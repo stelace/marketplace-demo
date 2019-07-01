@@ -1,0 +1,44 @@
+rating:
+  labels:
+    main:presentation:
+      en: Overall impression
+      fr: Présentation
+    main:punctuality:
+      en: Punctuality
+      fr: Ponctualité
+    main:consistency:
+      en: Consistency
+      fr: Régularité
+    main:teamSpirit:
+      en: Team spirit
+      fr: Esprit d'équipe
+    main:involvement:
+      en: Involvement
+      fr: Implication
+    completionScore:
+      en: Completed mission
+      fr: A accompli l'intégralité de la mission
+    recommendation:
+      en: I recommend {name}
+      fr: Je recommande {name}
+  my_ratings:
+    en: My {SERVICE_NAME} experiences
+    fr: Mes expériences certifiées {SERVICE_NAME}
+  ratings_prerequisite_message:
+    en: >-
+      Subscribe to know more about experiences certified by {SERVICE_NAME}
+      and ratings from previous employers.
+    fr: >-
+      Abonnez-vous pour découvrir les expériences certifiées par {SERVICE_NAME}
+      ainsi que les évaluations attribuées par les employeurs précédents
+  no_rating_message:
+    en: |
+      {isCurrentUser, select,
+          true {You have}
+          other {This applicant has}
+      } not completed any mission on {SERVICE_NAME} yet.
+    fr: |
+      {isCurrentUser, select,
+          true {vous n’avez}
+          other {Ce candidat n'a}
+      } pas encore réalisé de mission sur {SERVICE_NAME}.

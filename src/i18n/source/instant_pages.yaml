@@ -1,0 +1,58 @@
+# Pages added dynamically and asynchronously to Vue router when having 'header' and 'content' at least.
+# You can use Stelace Content API to add new contents and pages to you website without any deployment.
+
+instant_pages:
+  help:
+    # Use this to set URL path explicitly such as 'helpcenter' (without leading '/')
+    # For SEO try to keep this value unchanged after publishing your website
+    # INSTANT_PAGE_PATH defaults to field name: 'help'
+    INSTANT_PAGE_PATH:
+      en: ""
+      fr: ""
+    page_title:
+      en: Help - {SERVICE_NAME}
+      fr: Questions fréquentes - {SERVICE_NAME}
+    # header is used in <h1> tag
+    header:
+      en: Help center
+      fr: Centre d’aide
+    content:
+      en: ""
+      fr: ""
+    content__EDITOR_LABEL:
+      en: Help page text
+      fr: Contenu de la page d’aide
+  terms:
+    # INSTANT_PAGE_PATH defaults to field name: 'terms'
+    page_title:
+      en: Terms - {SERVICE_NAME}
+      fr: Conditions d’utilisation et mentions légales - {SERVICE_NAME}
+    header:
+      en: Terms of use
+      fr: Conditions générales de service et d’utilisation
+    last_update_date:
+      en: "Last Updated: {date}"
+      fr: "Dernière mise à jour\_: {date}"
+    content:
+      en: ""
+      fr: ""
+    content__EDITOR_LABEL:
+      en: Terms page text
+      fr: Contenu des conditions et mentions légales
+  contact:
+    # INSTANT_PAGE_PATH defaults to field name: 'contact'
+    page_title:
+      en: Contact {SERVICE_NAME}
+      fr: Contactez-nous - {SERVICE_NAME}
+    header:
+      en: Contact us
+      fr: Contactez-nous
+    header__EDITOR_LABEL:
+      en: Contact page title
+      fr: Titre de la page Contact
+    content:
+      en: ""
+      fr: ""
+    content__EDITOR_LABEL:
+      en: Contact page text
+      fr: Contenu de la page Contact

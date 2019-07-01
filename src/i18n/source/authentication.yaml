@@ -1,0 +1,109 @@
+authentication:
+  log_in_button:
+    en: Log In
+    fr: Connexion
+  log_out_button:
+    en: Log Out
+    fr: Déconnexion
+  sign_up_button:
+    en: Sign Up
+    fr: Inscription
+  sign_up_action:
+    en: Sign Up
+    fr: S'inscrire
+  lost_password_button:
+    en: Forgot password?
+    fr: Mot de passe oublié
+  lost_password_message:
+    en: Please enter the email address associated with your account. We’ll email you a link to reset your password.
+    fr: Veuillez renseigner votre adresse email afin de redéfinir votre mot de passe.
+  lost_password_email_sent:
+    en: A password reset link has just been sent to you.
+    fr: Un email contenant un lien de redéfinition de mot de passe vient de vous être envoyé.
+  log_in_required_message:
+    en: "Please connect to {SERVICE_NAME} to continue."
+    fr: "Veuillez vous connecter à {SERVICE_NAME} pour continuer."
+  no_account_button:
+    en: Don’t have an account?
+    fr: "Vous n’avez pas de compte\_?"
+  existing_account_button:
+    en: Already have an account?
+    fr: "Déjà inscrit(e)\_?"
+  terms_optin[markdown]:
+    en: I read and agree to the [Terms of Service]({terms_path}) applicable on {SERVICE_NAME}.
+    fr: J’ai lu et accepte les [Conditions Générales d’Utilisation]({terms_path}) de {SERVICE_NAME}.
+  social_auth_button:
+    en: |
+      Continue {network_name, select,
+          Google{with Google}
+          Facebook{with Facebook}
+          other{}
+      }
+    fr: |
+      Se connecter {network_name, select,
+          Google{avec Google}
+          Facebook{avec Facebook}
+          other{}
+      }
+  placeholder:
+    email:
+      en: Email Address
+      fr: Adresse email
+    password:
+      en: Password
+      fr: Mot de passe
+    create_password:
+      en: |
+        Create a password {min_number_of_characters, select,
+            undefined {}
+            other {(min. {min_number_of_characters} characters)}
+        }
+      fr: |
+        Mot de passe {min_number_of_characters, select,
+            undefined {}
+            other {({min_number_of_characters} caractères minimum)}
+        }
+      context: Password placeholder showed when user is signing up. Should be short enough to fit in a small input.
+  email_check:
+    link_invalid:
+      en: This email check link is invalid.
+      fr: Ce lien de vérification d'email est invalide.
+    link_expired:
+      en: This email check link has expired.
+      fr: Ce lien de vérification d'email n'est plus valable.
+    already_checked:
+      en: You’ve already checked your email with this link.
+      fr: Ce lien de vérification d'email a déjà été utilisé.
+    success:
+      en: Your email address is now verified.
+      fr: Votre adresse email a bien été validée.
+  password_reset:
+    message:
+      en: Please enter your new password.
+      fr: Veuillez indiquer votre nouveau mot de passe.
+    link_invalid:
+      en: This password reset link is invalid.
+      fr: Ce lien de redéfinition de mot de passe est invalide.
+    already_reset:
+      en: You’ve already reset your password with this link.
+      fr: Ce lien de redéfinition de mot de passe a déjà été utilisé.
+    link_expired:
+      en: This password reset link has expired.
+      fr: Ce lien de redéfinition de mot de passe n'est plus valable.
+    success:
+      en: You can now log in with your new password.
+      fr: Vous pouvez désormais vous connecter avec votre nouveau mot de passe.
+  error:
+    missing:
+      en: Please fill in your credentials.
+      fr: Veuillez renseigner vos identifiants.
+    incorrect:
+      en: Please check your email address/password.
+      fr: Votre email/mot de passe est erroné.
+    invalid_email:
+      en: Please enter a valid email address.
+      fr: Veuillez renseigner une adresse email valide.
+    email_already_used:
+      en: This email address is already used by another account.
+      fr: L’adresse renseignée est déjà utilisée par un autre compte.
+      context: This can be useful to multi-account users trying to update their email address.

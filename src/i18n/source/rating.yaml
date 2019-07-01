@@ -1,0 +1,95 @@
+rating:
+  rating_label:
+    en: "Rating:"
+    fr: "Avis\_:"
+  rating_placeholder:
+    en: Rating*
+    fr: Avis*
+  my_ratings:
+    en: My ratings
+    fr: Mes évaluations
+  ratings_prerequisite_message:
+    en: A validated account is required to see the ratings.
+    fr: Un compte vérifié est requis pour voir les évaluations.
+  your_rating_label:
+    en: Your rating
+    fr: Votre avis
+  rating_given_user_label:
+    en: Rating given by {userName}
+    fr: Évaluation laissée par {userName}
+  no_rating_message:
+    en: |
+      {isCurrentUser, select,
+          true {You have}
+          other {This user has}
+      } no rating yet on {SERVICE_NAME}.
+    fr: |
+      {isCurrentUser, select,
+          true {Vous n'avez}
+          other {Cet utilisateur n'a}
+      } pas encore d’évaluations sur {SERVICE_NAME}.
+  rating_no_update_message:
+    en: You cannot update your rating or your comment anymore.
+    fr: Vous ne pouvez plus modifier vos avis et commentaires.
+  score:
+    good:
+      en: Good
+      fr: Positif
+    quite_good:
+      en: Quite good
+      fr: Assez positif
+    average:
+      en: Average
+      fr: Moyen
+    negative:
+      en: Bad
+      fr: Négatif
+    very_negative:
+      en: Very bad
+      fr: Très négatif
+  comment_label:
+    en: "Comment:"
+    fr: "Commentaire\_:"
+  missing_score:
+      en: Missing score
+      fr: Note manquante
+  see_more_ratings:
+    en: See more ratings
+    fr: Voir plus d’évaluations
+  average_label:
+    en: "Score:"
+    fr: "Note\_:"
+  count:
+    en: |
+      {nb_ratings, plural,
+          one{# rating}
+          other{# ratings}
+      }
+    fr: |
+      {nb_ratings, plural,
+          one{# évaluation}
+          other{# évaluations}
+      }
+  review_count:
+    en: |
+      {nb_reviews, plural,
+          one{# review}
+          other{# reviews}
+      }
+    fr: |
+      {nb_reviews, plural,
+          one{# commentaire}
+          other{# commentaires}
+      }
+    context: Reviews are ratings with a text comment.
+  recommendations_count:
+    en: |
+      {nb_recommendations, plural,
+          one{# recommendation}
+          other{# recommendations}
+      }
+    fr: |
+      {nb_recommendations, plural,
+          one{# recommandation}
+          other{# recommandations}
+      }

@@ -1,0 +1,53 @@
+stelace:
+  powered_by:
+    en: We run on
+    fr: Expérience conçue par
+    context: Platform provider’s branding
+  service_powered_by_stelace:
+    en: "{SERVICE_NAME} runs on Stelace Λ"
+    fr: "{SERVICE_NAME} s’appuie sur Stelace Λ"
+  platform_runner:
+    en: Platform runner
+    fr: Lanceur de plateformes Web
+places:
+  near_place:
+    en: "Near {place}"
+    fr: "{place} & environs"
+  here_marker_label:
+    en: Here
+    fr: Ici
+  location_examples:
+    en: "Address, city, station…"
+    fr: "Adresse, ville, gare…"
+    context: Illustrate search locations with some obvious examples
+  address_placeholder:
+    en: Address
+    fr: Adresse
+social:
+  join_us:
+    en: Join us
+    fr: Rejoignez-nous
+  share_on_facebook:
+    en: Share on Facebook
+    fr: Partagez sur Facebook
+  facebook_page:
+    en: "{SERVICE_NAME} Facebook page"
+    fr: "Page Facebook {SERVICE_NAME}"
+  prompt_share_header:
+    en: |
+      {is_owner, select,
+          true {Share your listing}
+          false {You liked?}
+          other {}
+      }
+    fr: |
+      {is_owner, select,
+          true {Faîtes connaître votre annonce}
+          false {Vous aimez ?}
+          other {}
+      }
+number:
+  fraction:
+    percent:
+      en: "{hundredth, number, percent}"
+      fr: "{hundredth, number, percent}"

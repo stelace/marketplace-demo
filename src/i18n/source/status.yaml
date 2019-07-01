@@ -1,0 +1,19 @@
+# More specific statuses can be used in other entries
+status:
+  validated:
+    en: Validated
+    fr: Valide
+    context: Shows that some piece information has been checked.
+  archived:
+    en: Archived
+    fr: Archivé
+  uploading_images:
+    en: Uploading images…
+    fr: Chargement des images en cours…
+    context: Displayed until upload to servers is complete.
+  no_results:
+    en: No results
+    fr: Aucun résultat
+  loading:
+    en: Loading
+    fr: Chargement en cours

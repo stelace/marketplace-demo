@@ -1,0 +1,103 @@
+[Settings]
+  # ID = "automatically set by Netlify or equal to $NETLIFY_ID_FOR_PRODUCTION when applicable"
+
+[Build]
+  Publish = "dist/spa"
+  Functions = ""
+
+# Note that headers and redirects are shared across all deploy contexts
+# https://www.netlify.com/docs/netlify-toml-reference/
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    # Allowing sameorigin for stelace dashboard content live-editor
+    X-Frame-Options = "SAMEORIGIN"
+    X-XSS-Protection = "1; mode=block"
+    # Only changing this to "all" on production branch (cf. production context below)
+    X-Robots-Tag = "noindex, nofollow"
+
+
+# Order of redirects matters
+
+# Serving HTML file
+[[redirects]]
+  from = "/stelace"
+  to = "https://dashboard.stelace.com/"
+  force = true
+  status = 200
+
+# All dashboard routes
+[[redirects]]
+  from = "/stelace/*"
+  to = "https://dashboard.stelace.com/stelace/:splat"
+  force = true
+  status = 200
+
+# SPA history mode routing. Keep this last:
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+
+# For "Netlify deploy" template button
+[template.environment]
+  STELACE_PUBLISHABLE_API_KEY = "Required: Stelace publishable API key (pubk_test_…)"
+  VUE_APP_SERVICE_NAME = "Service name: injected in various contents"
+  VUE_APP_DEFAULT_LANGUAGE = "Language: currently en (default) or fr"
+  VUE_APP_DEFAULT_CURRENCY = "Currency: ISO code like USD (default) or EUR"
+  VUE_APP_MAPBOX_STYLE = "Map tiles provider style URL (we suggest Maptiler)"
+  VUE_APP_MAPBOX_TOKEN = "Map token: not needed if token is included in style URL"
+  VUE_APP_NOMINATIM_HOST = "Nominatim API provider like https://open.mapquestapi.com"
+  VUE_APP_NOMINATIM_KEY = "Nominatim provider API key to to enable place search"
+  VUE_APP_GOOGLE_ANALYTICS_ID = "Google Analytics ID: UA-XXXXXXXX-1"
+  STRIPE_PUBLISH_KEY = "Stripe publishable API key for subscriptions"
+  NEXMO_API_KEY = "Nexmo API key to verify phone numbers"
+  NEXMO_API_SECRET = "Nexmo API secret"
+
+
+# Continuous deployment
+
+[context.production]
+  # Production-specific X-Robots-Tag header
+  command = "sed -i 's/noindex, nofollow/all/g' netlify.toml && yarn build"
+
+  [context.production.environment]
+    VUE_APP_SERVICE_NAME = "Stellar Jobs"
+    VUE_APP_NOMINATIM_HOST = "https://open.mapquestapi.com"
+
+    # Filling these in Netlify UI rather than here
+    # to avoid leaking and commiting secrets to repo:
+
+    # Stelace publishable key
+    # STELACE_PUBLISHABLE_API_KEY
+
+    # Map/Nominatim
+    # VUE_APP_MAPBOX_STYLE
+    # VUE_APP_NOMINATIM_KEY
+
+    # Analytics
+    # VUE_APP_GOOGLE_ANALYTICS_ID
+
+    # Additional services
+    # STRIPE_PUBLISH_KEY
+    # NEXMO_API_KEY and NEXMO_API_SECRET
+
+[context.dev]
+  # command = "yarn build"
+  [context.dev.environment]
+    VUE_APP_SERVICE_NAME = "Stellar Jobs"
+    VUE_APP_NOMINATIM_HOST = "https://open.mapquestapi.com"
+    VUE_APP_GOOGLE_ANALYTICS_ID = "UA-XXXXXXXX-1"
+    VUE_APP_CDN_UPLOAD_PREFIX = "dev/cd"
+
+# Deploy-preview context must be set explicitly.
+# It is expected to be roughly the same as dev branch context
+[context.deploy-preview]
+  # command = "yarn build"
+  [context.deploy-preview.environment]
+    VUE_APP_SERVICE_NAME = "Stellar Jobs"
+    VUE_APP_NOMINATIM_HOST = "https://open.mapquestapi.com"
+    VUE_APP_GOOGLE_ANALYTICS_ID = "UA-XXXXXXXX-1"
+    VUE_APP_CDN_UPLOAD_PREFIX = "dev/cd"

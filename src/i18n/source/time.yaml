@@ -1,0 +1,204 @@
+time:
+  unit_label:
+    en: |
+      {timeUnit, select,
+          M{ {nbTimeUnits, plural, one{# month} other{# months}} }
+          d{ {nbTimeUnits, plural, one{# day} other{# days}} }
+          n{ {nbTimeUnits, plural, one{# night} other{# nights}} }
+          h{ {nbTimeUnits, plural, one{# hour} other{# hours}} }
+          m{ {nbTimeUnits, plural, one{# minute} other{# minutes}} }
+          other{}
+      }
+    fr: |
+      {timeUnit, select,
+          M{ {nbTimeUnits, plural, one{# mois} other{# mois}} }
+          d{ {nbTimeUnits, plural, one{# jour} other{# jours}} }
+          n{ {nbTimeUnits, plural, one{# nuit} other{# nuits}} }
+          h{ {nbTimeUnits, plural, one{# heure} other{# heures}} }
+          m{ {nbTimeUnits, plural, one{# minute} other{# minutes}} }
+          other{}
+      }
+  per_time_unit:
+    en: |
+      { timeUnit, select,
+        M{ {nbUnits, plural, one{Per month} other{# months}} }
+        w{ {nbUnits, plural, one{Per week} other{# weeks}} }
+        d{ {nbUnits, plural, one{Per day} other{# days}} }
+        n{ {nbUnits, plural, one{Per night} other{# nights}} }
+        h{ {nbUnits, plural, one{Per hour} other{# hours}} }
+        m{ {nbUnits, plural, one{Per minute} other{# minutes}} }
+        other{}
+      }
+    fr: |
+      {timeUnit, select,
+        M{ {nbUnits, plural, one{Par mois} other{# mois}} }
+        w{ {nbUnits, plural, one{Par semaine} other{# semaines}} }
+        d{ {nbUnits, plural, one{Par jour} other{# jours}} }
+        n{ {nbUnits, plural, one{Par nuit} other{# nuits}} }
+        h{ {nbUnits, plural, one{Par heure} other{# heures}} }
+        m{ {nbUnits, plural, one{Par minute} other{# minutes}} }
+        other{}
+      }
+  per_time_unit_with_context:
+    en: |
+      {context, select,
+        undefined {}
+        other {{context}}
+      }: { timeUnit, select,
+        M{ {nbUnits, plural, one{Per month} other{# months}} }
+        w{ {nbUnits, plural, one{Per week} other{# weeks}} }
+        d{ {nbUnits, plural, one{Per day} other{# days}} }
+        n{ {nbUnits, plural, one{Per night} other{# nights}} }
+        h{ {nbUnits, plural, one{Per hour} other{# hours}} }
+        m{ {nbUnits, plural, one{Per minute} other{# minutes}} }
+        other{}
+      }
+    fr: |
+      {context, select,
+        undefined {}
+        other {{context}}
+      } : {timeUnit, select,
+        M{ {nbUnits, plural, one{Par mois} other{# mois}} }
+        w{ {nbUnits, plural, one{Par semaine} other{# semaines}} }
+        d{ {nbUnits, plural, one{Par jour} other{# jours}} }
+        n{ {nbUnits, plural, one{Par nuit} other{# nuits}} }
+        h{ {nbUnits, plural, one{Par heure} other{# heures}} }
+        m{ {nbUnits, plural, one{Par minute} other{# minutes}} }
+        other{}
+      }
+    context: Allow to add some context to time displayed with another translation, such as “Duration:…”
+  ago:
+    en: |
+      { timeUnit, select,
+        M{ {nbUnits, plural, one{one month} other{# months}} }
+        w{ {nbUnits, plural, one{one week} other{# weeks}} }
+        d{ {nbUnits, plural, one{one day} other{# days}} }
+        n{ {nbUnits, plural, one{one night} other{# nights}} }
+        h{ {nbUnits, plural, one{one hour} other{# hours}} }
+        m{ {nbUnits, plural, =0{a few moments} one{one minute} other{# minutes}} }
+        other{}
+      } ago
+    fr: |
+      Il y a
+      {timeUnit, select,
+        M{ {nbUnits, plural, one{un mois} other{# mois}} }
+        w{ {nbUnits, plural, one{une semaine} other{# semaines}} }
+        d{ {nbUnits, plural, one{un jour} other{# jours}} }
+        n{ {nbUnits, plural, one{une nuit} other{# nuits}} }
+        h{ {nbUnits, plural, one{une heure} other{# heures}} }
+        m{ {nbUnits, plural, =0{quelques instants} one{une minute} other{# minutes}} }
+        other{}
+      }
+  calendar_prompt_date:
+    en: Please pick your dates
+    fr: Veuillez choisir vos dates
+  date_short:
+    en: "{date, date, short}"
+    fr: "{date, date, short}"
+  date_long:
+    en: "{date, date, long}"
+    fr: "{date, date, long}"
+  date_fullmonth:
+    en: "{date, date, fullmonth}"
+    fr: "{date, date, fullmonth}"
+  date_full:
+    en: "{date, date, full}"
+    fr: "{date, date, full}"
+  time_short:
+    en: "{time, time, short}"
+    fr: "{time, time, short}"
+  time_full:
+    en: "{time, time, full}"
+    fr: "{time, time, full}"
+  year_label:
+    en: Year
+    fr: Année
+  month_label:
+    en: Month
+    fr: Year
+  from_day_label:
+    en: From
+    fr: Du
+  to_day_label:
+    en: To
+    fr: Au
+  duration_label:
+    en: Duration
+    fr: Durée
+  today:
+    en: Today
+    fr: Aujourd’hui
+  on_date:
+    en: |
+      on {date, date, short}{showTime, select,
+          true { at {date, time, short}}
+          other {}
+      }
+    fr: |
+      le {date, date, short}{showTime, select,
+          true { à {date, time, short}}
+          other {}
+      }
+  from_start_date_to_end_date:
+    en: |
+      {endDate, select, undefined{Starting from} other {From}} {startDate, date, short}{showTime, select,
+        other {}
+        true { at {startDate, time, short}}
+      } {endDate, select,
+        undefined {}
+        other {to {endDate, date, short}{showTime, select,
+          other {}
+          true { at {endDate, time, short}}
+        }}
+      }
+    fr: |
+      {endDate, select, undefined{À partir du} other{Du}} {startDate, date, short}{showTime, select,
+        other {}
+        true { à {startDate, time, short}}
+      } {endDate, select,
+        undefined {}
+        other {au {endDate, date, short}{showTime, select,
+          other {}
+          true { à {endDate, time, short}}
+        }}
+      }
+  start_label:
+    en: Start
+    fr: Début
+  end_label:
+    en: End
+    fr: Fin
+  start_date_label:
+    en: Start date
+    fr: Date de début
+  end_date_label:
+    en: End date
+    fr: Date de fin
+  missing_end_date_meaning:
+    en: Indefinite period
+    fr: Durée indéterminée
+    context: Can be open-ended contract or any other type of unlimited duration
+  delay:
+    few_minutes:
+      en: Few minutes
+      fr: Quelques minutes
+    less_than_one_hour:
+      en: Less than one hour
+      fr: Moins d'une heure
+    few_hours:
+      en: Few hours
+      fr: Quelques heures
+    in_the_day:
+      en: In the day
+      fr: Dans la journée
+    less_than_one_day:
+      en: Less than one day
+      fr: Moins de 24 heures
+  error:
+    incorrect_dates:
+      en: Dates are incorrect.
+      fr: Les dates sont incorrectes.
+      context: Can be used in any context such as availability settings or transaction.
+    overlapping_dates:
+      en: Please select a period not overlapping previous ones.
+      fr: Veuillez indiquer une période qui ne recouvre pas une autre période existante.

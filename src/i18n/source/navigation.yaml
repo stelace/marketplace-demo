@@ -1,0 +1,60 @@
+navigation:
+  home:
+    en: Home
+    fr: Accueil
+  faq:
+    en: FAQ
+    fr: "Comment ça marche\_?"
+  new_listing:
+    en: Publish your add
+    fr: Publiez votre annonce
+  new_listing__EDITOR_LABEL:
+    en: New listing link
+    fr: Lien de publication d’annonce
+  contact_us:
+    en: Contact us
+    fr: Contactez-nous
+  about_us:
+    en: About us
+    fr: Qui sommes-nous ?
+  terms:
+    en: Terms
+    fr: Conditions Générales
+  search:
+    en: Search
+    fr: Rechercher
+    context: Action required to find assets
+  back_top_of_page:
+    en: Back to top
+    fr: Retour en haut de page
+  back:
+    en: Back
+    fr: Retour
+    context: Back to previous view button
+  close:
+    en: Close
+    fr: Fermer
+    context: Close current in-app window or context
+  menu:
+    en: Menu
+    fr: Menu
+    context: Navigation menu label
+  account:
+    en: Account
+    fr: Mon compte
+  invite:
+    en: Invite
+    fr: Parrainer
+  inbox:
+    en: Inbox
+    fr: Boîte de réception
+  profile:
+    en: Profile
+    fr: Profil
+    context: Can point to public profile or dedicated profile edition page as well.
+  public_profile:
+    en: Public profile
+    fr: Profil public
+  my_assets:
+    en: My listings
+    fr: Mes annonces

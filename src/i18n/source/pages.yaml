@@ -1,0 +1,370 @@
+pages:
+  home:
+    page_title:
+      en: "Welcome to {SERVICE_NAME}"
+      fr: "Bienvenue sur {SERVICE_NAME}"
+      context: Default website title
+    page_title__EDITOR_LABEL:
+      en: Title of your website
+      fr: Titre de votre site
+    page_title__EDITOR_HELPER:
+      en: As shown in Web browser and search engine results such as Google.
+      fr: Apparaît dans votre navigateur Web ainsi que dans les résultats des moteurs de recherche tels que Google.
+    meta_description:
+      en: "Your community awaits you on {SERVICE_NAME}"
+      fr: "Rejoignez la communauté {SERVICE_NAME}"
+      context: This is a very generic default that should be replaced by admin before platform is online.
+    header:
+      en: "Welcome to {SERVICE_NAME}"
+      fr: "Bienvenue sur {SERVICE_NAME}"
+      context: Default home page header (H1)
+    header__EDITOR_LABEL:
+      en: Main header of your home page
+      fr: En-tête principal de votre page d’accueil
+    header__EDITOR_HELPER:
+      en: Try to describe your activity precisely to improve your SEO.
+      fr: Essayez de décrire votre activité précisément pour améliorer votre référencement.
+    subheader:
+      en: Your community
+      fr: Votre communauté
+    subheader__EDITOR_LABEL:
+      en: Subheader of your website
+      fr: En-tête secondaire
+    form_button:
+      en: Search
+      fr: Rechercher
+    form_button__EDITOR_LABEL:
+      en: Home search form button
+      fr: Bouton du formulaire de recherche de la page d’accueil
+    main_text_content:
+      en: ""
+      fr: ""
+    main_text_content__EDITOR_LABEL:
+      en: Main content of your home page
+      fr: Contenu principal de votre page d’accueil
+    asset_gallery_header:
+      en: Available on {SERVICE_NAME}
+      fr: Disponible sur {SERVICE_NAME}
+      context: Introducing some assets as sample on home page
+    testimonials_header:
+      en: They trust us
+      fr: Ils nous font confiance
+    features:
+      feature_1_title:
+        en: Title
+        fr: Titre
+      feature_1_content:
+        en: ""
+        fr: ""
+      feature_2_title:
+        en: Title
+        fr: Titre
+      feature_2_content:
+        en: ""
+        fr: ""
+      feature_3_title:
+        en: Title
+        fr: Titre
+      feature_3_content:
+        en: ""
+        fr: ""
+  new_asset:
+    page_title:
+      en: New listing - {SERVICE_NAME}
+      fr: Nouvelle annonce {SERVICE_NAME}
+      context: Window/Tab title (SEO).
+    meta_description:
+      en: Create your own listing in no time.
+      fr: Créez votre propre annonce en quelques instants.
+    header:
+      en: Create your new offer
+      fr: Créez votre nouvelle annonce
+    header__EDITOR_LABEL:
+      en: Main header of your listing creation page
+      fr: En-tête principal de la page création d'annonce
+    subheader:
+      en: It’s fast and free.
+      fr: C’est simple et gratuit.
+    form_header:
+      en: Everything starts with a good title
+      fr: Tout commence par un bon titre
+    publication_status:
+      en: |
+        {published, select,
+            after_validation {Your listing will be published after validation by {SERVICE_NAME}}
+            now {Your listing is now online.}
+            other {}
+        }
+      fr: |
+        {published, select,
+            after_validation {Votre annonce sera publiée très prochainement après validation par {SERVICE_NAME}.}
+            now {Votre annonce vient d’être publiée.}
+            other {}
+        }
+    picture_incentive:
+      en: Beautiful pictures make a difference…
+      fr: De belles images font la différence…
+    picture_incentive__EDITOR_LABEL:
+      en: "Incentive to upload attractive images"
+      fr: "Incitation à présenter des images de qualité"
+  search:
+    page_title:
+      en: |
+        Search
+        {query, select,
+            undefined {}
+            other {{query}}
+        }
+        - {SERVICE_NAME}
+        {page, select,
+            undefined {}
+            other { - Page {page}}
+        }
+      fr: |
+        Recherche
+        {query, select,
+            undefined {}
+            other {{query}}
+        }
+        - {SERVICE_NAME}
+        {page, select,
+            undefined {}
+            other { - Page {page}}
+        }
+    meta_description:
+      en: |
+        {query, select,
+            undefined {}
+            other {{query}:}
+        }
+        Find what you need on {SERVICE_NAME}
+        {page, select,
+            undefined {}
+            other { - Page {page}}
+        }
+      fr: |
+        {query, select,
+            undefined {}
+            other {{query} :}
+        }
+        Trouvez ce qu’il vous faut sur {SERVICE_NAME}
+        {page, select,
+            undefined {}
+            other { - Page {page}}
+        }
+    show_map:
+      en: Show map
+      fr: Afficher la carte
+      context: Option to show map interface on search page
+  transaction_payment:
+    page_title:
+      en: Checkout - {SERVICE_NAME}
+      fr: Paiement - {SERVICE_NAME}
+    header:
+      en: Checkout
+      fr: Paiement
+    header__EDITOR_LABEL:
+      en: Checkout page title
+      fr: Titre de la page de paiement
+    header_deposit:
+      en: Deposit
+      fr: Dépôt de garantie
+    billing_information:
+      en: Billing information
+      fr: Informations de facturation
+    country_of_residence_label:
+      en: Country of residence
+      fr: Pays de résidence
+    payment_secured_by:
+      en: |
+        Your payment details are encrypted and secured by {payment_provider, select,
+          stripe {Stripe.}
+          other {our certified payment provider.}
+        }
+      fr: |
+        Vos informations de paiement sont chiffrées et sécurisées par {payment_provider, select,
+          stripe {Stripe.}
+          other {notre prestataire de paiement accrédité.}
+        }
+    accept_payment_statement:
+      en: "I accept to pay {price, number, currency}."
+      fr: "J’accepte de payer {price, number, currency}."
+    accept_payment_statement__EDITOR_LABEL:
+      en: Payment statement
+      fr: Accord pour paiement
+    accept_deposit_statement:
+      en: "I accept that a {deposit, number, currency} deposit is required. It won’t be debited from my account except in case of a disputed moderated by {SERVICE_NAME}."
+      fr: "J’accepte qu’un dépôt de garantie (caution) de {deposit, number, currency} soit bloqué sur ma carte bancaire. Celui-ci ne sera en aucun cas prélevé en l’absence de litige avéré constaté par {SERVICE_NAME}."
+    accept_deposit_statement__EDITOR_LABEL:
+      en: Deposit statement
+      fr: Accord pour le dépôt de garantie
+    confirm_payment_button:
+      en: Confirm payment
+      fr: Confirmer et payer
+    3DSecure_logo_alt:
+      en: 3DSecure Visa / MasterCard logo
+      fr: Logo 3DSecure Visa / MasterCard
+    3DSecure_message:
+      en: Your bank may require 3DSecure authentication to secure your payment.
+      fr: Pour garantir votre sécurité, votre banque est susceptible de procéder à une vérification 3DSecure.
+  transaction_confirmation:
+    page_title:
+      en: "Payment {status, select, confirmed {confirmed} cancelled {cancelled} other{}}"
+      fr: "Paiement {status, select, confirmed {confirmé} cancelled {annulé} other{}}"
+    payment_processing_message:
+      en: Validation pending…
+      fr: Vérification en cours…
+    payment_success_message:
+      en: Payment successful
+      fr: Transaction réussie
+    generic_error:
+      en: An error has happened and we apologize for any inconvenience. Your card hasn't been debited.
+      fr: Une erreur s'est produite et nous vous prions de nous en excuser. Aucun prélèvement ne sera effectué.
+  public_profile:
+    page_title:
+      en: |
+        {user, select,
+            undefined {Profile}
+            other {{user}’s profile}
+        }
+        - {SERVICE_NAME}
+      fr: |
+        {user, select,
+            undefined {Profil}
+            other {Profil de {user}}
+        }
+        - {SERVICE_NAME}
+    meta_description:
+      en: |
+        {user_description, select,
+            undefined {
+                {user, select,
+                    undefined {Joined}
+                    other {{user} joined}
+                }
+                {SERVICE_NAME} {signup_date, select,
+                  undefined {}
+                  other {in {signup_date, date, fullmonth}}
+                }.
+            }
+            other {{user_description}}
+        }
+      fr: |
+        {user_description, select,
+            undefined {
+                {user, select,
+                    undefined {Fait confiance à}
+                    other {{user} fait confiance à}
+                }
+                {SERVICE_NAME} {signup_date, select,
+                  undefined {}
+                  other {depuis {signup_date, date, fullmonth}}
+                }.
+            }
+            other {{user_description}}
+        }
+      context: User can provide her own description.
+    greeting:
+      en: |
+        Welcome {user, select,
+            undefined {}
+            other {, I’m {user}}
+        }
+      fr: |
+        Bienvenue{user, select,
+            undefined {}
+            other {, je suis {user}}
+        }
+    greeting__EDITOR_LABEL:
+      en: Public profile page title
+      fr: Titre de la page de profil public
+  account:
+    page_title:
+      en: My account - {SERVICE_NAME}
+      fr: Mon compte {SERVICE_NAME}
+    greeting:
+      en: Welcome back {firstname, select, undefined {} other {{firstname}}}
+      fr: Bienvenue sur {SERVICE_NAME} {firstname, select, undefined {} other {{firstname}}}
+      context: User can have no name yet.
+    greeting__EDITOR_LABEL:
+      en: Greeting message of account page
+      fr: Message d’accueil du compte utilisateur
+    greeting_subtitle:
+      en: Keep your account info up-to-date and don’t miss a single opportunity.
+      fr: Maintenez vos informations à jour pour ne rien rater.
+    greeting_subtitle__EDITOR_LABEL:
+      en: Account page subtitle
+      # '\_' inserts a non-breaking space
+      fr: "Sous-titre de la page «\_Mon Compte\_»"
+  invite:
+    page_title:
+      en: Your friends on {SERVICE_NAME}
+      fr: Vos amis sur {SERVICE_NAME}
+    meta_description:
+      en: Invite your friends to join {SERVICE_NAME}.
+      fr: Invitez vos amis à rejoindre {SERVICE_NAME.
+  friend_referral:
+    page_title:
+      en: "{user, select, undefined {Invitation} other {{user}’s invitation}} - {SERVICE_NAME}"
+      fr: "{user, select, undefined {Invitation} other {Invitation de {user}}} - {SERVICE_NAME}"
+    meta_description:
+      en: "{user, select, undefined {You are invited} other {{user} invites you}} to join {SERVICE_NAME}."
+      fr: "{user, select, undefined {Vous avez reçu une invitation à rejoindre } other {{user} vous invite sur}} {SERVICE_NAME}."
+  not_found:
+    page_title:
+      en: Page not found - {SERVICE_NAME}
+      fr: Page introuvable - {SERVICE_NAME}
+    header:
+      en: Lost in {SERVICE_NAME}
+      fr: Lost in {SERVICE_NAME}
+    subheader:
+      en: Page requested may be lost.
+      fr: La page que vous cherchez est introuvable.
+    404_error_label:
+      en: 404 error - Page Not Found
+      fr: Erreur 404 - Page introuvable
+    custom_error_code_label:
+      en: "{errorCode, select, undefined {} other {{errorCode}}} Error"
+      fr: Erreur {errorCode, select, undefined {} other {{errorCode}}}
+  inbox:
+    page_title:
+      en: Inbox
+      fr: Messagerie
+    inbox_header:
+      en: Inbox
+      fr: Boîte de réception
+    transactions_header:
+      en: My transactions
+      fr: Mes transactions
+    empty_inbox:
+      en: Outgoing and incoming messages will be displayed on this page.
+      fr: Lorsque vous enverrez ou recevrez des demandes, les réponses reçues s'afficheront ici.
+    conversation_with:
+      en: Conversation {interlocutorName, select, undefined {} other {with {interlocutorName}}}
+      fr: Conversation {interlocutorName, select, undefined {} other {avec {interlocutorName}}}
+    message_to:
+      en: Message {interlocutorName, select, undefined {} other {to {interlocutorName}}}
+      fr: Message {interlocutorName, select, undefined {} other {à {interlocutorName}}}
+    contact_details_hidden_title:
+      en: Contact details protected
+      fr: Coordonnées protégées
+    contact_details_hidden_message:
+      en: Contact details are hidden before the acceptance of that transaction as a security measure.
+      fr: Les coordonnées sont masquées par mesure de sécurité avant la validation de cette transaction.
+    filter:
+      all:
+        en: All conversations
+        fr: Toutes les conversations
+      active:
+        en: Active conversations
+        fr: Conversations actives
+      archived:
+        en: Archived conversations
+        fr: Conversations archivées
+      unread:
+        en: Unread messages
+        fr: Avec messages non lus
+  conversation:
+    page_title:
+      en: Conversation
+      fr: Conversation

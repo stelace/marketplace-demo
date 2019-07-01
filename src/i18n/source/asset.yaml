@@ -1,0 +1,161 @@
+asset:
+  name_label:
+    en: Title
+    fr: Titre
+    context: Asset name used as title of asset page
+  asset_type_label:
+    en: Asset type
+    fr: Type de ressource
+  available_in_places:
+    en: "Available in {places}"
+    fr: "Disponible à {places}"
+    context: Introduce places where asset is available.
+  category_label:
+    en: Category
+    fr: Catégorie
+  subcategory_label:
+    en: Subcategory
+    fr: Sous-Catégorie
+  description_label:
+    en: Description
+    fr: Description
+  accessories_label:
+    en: Accessories
+    fr: Accessoires
+  quantity_label:
+    en: Quantity
+    fr: Quantité
+  condition_label:
+    en: Condition
+    fr: État
+  security_deposit_label:
+    en: Security deposit
+    fr: Dépôt de garantie
+  comments:
+    en: Comments
+    fr: Commentaires
+    context: Comments or questions & answers about current asset.
+  contact_owner_action:
+    en: "Contact {owner}"
+    fr: "Contacter {owner}"
+  owner_info_header:
+    en: "Offered by {owner}"
+    fr: "Informations sur {owner}"
+  response_rate_label:
+    en: "Response rate:"
+    fr: "Taux de réponse\_:"
+  response_time_label:
+    en: "Response time:"
+    fr: "Temps de réponse\_:"
+  reviews:
+    en: Reviews
+    fr: Évaluations
+  keywords:
+    en: Related keywords
+    fr: Mots-clés
+  similar_assets:
+    en: Similar offers
+    fr: Offres similaires
+  other_assets_from:
+    en: Other offers {owner, select, undefined{} other{from {owner}}}
+    fr: Autres offres {owner, select, undefined{} other{de {owner}}}
+  you_may_like:
+    en: You may like…
+    fr: "{SERVICE_NAME} recommande…"
+    context: Introducing automatic asset suggestions depending on user profile or history.
+  view_own_listings:
+    en: |
+      View my {nb_listings, plural,
+          =0 {listings}
+          one {listing}
+          other {# listings}
+      }
+    fr: |
+      Voir {nb_listings, plural,
+          =0 {mes annonces}
+          one {mon annonce}
+          other {# annonces}
+      }
+  checkout_action:
+    en: |
+      {timeBased, select,
+          true {Book}
+          false {Order}
+          other {Order}
+          undefined {Contact}
+      }
+    fr: |
+      {timeBased, select,
+          true {Réserver}
+          false {Commander}
+          other {Commander}
+          undefined {Contacter}
+      }
+  delete_listing_warning:
+    en: "Please confirm you want to delete this listing."
+    fr: "Confirmez-vous la suppression de cette annonce?"
+  delete_listing_and_transactions_warning:
+    en: |
+      The deletion of this listing will cancel associated ongoing transactions.
+      Please confirm you want to delete this listing.
+    fr: |
+      La suppression de cette annonce entraînera l’annulation des transactions en cours.
+      Confirmez-vous la suppression de cette annonce?
+  not_available_now:
+    en: Not available for now
+    fr: Indisponible pour le moment
+  not_available_anymore:
+    en: This listing is not available anymore.
+    fr: Cette annonce n’est plus disponible.
+  remove_action:
+    en: Remove
+    fr: Supprimer
+  pause_action:
+    en: Pause
+    fr: Mettre en pause
+  reactivate_action:
+    en: Reactivate
+    fr: Réactiver
+    context: Opposite to pause_action
+  pause_action_helper:
+    en: Deactivate your listing when you are unavailable
+    fr: Suspendez votre annonce en cas d’indisponibilité
+  paused:
+    en: Paused
+    fr: En pause
+  pending_validation:
+    en: Pending
+    fr: En attente
+    context: Asset or asset owner account must be validated.
+  unavailable:
+    en: Unavailable
+    fr: Indisponible
+    context: The asset is sold, or equivalent depending on business, with no unit available to other users anymore.
+  notification:
+    removed_success_message:
+      en: Removed listing
+      fr: Annonce supprimée
+    activated_success_message:
+      en: Listing activated
+      fr: Annonce activée
+    paused_success_message:
+      en: |
+        Listing paused {paused_until_date, select,
+            undefined {}
+            other {until {paused_until_date, date, short}}
+        }
+      fr: |
+        Annonce désactivée {paused_until_date, select,
+            undefined {}
+            other {jusqu’au {paused_until_date, date, short}}
+        }
+    sold:
+      en: Sold
+      fr: Vendu
+  owner_stats:
+    views:
+      en: "{views, plural, =0 {No view} one {One view} other {# views}}"
+      fr: "{views, plural, =0 {Aucune vue} one {Une vue} other {# vues}}"
+    contacts:
+      en: "{contacts, plural, =0 {No contact} one {One contact} other {# contacts}} for this listing."
+      fr: "{contacts, plural, =0 {Aucun contact} one {Un contact} other {# contacts}} pour cette annonce."

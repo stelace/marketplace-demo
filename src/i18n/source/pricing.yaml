@@ -1,0 +1,129 @@
+pricing:
+  price_with_currency:
+    en: "{price, number, currency}"
+    fr: "{price, number, currency}"
+  price_label:
+    en: Price
+    fr: Prix
+  asking_price_label:
+    en: Asking price
+    fr: Prix demandé
+    context: When price can be requested by user rather than set by provider. E.g. salary expectations
+  asking_price:
+    en: >-
+      Asking price{price, select,
+        undefined{}
+        other{: {price, number, currency} {timeUnit, select,
+          M{/ m}
+          d{/ d}
+          n{/ night}
+          h{/ h}
+          m{/ min}
+          other{}
+        }}
+      }
+    fr: >-
+      Prix demandé{price, select,
+        undefined{}
+        other{ : {price, number, currency} {timeUnit, select,
+          M{/ m}
+          d{/ d}
+          n{/ night}
+          h{/ h}
+          m{/ min}
+          other{}
+        }}
+      }
+    context: This price can be requested by user, like salary expectations
+  price_range:
+    en: From {lower_price, number, currency} to {upper_price, number, currency}
+    fr: De {lower_price, number, currency} à {upper_price, number, currency}
+  price_range_short:
+    en: "{lower_price, number, currency} - {upper_price, number, currency}"
+    fr: "{lower_price, number, currency} - {upper_price, number, currency}"
+  price_per_time_unit_short_label:
+    en: |
+      {price, select, undefined {Price} other {{price, number, currency}} }
+      {timeUnit, select,
+        M{/ m}
+        d{/ d}
+        n{/ night}
+        h{/ h}
+        m{/ min}
+        other{}
+      }
+    fr: |
+      {price, select, undefined {Prix} other {{price, number, currency}} }
+      {timeUnit, select,
+        M{/ m}
+        d{/ j}
+        n{/ nuit}
+        h{/ h}
+        m{/ min}
+        other{}
+      }
+  price_per_time_unit_label:
+    en: |
+      {price, select, undefined {Price} other {{price, number, currency}} }
+      {timeUnit, select,
+        M{per month}
+        d{per day}
+        n{per night}
+        h{per hour}
+        m{per minute}
+        other{}
+      }
+    fr: |
+      {price, select, undefined {Prix} other {{price, number, currency}} }
+      {timeUnit, select,
+        M{par mois}
+        d{par jour}
+        n{par nuit}
+        h{par heure}
+        m{par minute}
+        other{}
+      }
+  price_per_time_unit_label_tax_excluded:
+    en: |
+      {price, select, undefined {Price} other {{price, number, currency}} }
+      (excl. tax)
+      {timeUnit, select,
+        M{per month}
+        d{per day}
+        n{per night}
+        h{per hour}
+        m{per minute}
+        other{}
+      }
+    fr: |
+      {price, select, undefined {Prix} other {{price, number, currency}} }
+      HT
+      {timeUnit, select,
+        M{par mois}
+        d{par jour}
+        n{par nuit}
+        h{par heure}
+        m{par minute}
+        other{}
+      }
+  tax_excluded:
+    en: Tax excluded
+    fr: HT
+  service_fees:
+    en: Service fees
+    fr: Frais de service
+  free:
+    en: Free
+    fr: Gratuit
+  total:
+    en: Total
+    fr: Total
+  quantity:
+    en: Quantity
+    fr: Quantité
+  subscription_header:
+    en: Pricing
+    fr: Tarifs
+  subscription_subheader:
+    en: Premium offers for advanced users.
+    fr: Nos offres payantes s’adressent aux utilisateurs avancés.

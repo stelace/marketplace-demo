@@ -1,0 +1,4 @@
+time:
+  missing_end_date_meaning:
+    en: Omit end date for permanent contract.
+    fr: Ignorer la date de fin pour un CDI.

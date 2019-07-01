@@ -1,0 +1,139 @@
+# Generic prompts
+prompt:
+  continue_button:
+    en: Continue
+    fr: Continuer
+    context: Used in any context where a multi-step process is pending user action.
+  confirm_button:
+    en: Confirm
+    fr: Confirmer
+    context: Prompt user to complete ongoing process or confirm input.
+  save_button:
+    en: Save
+    fr: Enregistrer
+    context: General purpose button to save new content or setting.
+  cancel_button:
+    en: Cancel
+    fr: Annuler
+  reset_button:
+    en: Reset
+    fr: Réinitialiser
+  archive_button:
+    en: Archive
+    fr: Archiver
+  delete_button:
+    en: Delete
+    fr: Supprimer
+  send_button:
+    en: Send
+    fr: Envoyer
+  later_button:
+    en: Later
+    fr: Plus tard
+    context: User can postpone an action with this button.
+  confirm_delete:
+    en: Do you confirm the deletion?
+    fr: Confirmez-vous la suppression ?
+  binary_yes:
+    en: "Yes"
+    fr: "Oui"
+  binary_no:
+    en: "No"
+    fr: "Non"
+  binary_or_separator:
+    en: Or
+    fr: Ou
+    context: Introduces an alternative such as another login option.
+  select:
+    en: Select
+    fr: Sélectionner
+  browse:
+    en: Browse
+    fr: Parcourir
+    context: Applies to file inputs.
+  select_all_button:
+    en: Select all
+    fr: Tout sélectionner
+  deselect_all_button:
+    en: Deselect all
+    fr: Vider la sélection
+  mark_as_read_button:
+    en: Mark as read
+    fr: Marquer comme lu
+  archive_to_inbox_button:
+    en: Send to inbox
+    fr: Restaurer
+    context: Restoring from archived status.
+  restore_button:
+    en: Restore
+    fr: Restaurer
+  upload_attachments_button:
+    en: Upload attachments
+    fr: Envoyer des pièces-jointes
+  archives:
+    en: Archives
+    fr: Archives
+    context: Can be used to reveal advanced options to expose archived resources
+  click_here:
+    en: Click here
+    fr: Cliquez ici
+  see_more:
+    en: See more
+    fr: En voir plus
+  verify:
+    en: Verify
+    fr: Vérifier
+  validate:
+    en: Validate
+    fr: Valider
+  hide:
+    en: Hide
+    fr: Masquer
+  details:
+    en: Details
+    fr: Détail
+  generic_add_button:
+    en: Add
+    fr: Ajouter
+  create_button:
+    en: Create
+    fr: Créer
+    context: Used for any type of resource (contact, asset, content…)
+  login_to_know_more:
+    en: Login to know more.
+    fr: Connectez-vous pour en savoir plus.
+  drag_change_picture_order:
+    en: Drag to change picture order
+    fr: Faites glisser les images pour changer leur ordre
+  add_pictures:
+    en: Add pictures
+    fr: Ajouter des images
+  edit_pictures:
+    en: Edit pictures
+    fr: Modifier les images
+  remove_pictures:
+    en: Remove pictures
+    fr: Supprimer des images
+  drag_and_drop_pictures:
+    en: Drag and drop your pictures
+    fr: Glissez-déposez vos images
+  set_asset_availability:
+    en: Set availability
+    fr: Définir les disponibilités
+  my_availability:
+    en: My availability
+    fr: Mes disponibilités
+    context: General user’s availability, in contrast to single asset’s availability
+  service_update:
+    available:
+      en: "{SERVICE_NAME} Update"
+      fr: "Mise à jour {SERVICE_NAME}"
+      context: New version of the website / app is available.
+    refresh_helper:
+      en: "{SERVICE_NAME} has just been updated, you can refresh your page to enjoy."
+      fr: "{SERVICE_NAME} vient d’être mis à jour. Rafraîchissez votre page pour en profiter."
+      context: New version of the website / app is available.
+    refresh_button:
+      en: Update
+      fr: Mettre à jour
+      context: User may lose current content in the process.

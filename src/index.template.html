@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- Injected dynamically by seo mixin -->
+    <!-- <title><%= htmlWebpackPlugin.options.productName %></title> -->
+
+    <meta charset="utf-8">
+    <!-- Injected dynamically by seo mixin -->
+    <!-- <meta name="description" content="<%= htmlWebpackPlugin.options.productDescription %>"> -->
+    <meta name="format-detection" content="telephone=no">
+    <meta name="msapplication-tap-highlight" content="no">
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width<% if (htmlWebpackPlugin.options.ctx.mode.cordova) { %>, viewport-fit=cover<% } %>">
+
+    <meta name="apple-mobile-web-app-title" content="<%= htmlWebpackPlugin.options.serviceName %>">
+    <meta name="application-name" content="<%= htmlWebpackPlugin.options.serviceName %>">
+    <meta name="theme-color" content="<%= htmlWebpackPlugin.options.primaryColor %>">
+    <meta name="msapplication-TileColor" content="#b91d47">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="<%= htmlWebpackPlugin.options.serviceName %>">
+    <meta property="og:description" content="<%= htmlWebpackPlugin.options.ogDesc %>">
+    <meta property="og:url" content="<%= htmlWebpackPlugin.options.websiteUrl %>">
+    <meta property="og:image" content="<%= htmlWebpackPlugin.options.ogImage %>">
+
+    <link rel="apple-touch-icon" sizes="180x180" href="statics/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="statics/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="statics/favicon-16x16.png">
+    <link rel="mask-icon" href="statics/safari-pinned-tab.svg" color="<%= htmlWebpackPlugin.options.primaryColor %>">
+
+    <link rel="preconnect" href="<%= htmlWebpackPlugin.options.apiBaseUrl %>" crossorigin>
+    <% if (htmlWebpackPlugin.options.googleFonts.length) { %>
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+    <% } %>
+    <!-- Prefetch and don’t preload to avoid delaying whole page loading -->
+    <!-- Should load fast since this comes before all webpack prefetched chunks -->
+    <% for (let f of htmlWebpackPlugin.options.googleFonts) { %>
+    <link rel="prefetch" as="font" href="<%= f %>" crossorigin>
+    <% } %>
+    <% if (htmlWebpackPlugin.options.cdnUrl) { %>
+    <link rel="preconnect" href="<%= htmlWebpackPlugin.options.cdnUrl %>">
+    <% } %>
+
+    <!-- Performance tracking: must come before any style to record first-paint -->
+    <script>
+      try {
+        if (window && window.PerformanceObserver) {
+          var observer = new PerformanceObserver(function (list) {
+            var perfEntries = list.getEntries();
+            for (var i=0; i < perfEntries.length; i++) {
+              // 'name' is either 'first-paint' or 'first-contentful-paint'
+              var metricName = perfEntries[i].name;
+              var time = Math.round(perfEntries[i].startTime + perfEntries[i].duration);
+
+              // Can be used for Real User Monitoring
+              window.stlPerfEvents = { name: metricName, eventValue: time };
+            }
+          });
+          observer.observe({ entryTypes: ['paint'] });
+        }
+      } catch (e) {}
+    </script>
+
+    <!-- Loading screen styles -->
+    <style>
+      body {
+        margin: 0; /* match reset styles */
+      }
+      #app-loading-content, #app-loading-background {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+      }
+      #app-loading-background {
+        z-index: -1001;
+        background-size: cover;
+        background-position: 50% 50%;
+      }
+      #app-loading-background.-fade-out {
+        -webkit-animation: fadeout 300ms ease-in-out forwards;
+        animation: fadeout 300ms ease-in-out forwards;
+      }
+      #app-loading-background.-hide {
+        display:none;
+      }
+      #app-loading-content, .noscript {
+        color: #FFF;
+        text-align: center;
+        font-family: '-apple-system', BlinkMacSystemFont, 'Segoe UI', Roboto, 'Oxygen-Sans', Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+      }
+      #app-loading-content {
+        z-index: -1000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        line-height: 1.5; /* matching Quasar body line-height */
+      }
+      #app-loading-content .loading-content--fade-in {
+        -webkit-animation: 300ms linear 900ms reverse backwards fadeout;
+        animation: 300ms linear 900ms reverse backwards fadeout;
+      }
+      #app-loading-container.loaded #app-loading-content {
+        display: none;
+      }
+      .app-loading-title {
+        padding: 0 30px;
+        font-size: 2rem;
+        margin-bottom: 30px;
+      }
+      .app-loading-notice {
+        font-size: 1rem;
+        margin-bottom: 15px;
+      }
+      .app-loading-spinner {
+        width: 50px;
+        height: 50px;
+        background-color: #EEE;
+        margin: 15px auto;
+        border-radius: 100%;
+        -webkit-animation: scaleout 600ms infinite ease-in-out 1s backwards;
+        animation: scaleout 600ms infinite ease-in-out 1s backwards;
+      }
+
+      @-webkit-keyframes scaleout {
+        0% { -webkit-transform: scale(0) }
+        100% {
+          -webkit-transform: scale(1.0);
+          opacity: 0;
+        }
+      }
+
+      @keyframes scaleout {
+        0% {
+          -webkit-transform: scale(0);
+          transform: scale(0);
+        } 100% {
+          -webkit-transform: scale(1.0);
+          transform: scale(1.0);
+          opacity: 0;
+        }
+      }
+
+      @keyframes fadeout {
+        0% {}
+        100% { opacity: 0 }
+      }
+    </style>
+  </head>
+  <body>
+    <noscript>
+      <div class="noscript"><%= htmlWebpackPlugin.options.javascriptRequired %></div>
+    </noscript>
+
+    <div id="app-loading-container">
+      <div id="app-loading-background" class="app-loading" style="background: <%= htmlWebpackPlugin.options.loadingBackground %>;"></div>
+      <div id="app-loading-content" class="app-loading" style="background: <%= htmlWebpackPlugin.options.loadingOverlayColor %>;">
+        <div class="app-loading-title loading-content--fade-in"><%= htmlWebpackPlugin.options.loadingTitle %></div>
+        <div class="app-loading-notice loading-content--fade-in"><%= htmlWebpackPlugin.options.loadingNotice %></div>
+        <div class="app-loading-spinner"></div>
+      </div>
+    </div>
+
+    <!-- DO NOT touch the following DIV -->
+    <div id="q-app"></div>
+
+  </body>
+</html>

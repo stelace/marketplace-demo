@@ -1,0 +1,25 @@
+form:
+  search:
+    query_placeholder:
+      en: Job opening
+      fr: Poste à pourvoir
+    modes:
+      default:
+        en: Openings
+        fr: Offres
+      reversed:
+        en: Applicants
+        fr: Candidats
+    minimum_price:
+      en: Min. monthly wage
+      fr: Mensuel brut min.
+    maximum_price:
+      en: Max. monthly wage
+      fr: Mensuel brut max.
+    features_label:
+      en: Compensation
+      fr: Avantages
+  error:
+    missing_price:
+      en: Wage required
+      fr: Salaire brut requis

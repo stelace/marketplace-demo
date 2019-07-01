@@ -1,0 +1,57 @@
+# More specific error messages may be set in other entries
+error:
+  unknown_happened_header:
+    en: An error has happened.
+    fr: Une erreur s'est produite.
+  unknown_happened:
+    en: An error has happened and we will do our best to fix the issue. Please retry later.
+    fr: Une erreur s'est produite et nous cherchons à résoudre le problème. Veuillez réessayer plus tard.
+  failed_updoad:
+    en: File upload failed
+    fr: Erreur lors du chargement de fichier
+  file_upload_duplicate_name:
+    en: |
+      You’ve already uploaded a file {name, select,
+        undefined{with the same name}
+        other{this name “{name}”.}
+      }
+    fr: |
+      Vous avez déjà enregistré un fichier avec {name, select,
+        undefined{le même nom}
+        other{le nom « {name} ».}
+      }
+  file_upload_size_limit:
+    en: |
+      Your file
+      {file_name, select,
+        other {“{file_name}”}
+        undefined {}
+      } is too big {limit, select,
+        other {(Max. {limit, number} MB)}
+        undefined {}
+      }
+    fr: |
+      Votre fichier
+      {file_name, select,
+        other {"{file_name}"}
+        undefined {}
+      } est trop volumineux {limit, select,
+        other {(Maximum {limit, number} Mo)}
+        undefined {}
+      }
+  invalid_code:
+    en: This code is invalid.
+    fr: Ce code est erroné.
+  map_loading_error:
+    en: Map service unavailable
+    fr: Carte indisponible
+  not_authorized_page:
+    en: Sorry, you can't access the previous page.
+    fr: Désolé, vous n'avez pas accès à la page précédente.
+  login_to_access_page:
+    en: Log in to access the previous page.
+    fr: Connectez-vous pour accéder à la page précédente.
+  javascript_required:
+    en: Please enable JavaScript to use {SERVICE_NAME}.
+    fr: Veuillez activer JavaScript pour profiter de {SERVICE_NAME}.
+    context: Injected in first HTML loaded in case user disables JavaScript.

@@ -1,0 +1,143 @@
+# Email collection entry shared by each email template sent with Stelace Email API
+common:
+  preheader_content: &preheader
+    fr: >-
+      Ajoutez <a href="mailto:contact@example.com">contact@example.com</a>
+      à votre carnet d’adresses pour être sûr de recevoir nos emails.
+  footer_content: &footer_text
+    fr: >-
+      Une question ? Écrivez-nous à l’adresse <a href="mailto:contact@example.com">contact@example.com</a>
+      et nous vous répondrons dès que possible.
+  legal_notice: &legal
+    fr: Tous droits réservés © 2019 {serviceName}
+  style__color_brand: &brand_color
+    fr: "#ED7F12"
+  style__color_calltoaction: &cta_color
+    fr: "#ED7F12"
+
+# Individual template entry in email collection
+registration:
+  preheader_content: *preheader
+  subject:
+    fr: Confirmez votre inscription sur {serviceName}
+  content:
+    fr: >-
+      Bonjour et bienvenue sur {serviceName} !<br><br>
+
+      Merci de valider votre adresse e-mail en cliquant sur le bouton ci-dessous.
+  cta__button_url:
+    fr: "{emailCheckLink}"
+  cta_button__text:
+    fr: Vérifier mon email
+  trailing_content:
+    fr: A très vite sur {serviceName} !
+  # Reference use example.
+  # We can’t use YAML merge `<<: *reference` with JSON schema parsing
+  # https://github.com/nodeca/js-yaml/blob/master/lib/js-yaml/schema/json.js
+  # But we can create &reference for each shared content,
+  # unless we use 'common' entry as above.
+  # Note that template specific entry content overrides 'common' entry.
+  footer_content: *footer_text
+  legal_notice: *legal
+  style__color_brand: *brand_color
+  style__color_calltoaction: *cta_color
+
+emailCheck:
+  subject:
+    fr: Confirmez votre email sur {serviceName}
+  content:
+    fr: >-
+      Bonjour,<br><br>
+
+      Merci de valider votre adresse e-mail en cliquant sur le bouton ci-dessous.
+  cta__button_url:
+    fr: "{emailCheckLink}"
+  cta_button__text:
+    fr: Vérifier mon email
+  trailing_content:
+    fr: A très vite sur {serviceName} !
+
+passwordReset:
+  subject:
+    fr: Demande de réinitialisation de votre mot de passe
+  content:
+    fr: >-
+      Bonjour,<br><br>
+
+      Nous avons reçu une demande de modification de mot de passe.
+      Si vous êtes à l’origine de cette demande, merci de cliquer sur le lien ci-dessous.
+  cta__button_url:
+    fr: "{passwordResetLink}"
+  cta_button__text:
+    fr: Réinitialiser mon mot de passe
+  trailing_content:
+    fr: A très vite sur {serviceName} !
+
+transactionAcceptedByOwnerToTaker:
+  subject:
+    fr: Votre candidature a retenu l’attention de {organizationName}
+  content:
+    fr: >-
+      Félicitations !<br><br>
+
+      Votre candidature au poste de {assetName} au sein de la société {organizationName} a été retenue.
+      Rendez-vous dans votre messagerie {serviceName} pour échanger avec votre recruteur !<br><br>
+
+      A très vite sur {serviceName} !
+
+transactionRefusedByOwnerToTaker:
+  subject:
+    fr: Votre candidature au poste de {assetName} n’a pas été retenue
+  content:
+    fr: >-
+      Bonjour,<br><br>
+
+      Nous sommes au regret de vous annoncer que votre candidature au poste de {assetName} au sein de l’établissement {organizationName} n’a pas été retenue.<br><br>
+
+      N’hésitez pas à postuler à d’autres offres sur {serviceName} pour augmenter vos chances de trouver un poste !<br><br>
+
+      A très vite sur {serviceName} !
+
+transactionAcceptedByTakerToOwner:
+  subject:
+    fr: Votre proposition d’embauche a été acceptée par {takerDisplayName}
+  content:
+    fr: >-
+      Bonne nouvelle !<br><br>
+
+      {takerDisplayName} a accepté le poste de {assetName} que vous lui avez proposé.<br><br>
+
+      Rendez-vous dans votre messagerie {serviceName} pour échanger avec {takerDisplayName} !<br><br>
+
+      A très vite sur {serviceName} !
+
+transactionRefusedByTakerToOwner:
+  subject:
+    fr: Vous avez reçu un message concernant le poste de {assetName}
+  content:
+    fr: >-
+      Bonjour,<br><br>
+
+      Vous avez reçu un nouveau message concernant l’offre d’emploi faite à {takerDisplayName}.
+      Cliquez sur le bouton pour consulter ce message.
+  cta__button_url:
+    fr: "{conversationLink}"
+  cta_button__text:
+    fr: Lire le message
+  trailing_content:
+    fr: A très vite sur {serviceName} !
+
+contactMessageByOwnerToTaker:
+  subject:
+    fr: Un recruteur est intéressé par votre profil !
+  content:
+    fr: >-
+      Bonjour,<br><br>
+
+      Votre profil a tapé dans l’œil d’un recruteur. Rendez-vous vite dans votre messagerie {serviceName} pour prendre connaissance du message qu’il vous a envoyé !
+  cta__button_url:
+    fr: "{conversationLink}"
+  cta_button__text:
+    fr: Accéder à la messagerie
+  trailing_content:
+    fr: A très vite sur {serviceName} !

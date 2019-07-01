@@ -1,0 +1,32 @@
+json('../styles.json') // JSON import: https://github.com/stylus/stylus/pull/784
+
+// cf styles.json.md
+
+withLegacy(fontFamily, modernUrl, legacyUrl, legacyFormat = 'woff')
+  if (legacyFont)
+    "local('%s Regular'), url('%s') format('woff2'), url('%s') format('%s')" \
+      % (fontFamily modernUrl legacyUrl legacyFormat)
+  else
+    "local('%s Regular'), url('%s') format('woff2')" % (fontFamily modernUrl)
+
+@font-face
+  font-family: userFont
+  font-display: userFontDisplay
+  font-style: normal
+  font-weight: 400
+  src: withLegacy(@font-family, userFontNormal, userFontNormalLegacy, userFontLegacyFormat)
+
+if userFontMedium
+  @font-face
+    font-family: userFont
+    font-display: userFontDisplay
+    font-style: normal
+    font-weight: 500
+    src: withLegacy(@font-family, userFontMedium, userFontMediumLegacy, userFontLegacyFormat)
+
+@font-face
+  font-family: userFont
+  font-display: userFontDisplay
+  font-style: normal
+  font-weight: 700
+  src: withLegacy(@font-family, userFontBold, userFontBoldLegacy, userFontLegacyFormat)

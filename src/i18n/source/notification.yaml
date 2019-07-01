@@ -1,0 +1,47 @@
+notification:
+  saved:
+    en: Saved
+    fr: Enregistré
+    context: Displayed once various user input or action has been saved.
+  deleted:
+    en: Deleted
+    fr: Supprimé
+  already_validated:
+    en: Already validated
+    fr: Validation déjà effectuée
+    context: Can be used in any validation process such as phone or transaction.
+  validation_code_already_sent:
+    en: Please use the code that has already been sent to you.
+    fr: Merci de saisir le code envoyé précédemment.
+  validation_last_attempt:
+    en: Last attempt
+    fr: Dernier essai
+    context: "Displayed when user has just failed to complete a process and is offered one last try, generally for security reasons."
+  validation_success:
+    en: Validation success
+    fr: Validation réussie
+  validation_failed:
+    en: "Validation failed{retry, select, later {, please retry later.} other {}}"
+    fr: "Échec de la validation{retry, select, later {, veuillez réessayer plus tard.} other {}}"
+  shared:
+    en: Thank you for sharing!
+    fr: "Merci d’avoir partagé\_!"
+    context: Used to inform user that (social) link sharing is completed.
+  message_sent_success:
+    en: Message sent
+    fr: Message envoyé
+  new_messages:
+    en: |
+      You {count, plural,
+          =0 {have no new message}
+          one {have a new message}
+          other {have {count} new messages}
+      }
+      in your inbox.
+    fr: |
+      Vous {count, plural,
+          =0 {n’avez pas de nouveau message}
+          one {avez un nouveau message}
+          other {avez {count} nouveaux messages}
+      }
+      dans votre boite de réception.

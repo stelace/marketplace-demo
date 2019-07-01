@@ -1,0 +1,22 @@
+// Browser overrides
+
+// Disable Firefox input red box-shadow when validation fails
+// https://developer.mozilla.org/en-US/docs/Web/CSS/:invalid
+:invalid
+  box-shadow: none
+
+:-moz-submit-invalid
+  box-shadow: none
+
+:-moz-ui-invalid
+  box-shadow: none
+
+// Disable number input default styles
+input[type='number'] {
+    -moz-appearance:textfield;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}

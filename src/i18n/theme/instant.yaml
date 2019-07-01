@@ -1,0 +1,16 @@
+instant:
+  config:
+    customAttributes:
+      fed_label:
+        en: Fed
+        fr: Nourri
+      lodged_label:
+        en: Lodged
+        fr: Logé
+      laundry_label:
+        en: Laundry
+        fr: Blanchi
+    roles:
+      premium_label:
+        en: Premium
+        fr: Premium

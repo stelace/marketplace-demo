@@ -1,0 +1,27 @@
+instant_pages:
+  terms:
+    header:
+      en: Terms
+      fr: Conditions d’utilisation
+    INSTANT_PAGE_PATH:
+      fr: cgu
+    content[markdown]:
+      en: |-
+        Available soon
+      fr: |-
+        Bientôt disponible
+
+  about_us:
+    header:
+      en: About us
+      fr: Qui sommes-nous ?
+    subheader:
+      en: More about {SERVICE_NAME}
+      fr: L’histoire de {SERVICE_NAME}
+    INSTANT_PAGE_PATH:
+      fr: histoire
+    content[markdown]:
+      en:
+         Available soon
+      fr: |-
+        Bientôt disponible

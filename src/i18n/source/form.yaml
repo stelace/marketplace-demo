@@ -1,0 +1,128 @@
+form:
+  characters_remaining:
+    en: |
+      {characters_remaining, plural,
+          =0 {No character left}
+          one {One character available}
+          other {# characters available}
+      }
+    fr: |
+      {characters_remaining, plural,
+          =0 {Aucun caractère restant}
+          one {Un caractère restant}
+          other {# caractères restants}
+      }
+  validation_code_placeholder:
+    en: Validation code
+    fr: Code de validation
+    context: Can be used in many contexts such as phone or transaction validation.
+  slider_helper:
+    en: Slide to adjust
+    fr: Glisser pour modifier
+    context: Helps user using slider to set values in forms.
+  date_placeholder:
+    en: Date
+    fr: Date
+  tags_label:
+    en: Tags
+    fr: Mots-clés
+  search:
+    placeholder:
+      en: Search
+      fr: Rechercher
+      context: Generic search placeholder (user or asset filter forms)
+    query_placeholder:
+      en: You’re looking for…
+      fr: "Que recherchez-vous\_?"
+      context: More enticing than generic placeholder
+    near_location_placeholder:
+      en: Near…
+      fr: À proximité de…
+    search_types_filter:
+      en: Search type
+      fr: Type de recherche
+    reset_search_results:
+      en: Reset your search parameters
+      fr: Réinitialiser vos paramètres de recherche
+    filters:
+      en: Filters
+      fr: Filtres
+    features_label:
+      en: Features
+      fr: Caractéristiques
+    minimum_price:
+      en: Min
+      fr: Minimum
+    maximum_price:
+      en: Max
+      fr: Maximum
+    sort:
+      en: Sort
+      fr: Trier
+    default_sorting:
+      en: Default
+      fr: Par défaut
+    modes:
+      default:
+        en: Offers
+        fr: Offres
+        context: Default search mode, generally “offers” as opposed to “requests” or submissions
+      reversed:
+        en: Requests
+        fr: Demandes
+        context: Reversed search mode, generally “requests” as opposed to “offers”
+  error:
+    missing_field:
+      en: Required field
+      fr: Champ requis
+      context: Vocabulary is specific to form (fields).
+    missing_information:
+      en: Missing information
+      fr: Information manquante
+      context: Can be showed when some parts of form has not been filled in.
+    missing_title:
+      en: Required title
+      fr: Titre requis
+    missing_price:
+      en: Missing price
+      fr: Prix manquant
+    missing_description:
+      en: Required description
+      fr: Description requise
+    missing_image:
+      en: Missing picture
+      fr: Photographie manquante
+    missing_place:
+      en: Place required
+      fr: Lieu requis
+    missing_email:
+      en: Missing email address
+      fr: Adresse email manquante
+    missing_phone:
+      en: Missing phone number
+      fr: Numéro de téléphone manquant
+    missing_tax_id:
+      en: Missing tax ID
+      fr: Numéro de TVA manquant
+    missing_comment:
+      en: Please leave a comment
+      fr: Merci de renseigner un commentaire
+    missing_banking_details:
+      en: Banking details required
+      fr: Informations bancaires requises
+    min_characters:
+      fr: "{min_number_of_characters, plural, one {Ce champ ne peut pas être vide.} other {# caractères minimum}}"
+      en: "{min_number_of_characters, plural, one {This can’t be empty.} other {Minimum # characters}}"
+    characters_exceeding:
+      en: |
+        {characters_exceeding, plural,
+            =0 {No character left}
+            one {One character exceeding}
+            other {# characters exceeding}
+        }
+      fr: |
+        {characters_exceeding, plural,
+            =0 {Aucun caractère restant}
+            one {Un caractère en trop}
+            other {# caractères en trop}
+        }

@@ -1,0 +1,40 @@
+// Quasar overrides
+
+.q-toolbar
+  height: $toolbar-min-height // safer than just setting min-height (IE 11 flex bug)
+  // We don’t need variable for now anyway
+
+.q-field--dark:not(.q-field--focused) .q-field__label, .q-field--dark .q-field__marginal, .q-field--dark .q-field__bottom
+  color: rgba(255, 255, 255, 1) // Higher contrast in home search card (dark version)
+
+.q-field--auto-height.q-field--labeled .q-field__control-container
+  padding-bottom: 0 // Needed for header search inputs alignment
+
+// Apply ellipsis style to select input if input is too long for parent width
+// May submit a PR to Quasar as it’s quite safe
+.q-field .q-field__control
+  max-width: 100%
+  .q-field__native > *
+    text-overflow: ellipsis
+    white-space: nowrap
+    overflow: hidden
+
+// Clearer distinction between stars awarded and remaining
+.q-rating__icon:not(.q-rating__icon--active)
+  color: $grey-5
+
+// Tweaking date picker
+.q-date__calendar .q-date__calendar-days-container
+  .bg-primary
+    background: $secondary!important // customer request
+
+// TODO: submit PR to Quasar to add custom class to popup-edit to apply overflow override only when needed
+// E.g. when including an autocomplete input in popup
+.q-menu.scroll.q-popup-edit
+  overflow: visible // override scroll class
+
+.q-uploader--hide-list .q-uploader__list
+  display: none
+
+.subscription-dialog .q-card
+  padding: 16px

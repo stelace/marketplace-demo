@@ -1,0 +1,85 @@
+// app global css
+
+@import './browser-overrides.styl'
+@import './debug.styl'
+@import './flex.styl'
+// @import './fonts.styl' // Imported in fonts.js boot file depending on environment
+@import './quasar-overrides.styl'
+
+:root
+  --stl-color-font        $font-color
+  --stl-color-background  $background-color
+  --stl-home-search-card-background $home-search-card-background
+
+body
+  color $font-color
+  color var(--stl-color-font)
+
+.text-default-color
+  color $font-color !important
+  color var(--stl-color-font) !important
+
+.stl-content-container
+  max-width 100%
+  // Make sure breakpoint below is greater than maximum max-width below
+  @media (min-width $breakpoint-sm-min)
+    max-width 40rem
+    &.stl-content-container--large
+      max-width 60rem
+    &.stl-content-container--xlarge
+      max-width 90rem
+
+.margin-h-center
+  margin-left auto
+  margin-right auto
+
+.bg-secondary-gradient
+  background linear-gradient(170deg, #f6bf88 0%, $secondary 50%)
+
+.bg-primary-gradient
+  background linear-gradient(170deg, #3464b2 0%, $primary 75%)
+  color #FFFFFF
+
+.bg-accent-gradient
+  background linear-gradient(170deg, $primary 0%, $accent 90%)
+  color #FFFFFF
+
+// Typography
+
+.preserve-lines
+  white-space pre-line
+  word-wrap break-word
+
+a.anchor-text--reset, a.anchor-text--reset:focus, a.anchor-text--reset:hover
+  color inherit
+.anchor-text--reset, .anchor-text--reset:focus, .anchor-text--reset:hover
+  a
+    color inherit
+
+a.anchor-text--reset
+  text-decoration none
+.anchor-text--reset a
+  text-decoration none
+
+a.anchor-text--underline-focus
+  &:focus, &:hover
+    text-decoration underline
+.anchor-text--underline-focus
+  a:focus, a:hover
+    text-decoration underline
+
+// Animations
+
+//.animated
+  // animation-duration $transition-duration
+
+// VuePhotoSwipe custom styles
+.asset__gallery-thumbnail
+  position: relative
+  overflow: hidden
+  img[itemprop="thumbnail"]
+    border 1px solid transparent
+
+// Encourage user to subscribe
+.app--blur
+  filter: blur(10px) // Does not work on IE11

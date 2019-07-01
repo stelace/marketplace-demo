@@ -1,0 +1,198 @@
+user:
+  joined_in_month:
+    en: Joined in {subscription_date, date, fullmonth}
+    fr: Membre depuis {subscription_date, date, fullmonth}
+  firstname_label:
+    en: First name
+    fr: Prénom
+  lastname_label:
+    en: Last name
+    fr: Nom
+  name_label:
+    en: Name
+    fr: Nom
+  organization_name_label:
+    en: Organization name
+    fr: Nom de l’organisation
+    context: Can be a business, NGO or any other institution
+  user_type_label:
+    en: Status
+    fr: Statut
+  user_type_individual:
+    en: Individual
+    fr: Particulier
+  user_type_organization:
+    en: Organization
+    fr: Professionnel
+  select_user_group_helper:
+    en: I am
+    fr: Je suis
+  provider_label:
+    en: Provider
+    fr: Fournisseur
+  user_label:
+    en: Consumer
+    fr: Demandeur
+  organization_label:
+    en: Organization name
+    fr: Nom de l'organisation
+  date_of_birth_label:
+    en: Date of birth
+    fr: Date de naissance
+  phone_number_label:
+    en: Phone number
+    fr: Numéro de téléphone
+  tax_id_label:
+    en: Tax ID
+    fr: Numéro de TVA
+  email_address_label:
+    en: Email Address
+    fr: Adresse Email
+  favorite_places_label:
+    en: Favorite places
+    fr: Lieux favoris
+    context: Can be used to suggest offers to user
+  picture_title:
+    en: "{user, select, undefined {Profile picture} other {Picture of {user}}}"
+    fr: "Photo {user, select, undefined {du profil} other {de {user}}}"
+  assets_title:
+    en: |
+      {user, select, _SELF_{My} other{{user}}’s undefined{}} {hasOther, select,
+          true{Other}
+          other{}
+      } Listings
+    fr: |
+      {user, select, _SELF_{Mes} other{} undefined{}} {hasOther, select,
+          true{Autres}
+          other{}
+      } Annonces {user, select,
+        undefined {}
+        other {{user, select,
+          _SELF_ {}
+          other{de {user}}
+        }}
+      }
+    context: Can be "My assets", "My other assets" if user has special name '_SELF_', but can also be "Mark’s (other) assets"…
+  account:
+    premium_label:
+      en: Premium
+      fr: Premium
+      context: Some users can subscribe to get premium features.
+    validation_header: &accountValidationHeader
+      en: Account validation
+      fr: Vérification du profil
+    validation_required_message: &accountValidationRequiredMessage
+      en: A validated account is required to continue.
+      fr: Un compte vérifié est requis pour continuer.
+    checkout_prerequisite_header: *accountValidationHeader
+    checkout_prerequisite_message: *accountValidationRequiredMessage
+    contact_user_prerequisite_header: *accountValidationHeader
+    contact_user_prerequisite_message: *accountValidationRequiredMessage
+    contact_info_header:
+      en: My contact info
+      fr: Mes coordonnées
+    email_validation_link_sent:
+      en: Please click on the validation link that we’ve just sent to your email address.
+      fr: Merci de cliquer sur lien de confirmation que nous venons d’envoyer à votre adresse email.
+    new_email_address_helper:
+      en: |
+        {email, select,
+          undefined {Please validate your email address:}
+          other {{email} is outdated? Please fill your new email address:}
+        }
+      fr: |
+        {email, select,
+          undefined {Veuillez valider votre adresse email :}
+          other {{email} n’est plus valable ? Renseignez votre nouvelle adresse email :}
+        }
+    new_email_address_success:
+      en: Please go to your email inbox to validate your new email address
+      fr: Merci de consulter votre boîte email pour valider votre nouvelle adresse email
+    contact_info_kept_private:
+      en: Your contact details will not be displayed publicly.
+      fr: Le détail de vos coordonnées n’apparaîtra pas publiquement.
+    my_profile_title_label:
+      en: My profile title
+      fr: Titre de mon profil
+      context: User is expected to introduce herself in a few words
+    my_description_label:
+      en: My description
+      fr: Ma description
+      context: Description allow users to introduce themselves and communicate about their interests.
+    my_password_title:
+      en: My password
+      fr: Mon mot de passe
+      context: Section where user can update her password
+    current_password_label:
+      en: Current password
+      fr: Mot de passe actuel
+    new_password_label:
+      en: New password
+      fr: Nouveau mot de passe
+    incorrect_current_password:
+      en: Your current password does not match, please check your input.
+      fr: La saisie de votre ancien mot de passe est erronée.
+    income_statement_title:
+      en: Income reports
+      fr: Mes revenus
+      context: "In this section, user can download annual income report on platform to fill in tax returns."
+    change_profile_image_button:
+      en: |
+        {existing_image, select,
+            has_image{Change my image}
+            upcoming_upload{Cancel}
+            other{Add my image}
+        }
+      fr: |
+        {existing_image, select,
+            has_image{Changer mon image}
+            upcoming_upload{Annuler}
+            other{Ajouter mon image}
+        }
+      context: Same button is used to cancel upload during process.
+    update_profile_button:
+      en: Update my profile
+      fr: Compléter mon profil
+    create_organization_button:
+      en: Create an organization
+      fr: Créer une organisation
+    org_name_with_number_suffix:
+      en: "{name} - Org. n°{number}"
+      fr: "{name} - Org. n°{number}"
+    new_phone_number_helper:
+      en: |
+        {phone, select,
+          undefined {Please fill your phone number:}
+          other {{phone} is outdated? Please fill your new phone number:}
+        }
+      fr: |
+        {phone, select,
+          undefined {Renseignez votre numéro de téléphone :}
+          other {{phone} n’est plus valable ? Renseignez votre nouveau numéro de téléphone :}
+        }
+    phone_validation_code_helper:
+      en: Keep your phone at hand to get your validation code.
+      fr: "Conservez votre téléphone à portée de main avant de poursuivre, afin de recevoir un code de validation à 4 chiffres."
+    phone_validation_code_sent:
+      en: Please fill in the validation code we have just sent to you.
+      fr: Merci de saisir le code de validation que nous venons de vous envoyer.
+    phone_validation_button:
+      en: Validate my number
+      fr: Vérifier mon numéro
+      context: Give the user a hint about upcoming validation process once phone number has been filled in.
+  experiences:
+    my_experiences:
+      en: My experiences
+      fr: Mes expériences
+    company_name_label:
+      en: Company name
+      fr: Nom de l'entreprise
+    job_title_label:
+      en: Job title
+      fr: Intitulé du poste
+    description_label:
+      en: Description
+      fr: Description
+    location_label:
+      en: Location
+      fr: Lieu

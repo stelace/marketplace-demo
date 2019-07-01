@@ -1,0 +1,130 @@
+payment:
+  card:
+    add_new_card:
+      en: Add a new card
+      fr: Utiliser une nouvelle carte
+    reuse_card:
+      en: Reuse a card
+      fr: Réutiliser une carte
+    number:
+      en: Card number
+      fr: Numéro de carte
+    expiration_label:
+      en: Expires
+      fr: Expiration
+    card_verification_code_label:
+      en: CVC
+      fr: Cryptogramme visuel
+    save_label:
+      en: Save card for later.
+      fr: Enregistrer ma carte pour plus tard.
+  banking_details:
+    en: Banking details
+    fr: Informations bancaires
+  subscription:
+    subscription_label:
+      en: Subscription
+      fr: Abonnement
+    plan_description:
+      en: |
+        {priceTaxExcluded, number, currency} excl tax
+        or {priceTaxIncluded, number, currency} incl tax
+      fr: |
+        {priceTaxExcluded, number, currency} HT
+        soit {priceTaxIncluded, number, currency} TTC
+    subscribe_label:
+      en: Subscribe
+      fr: S'abonner
+    unsubscribe_label:
+      en: Unsubscribe
+      fr: Se désabonner
+    selected_plan_label:
+      en: Selected
+      fr: Sélectionné
+    upcoming_deadline_label:
+      en: Upcoming deadline
+      fr: Prochaine échéance
+    expiry_label:
+      en: Expiry of subscription
+      fr: Fin de l'abonnement
+    already_subscribed:
+      en: You already have an ongoing subscription.
+      fr: Vous avez déjà un abonnement en cours.
+    switch_to_main_organization_header:
+      en: Organization change
+      fr: Changement d'organisation
+    switch_to_main_organization_message:
+      en: |
+        Currently you’re logged as the subsidiary « {childOrgName} ».
+        Only the main organization can subscribe.
+        You will be logged as the main organization « {mainOrgName} » if you continue.
+      fr: |
+        Vous êtes actuellement connecté en tant que « {childOrgName} ».
+        Or seule l'organisation parente peut s'abonner.
+        Vous serez automatiquement connecté en tant que « {mainOrgName} » si vous continuez.
+    checkout_confirmation_message:
+      en: |
+        You have selected the subscription plan « {planTitle} »
+        for {priceTaxExcluded, number, currency} tax excluded
+        or {priceTaxIncluded, number, currency} tax included.
+        Continue to access the payment page.
+      fr: |
+        Vous avez sélectionné l’abonnement « {planTitle} »
+        pour un montant de {priceTaxExcluded, number, currency} HT
+        soit {priceTaxIncluded, number, currency} TTC.
+        Continuez pour accéder à la page de paiement.
+    checkout_success_message:
+      en: Your payment has been processed, thank you for subscribing.
+      fr: Le paiement de votre abonnement a bien été pris en compte.
+    checkout_failure_message:
+      en: The payment of your subscription has been canceled or has failed. Please try again later.
+      fr: Le paiement de votre abonnement a été annulé ou a échoué. Veuillez réessayer plus tard.
+  error:
+    payment_error_title:
+      en: Payment failed
+      fr: Échec du paiement
+    invalid_card_number:
+      en: Please check your card number.
+      fr: Veuillez vérifier votre numéro de carte.
+    invalid_card_expiration_date:
+      en: Please check your card expiration date.
+      fr: Veuillez vérifier la date d'expiration de votre carte.
+    invalid_card_cvc:
+      en: Please check your card validation code (on the back of your card).
+      fr: Veuillez vérifier votre code de validation (inscrit au dos de votre carte bancaire).
+    invalid_card_zip:
+      en: Please check your zip.
+      fr: Veuillez vérifier votre code postal.
+    card_limit_reached:
+      en: Your card limit has been reached.
+      fr: Le plafond de votre carte bancaire a été atteint.
+    card_3dsecure_not_available:
+      en: "Your card isn’t available with 3DSecure authentication."
+      fr: "La vérification 3DSecure n’est pas disponible sur votre carte."
+    card_3dsecure_incompatible:
+      en: Your card is incompatible with 3DSecure authentication.
+      fr: "Votre carte n’est pas compatible avec la vérification 3DSecure."
+    3dsecure_fail:
+      en: The 3DSecure authentication has failed.
+      fr: La vérification 3DSecure a échoué.
+    insufficient_funds:
+      en: Please check that you have sufficient funds in your bank account.
+      fr: Veuillez vérifier que vous disposez des fonds suffisants sur votre compte.
+    do_not_honor:
+      en: Your bank has refused the payment. Please enquire before trying again.
+      fr: La banque a refusé le paiement. Veuillez la contacter avant de réessayer.
+    card_inactive:
+      en: Your card is inactive. Please activate it before trying again.
+      fr: "Votre carte bancaire est inactive. Veuillez l’activer avant de réessayer."
+    card_expired:
+      en: Your card has expired. Please add a new one.
+      fr: Votre carte bancaire a expiré. Veuillez saisir un autre numéro de carte bancaire.
+    card_expiration_too_short:
+      en: Please use a card that expires in one month at least.
+      fr: Veuillez utiliser une carte expirant dans au moins un mois.
+    generic_error:
+      en: "The payment has failed. Please check that you have sufficient funds on your account and that your card limit hasn’t been reached."
+      fr: "Le paiement a échoué. Veuillez vérifier que vous disposez de fonds suffisants et que le plafond de votre carte bancaire n’a pas été atteint."
+    not_authorized_subscription:
+      en: Sorry, you can't subscribe to any plan.
+      fr: Désolé, vous ne pouvez pas vous abonner.

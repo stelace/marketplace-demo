@@ -1,0 +1,14 @@
+.flex-item--grow
+  flex: 1 0 0% // take only space not used by flex siblings (default here: flex-basis: 0)
+  // Using % for bugs in IE https://github.com/philipwalton/flexbugs#flexbug-4
+
+.flex-item--grow-shrink-auto
+  flex: 1 1 auto
+  // Take necessary space, then take space not used by flex siblings
+  // Allow shrinking when parent is too small
+  // On IE11, fix may be needed to force effective shrinking
+  // Override with appropriate max-width/height)
+  max-width: 100%
+
+.flex-item--auto
+  flex: 0 0 auto // Take just what it needs

@@ -1,0 +1,151 @@
+transaction:
+  impending_cancellation:
+    en: Impending cancellation
+    fr: Annulation imminente
+  unavailable_periods:
+    en: Unavailable periods
+    fr: Périodes indisponibles
+  remaining_time_to_accept:
+    en: "{remainingTime} remaining to accept."
+    fr: "Il ne vous reste que\_{remainingTime} pour accepter."
+  impending_cancellation_message:
+    en: "The transaction cancellation is impending. Please accept or reject the request from {userName} or contact us if there is any problem."
+    fr: "L'annulation de cette réservation est imminente. Merci d'accepter ou de refuser rapidement la demande de {userName} ou de nous contacter en cas de difficultés."
+  acceptance_success_title:
+    en: Accepted
+    fr: Demande acceptée
+  rejection_success_title:
+    en: Rejected
+    fr: Demande rejetée
+  summary:
+    owner_net_amount:
+      en: "Net amount for you: {price, number, currency}"
+      fr: "Montant net vous revenant\_: {price, number, currency}"
+    taker_fees:
+      en: |
+        Service fees: {price, select,
+            0 {Free}
+            other{{price, number, currency}}
+        }
+      fr: |
+        Frais de service : {price, select,
+            0 {Offerts}
+            other{{price, number, currency}}
+        }
+    owner_fees:
+      en: |
+        {price, select,
+            0 {Payment fees: Free}
+            other {Payment fees included: {price, number, currency}}
+        }
+      fr: |
+        {price, select,
+            0 {Frais de paiement : Offerts}
+            other{Dont frais de paiement : {price, number, currency}}
+        }
+    quantity:
+      en: "Quantity: {quantity}"
+      fr: "Quantity\_: {quantity}"
+    security_deposit:
+      en: "Security deposit: {price, number, currency}"
+      fr: "Caution\_: {price, number, currency}"
+  status:
+    label:
+      en: Status
+      fr: Statut
+    draft:
+      en: Draft
+      fr: En brouillon
+    accepted:
+      en: Accepted
+      fr: Accepté
+    rejected:
+      en: Rejected
+      fr: Rejeté
+    pending:
+      en: Pending
+      fr: En attente
+    validated:
+      en: Validated
+      fr: Validé
+    completed:
+      en: Completed
+      fr: Terminé
+    cancelled:
+      en: Cancelled
+      fr: Annulé
+    withdrawn:
+      en: Withdrawn
+      fr: Rétracté
+    information:
+      en: Information
+      fr: Information
+  status_message:
+    cancelled:
+      en: The transaction has been cancelled.
+      fr: La réservation a été annulée.
+    paid_and_accepted:
+      en: A transaction has been accepted and paid on {date, date, short}.
+      fr: Cette réservation a été acceptée et payée le {date, date, short}.
+    paid_as_owner:
+      en: The transaction has been paid by {userName}.
+      fr: Cette réservation a été payée par {userName}.
+    accepted_as_taker:
+      en: The transaction has been accepted by {userName} on {acceptedDate, date, short}.
+      fr: La réservation a été acceptée par {userName} le {acceptedDate, date, short}.
+    accepted_as_owner:
+      en: You accepted the transaction.
+      fr: Vous avez accepté cette réservation.
+  prompt:
+    accept_button:
+      en: Accept
+      fr: Accepter
+    reject_button:
+      en: Reject
+      fr: Refuser
+    confirm_and_pay_button:
+      en: Confirm
+      fr: Confirmer
+    withdraw_button:
+      en: Withdraw
+      fr: Se rétracter
+  error:
+    own_listing_transaction:
+      en: You cannot book your own listing.
+      fr: Vous ne pouvez pas réserver pour votre propre annonce.
+    minimum_duration:
+      en: |
+        The duration must be {timeUnit, select,
+            d{ {nbTimeUnits, plural, one{# day} other{# days}} }
+            n{ {nbTimeUnits, plural, one{# night} other{# nights}} }
+            h{ {nbTimeUnits, plural, one{# hour} other{# hours}} }
+            m{ {nbTimeUnits, plural, one{# minute} other{# minutes}} }
+            other{}
+        } at least.
+      fr: |
+        La durée doit être de {timeUnit, select,
+            d{ {nbTimeUnits, plural, one{# jour} other{# jours}} }
+            n{ {nbTimeUnits, plural, one{# nuit} other{# nuits}} }
+            h{ {nbTimeUnits, plural, one{# heure} other{# heures}} }
+            m{ {nbTimeUnits, plural, one{# minute} other{# minutes}} }
+            other{}
+        } au minimum.
+    maximum_duration:
+      en: |
+        The duration must be {timeUnit, select,
+            d{ {nbTimeUnits, plural, one{# day} other{# days}} }
+            n{ {nbTimeUnits, plural, one{# night} other{# nights}} }
+            h{ {nbTimeUnits, plural, one{# hour} other{# hours}} }
+            m{ {nbTimeUnits, plural, one{# minute} other{# minutes}} }
+            other{}
+        } at the maximum.
+      fr: |
+        La durée doit être de {timeUnit, select,
+            d{ {nbTimeUnits, plural, one{# jour} other{# jours}} }
+            n{ {nbTimeUnits, plural, one{# nuit} other{# nuits}} }
+            h{ {nbTimeUnits, plural, one{# heure} other{# heures}} }
+            m{ {nbTimeUnits, plural, one{# minute} other{# minutes}}
+        } other{} } au maximum.
+    unavailable_periods:
+      en: The selected dates are not available.
+      fr: Les dates sélectionnées ne sont pas disponibles.
