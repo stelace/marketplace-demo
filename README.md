@@ -1,6 +1,6 @@
 [![Stelace-platform-runner](https://user-images.githubusercontent.com/12909094/59638847-c41f1900-9159-11e9-9fa5-6d7806d57c92.png)](https://stelace.com)
 
-[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/stelace/stelace-instant)
+[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/stelace/jobs-marketplace-template)
 
 # Vue marketplace template
 
@@ -18,6 +18,8 @@ A lighter platform template focused on search and automation is [also available]
 **What is Stelace?**
 
 [Stelace](https://stelace.com/) provides search, inventory and user management infrastructure for Web platforms, ranging from search-intensive marketplaces to online community apps. Stelace offers powerful backend and APIs including advanced search, automation, and content delivery, to let you focus on what makes your platform unique.
+
+[API Docs](https://stelace.com/docs)
 
 [![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg)](https://conventionalcommits.org)
 ---
@@ -67,11 +69,13 @@ You will be able to use [official Stelace dashboard](https://stelace.com), enabl
 
 You first need to get your Stelace API Key. Good news: [it’s free](https://stelace.com/pricing).
 
+> Note: this template uses advanced features available in _Business_ plans or higher, such as Organizations.
+
 1. Clone this repository
 
 ```
-git clone https://github.com/stelace/stelace-instant.git
-cd stelace-instant
+git clone https://github.com/stelace/jobs-marketplace-template.git
+cd jobs-marketplace-template
 ```
 
 2. Install node_modules
