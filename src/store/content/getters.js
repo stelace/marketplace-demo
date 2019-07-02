@@ -6,6 +6,7 @@ import { getImageUrl } from 'src/utils/image'
 
 const isDevDebuggingStyles = process.env.DEV && process.env.VUE_APP_DEBUG_STYLES === 'true'
 const cdnUrl = process.env.VUE_APP_CDN_WITH_IMAGE_HANDLER_URL
+const cdnS3Url = process.env.VUE_APP_CDN_S3_URL
 const webPFilter = 'format(webp)'
 
 export function entries (state) {
@@ -60,10 +61,9 @@ export function termsPath (state, getters) {
 
 export function homeHeroUrlTransformed (state, getters, rootState) {
   const url = rootState.style.homeHeroUrl || ''
-  const fromCdn = url.startsWith(cdnUrl)
   const hasThumborFilters = url.indexOf('filters:') > -1
 
-  if (url && fromCdn && !hasThumborFilters && state.acceptWebP) {
+  if (url && servedFromCdn(url) && !hasThumborFilters && state.acceptWebP) {
     return getImageUrl(url).filter(webPFilter).buildUrl()
   }
 
@@ -101,7 +101,7 @@ export function getAvatarImageUrl (state, getters) {
     const imgUri = user.avatarUrl || ''
     const avatarSquareSize = Math.round(resolution) * getters.avatarImageWidth
 
-    return imgUri.startsWith(cdnUrl)
+    return servedFromCdn(imgUri)
       ? getImageUrl(imgUri)
         .resize(avatarSquareSize, avatarSquareSize)
         .filter(state.acceptWebP ? webPFilter : '')
@@ -115,7 +115,7 @@ export function getBaseImageUrl (state, getters) {
   return (resource, { accessorString, index = 0 } = {}) => {
     const imgUri = getImageUri(resource, { accessorString, index })
 
-    return imgUri.startsWith(cdnUrl)
+    return servedFromCdn(imgUri)
       ? getImageUrl(imgUri)
         .resize(getters.baseImageWidth, getters.baseImageHeight)
         .filter(state.acceptWebP ? webPFilter : '')
@@ -128,7 +128,7 @@ export function getLargeImageUrl (state, getters) {
   return (resource, { accessorString, index = 0 } = {}) => {
     const imgUri = getImageUri(resource, { accessorString, index })
 
-    return imgUri.startsWith(cdnUrl)
+    return servedFromCdn(imgUri)
       ? getImageUrl(imgUri)
         .resize(getters.largeImageWidth, getters.largeImageHeight)
         .filter(state.acceptWebP ? webPFilter : '')
@@ -210,4 +210,8 @@ function getAccessorString (index) {
 
 function getImageUri (resource, { accessorString, index = 0 } = {}) {
   return accessorString ? get(resource, accessorString, '') : get(resource, getAccessorString(index), '')
+}
+
+function servedFromCdn (url) {
+  return typeof url === 'string' && (url.startsWith(cdnUrl) || url.startsWith(cdnS3Url))
 }
