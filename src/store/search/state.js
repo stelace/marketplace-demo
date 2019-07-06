@@ -44,6 +44,7 @@ export default {
     nbResults: 0,
     nbPages: 1
   },
+  maxDistance: 250000, // 250km
 
   assets: [],
   usersById: {},

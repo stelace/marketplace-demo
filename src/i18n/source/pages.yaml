@@ -156,6 +156,12 @@ pages:
       en: Show map
       fr: Afficher la carte
       context: Option to show map interface on search page
+    search_after_map_move:
+      en: Search as I move the map
+      fr: Rechercher quand je déplace la carte
+    redo_search:
+      en: Redo search here
+      fr: Relancer la recherche ici
   transaction_payment:
     page_title:
       en: Checkout - {SERVICE_NAME}

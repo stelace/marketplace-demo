@@ -31,7 +31,7 @@ export default {
     if (endDate || endDate === null) state.endDate = endDate || ''
   },
   [types.SET_SEARCH_LOCATION] (state, { queryLocation, latitude, longitude }) {
-    state.queryLocation = queryLocation
+    if (queryLocation) state.queryLocation = queryLocation
     state.latitude = latitude
     state.longitude = longitude
   },

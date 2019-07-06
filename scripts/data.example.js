@@ -401,6 +401,7 @@ module.exports = {
               'recommendation',
             ],
           },
+          searchAfterMapMove: true,
           assetsInUniqueCountry: 'fr',
           assetsInUniqueCountryActive: true,
           shouldAuthenticateAsOrg: ['provider'],

@@ -39,9 +39,46 @@
       <QNoSsr>
         <AppMap
           class="absolute-full"
+          :nav-control="{ show: true, position: 'top-left' }"
           @map-resize="mapResized"
           @map-load="mapLoaded"
+          @map-movestart="mapMoveStarted"
+          @map-moveend="mapMoveEnded"
         />
+
+        <QBtn
+          v-if="searchAfterMapMoveActive"
+          v-show="!showRetriggerSearchLabel"
+          class="map-search-on-map-move bg-white q-py-sm"
+          size="sm"
+          @click="toggleSearchAfterMapMove"
+        >
+          <QCheckbox
+            :value="shouldSearchAfterMapMove"
+            dense
+            @input="toggleSearchAfterMapMove"
+          />
+
+          <AppContent
+            class="q-ml-sm"
+            entry="pages"
+            field="search.search_after_map_move"
+          />
+        </QBtn>
+        <QBtn
+          v-if="searchAfterMapMoveActive"
+          v-show="showRetriggerSearchLabel"
+          color="secondary"
+          class="map-search-on-map-move q-py-sm"
+          size="sm"
+          @click="triggerSearchWithMapCenter"
+        >
+          <AppContent
+            v-show="showRetriggerSearchLabel"
+            entry="pages"
+            field="search.redo_search"
+          />
+        </QBtn>
       </QNoSsr>
     </QPageSticky>
   </q-page>
@@ -77,6 +114,15 @@ export default {
       populatedMapMarkers: { // Keep track of generated popup contents.
         // assetId: markerDOMElement // to clean up before destroy
       },
+      shouldSearchAfterMapMove: true,
+      mapCenterChanged: false,
+      mapMovingProgrammatically: false,
+      mapCenterGps: {
+        latitude: 0, // will be set after map initialization
+        longitude: 0,
+      },
+      mapFitBoundsActive: true,
+      mapFitBoundsTimeout: null,
     }
   },
   computed: {
@@ -90,6 +136,13 @@ export default {
       'isSearchMapVisible',
       'defaultSearchMode',
     ]),
+    showRetriggerSearchLabel () {
+      if (this.shouldSearchAfterMapMove) return false
+      return this.mapCenterChanged
+    },
+    searchAfterMapMoveActive () {
+      return get(this.common.config, 'stelace.instant.searchAfterMapMove')
+    }
   },
   watch: {
     searchedAssets () {
@@ -124,6 +177,8 @@ export default {
 
     this.destroyMarkers()
     delete window.stlMapMarkers
+
+    clearTimeout(this.mapFitBoundsTimeout)
   },
   methods: {
     async afterAuth () {
@@ -170,20 +225,33 @@ export default {
       const mapFeatures = this.getMapFeatures()
       this.destroyMarkers({ keep: this.searchedAssets.map(a => a.id) })
 
-      if (!mapFeatures.length) return
+      if (!mapFeatures.length) {
+        this.mapFitBoundsActive = true
+        return
+      }
 
-      const firstCoordinates = mapFeatures[0].geometry.coordinates
+      if (this.mapFitBoundsActive) {
+        this.mapMovingProgrammatically = true
 
-      // Pass the first coordinates & wrap each coordinate pair in `extend` to include them in the bounds result.
-      // A variation of this technique could be applied to zooming to the bounds of multiple Points or Polygon geomteries
-      // - it just requires wrapping all the coordinates with the extend method.
-      const bounds = mapFeatures.reduce(function (bounds, f) {
-        return bounds.extend(f.geometry.coordinates)
-      }, new mapboxgl.LngLatBounds(firstCoordinates, firstCoordinates))
+        const firstCoordinates = mapFeatures[0].geometry.coordinates
 
-      this.map.fitBounds(bounds, {
-        padding: 50
-      })
+        // Pass the first coordinates & wrap each coordinate pair in `extend` to include them in the bounds result.
+        // A variation of this technique could be applied to zooming to the bounds of multiple Points or Polygon geomteries
+        // - it just requires wrapping all the coordinates with the extend method.
+        const bounds = mapFeatures.reduce(function (bounds, f) {
+          return bounds.extend(f.geometry.coordinates)
+        }, new mapboxgl.LngLatBounds(firstCoordinates, firstCoordinates))
+
+        const fitBoundsDuration = 2000
+        this.map.fitBounds(bounds, {
+          padding: 50,
+          duration: fitBoundsDuration
+        })
+        this.mapFitBoundsTimeout = setTimeout(() => {
+          this.mapMovingProgrammatically = false
+          this.mapFitBoundsActive = true
+        }, fitBoundsDuration)
+      }
 
       // add new markers to map
       mapFeatures.forEach(f => {
@@ -262,10 +330,58 @@ export default {
 
       if (animate) el.classList.add('stl-map-marker--bounce')
       else el.classList.remove('stl-map-marker--bounce')
+    },
+    mapMoveStarted (map) {
+      if (this.mapMovingProgrammatically) return
+
+      this.mapCenterChanged = true
+    },
+    mapMoveEnded (map) {
+      if (this.mapMovingProgrammatically || !this.mapCenterChanged) return
+
+      const rawCenter = map.getCenter()
+
+      this.mapCenterGps = {
+        latitude: rawCenter.lat,
+        longitude: rawCenter.lng
+      }
+
+      if (this.shouldSearchAfterMapMove) {
+        this.triggerSearchWithMapCenter()
+      }
+    },
+    toggleSearchAfterMapMove () {
+      this.shouldSearchAfterMapMove = !this.shouldSearchAfterMapMove
+    },
+    async triggerSearchWithMapCenter () {
+      this.$store.commit(mutationTypes.SET_SEARCH_LOCATION, {
+        latitude: this.mapCenterGps.latitude,
+        longitude: this.mapCenterGps.longitude,
+      })
+
+      this.mapFitBoundsActive = false
+
+      try {
+        await this.searchAssets()
+      } catch (err) {
+        throw err
+      } finally {
+        this.mapCenterChanged = false
+      }
     }
   }
 }
 </script>
 
 <style lang="stylus" scoped>
+
+$stl-map-search-on-map-move-top = 10px
+$stl-map-search-on-map-move-left = 50px
+
+.map-search-on-map-move
+  position: absolute
+  top: $stl-map-search-on-map-move-top
+  left: $stl-map-search-on-map-move-left
+  z-index: 1
+
 </style>

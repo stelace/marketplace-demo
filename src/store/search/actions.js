@@ -58,6 +58,7 @@ export async function searchAssets ({ state, rootState, rootGetters, commit, dis
     orderBy: searchFilters.orderBy,
     order: searchFilters.order,
 
+    maxDistance: state.maxDistance,
     query: state.query,
     location: {
       latitude: state.latitude,

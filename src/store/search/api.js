@@ -15,6 +15,7 @@ export const searchAssets = async ({
   filters = {},
   customAttributesFilters = {},
   query,
+  maxDistance,
   availabilityFilters = defaultAvailabilityFilters
 } = {}) => {
   let filter = filters.filter || ''
@@ -45,6 +46,7 @@ export const searchAssets = async ({
   if (filters.validated) searchParams.validated = filters.validated
 
   if (query) searchParams.query = query
+  if (maxDistance) searchParams.maxDistance = maxDistance
   if (filters.categoryId) searchParams.categoryId = flatten([filters.categoryId])
   if (filters.assetTypeId) searchParams.assetTypeId = flatten([filters.assetTypeId])
   if (filters.similarTo) searchParams.similarTo = flatten([filters.similarTo])
