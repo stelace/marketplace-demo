@@ -126,7 +126,7 @@ export function registerNewPages ({ state, commit, getters }) {
 function handleContentError (err) {
   logger(err, { notification: { // User should know the app is broken…
     message: errorMessage || 'Error',
-    i18: false,
+    i18n: false,
     timeout: defaultDelay * 2
   } })
   return err // In prod we don’t throw to load other contents available
