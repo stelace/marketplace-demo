@@ -159,6 +159,13 @@ export default {
         })
       }
 
+      this.$store.commit({
+        type: mutationTypes.SEARCH__SET_MAP_OPTIONS,
+        useMapCenter: false,
+        latitude: null,
+        longitude: null
+      })
+
       this.searchAssets()
     },
     updateMaxPrice (maximumPrice) {

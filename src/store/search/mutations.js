@@ -1,4 +1,4 @@
-import { keyBy } from 'lodash'
+import { keyBy, isUndefined } from 'lodash'
 import * as types from 'src/store/mutation-types'
 
 export default {
@@ -39,6 +39,12 @@ export default {
     state.queryLocation = null
     state.latitude = null
     state.longitude = null
+  },
+  [types.SEARCH__SET_MAP_OPTIONS] (state, { latitude, longitude, useMapCenter, maxDistance } = {}) {
+    if (!isUndefined(latitude)) state.mapCenterLatitude = latitude
+    if (!isUndefined(longitude)) state.mapCenterLongitude = longitude
+    if (!isUndefined(useMapCenter)) state.useMapCenter = useMapCenter
+    if (!isUndefined(maxDistance)) state.maxDistance = maxDistance
   },
   [types.SET_PRICE_RANGE] (state, { min, max }) {
     state.priceRange.min = min

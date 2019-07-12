@@ -91,6 +91,7 @@ import { mapState, mapGetters } from 'vuex'
 import * as mutationTypes from 'src/store/mutation-types'
 
 import { get } from 'lodash'
+import getDistance from 'geolib/es/getDistance'
 
 import AssetCard from 'src/components/AssetCard'
 
@@ -121,6 +122,7 @@ export default {
         latitude: 0, // will be set after map initialization
         longitude: 0,
       },
+      mapMaxDistance: null,
       mapFitBoundsActive: true,
       mapFitBoundsTimeout: null,
     }
@@ -135,17 +137,15 @@ export default {
       'searchedAssets',
       'isSearchMapVisible',
       'defaultSearchMode',
+      'searchAfterMapMoveActive',
     ]),
     showRetriggerSearchLabel () {
       if (this.shouldSearchAfterMapMove) return false
       return this.mapCenterChanged
     },
-    searchAfterMapMoveActive () {
-      return get(this.common.config, 'stelace.instant.searchAfterMapMove')
-    }
   },
   watch: {
-    searchedAssets () {
+    'search.assets' () {
       this.refreshMap()
     },
     isSearchMapVisible (visible) {
@@ -251,6 +251,8 @@ export default {
           this.mapMovingProgrammatically = false
           this.mapFitBoundsActive = true
         }, fitBoundsDuration)
+      } else {
+        this.mapFitBoundsActive = true
       }
 
       // add new markers to map
@@ -332,11 +334,12 @@ export default {
       else el.classList.remove('stl-map-marker--bounce')
     },
     mapMoveStarted (map) {
-      if (this.mapMovingProgrammatically) return
+      if (!this.searchAfterMapMoveActive || this.mapMovingProgrammatically) return
 
       this.mapCenterChanged = true
     },
     mapMoveEnded (map) {
+      if (!this.searchAfterMapMoveActive) return
       if (this.mapMovingProgrammatically || !this.mapCenterChanged) return
 
       const rawCenter = map.getCenter()
@@ -346,6 +349,17 @@ export default {
         longitude: rawCenter.lng
       }
 
+      const bounds = map.getBounds()
+      const sw = bounds.getSouthWest()
+      const ne = bounds.getNorthEast()
+
+      this.mapMaxDistance = Math.round(
+        getDistance(
+          { latitude: sw.lat, longitude: sw.lng },
+          { latitude: ne.lat, longitude: ne.lng },
+        ) / 2
+      )
+
       if (this.shouldSearchAfterMapMove) {
         this.triggerSearchWithMapCenter()
       }
@@ -354,7 +368,12 @@ export default {
       this.shouldSearchAfterMapMove = !this.shouldSearchAfterMapMove
     },
     async triggerSearchWithMapCenter () {
-      this.$store.commit(mutationTypes.SET_SEARCH_LOCATION, {
+      clearTimeout(this.mapFitBoundsTimeout)
+
+      this.$store.commit({
+        type: mutationTypes.SEARCH__SET_MAP_OPTIONS,
+        useMapCenter: true,
+        maxDistance: this.mapMaxDistance,
         latitude: this.mapCenterGps.latitude,
         longitude: this.mapCenterGps.longitude,
       })
