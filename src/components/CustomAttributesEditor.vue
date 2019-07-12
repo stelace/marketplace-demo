@@ -152,7 +152,7 @@ export default {
             </template>
           </QSelect>
         </template>
-        <template v-if="customAttribute.type === 'number'">
+        <template v-else-if="customAttribute.type === 'number'">
           <QInput
             v-model="customAttributes[customAttribute.name]"
             type="number"
@@ -160,7 +160,7 @@ export default {
             @input="(value) => onCustomAttributeChange(customAttribute.name, parseFloat(value))"
           />
         </template>
-        <template v-if="customAttribute.type === 'tags'">
+        <template v-else-if="customAttribute.type === 'tags'">
           <QSelect
             v-model="customAttributes[customAttribute.name]"
             :options="tagOptions[customAttribute.name]"
