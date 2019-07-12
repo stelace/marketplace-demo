@@ -520,11 +520,11 @@ export default {
           if (err.statusCode === 422 && err.message === 'Unavailable username') {
             this.errorType = 'signupEmailAlreadyUsed'
           }
+        } else {
+          throw err
         }
 
         EventBus.$emit('authStatusChanged', 'failure')
-
-        throw err
       } finally {
         this.actionPending = false
       }
