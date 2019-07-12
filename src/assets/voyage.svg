@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 64">
+  <defs>
+    <filter id="b">
+      <feGaussianBlur stdDeviation="8"/>
+    </filter>
+  </defs>
+  <g filter="url(#b)">
+    <rect width="128" height="64" x="0" y="0" fill="rgb(123, 108, 85)"/>
+    <path fill="rgb(60, 34, 4)" fill-opacity="0.73" d="M-6,22L138,22L138,67L-6,67Z"/>
+    <path fill="rgb(233, 227, 208)" fill-opacity="0.75" d="M-4,1L131,1L131,15L-4,15Z"/>
+    <ellipse cx="25" cy="11" fill="rgb(186, 197, 195)" fill-opacity="0.41" rx="21" ry="15"/>
+    <path fill="rgb(204, 131, 37)" fill-opacity="0.23" d="M5,40L87,40L87,83L5,83Z"/>
+    <ellipse cx="116" cy="52" fill="rgb(23, 17, 7)" fill-opacity="0.56" rx="25" ry="24"/>
+    <path fill="rgb(221, 210, 189)" fill-opacity="0.99" d="M25,-4L132,-4L132,12L25,12Z"/>
+    <path fill="rgb(41, 52, 55)" fill-opacity="0.44" d="M34,18L133,18L133,32L34,32Z"/>
+    <ellipse cx="124" cy="18" fill="rgb(95, 130, 132)" fill-opacity="0.52" rx="34" ry="6"/>
+    <ellipse cx="6" cy="8" fill="rgb(114, 116, 110)" fill-opacity="0.40" rx="12" ry="20"/>
+    <ellipse cx="76" cy="55" fill="rgb(155, 106, 41)" fill-opacity="0.44" rx="17" ry="9"/>
+    <ellipse cx="71" cy="19" fill="rgb(34, 40, 40)" fill-opacity="0.30" rx="21" ry="7"/>
+    <ellipse cx="5" cy="36" fill="rgb(0, 3, 4)" fill-opacity="0.46" rx="22" ry="4"/>
+    <ellipse cx="95" cy="48" fill="rgb(74, 43, 11)" fill-opacity="0.44" rx="18" ry="16"/>
+    <ellipse cx="27" cy="13" fill="rgb(214, 217, 203)" fill-opacity="0.47" rx="26" ry="4"/>
+    <ellipse cx="127" cy="3" fill="rgb(131, 103, 59)" fill-opacity="0.21" rx="13" ry="12"/>
+    <path fill="rgb(97, 126, 127)" fill-opacity="0.49" d="M14,27L63,18L-24,15Z"/>
+    <path fill="rgb(63, 38, 15)" fill-opacity="0.70" d="M49,21L88,21L88,43L49,43Z"/>
+    <ellipse cx="123" cy="46" fill="rgb(0, 10, 5)" fill-opacity="0.51" rx="10" ry="8"/>
+    <ellipse cx="56" cy="67" fill="rgb(0, 0, 15)" fill-opacity="0.43" rx="5" ry="13"/>
+    <path fill="rgb(122, 143, 141)" fill-opacity="0.60" d="M42,14L122,14L122,17L42,17Z"/>
+    <path fill="rgb(203, 141, 63)" fill-opacity="0.45" d="M47,43L36,45L38,39Z"/>
+    <path fill="rgb(65, 40, 2)" fill-opacity="0.46" d="M29,57L34,46L-25,36Z"/>
+    <ellipse cx="125" cy="25" fill="rgb(64, 77, 76)" fill-opacity="0.47" rx="32" ry="6"/>
+    <path fill="rgb(160, 112, 53)" fill-opacity="0.51" d="M44,63L35,67L18,54Z"/>
+    <ellipse cx="-1" cy="68" fill="rgb(146, 88, 35)" fill-opacity="0.52" rx="12" ry="11"/>
+    <path fill="rgb(160, 121, 78)" fill-opacity="0.44" d="M65,61L67,57L34,38Z"/>
+    <path fill="rgb(241, 185, 119)" fill-opacity="0.37" d="M65,47L74,47L74,51L65,51Z"/>
+    <ellipse cx="8" cy="2" fill="rgb(146, 122, 102)" fill-opacity="0.41" rx="25" ry="2"/>
+    <path fill="rgb(36, 23, 0)" fill-opacity="0.46" d="M25,60L26,79L7,59Z"/>
+    <ellipse cx="57" cy="8" fill="rgb(243, 227, 204)" fill-opacity="0.38" rx="50" ry="3"/>
+    <ellipse cx="3" cy="26" fill="rgb(23, 36, 40)" fill-opacity="0.48" rx="4" ry="10"/>
+    <path fill="rgb(65, 44, 26)" fill-opacity="0.71" d="M7,26L64,26L64,34L7,34Z"/>
+  </g>
+</svg>
