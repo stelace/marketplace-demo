@@ -14,6 +14,9 @@ export default async ({ Vue }) => {
   // `info` is a Vue-specific error info, e.g. which lifecycle hook
   // the error was found in. Only available in 2.2.0+
   Vue.config.errorHandler = function (err, vm, info) {
+    // already handled by App.vue
+    if (err.message.toLowerCase().includes('user session expired')) return
+
     EventBus.$emit('error')
 
     // Restore default behavior Vue.util: https://github.com/vuejs/vue/issues/8433

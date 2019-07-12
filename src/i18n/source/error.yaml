@@ -55,3 +55,6 @@ error:
     en: Please enable JavaScript to use {SERVICE_NAME}.
     fr: Veuillez activer JavaScript pour profiter de {SERVICE_NAME}.
     context: Injected in first HTML loaded in case user disables JavaScript.
+  user_session_expired:
+    en: Your session has expired. Please log in again.
+    fr: Votre session a expiré. Merci de vous reconnecter.

@@ -170,8 +170,8 @@ export async function signup ({ commit, dispatch }, { userAttrs, noLogin = false
   })
 }
 
-export async function logout ({ commit }) {
-  await stelace.auth.logout()
+export async function logout ({ commit }, { sessionExpired = false } = {}) {
+  if (!sessionExpired) await stelace.auth.logout()
   stelace.setOrganizationId(null)
   removeOrganizationIdInLocalStorage()
 

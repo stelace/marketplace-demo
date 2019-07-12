@@ -12,10 +12,11 @@
 import { mapState, mapGetters } from 'vuex'
 import * as mutationTypes from 'src/store/mutation-types'
 
-import { get } from 'lodash'
+import { get, debounce } from 'lodash'
 
 import { getAuthToken } from 'src/utils/auth'
 import EventBus from 'src/utils/event-bus'
+import stelace from 'src/utils/stelace'
 
 export default {
   sockets: {
@@ -87,6 +88,8 @@ export default {
 
     this.$socket.open()
 
+    this.handleUserSessionExpiration()
+
     // only subscribe in client-side (mounted function)
     EventBus.$on('refreshSocket', () => {
       this.refreshSocket()
@@ -126,6 +129,21 @@ export default {
     refreshSocket () {
       this.$socket.close()
       this.$socket.open()
+    },
+    handleUserSessionExpiration () {
+      // use debounce function to prevent notification spamming
+      // due to multiple requests failing after session expiration
+      const debouncedEmitUserSessionExpiredError = debounce(() => {
+        this.notifyInfo('error.user_session_expired', { timeout: 10000 })
+        const tokenStore = stelace.getTokenStore()
+        tokenStore.removeTokens()
+
+        this.$store.dispatch('logout', { sessionExpired: true })
+      }, 2000)
+
+      stelace.onError('userSessionExpired', () => {
+        debouncedEmitUserSessionExpiredError()
+      })
     }
   },
 }
