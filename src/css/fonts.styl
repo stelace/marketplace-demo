@@ -2,19 +2,22 @@ json('../styles.json') // JSON import: https://github.com/stylus/stylus/pull/784
 
 // cf styles.json.md
 
-withLegacy(fontFamily, modernUrl, legacyUrl, legacyFormat = 'woff')
+withLegacy(fontFamily, weight, url, legacyUrl, legacyFormat = 'woff')
   if (legacyFont)
-    "local('%s Regular'), url('%s') format('woff2'), url('%s') format('%s')" \
-      % (fontFamily modernUrl legacyUrl legacyFormat)
+    "local('%s %s'), url('%s') format('woff2'), url('%s') format('%s')" \
+      % (fontFamily weight url legacyUrl legacyFormat)
+  // E.g.:
+  // local("Play Regular"),url(https://fonts.gstatic.com/s/play/v10/6ae84K2oVqwItm4TCpAy2g.woff2) format("woff2"),
+  //   url(https://fonts.gstatic.com/s/play/v10/6ae84K2oVqwItm4TCpAy3A.woff) format("woff")
   else
-    "local('%s Regular'), url('%s') format('woff2')" % (fontFamily modernUrl)
+    "local('%s %s'), url('%s') format('woff2')" % (fontFamily weight url)
 
 @font-face
   font-family: userFont
   font-display: userFontDisplay
   font-style: normal
   font-weight: 400
-  src: withLegacy(@font-family, userFontNormal, userFontNormalLegacy, userFontLegacyFormat)
+  src: withLegacy(@font-family, 'Regular', userFontNormal, userFontNormalLegacy, userFontLegacyFormat)
 
 if userFontMedium
   @font-face
@@ -22,11 +25,11 @@ if userFontMedium
     font-display: userFontDisplay
     font-style: normal
     font-weight: 500
-    src: withLegacy(@font-family, userFontMedium, userFontMediumLegacy, userFontLegacyFormat)
+    src: withLegacy(@font-family, 'Medium', userFontMedium, userFontMediumLegacy, userFontLegacyFormat)
 
 @font-face
   font-family: userFont
   font-display: userFontDisplay
   font-style: normal
   font-weight: 700
-  src: withLegacy(@font-family, userFontBold, userFontBoldLegacy, userFontLegacyFormat)
+  src: withLegacy(@font-family, 'Bold', userFontBold, userFontBoldLegacy, userFontLegacyFormat)
