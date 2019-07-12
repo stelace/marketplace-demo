@@ -11,6 +11,14 @@ const readFile = util.promisify(fs.readFile)
 const readDir = util.promisify(fs.readdir)
 const writeFile = util.promisify(fs.writeFile)
 
+const chalk = require('chalk')
+const log = console.log
+const success = str => log(`\n${chalk.green(str)}\n`)
+const warn = (err, msg) => {
+  if (msg) log(chalk.yellow(msg))
+  if (err) log(err)
+}
+
 dotenv.config({
   path: process.env.NODE_ENV === 'production' ? '.env.production' : '.env.development'
 })
@@ -73,7 +81,7 @@ async function run () {
   const translationsPath = path.join(__dirname, '../src/i18n/build/')
   const translationFiles = await readDir(translationsPath)
   let apiEntries = await stelace.entries.list({ collection })
-    .catch(err => console.warn('\nError when fetching apiEntries\n\n', err)) || []
+    .catch(err => warn(err, '\nError when fetching apiEntries\n\n')) || []
 
   await pMap(translationFiles, async tr => {
     const filePath = path.join(translationsPath, tr)
@@ -95,12 +103,8 @@ async function run () {
 }
 
 run()
-  .then(nbFiles => console.log(`
-
-Success: ${nbFiles} translation files built
-
-  `))
-  .catch(console.error)
+  .then(nbFiles => success(`Success: ${nbFiles} translation files built`))
+  .catch(warn)
 
 function transformAndFlatten (data) {
   let result = {}

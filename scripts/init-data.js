@@ -5,6 +5,9 @@ const pMap = require('p-map')
 const pProps = require('p-props')
 const chalk = require('chalk')
 const inquirer = require('inquirer')
+const path = require('path')
+const fs = require('fs')
+const { execSync } = require('child_process')
 
 let stripe
 if (process.env.STRIPE_SECRET_KEY) {
@@ -12,9 +15,14 @@ if (process.env.STRIPE_SECRET_KEY) {
 }
 
 const log = console.log
-const warn = str => console.warn(chalk.yellow(str))
+const warn = (err, msg) => {
+  if (msg) log(chalk.yellow(msg))
+  if (err) log(err)
+}
 const prompt = inquirer.createPromptModule()
 let answers
+
+const env = process.env.NODE_ENV === 'production' ? 'production' : 'development'
 
 const initDataScript = 'initDataScript'
 // Useful to avoid removing objects not created by this script (use false value with caution)
@@ -71,6 +79,10 @@ async function run () {
 
   log(chalk.cyan.bold('\nStarting script…'))
 
+  if (!fs.existsSync(path.join(__dirname, 'data.js'))) {
+    log('Creating data.js file from data.example.js')
+    execSync('cp scripts/data.example.js scripts/data.js')
+  }
   const data = require('./data')
 
   // Order matters
@@ -500,6 +512,19 @@ function getRealIdentifier (type, id, handler) {
   }
 }
 
-run()
-  .then(() => log(chalk.green.bold('\nSuccess\n')))
-  .catch(warn)
+if (!fs.existsSync(`.env.${env}`)) {
+  return warn(
+    null,
+    `\nMissing .env file. Please start with "cp .env.example .env.${env}".\n` +
+      'More info is available in README.md.\n'
+  )
+} else if (!process.env.STELACE_SECRET_API_KEY) {
+  return log(chalk.cyan.bold(
+    '\nMissing STELACE_SECRET_API_KEY env variable.\n' +
+      'Please head over to https://stelace.com to ask your free key.\n'
+  ))
+} else {
+  run()
+    .then(() => log(chalk.green.bold('\nSuccess\n')))
+    .catch(warn)
+}

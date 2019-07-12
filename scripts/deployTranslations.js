@@ -10,6 +10,14 @@ const util = require('util')
 const readFile = util.promisify(fs.readFile)
 const readDir = util.promisify(fs.readdir)
 
+const chalk = require('chalk')
+const log = console.log
+const success = str => log(`\n${chalk.green(str)}`)
+const warn = (err, msg) => {
+  log(`\n${chalk.yellow(msg || 'Translations upload with Content API has failed.')}\n`)
+  if (err) log(err)
+}
+
 const {
   collection: defaultCollection,
   emailCollection,
@@ -89,23 +97,17 @@ async function run () {
 }
 
 run()
-  .then(() => console.log(`
-Success:
-
+  .then(() => {
+    success('Success:')
+    log(`
 ${stats.created.length} entr${stats.created.length > 1 ? 'ies' : 'y'} created${
   stats.created.length ? `:\n${stats.created.join('\n')}\n\n` : '\n'
 }${stats.updated.length} entr${stats.updated.length > 1 ? 'ies' : 'y'} updated${
   stats.updated.length ? ':\n' + stats.updated.join('\n') : ''
 }
-  `))
-  .catch((err) => {
-    console.log(`
-
-Translations upload to Content Entry API failed.
-
     `)
-    console.error(err)
   })
+  .catch(warn)
 
 // TODO: remove this once auto-pagination is implemented in SDK
 // We don’t want to install esm to `import` this single function from src/utils

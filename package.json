@@ -17,7 +17,8 @@
     "deploy:prod": "npm run build && node scripts/deployManuallyToNetlifyProd.js",
     "deploy:prod:translations": "cross-env NODE_ENV=production node scripts/deployTranslations.js",
     "deploy": "npm run build && netlify deploy --dir=dist/spa",
-    "deploy:translations": "node scripts/deployTranslations.js"
+    "deploy:translations": "node scripts/deployTranslations.js",
+    "seed": "node scripts/init-data.js"
   },
   "dependencies": {
     "@quasar/extras": "^1.1.3",

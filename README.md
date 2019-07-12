@@ -2,14 +2,14 @@
 
 [![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/stelace/jobs-marketplace-template)
 
-# Vue marketplace template
+# Vue marketplace starter kit (jobs)
 
-> This Stelace template is free to use, under the terms of the [MIT license](./LICENSE).
+> This Stelace starter kit is free to use, under the terms of the [MIT license](./LICENSE).
 Feel free to fork, contribute or just make it your own :heart:.
 
 ---
 
-This template offers **a full Vue.js marketplace front-end with pre-configured serverless deployment**.
+This starter kit offers **a full Vue.js marketplace front-end with pre-configured serverless deployment**.
 
 ![stellar-jobs-screenshot](https://user-images.githubusercontent.com/12909094/60470099-762d0980-9c5f-11e9-8d78-0bade89101c4.jpg)
 
@@ -17,7 +17,8 @@ A lighter platform template focused on search and automation is [also available]
 
 **What is Stelace?**
 
-[Stelace](https://stelace.com/) provides search, inventory and user management infrastructure for Web platforms, ranging from search-intensive marketplaces to online community apps. Stelace offers powerful backend and APIs including advanced search, automation, and content delivery, to let you focus on what makes your platform unique.
+[Stelace API](https://stelace.com/) provides search, inventory and user management infrastructure for Web platforms, ranging from search-intensive marketplaces to online community apps.
+Stelace offers powerful backend and APIs including advanced search, automation, and content delivery, to let you focus on what makes your platform unique.
 
 [API Docs](https://stelace.com/docs)
 
@@ -67,30 +68,33 @@ You will be able to use [official Stelace dashboard](https://stelace.com), enabl
 
 ## Getting started
 
-You first need to get your Stelace API Key. Good news: [it’s free](https://stelace.com/pricing).
+You first need to get your Stelace API Keys. Good news: [it’s free](https://stelace.com/pricing).
 
 > Note: this template uses advanced features available in _Business_ plans or higher, such as Organizations.
 
 1. Clone this repository
 
-```
+```sh
 git clone https://github.com/stelace/jobs-marketplace-template.git
 cd jobs-marketplace-template
 ```
 
 2. Install node_modules
 
-```
+```sh
+# using yarn instead of npm is recommended
 yarn
-# or
-npm install
 ```
+
+> If you don’t have [yarn](https://yarnpkg.com/) installed, you can follow these [instructions](https://yarnpkg.com/docs/install).
 
 3. Create environment files for development and production.
+
 You can copy `.env.example` and fill it with Stelace API keys.
 
-```
+```sh
 cp .env.example .env.development
+# You may want to use live keys in this file
 cp .env.example .env.production
 ```
 
@@ -102,9 +106,9 @@ You need to fill the following environment variables:
 
 4. Start the development server
 
-```
+```sh
 yarn dev
-# or
+# same as
 quasar dev
 ```
 
@@ -112,9 +116,8 @@ Please refer to [Quasar docs](https://v1.quasar-framework.org/) for more details
 
 5. Seed development [data](./docs/development-data.md)
 
-```
-cp scripts/data.example.js scripts/data.js
-node scripts/init-data.js
+```sh
+yarn seed
 ```
 
 <details>
@@ -124,13 +127,13 @@ Stelace Core API server has to be launched locally before starting this project'
 
 First we need to launch services needed by Stelace Core API.
 
-```
+```sh
 docker-compose up -d elasticsearch postgresql redis
 ```
 
 Then we need to initialize the database with Instant configuration.
 
-```
+```sh
 cd /path/to/stelace-core
 git checkout dev
 yarn setup:instant
@@ -140,7 +143,7 @@ Secret and publishable api keys will be displayed so you can use it as environme
 
 Let’s start the server.
 
-```
+```sh
 yarn start
 ```
 

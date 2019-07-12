@@ -13,6 +13,9 @@ const _ = require('lodash')
 const glob = require('glob')
 const pMap = require('p-map')
 
+// const chalk = require('chalk')
+const log = console.log
+
 // const apiKey = process.env.STELACE_PUBLISHABLE_API_KEY || ''
 // const stelaceEnv = apiKey.includes('_live_') ? 'live' : 'test'
 
@@ -25,7 +28,7 @@ module.exports = function (ctx) {
 
   // Ensuring we have local translations up-to-date. Runs once.
   // TODO: allow to distinguish between live and test environments in buildTranslationFiles.js
-  execSync(ctx.dev ? 'npm run translate' : 'npm run translate:prod')
+  execSync(ctx.dev ? 'npm run translate' : 'npm run translate:prod', { stdio: 'inherit' })
 
   // ///////// //
   // Dev tools //
@@ -50,7 +53,7 @@ module.exports = function (ctx) {
   try {
     commitSHA = execSync('git rev-parse HEAD').toString().trim()
   } catch (e) {
-    console.log('\nCould not retrieve git commit SHA.\n')
+    log('\nCould not retrieve git commit SHA.\n')
   }
 
   // //////////// //
