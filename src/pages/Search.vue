@@ -149,7 +149,10 @@ export default {
       this.refreshMap()
     },
     isSearchMapVisible (visible) {
-      if (!visible) this.destroyMarkers()
+      if (!visible) {
+        this.destroyMarkers()
+        this.map = null
+      }
     }
   },
   beforeMount () {
