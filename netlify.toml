@@ -2,8 +2,9 @@
   # ID = "automatically set by Netlify or equal to $NETLIFY_ID_FOR_PRODUCTION when applicable"
 
 [Build]
-  Publish = "dist/spa"
-  Functions = ""
+  publish = "dist/spa"
+  command = "yarn build"
+  functions = ""
 
 # Note that headers and redirects are shared across all deploy contexts
 # https://www.netlify.com/docs/netlify-toml-reference/
@@ -85,7 +86,6 @@
     # NEXMO_API_KEY and NEXMO_API_SECRET
 
 [context.dev]
-  # command = "yarn build"
   [context.dev.environment]
     VUE_APP_SERVICE_NAME = "Stellar Jobs"
     VUE_APP_NOMINATIM_HOST = "https://open.mapquestapi.com"
@@ -95,7 +95,6 @@
 # Deploy-preview context must be set explicitly.
 # It is expected to be roughly the same as dev branch context
 [context.deploy-preview]
-  # command = "yarn build"
   [context.deploy-preview.environment]
     VUE_APP_SERVICE_NAME = "Stellar Jobs"
     VUE_APP_NOMINATIM_HOST = "https://open.mapquestapi.com"
