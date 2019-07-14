@@ -196,6 +196,13 @@ export default {
             </template>
           </QSelect>
         </template>
+        <template v-if="customAttribute.type === 'text'">
+          <QInput
+            v-model="customAttributes[customAttribute.name]"
+            type="text"
+            :label="$t({ id: contentKey(customAttribute) })"
+          />
+        </template>
       </div>
     </div>
   </div>

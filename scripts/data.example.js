@@ -468,6 +468,24 @@ module.exports = {
           priority: 1 // used to order custom attributes in UI
         }
       }
+    },
+    reference: {
+      name: 'reference',
+      type: 'text',
+      metadata: {
+        instant: {
+          i18n: {
+            label: {
+              entry: 'instant',
+              field: 'config.customAttributes.reference_label',
+              default: 'Reference'
+            },
+            description: {}
+          },
+          materialIcon: null,
+          priority: 1 // used to order custom attributes in UI
+        }
+      }
     }
   },
   messages: {

@@ -10,6 +10,9 @@ instant:
       laundry_label:
         en: Laundry
         fr: Blanchi
+      reference_label:
+        en: Reference
+        fr: Référence
     roles:
       premium_label:
         en: Premium
