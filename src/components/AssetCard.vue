@@ -83,7 +83,21 @@ export default {
               v-if="asset.price"
               class="text-weight-bold text-grey-8 ellipsis"
             >
-              {{ $t({ id: 'pricing.price_per_time_unit_short_label' }, { price: $fx(asset.price), timeUnit: asset.timeUnit }) }}
+              <AppContent
+                v-if="asset.assetType.timeBased"
+                entry="pricing"
+                field="price_per_time_unit_short_label"
+                :options="{
+                  price: $fx(asset.price),
+                  timeUnit: asset.timeUnit
+                }"
+              />
+              <AppContent
+                v-else
+                entry="pricing"
+                field="price_with_currency"
+                :options="{ price: $fx(asset.price) }"
+              />
             </div>
             <!-- <h3 class="text-subtitle2 text-weight-medium text-grey-6 q-ma-none text-right ellipsis">
               {{ categoryName }}

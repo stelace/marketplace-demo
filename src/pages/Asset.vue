@@ -97,12 +97,19 @@
             input-type="number"
           >
             <AppContent
+              v-if="activeAsset.assetType.timeBased"
               entry="pricing"
               field="price_per_time_unit_label"
               :options="{
                 price: $fx(activeAsset.price),
                 timeUnit: activeAsset.timeUnit
               }"
+            />
+            <AppContent
+              v-else
+              entry="pricing"
+              field="price_with_currency"
+              :options="{ price: $fx(activeAsset.price) }"
             />
           </AppSwitchableEditor>
         </div>

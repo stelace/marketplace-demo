@@ -116,6 +116,11 @@ export default {
       'isUser',
     ]),
   },
+  async preFetch ({ store }) {
+    await Promise.all([
+      store.dispatch('fetchAssetsRelatedResources'),
+    ])
+  },
   mounted () {
     EventBus.$on('newMessage', () => this.fetchMessagesAndMarkAsRead())
   },
@@ -249,27 +254,29 @@ export default {
                 <!-- We need a high level of customization here, with ICU contents stored in Stelace
                   to show something such as 'Candidature reçue le…' -->
                 <!-- {{ $t({ id: 'time.date_long' }, { date: inbox.transaction.createdDate }) }} -->
-                <AppContent
-                  v-if="endDate"
-                  tag="div"
-                  entry="time"
-                  field="per_time_unit_with_context"
-                  :options="{
-                    context: $t({ id: 'time.duration_label' }),
-                    nbUnits: nbTimeUnits,
-                    timeUnit
-                  }"
-                />
-                <AppContent
-                  tag="div"
-                  entry="time"
-                  field="from_start_date_to_end_date"
-                  :options="{
-                    startDate,
-                    endDate,
-                    showTime: false
-                  }"
-                />
+                <span v-if="inbox.transaction.assetType.timeBased">
+                  <AppContent
+                    v-if="endDate"
+                    tag="div"
+                    entry="time"
+                    field="per_time_unit_with_context"
+                    :options="{
+                      context: $t({ id: 'time.duration_label' }),
+                      nbUnits: nbTimeUnits,
+                      timeUnit
+                    }"
+                  />
+                  <AppContent
+                    tag="div"
+                    entry="time"
+                    field="from_start_date_to_end_date"
+                    :options="{
+                      startDate,
+                      endDate,
+                      showTime: false
+                    }"
+                  />
+                </span>
               </div>
               <div
                 v-if="attachments.length"

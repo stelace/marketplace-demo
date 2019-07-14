@@ -145,6 +145,10 @@ export function defaultSearchMode (state, getters, rootState, rootGetters) {
   return defaultMode
 }
 
+export function searchModeConfig (state, getters, rootState, rootGetters) {
+  return get(rootGetters.searchOptions, `modes.${rootState.search.searchMode}`)
+}
+
 export function suggestionSearchMode (state, getters, rootState, rootGetters) {
   return isProvider(rootGetters.currentUser) ? 'reversed' : 'default'
 }

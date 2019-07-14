@@ -451,6 +451,7 @@ export default {
             class="step-3 q-py-lg"
           >
             <DateRangePicker
+              v-show="showAvailabilityDates"
               class="q-mb-xl"
               :start-date="startDate"
               :end-date="endDate"
