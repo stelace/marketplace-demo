@@ -1,7 +1,7 @@
 import stelace from 'src/utils/stelace'
 import { isNil, isEmpty, isPlainObject, forEach, flatten } from 'lodash'
 
-const defaultAvailabilityFilters = {
+const defaultAvailabilityFilter = {
   enabled: true,
   fullPeriod: false
 }
@@ -16,7 +16,7 @@ export const searchAssets = async ({
   customAttributesFilters = {},
   query,
   maxDistance,
-  availabilityFilters = defaultAvailabilityFilters
+  availabilityFilter = defaultAvailabilityFilter
 } = {}) => {
   let filter = filters.filter || ''
   const addToFilter = (expression, operator = '&&') => {
@@ -37,7 +37,7 @@ export const searchAssets = async ({
     sort: {
       [apiOrderBy]: order
     },
-    availabilityFilters
+    availabilityFilter
   }
 
   if (typeof filters.active === 'boolean' || filters.active === null) {
