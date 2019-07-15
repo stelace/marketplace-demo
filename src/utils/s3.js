@@ -19,7 +19,7 @@ export function cleanPrefix (prefix = '') {
 export function getS3SignedUrl (file, { folder = 'files' } = {}) {
   return axios.get( // get AWS S3 signed URL from Lambda behind API Getaway
     `${process.env.VUE_APP_CDN_POLICY_ENDPOINT}?filename=${
-      file.name
+      encodeURIComponent(file.name)
     }&folder=${
       cleanPrefix(process.env.VUE_APP_CDN_UPLOAD_PREFIX)
     }${folder}`,
