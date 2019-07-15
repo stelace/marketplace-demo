@@ -90,7 +90,9 @@ import Vue from 'vue'
 import { mapState, mapGetters } from 'vuex'
 import * as mutationTypes from 'src/store/mutation-types'
 
-import { get } from 'lodash'
+import { get, set } from 'lodash'
+import getDistance from 'geolib/es/getDistance'
+import pMap from 'p-map'
 
 import AssetCard from 'src/components/AssetCard'
 
@@ -121,6 +123,7 @@ export default {
         latitude: 0, // will be set after map initialization
         longitude: 0,
       },
+      mapMaxDistance: null,
       mapFitBoundsActive: true,
       mapFitBoundsTimeout: null,
     }
@@ -135,21 +138,22 @@ export default {
       'searchedAssets',
       'isSearchMapVisible',
       'defaultSearchMode',
+      'searchAfterMapMoveActive',
     ]),
     showRetriggerSearchLabel () {
       if (this.shouldSearchAfterMapMove) return false
       return this.mapCenterChanged
     },
-    searchAfterMapMoveActive () {
-      return get(this.common.config, 'stelace.instant.searchAfterMapMove')
-    }
   },
   watch: {
-    searchedAssets () {
+    'search.assets' () {
       this.refreshMap()
     },
     isSearchMapVisible (visible) {
-      if (!visible) this.destroyMarkers()
+      if (!visible) {
+        this.destroyMarkers()
+        this.map = null
+      }
     }
   },
   beforeMount () {
@@ -251,13 +255,13 @@ export default {
           this.mapMovingProgrammatically = false
           this.mapFitBoundsActive = true
         }, fitBoundsDuration)
+      } else {
+        this.mapFitBoundsActive = true
       }
 
       // add new markers to map
-      mapFeatures.forEach(f => {
+      pMap(mapFeatures, async f => {
         const assetId = f.properties.assetId
-        if (window.stlMapMarkers[assetId]) return
-
         const asset = this.searchedAssets.find(a => a.id === assetId)
         const markerId = `marker-${assetId}`
         const imgSrc = this.getBaseImageUrl(asset)
@@ -269,46 +273,54 @@ export default {
         el.className = 'stl-map-marker'
         el.style.backgroundImage = `url('${imgSrc}')`
 
-        const popupId = `map-popup-${assetId}`
-        const popup = new mapboxgl.Popup({
-          closeButton: false,
-          className: 'stl-map-search-popup'
-        })
-        // Use render function to spare vue compiler
-        const PopupContent = Vue.extend({
-          components: { AssetCard },
-          router: this.$router,
-          store: this.$store,
-          render: h => h(AssetCard, {
-            props: { asset },
-            attrs: { id: popupId },
+        let marker = get(window.stlMapMarkers, assetId)
+
+        if (!marker) {
+          const popupId = `map-popup-${assetId}`
+          const popup = new mapboxgl.Popup({
+            closeButton: false,
+            className: 'stl-map-search-popup'
+          }).setHTML(`<div id="${popupId}"></div>`)
+
+          // Use render function to spare vue compiler
+          const PopupContent = Vue.extend({
+            components: { AssetCard },
+            router: this.$router,
+            store: this.$store,
+            render: h => h(AssetCard, {
+              props: { asset },
+              attrs: { id: popupId },
+            })
           })
-        })
 
-        const marker = new mapboxgl.Marker(el)
-          .setLngLat(f.geometry.coordinates)
-          .addTo(this.map)
-          .setPopup(popup.setHTML(`<div id="${popupId}"></div>`))
+          marker = new mapboxgl.Marker(el)
+            .setLngLat(f.geometry.coordinates)
+            .addTo(this.map)
+            .setPopup(popup)
 
-        window.stlMapMarkers[assetId] = marker
+          set(window.stlMapMarkers, assetId, marker)
 
-        popup.on('open', () => {
-          // Mount PopupContent once
-          const isPopupEmpty = !this.populatedMapMarkers[assetId]
+          popup.on('open', async () => {
+            // Mount PopupContent once
+            const isPopupEmpty = !this.populatedMapMarkers[assetId]
 
-          if (isPopupEmpty) {
-            // can only mount Vue component once mapbox injects popup in DOM
-            new PopupContent().$mount(`#${popupId}`)
-            this.populatedMapMarkers[assetId] = document.getElementById(markerId)
-          }
+            if (isPopupEmpty) {
+              // can only mount Vue component once mapbox injects popup in DOM
+              new PopupContent().$mount(`#${popupId}`)
+              this.populatedMapMarkers[assetId] = document.getElementById(markerId)
+              // Hack to force appropriate initial positionning
+              marker.togglePopup()
+              marker.togglePopup()
+            }
 
-          this.populatedMapMarkers[assetId].style.display = 'none'
-        })
-        popup.on('close', () => {
-          // all popups (even empty ones) get closed when markers are destroyed
-          if (this.populatedMapMarkers[assetId]) this.populatedMapMarkers[assetId].style.display = ''
-        })
-      })
+            this.populatedMapMarkers[assetId].style.display = 'none'
+          })
+          popup.on('close', () => {
+            // all popups (even empty ones) get closed when markers are destroyed
+            if (this.populatedMapMarkers[assetId]) this.populatedMapMarkers[assetId].style.display = ''
+          })
+        }
+      }, { concurrency: 2 }) // pMap
     },
     destroyMarkers ({ keep } = {}) {
       // Don’t keep all markers in memory when results change
@@ -332,11 +344,12 @@ export default {
       else el.classList.remove('stl-map-marker--bounce')
     },
     mapMoveStarted (map) {
-      if (this.mapMovingProgrammatically) return
+      if (!this.searchAfterMapMoveActive || this.mapMovingProgrammatically) return
 
       this.mapCenterChanged = true
     },
     mapMoveEnded (map) {
+      if (!this.searchAfterMapMoveActive) return
       if (this.mapMovingProgrammatically || !this.mapCenterChanged) return
 
       const rawCenter = map.getCenter()
@@ -346,6 +359,17 @@ export default {
         longitude: rawCenter.lng
       }
 
+      const bounds = map.getBounds()
+      const sw = bounds.getSouthWest()
+      const ne = bounds.getNorthEast()
+
+      this.mapMaxDistance = Math.round(
+        getDistance(
+          { latitude: sw.lat, longitude: sw.lng },
+          { latitude: ne.lat, longitude: ne.lng },
+        ) / 2
+      )
+
       if (this.shouldSearchAfterMapMove) {
         this.triggerSearchWithMapCenter()
       }
@@ -354,7 +378,12 @@ export default {
       this.shouldSearchAfterMapMove = !this.shouldSearchAfterMapMove
     },
     async triggerSearchWithMapCenter () {
-      this.$store.commit(mutationTypes.SET_SEARCH_LOCATION, {
+      clearTimeout(this.mapFitBoundsTimeout)
+
+      this.$store.commit({
+        type: mutationTypes.SEARCH__SET_MAP_OPTIONS,
+        useMapCenter: true,
+        maxDistance: this.mapMaxDistance,
         latitude: this.mapCenterGps.latitude,
         longitude: this.mapCenterGps.longitude,
       })

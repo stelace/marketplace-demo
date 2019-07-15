@@ -58,11 +58,14 @@ export async function searchAssets ({ state, rootState, rootGetters, commit, dis
     orderBy: searchFilters.orderBy,
     order: searchFilters.order,
 
-    maxDistance: state.maxDistance,
+    maxDistance: state.useMapCenter ? state.maxDistance : state.defaultMaxDistance,
     query: state.query,
-    location: {
+    location: !state.useMapCenter ? {
       latitude: state.latitude,
       longitude: state.longitude
+    } : {
+      latitude: state.mapCenterLatitude,
+      longitude: state.mapCenterLongitude
     },
     filters: Object.assign({}, searchFilters.filters, {
       active: true,

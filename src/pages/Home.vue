@@ -233,6 +233,13 @@ export default {
       }
 
       this.$store.commit({
+        type: types.SEARCH__SET_MAP_OPTIONS,
+        useMapCenter: false,
+        latitude: null,
+        longitude: null
+      })
+
+      this.$store.commit({
         type: types.SET_SEARCH_DATES,
         startDate: this.startDate ? new Date(this.startDate).toISOString() : null,
         reset: true

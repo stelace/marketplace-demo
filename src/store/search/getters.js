@@ -148,3 +148,7 @@ export function defaultSearchMode (state, getters, rootState, rootGetters) {
 export function suggestionSearchMode (state, getters, rootState, rootGetters) {
   return isProvider(rootGetters.currentUser) ? 'reversed' : 'default'
 }
+
+export function searchAfterMapMoveActive () {
+  return process.env.VUE_APP_DISABLE_AUTO_SEARCH_ON_MAP_MOVE !== 'true'
+}

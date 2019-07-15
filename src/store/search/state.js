@@ -15,6 +15,13 @@ export default {
   latitude: null,
   longitude: null,
 
+  mapCenterLatitude: null,
+  mapCenterLongitude: null,
+  defaultMaxDistance: 150000, // 150km
+  maxDistance: null,
+
+  useMapCenter: false,
+
   searchMode: null,
   displayCustomAttributes: [],
   assetTypesIds: [],
@@ -44,7 +51,6 @@ export default {
     nbResults: 0,
     nbPages: 1
   },
-  maxDistance: 250000, // 250km
 
   assets: [],
   usersById: {},
