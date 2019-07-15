@@ -1,5 +1,5 @@
 <script>
-import { get, values } from 'lodash'
+import { get, values, pick } from 'lodash'
 import { mapState, mapGetters } from 'vuex'
 import { date } from 'quasar'
 
@@ -14,6 +14,7 @@ import AppGalleryUploader from 'src/components/AppGalleryUploader'
 import CustomAttributesEditor from 'src/components/CustomAttributesEditor'
 import DateRangePicker from 'src/components/DateRangePicker'
 import PlacesAutocomplete from 'src/components/PlacesAutocomplete'
+import SelectAssetType from 'src/components/SelectAssetType'
 import SelectCategories from 'src/components/SelectCategories'
 
 import PageComponentMixin from 'src/mixins/pageComponent'
@@ -26,6 +27,7 @@ export default {
     CustomAttributesEditor,
     DateRangePicker,
     PlacesAutocomplete,
+    SelectAssetType,
     SelectCategories,
   },
   mixins: [
@@ -44,6 +46,7 @@ export default {
       locations: [],
       options: ['option1'],
       selectedCategory: null,
+      editingAssetType: null,
       visibleStep: 1,
       requestAuthentication: false,
       editingCustomAttributes: {},
@@ -73,9 +76,28 @@ export default {
       if (defaultType) return defaultType
       else return this.assetTypes[0]
     },
+    showSelectAssetType () {
+      if (this.filteredAssetTypesIds) return this.filteredAssetTypesIds.length > 1
+      else return this.assetTypes.length > 1
+    },
+    filteredAssetTypesIds () {
+      const config = this.common.config
+      const assetTypesConfig = get(config, 'stelace.instant.assetTypes')
+
+      if (!assetTypesConfig) return null
+
+      return Object.keys(assetTypesConfig)
+    },
+    isAssetTypeReadonly () {
+      return !!this.asset.asset.id
+    },
     selectedAssetType () {
       if (!this.asset.asset.id) {
-        return this.assetTypes.find(assetType => assetType.id === this.defaultAssetType.id) || {}
+        if (this.editingAssetType) return this.editingAssetType
+        else {
+          if (this.assetTypes.length === 1) return this.assetTypes[0]
+          else return this.assetTypes.find(assetType => assetType.id === this.defaultAssetType.id) || null
+        }
       } else {
         return this.common.assetTypesById[this.asset.asset.assetTypeId] || {}
       }
@@ -141,8 +163,8 @@ export default {
         steps[4] = true
       }
 
-      // Last valid step
-      return steps.reduce((previous, step, i) => step ? i : previous, 1)
+      // Index of first falsy step
+      return steps.indexOf(false) >= 0 ? steps.indexOf(false) - 1 : steps.length - 1
     },
     reusableImages () {
       return this.currentUser.id ? this.currentUser.images : []
@@ -175,6 +197,9 @@ export default {
     },
     changeCustomAttributes (customAttributes) {
       this.editingCustomAttributes = customAttributes
+    },
+    selectAssetType (assetType) {
+      this.editingAssetType = assetType
     },
     selectCategory (category) {
       this.selectedCategory = category
@@ -254,10 +279,10 @@ export default {
             assetTypeId: this.selectedAssetType.id,
             description: this.description,
             price: this.price,
-            quantity: assetQuantity,
+            quantity: this.selectedAssetType.infiniteStock ? 1 : assetQuantity,
             locations: this.locations,
             categoryId: this.selectedCategory ? this.selectedCategory.id : null,
-            customAttributes: this.editingCustomAttributes,
+            customAttributes: pick(this.editingCustomAttributes, this.editableCustomAttributeNames),
             active: true,
             validated: this.canPublishAsset,
             metadata: {
@@ -391,6 +416,22 @@ export default {
           <div class="text-h5">
             {{ $t({ id: 'pages.new_asset.form_header' }) }}
           </div>
+          <div class="q-mt-md row justify-center">
+            <SelectAssetType
+              v-if="showSelectAssetType"
+              :filtered-ids="filteredAssetTypesIds"
+              :initial-asset-type="selectedAssetType"
+              :label="$t({ id: 'asset.asset_type_label' })"
+              :show-search-icon="false"
+              :rules="[
+                selectedAssetType => !!selectedAssetType ||
+                  $t({ id: 'form.error.missing_field' })
+              ]"
+              :readonly="isAssetTypeReadonly"
+              bottom-slots
+              @change="selectAssetType"
+            />
+          </div>
           <div class="row justify-center">
             <QInput
               v-model="name"
@@ -473,6 +514,7 @@ export default {
               </div>
               <div class="col-sm-5">
                 <QInput
+                  v-show="!selectedAssetType.infiniteStock"
                   v-model="quantity"
                   :label="$t({ id: 'asset.quantity_label' })"
                   required
