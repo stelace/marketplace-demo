@@ -8,6 +8,7 @@ const inquirer = require('inquirer')
 const path = require('path')
 const fs = require('fs')
 const { execSync } = require('child_process')
+const { importCategories } = require('./import-categories')
 
 let stripe
 if (process.env.STRIPE_SECRET_KEY) {
@@ -236,6 +237,28 @@ async function run () {
       payload.metadata = metadata
 
       createdData.categories[key] = await stelace.categories.create(payload)
+    }
+  }
+  const categoriesToCreate = await importCategories(path.join(__dirname, 'categories.csv'))
+  if (categoriesToCreate.length) {
+    const categoriesByReference = {}
+
+    for (let cat of categoriesToCreate) {
+      const payload = {
+        name: cat.name,
+      }
+
+      if (cat._parentId) {
+        const parentCategory = categoriesByReference[cat._parentId]
+        payload.parentId = parentCategory.id
+      }
+
+      const metadata = Object.assign({}, payload.metadata, { initDataScript })
+      payload.metadata = metadata
+
+      const newCategory = await stelace.categories.create(payload)
+      createdData.categories[cat._label] = newCategory
+      categoriesByReference[cat._reference] = newCategory
     }
   }
   if (data.customAttributes) {
