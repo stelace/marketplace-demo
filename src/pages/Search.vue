@@ -271,7 +271,7 @@ export default {
         let el = document.createElement('div')
         el.id = markerId
         el.className = 'stl-map-marker'
-        el.style.backgroundImage = `url('${imgSrc}')`
+        el.style.backgroundImage = `url("${imgSrc}")`
 
         let marker = get(window.stlMapMarkers, assetId)
 
