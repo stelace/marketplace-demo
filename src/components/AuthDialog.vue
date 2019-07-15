@@ -51,14 +51,19 @@
           field="password_reset.message"
         />
       </q-card-section>
-      <q-card-section v-show="showAuthDialogUserType">
-        <AuthDialogUserType
-          :roles.sync="user.roles"
-          :firstname.sync="user.firstname"
-          :lastname.sync="user.lastname"
-          :display-name.sync="user.displayName"
-          :visible-user-types="authDialogActionConfig.userTypes"
-          @is-valid="isValidUserType"
+      <q-card-section v-show="type === 'signup'">
+        <h2 class="text-center text-h6 q-my-none">
+          <AppContent
+            entry="user"
+            field="select_user_group_helper"
+          />
+        </h2>
+        <q-input
+          v-model="user.firstname"
+          type="text"
+          :label="$t({ id: 'user.firstname_label' })"
+          autocomplete="firstname"
+          required
         />
       </q-card-section>
       <q-card-section>
@@ -373,14 +378,11 @@ import { required, email, minLength } from 'vuelidate/lib/validators'
 import EventBus from 'src/utils/event-bus'
 import { getInstantRoutePath } from 'src/router/routes'
 
-import AuthDialogUserType from 'src/components/AuthDialogUserType'
+import { getDisplayName } from 'src/utils/user'
 
 const passwordMinLength = 8
 
 export default {
-  components: {
-    AuthDialogUserType
-  },
   props: {
     title: {
       type: String,
@@ -404,10 +406,8 @@ export default {
         firstname: '',
         lastname: '',
         displayName: '',
-        roles: []
       },
       newPassword: null,
-      validUserType: false,
       actionPending: false,
       termsAccepted: false,
       errorType: null
@@ -436,7 +436,6 @@ export default {
     ]),
     ...mapGetters([
       'currentUser',
-      'authDialogActionConfig',
       'termsPath',
     ]),
     type () {
@@ -451,7 +450,7 @@ export default {
     authButtonDisabled () {
       return this.$v.user.email.$invalid ||
         this.$v.user.password.$invalid ||
-        (this.type === 'signup' && (!this.validUserType || !this.termsAccepted))
+        (this.type === 'signup' && !this.termsAccepted)
     },
     lostPasswordButtonDisabled () {
       return this.type === 'lostPassword' && this.$v.user.email.$invalid
@@ -465,9 +464,6 @@ export default {
     },
     resetPasswordToken () {
       return this.auth.resetPasswordToken
-    },
-    showAuthDialogUserType () {
-      return this.type === 'signup'
     },
     termsFullPath () {
       return getInstantRoutePath(this.termsPath)
@@ -485,6 +481,7 @@ export default {
           })
         } else if (this.type === 'signup') {
           const params = Object.assign({}, this.user)
+          params.displayName = getDisplayName(this.user.firstname)
           params.username = params.email
           params.metadata = {
             instant: {
@@ -635,9 +632,6 @@ export default {
         this.goToPreviousPage()
         this.notifyWarning('error.login_to_access_page')
       }
-    },
-    isValidUserType (isValidUserType) {
-      this.validUserType = isValidUserType
     },
     onOpenAuthDialog () {
       EventBus.$emit('authStatusChanged', 'opened')

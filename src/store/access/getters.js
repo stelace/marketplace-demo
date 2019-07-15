@@ -1,4 +1,4 @@
-import { get, isEmpty } from 'lodash'
+import { get } from 'lodash'
 import * as userUtils from 'src/utils/user'
 
 // HELPER FUNCTIONS
@@ -86,10 +86,6 @@ export function canEditUserAvailability (state, getters, rootState, rootGetters)
 
 export function canRateUser (state, getters, rootState, rootGetters) {
   return rootGetters.isProvider
-}
-
-export function canCreateOrganization (state, getters, rootState, rootGetters) {
-  return rootGetters.isProvider && rootGetters.isAccountActive
 }
 
 export function canViewRatingsList (state, getters, rootState, rootGetters) {

@@ -104,8 +104,6 @@ export default {
       if (status === 'success' && this.actionAfterAuthentication) {
         if (this.actionAfterAuthentication === 'checkout') {
           this.checkoutAfterAuth()
-        } else if (this.actionAfterAuthentication === 'contactUser') {
-          this.contactUserAfterAuth()
         }
         this.actionAfterAuthentication = null
       } else if (status === 'closed') {
@@ -145,58 +143,6 @@ export default {
       this.$q.dialog({
         title: this.$t({ id: 'user.account.checkout_prerequisite_header' }),
         message: this.$t({ id: 'user.account.checkout_prerequisite_message' }),
-        ok: {
-          label: this.$t({ id: 'prompt.continue_button' }),
-          color: 'positive',
-          class: 'q-ma-sm'
-        }
-      })
-    },
-    async contactUser () {
-      if (!this.currentUser.id) {
-        this.actionAfterAuthentication = 'contactUser'
-        this.openAuthDialog()
-        return
-      }
-
-      if (this.canContactUser) {
-        this.contactUserAfterAuth()
-      } else {
-        this.showContactUserPrerequisiteDialog()
-      }
-    },
-    async contactUserAfterAuth () {
-      if (!this.currentUser.id) {
-        this.actionAfterAuthentication = 'contactUser'
-        this.openAuthDialog()
-        return
-      }
-
-      // cannot contact herself
-      if (this.isOwnerCurrentUser) return
-
-      const asset = this.asset.activeAsset
-
-      const message = await this.$store.dispatch('sendMessage', {
-        content: ' ',
-        topicId: asset.id,
-        receiverId: asset.ownerId,
-        metadata: {
-          isHiddenMessage: true
-        }
-      })
-
-      await this.$store.dispatch('fetchMessages', { forceRefreshAll: true })
-
-      this.$router.push({
-        name: 'conversation',
-        params: { id: message.conversationId }
-      })
-    },
-    showContactUserPrerequisiteDialog () {
-      this.$q.dialog({
-        title: this.$t({ id: 'user.account.contact_user_prerequisite_header' }),
-        message: this.$t({ id: 'user.account.contact_user_prerequisite_message' }),
         ok: {
           label: this.$t({ id: 'prompt.continue_button' }),
           color: 'positive',

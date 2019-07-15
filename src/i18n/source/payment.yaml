@@ -50,18 +50,6 @@ payment:
     already_subscribed:
       en: You already have an ongoing subscription.
       fr: Vous avez déjà un abonnement en cours.
-    switch_to_main_organization_header:
-      en: Organization change
-      fr: Changement d'organisation
-    switch_to_main_organization_message:
-      en: |
-        Currently you’re logged as the subsidiary « {childOrgName} ».
-        Only the main organization can subscribe.
-        You will be logged as the main organization « {mainOrgName} » if you continue.
-      fr: |
-        Vous êtes actuellement connecté en tant que « {childOrgName} ».
-        Or seule l'organisation parente peut s'abonner.
-        Vous serez automatiquement connecté en tant que « {mainOrgName} » si vous continuez.
     checkout_confirmation_message:
       en: |
         You have selected the subscription plan « {planTitle} »

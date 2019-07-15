@@ -1,19 +1,15 @@
 instant:
   config:
     customAttributes:
-      fed_label:
-        en: Fed
-        fr: Nourri
-      lodged_label:
-        en: Lodged
-        fr: Logé
-      laundry_label:
-        en: Laundry
-        fr: Blanchi
       reference_label:
         en: Reference
         fr: Référence
-    roles:
-      premium_label:
-        en: Premium
-        fr: Premium
+      brand_label:
+        en: Brand
+        fr: Marque
+      dimension_label:
+        en: Dimension
+        fr: Dimensions
+      transport_label:
+        en: Transport
+        fr: Transport

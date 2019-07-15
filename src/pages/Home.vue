@@ -11,8 +11,6 @@ import SelectCategories from 'src/components/SelectCategories'
 
 import * as types from 'src/store/mutation-types'
 
-import EventBus from 'src/utils/event-bus'
-
 import PageComponentMixin from 'src/mixins/pageComponent'
 
 export default {
@@ -66,8 +64,6 @@ export default {
       'currentUser',
       'defaultSearchMode',
       'homeHeroUrlTransformed',
-      'mainOrganization',
-      'isMainOrganization',
     ]),
   },
   watch: {
@@ -79,12 +75,6 @@ export default {
     this.$store.dispatch('fetchLastAssets', {
       nbResults: this.nbAssetsPerSlideDefault * this.nbCarouselSlides
     }).then(assets => { this.assets = assets })
-  },
-  async mounted () {
-    EventBus.$on('authStatusChanged', (status) => this.onAuthChange(status))
-  },
-  beforeDestroy () {
-    EventBus.$off('authStatusChanged', (status) => this.onAuthChange(status))
   },
   methods: {
     async afterAuth () {

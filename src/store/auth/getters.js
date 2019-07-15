@@ -54,21 +54,3 @@ export function canViewSelectedUserPrivateData (state, getters, rootState, rootG
 
   return privateFields.every(field => !isUndefined(selectedUser[field]))
 }
-
-export function authDialogActionConfig (state) {
-  const action = state.authDialogAction
-
-  const actionConfig = {
-    userTypes: ['user', 'provider']
-  }
-
-  if (!action) {
-    return actionConfig
-  }
-
-  if (action === 'createAsset') {
-    actionConfig.userTypes = ['provider']
-  }
-
-  return actionConfig
-}

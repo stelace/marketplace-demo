@@ -6,44 +6,40 @@
 // like where ids are expected, so that you can use 'assetTypes::someName'
 // instead of an id you don’t know (that will look like 'ast_xx…').
 
-const ms = require('ms')
+// const ms = require('ms')
 
 // cannot use addToDate from quasar
 // because quasar isn't exported as a commonjs module to be used in NodeJS
-function computeDate (isoDate, duration) {
-  return new Date(new Date(isoDate).getTime() + ms(duration)).toISOString()
-}
+// function computeDate (isoDate, duration) {
+//   return new Date(new Date(isoDate).getTime() + ms(duration)).toISOString()
+// }
 
 module.exports = {
   assetTypes: {
-    job: {
-      name: 'Job',
+    renting: {
+      name: 'Renting',
       timeBased: true,
       infiniteStock: false,
       timing: {
-        timeUnit: 'M',
+        timeUnit: 'd',
         minDuration: { d: 1 }
       },
       active: true
     },
-    applicant: {
-      name: 'Applicant',
-      timeBased: true,
+    selling: {
+      name: 'Selling',
+      timeBased: false,
       infiniteStock: false,
-      timing: {
-        timeUnit: 'M',
-        minDuration: { d: 1 }
-      },
       active: true
     }
   },
   assets: {
-    barman: {
-      name: 'Awesome barman',
-      description: 'Barman description',
-      assetTypeId: 'assetTypes::job',
-      ownerId: 'users.mainOrganization::company1',
-      price: 2000,
+    coldRack: {
+      name: 'Cold rack',
+      description: 'Cold rack description',
+      assetTypeId: 'assetTypes::renting',
+      ownerId: 'users::user1',
+      price: 100,
       locations: [
         {
           latitude: 44.5667,
@@ -54,26 +50,22 @@ module.exports = {
       validated: true,
       active: true,
       customAttributes: {
-        fed: true,
-        lodged: true,
+        reference: 'X456FB',
+        brand: 'Philips',
+        dimension: '1m x 1m x 2m',
+        transport: false
       },
       metadata: {
         images: [
-          { url: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/6b5bca6e96d095228fd070ffade9f4c5-IMG_0044.JPG' },
-          { url: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/94b61699afbdfdb249c69d58d50b65fa-IMG_0088.JPG' },
-          { url: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/fe30b4130841a5df3b286b827c6ec715-IMG_0066.JPG' },
-          { url: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/f89bd281daf4d3f3d586ba1448693c86-IMG_0120.JPG' },
-          { url: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/69fc77bfd7b6edf19828e1c9d69b817e-IMG_0170.JPG' },
-          { url: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/db36c7b812ab5c752541d65a554f861f-IMG_0213.JPG' },
-          { url: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/516ce7283219eea9a9929cd885b05fe9-IMG_0197.JPG' }
+          { url: 'https://stelace-instant-dev-eu.s3.amazonaws.com/dev/wingon/images/2b183c466e30b2ea7977f3ab1b560009-armoire-de-transfert-froide-1-5-c-monocoque-57682.jpg' }
         ]
       }
     },
-    waiter: {
-      name: 'Oyster farm worker',
-      description: 'Hard work, very rewarding',
-      assetTypeId: 'assetTypes::job',
-      ownerId: 'users.mainOrganization::company2',
+    chestFreezer: {
+      name: 'Chest freezer',
+      description: 'Very large',
+      assetTypeId: 'assetTypes::selling',
+      ownerId: 'users::user2',
       price: 2500,
       locations: [
         {
@@ -85,20 +77,23 @@ module.exports = {
       validated: true,
       active: true,
       customAttributes: {
-        fed: true,
+        reference: 'coffre-1',
+        brand: 'Samsung',
+        dimension: '3m x 1.5m x 1.5m',
+        transport: true
       },
       metadata: {
         images: [
-          { url: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/37417d8fdee7f756889e9251f696b159-Juste-4.jpg' }
+          { url: 'https://stelace-instant-dev-eu.s3.amazonaws.com/dev/wingon/images/4959e12f23e6b4b296360631a70c12ec-congelateur-coffre-803-litres-525253.jpg' }
         ]
       }
     },
-    farmWorker1: {
-      name: 'Experienced Farm Worker for Summer',
-      description: 'Farm Worker description',
-      assetTypeId: 'assetTypes::job',
-      ownerId: 'users.mainOrganization::company3',
-      price: 1800,
+    potatoesCooker: {
+      name: 'Potatoes cooker',
+      description: 'Very convenient to use',
+      assetTypeId: 'assetTypes::renting',
+      ownerId: 'users::user3',
+      price: 30,
       locations: [
         {
           latitude: 43.6,
@@ -110,18 +105,22 @@ module.exports = {
       active: true,
       metadata: {
         images: [
-          { url: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/2bedecf2e22bebb4b78d8bf656139afa-ClanMaMa-1.jpg' },
-          { url: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/db235d3732d7d21bd012d889a364c36e-ClanMaMa-2.jpg' },
-          { url: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/c13f4981551c3f2471fd06dba8c27b9d-ClanMaMa-3.jpg' }
+          { url: 'https://stelace-instant-dev-eu.s3.amazonaws.com/dev/wingon/images/8ca4e44957fc38547ce3c335156c916d-cuiseur-pommes-de-terre-mat-riau-acier-inoxydable-18-10-qualit-lourde-contenance-25-0-l-32-0-cm-contacto-5666768.jpg' },
         ]
       }
     },
-    farmWorker2: {
-      name: 'Experienced Farm Worker for Spring',
-      description: 'Farm Worker description',
-      assetTypeId: 'assetTypes::job',
-      ownerId: 'users.mainOrganization::company3',
-      price: 1800,
+    hoodTypeDishWasher: {
+      name: 'Hood type dish washer',
+      description: 'Cleans very well',
+      assetTypeId: 'assetTypes::renting',
+      ownerId: 'users::user3',
+      price: 60,
+      customAttributes: {
+        reference: '7896515',
+        brand: 'ElectroLux',
+        dimension: null,
+        transport: true
+      },
       locations: [
         {
           latitude: 43.6,
@@ -133,20 +132,15 @@ module.exports = {
       active: true,
       metadata: {
         images: [
-          { url: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/4c542ffebd490cfc73373a754bd144d8-Belvedere1.jpg' },
-          { url: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/07bbb8c7fe7b5ca5e13f5668124a9c47-Belvedere2.jpg' },
-          { url: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/7d1afc8b6ae1ee97e3ea1774ecd97604-Belvedere3.jpg' },
-          { url: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/7ca02f3f0ba85ca344e4dc0b4d76f8f1-Belvedere4.jpg' },
-          { url: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/0b888640db8d6245b792ca2c38e4ad6e-Belvedere5.jpg' },
-          { url: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/a77ec5be0cea668dfbd6ca0104d1fa7e-Belvedere6.jpg' }
+          { url: 'https://stelace-instant-dev-eu.s3.amazonaws.com/dev/wingon/images/cf63b2383ed277c383715e4c71edb495-Lave vaisselle capot.png' },
         ],
       }
     },
-    tourGuide: {
-      name: 'Beginner tour guide',
-      description: 'Tour guide description',
-      assetTypeId: 'assetTypes::job',
-      ownerId: 'users.mainOrganization::company3',
+    rotisserie: {
+      name: 'Rotisserie',
+      description: 'Perfect for any meat',
+      assetTypeId: 'assetTypes::selling',
+      ownerId: 'users::user3',
       price: 1000,
       locations: [
         {
@@ -159,134 +153,23 @@ module.exports = {
       active: true,
       metadata: {
         images: [
-          { url: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/819117a2ebcb1843770df00a6d62fc43-42840329_267734193795979_8786764997486182400_o.jpg' },
-          { url: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/3d3794bbf0591a70b67d8724898d7410-31649378_186219878614078_6013957557415051264_n.jpg' },
-          { url: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/e7d6b98b0be913b09a9c8dc81f10beb0-48123040_292455064657225_7619080182749462528_o.jpg' },
-          { url: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/f5c9218d019d262f3d15295596b09551-48366346_290948278141237_4912170395836088320_o.jpg' },
-          { url: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/77d9be123efa469932ab2454fb9f95eb-53632226_324173318152066_6784837503384813568_o.jpg' }
-        ]
-      }
-    },
-    tourGuide2: {
-      name: 'Tour guide for insolite places',
-      description: 'Tour guide description',
-      assetTypeId: 'assetTypes::job',
-      ownerId: 'users.mainOrganization::company3',
-      price: 2500,
-      locations: [
-        {
-          latitude: 43.2961,
-          longitude: 5.3699,
-          shortDisplayName: 'Marseille'
-        }
-      ],
-      validated: true,
-      active: true,
-      metadata: {
-      }
-    },
-    photographer: {
-      name: 'Confirmed photographer',
-      description: 'Expert needed',
-      assetTypeId: 'assetTypes::job',
-      ownerId: 'users.mainOrganization::company4',
-      price: 2700,
-      locations: [
-        {
-          latitude: 48.3905,
-          longitude: -4.4860,
-          shortDisplayName: 'Brest'
-        }
-      ],
-      validated: true,
-      active: true,
-      metadata: {
-        images: [
-          { url: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/f5c9218d019d262f3d15295596b09551-48366346_290948278141237_4912170395836088320_o.jpg' }
-        ]
-      }
-    },
-    gardener: {
-      name: 'Specialized gardener',
-      description: 'Tulip expert',
-      assetTypeId: 'assetTypes::job',
-      ownerId: 'users.mainOrganization::company2',
-      price: 4100,
-      locations: [
-        {
-          latitude: 48.5846,
-          longitude: 7.7507,
-          shortDisplayName: 'Strasbourg'
-        }
-      ],
-      validated: true,
-      active: true,
-      metadata: {
-        images: [
-          { url: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/48ea4fe7281ea6e2c3b732cb3455d9fc-japanese-gardens.jpg' }
-        ]
-      }
-    },
-    iceCreamVendor: {
-      name: 'Beach ice cream vendor',
-      description: 'Ice cream vendor description',
-      assetTypeId: 'assetTypes::job',
-      ownerId: 'users.mainOrganization::company1',
-      price: 2300,
-      locations: [
-        {
-          latitude: 50.6305,
-          longitude: 3.0706,
-          shortDisplayName: 'Lille'
-        }
-      ],
-      validated: true,
-      active: true,
-      customAttributes: {
-        fed: true,
-        lodged: false,
-        laundry: true
-      },
-      metadata: {
-        images: [
-          { url: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/69fc77bfd7b6edf19828e1c9d69b817e-IMG_0170.JPG' }
-        ]
-      }
-    },
-    ballBoy: {
-      name: 'Ball boy for Rolland Garros',
-      description: 'Ball boy description',
-      assetTypeId: 'assetTypes::job',
-      ownerId: 'users.mainOrganization::company4',
-      price: 1100,
-      locations: [
-        {
-          latitude: 48.8566,
-          longitude: 2.3514,
-          shortDisplayName: 'Paris'
-        }
-      ],
-      validated: true,
-      active: true,
-      metadata: {
-        images: [
-          { url: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/b641d42803ac2dee7dbc3112a70e0e68-roland-garros.jpg' }
+          { url: 'https://stelace-instant-dev-eu.s3.amazonaws.com/dev/wingon/images/15c7fb9feb258b070dea18e49d241829-rotissoire-autonettoyante-acr-automatique-sur-placard-technique-a-roulette-6056319.jpg' },
         ]
       }
     }
   },
   categories: {
-    farmWorker: {
-      name: 'Farm Worker'
+    cold: {
+      name: 'Cold'
     },
-    waiter: {
-      name: 'Waiter'
+    pot: {
+      name: 'Pots'
     },
-    photographer: {
-      name: 'Photographer'
+    washing: {
+      name: 'Washing'
     },
-    barman: {
-      name: 'Barman'
+    oven: {
+      name: 'Ovens'
     }
   },
   config: {
@@ -298,34 +181,56 @@ module.exports = {
           locale: 'fr',
           currency: 'EUR',
           assetTypes: {
-            'assetTypes::job': {
-              isDefault: true,
+            'assetTypes::renting': {
+              isDefault: false,
               customAttributes: [
-                'fed',
-                'lodged',
-                'laundry'
+                'reference',
+                'brand',
+                'dimension',
+                'transport'
+              ]
+            },
+            'assetTypes::selling': {
+              isDefault: false,
+              customAttributes: [
+                'reference',
+                'brand',
+                'dimension',
+                'transport'
               ]
             }
           },
           searchOptions: {
             modes: {
               default: {
-                assetTypesIds: ['assetTypes::job'],
+                assetTypesIds: ['assetTypes::renting', 'assetTypes::selling'],
                 customAttributes: [
-                  'fed',
-                  'lodged',
-                  'laundry'
+                  'transport'
                 ],
                 isActiveFor: [
                   'public',
-                  'user',
-                  'provider'
+                  'user'
                 ]
               },
-              reversed: {
-                assetTypesIds: ['assetTypes::applicant'],
-                isActiveFor: ['getters.isPremium'],
-                isDefaultFor: ['getters.isPremium']
+              renting: {
+                assetTypesIds: ['assetTypes::renting'],
+                customAttributes: [
+                  'transport'
+                ],
+                isActiveFor: [
+                  'public',
+                  'user'
+                ]
+              },
+              selling: {
+                assetTypesIds: ['assetTypes::selling'],
+                customAttributes: [
+                  'transport'
+                ],
+                isActiveFor: [
+                  'public',
+                  'user'
+                ]
               }
             }
           },
@@ -395,9 +300,9 @@ module.exports = {
               'recommendation',
             ],
           },
+
           assetsInUniqueCountry: 'fr',
           assetsInUniqueCountryActive: true,
-          shouldAuthenticateAsOrg: ['provider'],
           countriesCovered: ['fr'],
           countriesCoveredActive: true,
           googleAnalyticsTrackingActive: true,
@@ -408,61 +313,6 @@ module.exports = {
     }
   },
   customAttributes: {
-    fed: {
-      name: 'fed',
-      type: 'boolean',
-      metadata: {
-        instant: {
-          i18n: {
-            label: {
-              entry: 'instant',
-              field: 'config.customAttributes.fed_label',
-              default: 'Fed' // in case translation is missing
-              // Generally in the default language of the platform
-            },
-            description: {}
-          },
-          materialIcon: 'restaurant', // example of UIcustomization with metadata
-          priority: 10 // used to order custom attributes in UI
-        }
-      }
-    },
-    lodged: {
-      name: 'lodged',
-      type: 'boolean',
-      metadata: {
-        instant: {
-          i18n: {
-            label: {
-              entry: 'instant',
-              field: 'config.customAttributes.lodged_label',
-              default: 'Lodged'
-            },
-            description: {}
-          },
-          materialIcon: 'home',
-          priority: 5 // used to order custom attributes in UI
-        }
-      }
-    },
-    laundry: {
-      name: 'laundry',
-      type: 'boolean',
-      metadata: {
-        instant: {
-          i18n: {
-            label: {
-              entry: 'instant',
-              field: 'config.customAttributes.laundry_label',
-              default: 'Laundry'
-            },
-            description: {}
-          },
-          materialIcon: 'local_laundry_service',
-          priority: 1 // used to order custom attributes in UI
-        }
-      }
-    },
     reference: {
       name: 'reference',
       type: 'text',
@@ -472,262 +322,129 @@ module.exports = {
             label: {
               entry: 'instant',
               field: 'config.customAttributes.reference_label',
-              default: 'Reference'
+              default: 'Reference' // in case translation is missing
+              // Generally in the default language of the platform
             },
             description: {}
           },
-          materialIcon: null,
-          priority: 1 // used to order custom attributes in UI
+          priority: 6 // used to order custom attributes in UI
+        }
+      }
+    },
+    brand: {
+      name: 'brand',
+      type: 'text',
+      metadata: {
+        instant: {
+          i18n: {
+            label: {
+              entry: 'instant',
+              field: 'config.customAttributes.brand_label',
+              default: 'Brand' // in case translation is missing
+              // Generally in the default language of the platform
+            },
+            description: {}
+          },
+          priority: 10 // used to order custom attributes in UI
+        }
+      }
+    },
+    dimension: {
+      name: 'dimension',
+      type: 'text',
+      metadata: {
+        instant: {
+          i18n: {
+            label: {
+              entry: 'instant',
+              field: 'config.customAttributes.dimension_label',
+              default: 'Dimension' // in case translation is missing
+              // Generally in the default language of the platform
+            },
+            description: {}
+          },
+          priority: 8 // used to order custom attributes in UI
+        }
+      }
+    },
+    transport: {
+      name: 'transport',
+      type: 'boolean',
+      metadata: {
+        instant: {
+          i18n: {
+            label: {
+              entry: 'instant',
+              field: 'config.customAttributes.transport_label',
+              default: 'Transport' // in case translation is missing
+              // Generally in the default language of the platform
+            },
+            description: {}
+          },
+          materialIcon: 'directions_car', // example of UIcustomization with metadata
+          priority: 10 // used to order custom attributes in UI
         }
       }
     }
   },
   messages: {
-    message1: {
-      topicId: 'transactions::waiter',
-      content: 'Hi',
-      read: true,
-      senderId: 'users::applicant1',
-      receiverId: 'users::company2'
-    },
-    message2: {
-      topicId: 'transactions::waiter',
-      content: 'I’d like to know more.',
-      conversationId: 'conversations::message1',
-      read: true,
-      senderId: 'users::company2',
-      receiverId: 'users::applicant1'
-    },
-    message3: {
-      topicId: 'transactions::waiter',
-      content: 'Did you receive my message?',
-      conversationId: 'conversations::message1',
-      read: false,
-      senderId: 'users::company2',
-      receiverId: 'users::applicant1'
-    },
-    message4: {
-      topicId: 'transactions::farmWorker1',
-      content: 'This is a game I’m testing.',
-      read: true,
-      senderId: 'users::applicant2',
-      receiverId: 'users::company3'
-    }
+
   },
   ratings: {
-    applicant1Presentation: {
-      score: 70,
-      authorId: 'users::company1',
-      targetId: 'users::applicant1',
-      transactionId: 'transactions::waiter',
-      label: 'main:presentation'
-    },
-    applicant1Punctuality: {
-      score: 30,
-      authorId: 'users::company1',
-      targetId: 'users::applicant1',
-      transactionId: 'transactions::waiter',
-      label: 'main:punctuality'
-    },
-    applicant1Consistency: {
-      score: 80,
-      authorId: 'users::company1',
-      targetId: 'users::applicant1',
-      transactionId: 'transactions::waiter',
-      label: 'main:consistency'
-    },
-    applicant1TeamSpirit: {
-      score: 100,
-      authorId: 'users::company1',
-      targetId: 'users::applicant1',
-      transactionId: 'transactions::waiter',
-      label: 'main:teamSpirit'
-    },
-    applicant1Involvement: {
-      score: 50,
-      authorId: 'users::company1',
-      targetId: 'users::applicant1',
-      transactionId: 'transactions::waiter',
-      label: 'main:involvement'
-    },
-    applicant1CompletionScore: {
-      score: 0,
-      authorId: 'users::company1',
-      targetId: 'users::applicant1',
-      transactionId: 'transactions::waiter',
-      label: 'completionScore'
-    },
+
   },
   transactions: {
-    waiter: {
-      assetId: 'assets::waiter',
-      startDate: computeDate(new Date().toISOString(), '10d'),
-      duration: { d: 30 },
-      quantity: 1,
-      takerId: 'users::applicant1'
-    },
-    farmWorker1: {
-      assetId: 'assets::farmWorker1',
-      startDate: computeDate(new Date().toISOString(), '5d'),
-      duration: { d: 15 },
-      quantity: 1,
-      takerId: 'users::applicant2'
-    },
-    barman: {
-      assetId: 'assets::barman',
-      startDate: computeDate(new Date().toISOString(), '15d'),
-      duration: { d: 10 },
-      quantity: 1,
-      takerId: 'users::applicant2'
-    }
+
   },
   users: {
-    company1: {
-      username: `jobs-marketplace-test-premium1@example.com`,
-      password: 'jobs-marketplace-test-premium1@example.com',
-      email: 'jobs-marketplace-test-premium1@example.com',
-      displayName: 'Company 1',
-      roles: ['provider', 'premium'],
-      metadata: {
-        _private: {
-          taxId: 'FRAB123456789',
-          phone: '+33 1 23 45 67 89',
-        },
-        instant: {
-          twitterHandle: '@company1'
-        }
-      },
-      platformData: {
-        instant: {
-          emailVerified: true,
-          phoneVerified: true,
-          taxIdVerified: true,
-          accountActive: true,
-        },
-
-        _private: {
-          validTaxIds: ['FRAB123456789'],
-          premiumEndDate: computeDate(new Date().toISOString(), '30d')
-        }
-      }
-    },
-    company2: {
-      username: `jobs-marketplace-test-recruteur2@example.com`,
-      password: 'jobs-marketplace-test-recruteur2@example.com',
-      email: `jobs-marketplace-test-recruteur2@example.com`,
-      displayName: 'Company 2',
-      roles: ['provider'],
-      metadata: {
-        instant: {
-          twitterHandle: '@company2'
-        },
-      }
-    },
-    company3: {
-      username: `jobs-marketplace-test-recruteur3@example.com`,
-      password: 'jobs-marketplace-test-recruteur3@example.com',
-      email: 'jobs-marketplace-test-recruteur3@example.com',
-      displayName: 'Company 3',
-      roles: ['provider'],
-      metadata: {
-        instant: {
-          twitterHandle: '@company2'
-        },
-      }
-    },
-    company4: {
-      username: `jobs-marketplace-test-recruteur4@example.com`,
-      password: 'jobs-marketplace-test-recruteur4@example.com',
-      email: 'jobs-marketplace-test-recruteur4@example.com',
-      displayName: 'Company 4',
-      roles: ['provider'],
-      metadata: {
-        instant: {
-          twitterHandle: '@company4'
-        },
-      }
-    },
-    applicant1: {
-      username: `jobs-marketplace-test-candidat1@example.com`,
-      password: `jobs-marketplace-test-candidat1@example.com`,
-      email: `jobs-marketplace-test-candidat1@example.com`,
+    user1: {
+      username: `marketplace-test-user1@example.com`,
+      password: `marketplace-test-user1@example.com`,
+      email: `marketplace-test-user1@example.com`,
       displayName: 'Jordan',
       firstname: 'Jordan',
       lastname: 'Rossignol',
-      roles: ['user'],
       metadata: {
         _private: {
           phone: '+33 9 87 65 43 21',
         },
 
         instant: {
-          profileTitle: 'Best barman in town',
-          profileSalary: 2000,
-          categoryId: 'categories::barman',
           avatarUrl: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/2abc4416b56dfe144e1e2c43d3143bee-Profil-Jordan-003.jpg'
-        }
-      },
-      platformData: {
-        instant: {
-          emailVerified: true,
-          phoneVerified: true,
-          accountActive: true
         }
       }
     },
-    applicant2: {
-      username: `jobs-marketplace-test-candidat2@example.com`,
-      password: `jobs-marketplace-test-candidat2@example.com`,
-      email: `jobs-marketplace-test-candidat2@example.com`,
+    user2: {
+      username: `marketplace-test-user2@example.com`,
+      password: `marketplace-test-user2@example.com`,
+      email: `marketplace-test-user2@example.com`,
       displayName: 'Sophie',
       firstname: 'Sophie',
       lastname: 'Bleue',
-      roles: ['user'],
       metadata: {
         _private: {
           phone: '+33 6 87 65 43 21',
         },
 
         instant: {
-          profileTitle: 'Skilled photographer',
-          profileSalary: 1500,
-          categoryId: 'categories::photographer',
           avatarUrl: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/4060e81d8687239763932b4e59a140d0-132x132_usr_avatar_maman_louve.jpg'
-        }
-      },
-      platformData: {
-        instant: {
-          emailVerified: true,
-          phoneVerified: true,
-          accountActive: true
         }
       }
     },
-    applicant3: {
-      username: `jobs-marketplace-test-candidat3@example.com`,
-      password: `jobs-marketplace-test-candidat3@example.com`,
-      email: `jobs-marketplace-test-candidat3@example.com`,
+    user3: {
+      username: `marketplace-test-user3@example.com`,
+      password: `marketplace-test-user3@example.com`,
+      email: `marketplace-test-user3@example.com`,
       displayName: 'Cyril',
       firstname: 'Cyril',
       lastname: 'Petit',
-      roles: ['user'],
       metadata: {
         _private: {
           phone: '+33 2 68 65 23 21',
         },
 
         instant: {
-          profileTitle: 'Trained farm worker',
-          profileSalary: 1350,
-          categoryId: 'categories::farmWorker',
           avatarUrl: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/833a41bdc057376c6954800b12157219-image-principale-919b9d.png'
-        }
-      },
-      platformData: {
-        instant: {
-          emailVerified: true,
-          phoneVerified: true,
-          accountActive: true
         }
       }
     }
@@ -746,20 +463,12 @@ module.exports = {
       event: 'user__created',
       context: ['stelace'],
       computed: {
-        expirationDate: 'new Date(new Date().getTime() + 3600 * 1000).toISOString()',
-        isProvider: 'user.roles.some(role => role === "provider")',
-        isOrganization: 'user.roles.some(role => role === "organization")'
+        expirationDate: 'new Date(new Date().getTime() + 3600 * 1000).toISOString()'
       },
       run: [
         {
           endpointMethod: 'POST',
-          stop: `
-            !user.email ||
-            (
-              computed.isProvider &&
-              !(computed.isProvider && computed.isOrganization)
-            )
-          `,
+          stop: `!user.email`,
           endpointUri: '/token/check/request',
           endpointPayload: {
             userId: 'user.id',
@@ -1270,52 +979,6 @@ module.exports = {
       ]
     },
 
-    sendEmailToTakerWhenProviderContact: {
-      name: '[Email] Provider contacts a user',
-      description: 'Send an email when a provider contacts a user if it’s the first message of the conversation',
-      event: 'message__created',
-      context: ['stelace'],
-      computed: {
-        firstNotification: '_.get(message, "metadata.instant.firstNotification", false)',
-        senderType: '_.get(message, "metadata.instant.senderType")',
-        conversationId: 'message.conversationId',
-        receiverId: 'message.receiverId'
-      },
-      run: [
-        {
-          name: 'receiver',
-          stop: `
-            !computed.conversationId &&
-            !computed.firstNotification &&
-            computed.senderType !== "provider"
-          `,
-          endpointMethod: 'GET',
-          endpointUri: '/users/${computed.receiverId}',
-        },
-        {
-          stop: `
-            !computed.toEmail
-          `,
-          endpointMethod: 'POST',
-          computed: {
-            toName: '_.get(responses, "receiver.displayName", "")',
-            toEmail: '_.get(responses, "receiver.email", "")',
-            conversationLink: '`${env.STELACE_INSTANT_WEBSITE_URL}/i/${computed.conversationId}`'
-          },
-          endpointUri: '/emails/send-template',
-          endpointPayload: {
-            name: '"contactMessageByOwnerToTaker"',
-            data: {
-              conversationLink: 'computed.conversationLink'
-            },
-            locale: '"fr"',
-            toEmail: 'computed.toEmail',
-            toName: 'computed.toName'
-          }
-        }
-      ]
-    },
-
     sendNotificationWhenNewMessage: {
       name: 'New message notification',
       description: 'Send a notification via Signal',
@@ -1341,461 +1004,6 @@ module.exports = {
       ]
     },
 
-    addRoleToUserAtSignup: {
-      name: '[Init] User roles at signup',
-      description: 'Add roles to user at signup depending if she is a user or a provider',
-      event: 'user__created',
-      computed: {
-        isUser: 'user.roles.some(role => role === "user")',
-        isProvider: 'user.roles.some(role => role === "provider")',
-        isOrganization: 'user.roles.some(role => role === "organization")',
-      },
-      run: [
-        {
-          endpointMethod: 'PATCH',
-          stop: '(!computed.isUser && !computed.isProvider) || computed.isOrganization',
-          endpointUri: '/users/${user.id}',
-          endpointPayload: {
-            roles: `
-              user.roles.concat(
-                computed.isUser
-                  ? (user.roles.includes("applicant") ? [] : ["applicant"])
-                  : (user.roles.includes("recruiter") ? [] : ["recruiter"])
-              )
-            `
-          }
-        }
-      ]
-    },
-
-    copyUserNamesIntoPremiumAtCreation: {
-      name: '[Init] User names at creation',
-      description: 'Copy user names into premium namespace at user creation',
-      event: 'user__created',
-      computed: {
-        isUser: 'user.roles.some(role => role === "user")',
-      },
-      run: [
-        {
-          endpointMethod: 'PATCH',
-          stop: '!computed.isUser',
-          endpointUri: '/users/${user.id}',
-          endpointPayload: {
-            metadata: {
-              _premium: {
-                firstname: 'user.firstname',
-                lastname: 'user.lastname'
-              }
-            }
-          }
-        }
-      ]
-    },
-
-    copyUserNamesIntoPremiumAtUpdate: {
-      name: '[Sync] User names at update',
-      description: 'Copy user names into premium namespace when user is updated',
-      event: 'user__updated',
-      computed: {
-        isUser: 'user.roles.some(role => role === "user")',
-      },
-      run: [
-        {
-          endpointMethod: 'PATCH',
-          stop: `
-            !computed.isUser ||
-            (typeof changesRequested.firstname === "undefined" && typeof changesRequested.lastname === "undefined")
-          `,
-          endpointUri: '/users/${user.id}',
-          endpointPayload: {
-            metadata: {
-              _premium: {
-                firstname: 'user.firstname',
-                lastname: 'user.lastname'
-              }
-            }
-          }
-        }
-      ]
-    },
-
-    createOrgForProvider: {
-      name: '[Init] Provider organization creation',
-      description: 'Create an organization for the provider at signup',
-      event: 'user__created',
-      run: [
-        {
-          name: 'organization',
-          endpointMethod: 'POST',
-          stop: '!user.roles.includes("provider") || user.roles.includes("organization")',
-          computed: {
-            rolesToUpdate: 'user.roles.includes("recruiter") ? user.roles : user.roles.concat(["recruiter"])',
-          },
-          endpointUri: '/users',
-          endpointPayload: {
-            type: '"organization"',
-            displayName: 'user.displayName',
-            orgOwnerId: 'user.id',
-            roles: 'computed.rolesToUpdate',
-            email: 'user.email',
-            metadata: 'Object.assign({}, user.metadata, { instant: { contactId: user.id } })',
-            platformData: 'user.platformData',
-          }
-        },
-        {
-          endpointMethod: 'PATCH',
-          endpointUri: '/users/${user.id}/organizations/${responses.organization.id}',
-          endpointPayload: {
-            roles: 'computed.rolesToUpdate'
-          }
-        }
-      ]
-    },
-
-    updateChildOrgAtCreation: {
-      name: '[Init] Children organizations at creation',
-      description: 'Update provider child organization at creation',
-      event: 'user__created',
-      computed: {
-        childOrgId: 'user.id',
-        childOrgRoles: 'user.roles',
-        parentOrgId: 'Object.keys(user.organizations)[0]',
-        isChildOrg: 'Object.keys(user.organizations).length === 1'
-      },
-      run: [
-        {
-          name: 'parentOrg',
-          description: 'Fetch parent organization',
-          stop: `
-            !computed.childOrgRoles.includes("provider") ||
-            !computed.childOrgRoles.includes("organization") ||
-            !computed.isChildOrg
-          `,
-          endpointMethod: 'GET',
-          endpointUri: '/users/${computed.parentOrgId}'
-        },
-        {
-          description: 'Update the child organization with parent organization data',
-          computed: {
-            parentOrgRoles: '_.get(responses, "parentOrg.roles", [])',
-            contactId: '_.get(responses, "parentOrg.metadata.instant.contactId")',
-            getParentOrgData: 'key => _.get(responses, `parentOrg.platformData.instant.${key}`)',
-            getParentOrgPrivateData: 'key => _.get(responses, `parentOrg.platformData._private.${key}`)',
-          },
-          endpointMethod: 'PATCH',
-          endpointUri: '/users/${computed.childOrgId}',
-          endpointPayload: {
-            roles: 'computed.parentOrgRoles',
-            platformData: {
-              instant: {
-                emailVerified: 'computed.getParentOrgData("emailVerified")',
-                phoneVerified: 'computed.getParentOrgData("phoneVerified")',
-                taxIdVerified: 'computed.getParentOrgData("taxIdVerified")',
-                accountActive: 'computed.getParentOrgData("accountActive")',
-              },
-              _private: {
-                validTaxIds: 'computed.getParentOrgPrivateData("validTaxIds")',
-                premiumEndDate: 'computed.getParentOrgPrivateData("premiumEndDate")'
-              }
-            }
-          }
-        },
-        {
-          description: 'Update user roles within the child organization',
-          endpointMethod: 'PATCH',
-          endpointUri: '/users/${computed.contactId}/organizations/${computed.childOrgId}',
-          endpointPayload: {
-            roles: 'computed.parentOrgRoles.filter(role => role !== "organization")'
-          }
-        }
-      ]
-    },
-
-    syncChildrenOrgsWithParentOrg: {
-      name: '[Sync] Children organizations when parent org updates',
-      description: 'Synchronize children orgs with parent org',
-      event: 'user__updated',
-      computed: {
-        parentOrgId: 'user.id',
-        mayBeParentOrg: 'Object.keys(user.organizations).length === 0',
-        contactId: '_.get(user, "metadata.instant.contactId")',
-        premiumEndDate: '_.get(user, "metadata._private.premiumEndDate")',
-        changedPremiumEndDate: '_.get(changesRequested, "metadata._private.premiumEndDate")',
-      },
-      run: [
-        // get user to retrieve all children organizations
-        {
-          name: 'user',
-          computed: {
-            dataChanged: `
-              typeof changesRequested.roles !== "undefined" ||
-              typeof computed.changedPremiumEndDate !== "undefined"
-            `
-          },
-          stop: `
-            !user.roles.includes("provider") ||
-            !user.roles.includes("organization") ||
-            !computed.mayBeParentOrg ||
-            !computed.contactId ||
-            !computed.dataChanged
-          `,
-          endpointMethod: 'GET',
-          endpointUri: '/users/${computed.contactId}'
-        },
-        // synchronize all children organizations with parent org data
-        {
-          computed: {
-            objects: `
-              Object.keys(_.get(responses, "user.organizations", {}))
-                .filter(orgId => orgId !== computed.parentOrgId)
-                .map(orgId => {
-                  return {
-                    objectId: orgId,
-                    payload: {
-                      roles: user.roles,
-                      metadata: {
-                        _private: {
-                          premiumEndDate: computed.premiumEndDate
-                        }
-                      }
-                    }
-                  }
-                })
-            `
-          },
-          endpointMethod: 'POST',
-          endpointUri: '/batch',
-          endpointPayload: {
-            objectType: '"user"',
-            method: '"PATCH"',
-            objects: 'computed.objects'
-          }
-        }
-      ]
-    },
-
-    // roles "premium" or "newcomer" can be added to an organization at anytime
-    // if we don't synchronize user roles within its organization with the organization roles
-    // the user will miss the 'premium' role for instance and won't see premium namespace data
-    syncUserRolesWithOrg: {
-      name: '[Sync] User roles with org',
-      description: 'Synchronize user roles with org',
-      event: 'user__updated',
-      computed: {
-        orgId: 'user.id',
-        roles: 'user.roles',
-        contactId: '_.get(user, "metadata.instant.contactId")',
-      },
-      run: [
-        {
-          computed: {
-            newRoles: 'computed.roles.filter(role => role !== "organization")'
-          },
-          stop: `
-            !computed.roles.includes("provider") ||
-            !computed.roles.includes("organization") ||
-            !computed.contactId ||
-            typeof changesRequested.roles === "undefined"
-          `,
-          endpointMethod: 'PATCH',
-          endpointUri: '/users/${computed.contactId}/organizations/${computed.orgId}',
-          endpointPayload: {
-            roles: 'computed.newRoles'
-          }
-        }
-      ]
-    },
-
-    activateAccountToUser: {
-      name: '[Update] Account activation',
-      description: 'Activate user account when requirements are fulfilled',
-      event: 'user__updated',
-      computed: {
-        getPlatformInstantData: 'key => _.get(user, `platformData.instant.${key}`)',
-        isUser: 'user.roles.includes("user")',
-        isProvider: 'user.roles.includes("provider")'
-      },
-      run: [
-        {
-          endpointMethod: 'PATCH',
-          stop: `
-            computed.getPlatformInstantData("accountActive") === true ||
-            computed.getPlatformInstantData("emailVerified") !== true ||
-            computed.getPlatformInstantData("phoneVerified") !== true ||
-            (
-              !(computed.isUser && user.firstname && user.lastname) &&
-              !(computed.isProvider && user.displayName && computed.getPlatformInstantData("taxIdVerified") === true)
-            )
-          `,
-          endpointUri: '/users/${user.id}',
-          endpointPayload: {
-            platformData: {
-              instant: {
-                accountActive: true
-              }
-            }
-          }
-        }
-      ]
-    },
-
-    publishAssetsWhenRecruiterActivatesAccount: {
-      name: '[Update] Assets activation',
-      description: 'Publish assets when recruiter activates her account',
-      event: 'user__updated',
-      computed: {
-        isProvider: 'user.roles.includes("provider")',
-        accountActive: '_.get(user, "platformData.instant.accountActive", false)',
-        assetsPublished: '_.get(user, "platformData._private.assetsPublished", false)',
-      },
-      run: [
-        {
-          name: 'assets',
-          description: 'Retrieve the max number of assets allowed (assimilates to "all" assets)',
-          endpointMethod: 'GET',
-          stop: '!computed.isProvider || computed.accountActive === computed.assetsPublished',
-          endpointUri: '/assets?ownerId=${user.id}&nbResultsPerPage=100',
-        },
-        {
-          endpointMethod: 'POST',
-          endpointUri: '/batch',
-          computed: {
-            objects: `
-              _.get(responses, "assets.results", []).map(asset => {
-                return { objectId: asset.id, payload: { validated: computed.accountActive } }
-              })
-            `
-          },
-          endpointPayload: {
-            objectType: '"asset"',
-            method: '"PATCH"',
-            objects: 'computed.objects'
-          }
-        },
-        {
-          endpointMethod: 'PATCH',
-          endpointUri: '/users/${user.id}',
-          endpointPayload: {
-            platformData: {
-              _private: {
-                assetsPublished: 'computed.accountActive'
-              }
-            }
-          }
-        }
-      ]
-    },
-
-    createAssetForApplicant: {
-      name: '[Init] Applicant asset at creation',
-      description: 'Create an asset that will be associated to the applicant',
-      event: 'user__updated',
-      computed: {
-        startDate: '_.get(user, "metadata.availabilityStartDate", new Date().toISOString())',
-        endDate: '_.get(user, "metadata.availabilityEndDate", new Date(new Date().getTime() + 24 * 3600 * 1000).toISOString())',
-        assetTypeId: '"assetTypes::applicant"',
-        getMetadataInstant: 'key => _.get(user, `metadata.instant.${key}`)',
-        getPlatformDataInstant: 'key => _.get(user, `platformData.instant.${key}`)',
-      },
-      run: [
-        {
-          name: 'asset',
-          endpointMethod: 'POST',
-          stop: `
-            typeof changesRequested.roles === "undefined" ||
-            !user.roles.includes("applicant") ||
-            computed.getPlatformDataInstant("assetId") ||
-            computed.getPlatformDataInstant("availabilityId")
-          `,
-          endpointUri: '/assets',
-          endpointPayload: {
-            name: 'computed.getMetadataInstant("profileTitle") || " "', // empty name not allowed
-            description: 'user.description',
-            ownerId: 'user.id',
-            categoryId: 'computed.getMetadataInstant("categoryId")',
-            assetTypeId: 'computed.assetTypeId',
-            locations: 'computed.getMetadataInstant("locations") || []',
-            price: 'computed.getMetadataInstant("profileSalary")',
-            validated: true,
-            active: 'computed.getPlatformDataInstant("accountActive") || false',
-            metadata: {
-              images: 'computed.getMetadataInstant("avatarUrl") ? [{ url: computed.getMetadataInstant("avatarUrl") }] : []',
-              // ensuring applicant assets are removed by init-data script
-              initDataScript: '_.get(user, "metadata.initDataScript")'
-            }
-          }
-        },
-        {
-          name: 'availability',
-          endpointMethod: 'POST',
-          computed: {
-            assetId: 'responses.asset.id'
-          },
-          endpointUri: '/availabilities',
-          endpointPayload: {
-            assetId: 'computed.assetId',
-            startDate: 'computed.startDate',
-            endDate: 'computed.endDate',
-            quantity: 1
-          }
-        },
-        {
-          endpointMethod: 'PATCH',
-          endpointUri: '/users/${user.id}',
-          endpointPayload: {
-            platformData: {
-              instant: {
-                assetId: 'computed.assetId',
-                availabilityId: 'responses.availability.id'
-              }
-            }
-          }
-        }
-      ]
-    },
-
-    updateAssetForApplicant: {
-      name: '[Sync] Applicant asset at update',
-      description: 'Update applicant asset when applicant user is updated',
-      event: 'user__updated',
-      computed: {
-        getMetadataInstant: 'key => _.get(user, `metadata.instant.${key}`)',
-        getPlatformDataInstant: 'key => _.get(user, `platformData.instant.${key}`)'
-      },
-      run: [
-        {
-          endpointMethod: 'PATCH',
-          stop: `
-            !user.roles.includes("applicant") ||
-            !computed.getPlatformDataInstant("assetId") ||
-            !computed.getPlatformDataInstant("availabilityId")
-          `,
-          endpointUri: '/assets/${computed.getPlatformDataInstant("assetId")}',
-          endpointPayload: {
-            name: 'computed.getMetadataInstant("profileTitle") || " "', // empty name not allowed
-            description: 'user.description',
-            categoryId: 'computed.getMetadataInstant("categoryId")',
-            price: 'computed.getMetadataInstant("profileSalary")',
-            locations: 'computed.getMetadataInstant("locations") || []',
-            validated: true,
-            active: 'computed.getPlatformDataInstant("accountActive") || false',
-            metadata: {
-              images: 'computed.getMetadataInstant("avatarUrl") ? [{ url: computed.getMetadataInstant("avatarUrl") }] : []'
-            }
-          }
-        },
-        {
-          endpointMethod: 'PATCH',
-          endpointUri: '/availabilities/${computed.getPlatformDataInstant("availabilityId")}',
-          endpointPayload: {
-            startDate: 'computed.startDate',
-            endDate: 'computed.endDate',
-            quantity: 1
-          }
-        }
-      ]
-    },
-
     completeTransactions: {
       name: 'Complete transactions',
       description: `
@@ -1814,43 +1022,6 @@ module.exports = {
         }
       ]
     },
-
-    createUnavailabilityForApplicant: {
-      name: '[Sync] Applicant unavailabilities',
-      description: 'Create unavailability for applicant when she finds a job',
-      event: 'transaction__status_changed',
-      computed: {
-        applicantId: 'transaction.takerId',
-        filteredAssetTypeId: '"assetTypes::job"',
-      },
-      run: [
-        {
-          name: 'applicant',
-          stop: `
-            transaction.status !== "validated" ||
-            transaction.assetTypeId !== computed.filteredAssetTypeId
-          `,
-          endpointMethod: 'GET',
-          endpointUri: '/users/${computed.applicantId}',
-        },
-        {
-          computed: {
-            applicantAssetId: '_.get(responses, "applicant.platformData.instant.assetId")'
-          },
-          stop: `
-            !computed.applicantAssetId
-          `,
-          endpointMethod: 'POST',
-          endpointUri: '/availabilities',
-          endpointPayload: {
-            assetId: 'computed.applicantAssetId',
-            startDate: 'transaction.startDate',
-            endDate: 'transaction.endDate',
-            quantity: '"-1"'
-          }
-        }
-      ]
-    }
   }
   /* eslint-enable no-template-curly-in-string */
 }

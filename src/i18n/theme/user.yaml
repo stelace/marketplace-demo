@@ -1,35 +1,4 @@
 user:
-  user_label:
-    en: Applicant
-    fr: Candidat
-  provider_label:
-    en: Recruiter
-    fr: Recruteur
-  organization_name_label:
-    en: Company name
-    fr: Nom de l’entreprise
   favorite_places_label:
     en: Near
     fr: Disponible près de
-  account:
-    validation_required_message:
-      en: Your job openings will be published once you profile contact info is validated.
-      fr: Vos annonces ne seront publiées que lorsque votre profil sera validé (adresse email, numéro de TVA et de téléphone vérifiés).
-    checkout_prerequisite_header:
-      en: Fill company profile
-      fr: Complétez votre profil
-    checkout_prerequisite_message:
-      en: Only applicants with validated contact info can apply.
-      fr: Seuls les candidats ayant complété leur profil (téléphone et adresse e-mail vérifiés) peuvent postuler aux offres d’emploi.
-    contact_user_prerequisite_header:
-      en: Contact applicant
-      fr: Contactez un candidat
-    contact_user_prerequisite_message:
-      en: Only subscribers with validated contact info can start conversations with applicants.
-      fr: La mise en relation avec des candidats est réservée aux abonnés ayant complété leur profil (téléphone, adresse-mail et numéro de TVA vérifiés).
-    create_organization_button:
-      en: Create a facility
-      fr: Créer un établissement
-    org_name_with_number_suffix:
-      en: " - Facility #{number}"
-      fr: " - Établissement n°{number}"

@@ -471,7 +471,7 @@ import { get } from 'lodash'
 import { date } from 'quasar'
 
 import { isValidDateString } from 'src/utils/time'
-import { isUser, isProvider } from 'src/utils/user'
+import { isUser } from 'src/utils/user'
 import { isAssetId } from 'src/utils/id'
 
 import DatePickerInput from 'src/components/DatePickerInput'
@@ -538,7 +538,7 @@ export default {
       if (!this.contextResourceImageUrl) return false
       if (!this.contextLocations.length) return false
 
-      return this.route.name === 'asset' || (this.isProfilePage && isProvider(this.selectedUser))
+      return this.route.name === 'asset'
     },
     availabilityGraph () {
       if (!this.selectedUser.assetId) return

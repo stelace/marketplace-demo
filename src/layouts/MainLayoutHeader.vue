@@ -11,7 +11,7 @@ import PlacesAutocomplete from 'src/components/PlacesAutocomplete'
 
 import AuthDialogMixin from 'src/mixins/authDialog'
 
-import { isProvider, populateUser } from 'src/utils/user'
+import { isProvider } from 'src/utils/user'
 
 export default {
   components: {
@@ -88,7 +88,6 @@ export default {
       'isPremium',
       'currentOrganizations',
       'defaultSearchMode',
-      'canCreateOrganization'
     ]),
   },
   watch: {
@@ -198,47 +197,6 @@ export default {
 
       this.searchAssets()
     },
-    async createOrganization () {
-      this.creatingOrganization = true
-
-      const mainOrganization = this.currentOrganizations[0]
-      populateUser(mainOrganization, { isCurrentUser: true })
-
-      const newOrgNameWithSuffix = this.$t({ id: 'user.account.org_name_with_number_suffix' }, {
-        name: mainOrganization.displayName,
-        number: this.currentOrganizations.length + 1
-      })
-
-      try {
-        await this.$store.dispatch('createOrganization', {
-          attrs: {
-            displayName: newOrgNameWithSuffix,
-            email: mainOrganization.email,
-            organizations: {
-              [mainOrganization.id]: {}
-            },
-            metadata: {
-              _private: {
-                phone: mainOrganization.phone,
-                taxId: mainOrganization.taxId,
-              }
-            }
-          }
-        }, { stelaceOrganizationId: mainOrganization.id })
-
-        this.$refs.accountMenu.hide()
-
-        this.$router.push({ name: 'publicProfile', params: { id: this.currentUser.id } })
-      } catch (err) {
-        this.notifyWarning('error.unknown_happened_header')
-      } finally {
-        this.creatingOrganization = false
-      }
-    },
-    async selectOrganization (org) {
-      await this.$store.dispatch('selectOrganization', { organizationId: org.id })
-      this.$router.push({ name: 'publicProfile', params: { id: this.currentUser.id } })
-    }
   }
 }
 </script>
@@ -436,37 +394,10 @@ export default {
                 text-color="white"
               />
             </div>
-            <div
-              v-if="!isCurrentUserProvider || !canCreateOrganization"
-              class="text-center text-body1 text-weight-medium q-mb-md"
-            >
+            <div class="text-center text-body1 text-weight-medium q-mb-md">
               {{ accountName }}
             </div>
-            <div
-              v-else
-              class="text-center q-mb-md"
-            >
-              <QSelect
-                :value="currentUser"
-                :options="currentOrganizations"
-                :option-value="org => org && org.id"
-                :option-label="org => org && org.displayName"
-                class="organizations-select q-mb-sm"
-                @input="org => selectOrganization(org)"
-              />
-              <QBtn
-                :loading="creatingOrganization"
-                flat
-                @click="createOrganization"
-              >
-                <AppContent
-                  entry="user"
-                  field="account.create_organization_button"
-                />
-              </QBtn>
-            </div>
             <div class="column items-stretch">
-              <!-- TODO: switch organizations / create new new ones as provider -->
               <AppContent
                 v-close-popup
                 tag="QBtn"
@@ -645,6 +576,4 @@ $header-min-breakpoint = 359px
 .header__account-menu
   min-width: 260px
 
-.organizations-select
-  max-height: 8rem
 </style>
