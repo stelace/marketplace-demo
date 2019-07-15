@@ -16,19 +16,11 @@ export default {
 
     state.validationDialog[formType] = Object.assign({}, state.validationDialog[formType], data)
   },
-
-  [types.ADD_CHECKED_TAX_ID] (state, { taxId, taxIdResult }) {
-    state.checkedTaxIds = Object.assign({}, state.checkedTaxIds, {
-      [taxId]: taxIdResult
-    })
-  }
 }
 
 function isAllowedFormTypes (formType) {
   const allowedFormTypes = [
     'email',
-    'phone',
-    'taxId'
   ]
   return allowedFormTypes.includes(formType)
 }

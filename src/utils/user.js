@@ -1,17 +1,12 @@
-import { get, isString } from 'lodash'
+import { get } from 'lodash'
 import { convertApiToDisplayScore } from 'src/utils/rating'
-
-const taxIdRegex = /^FR([A-HJ-NP-Z\d]{2}\d{9})$/
 
 // Getting user.categoryId from user.metadata.metadata.instant.categoryId
 // Advice: use lodash get to safely access values
 export const userMetadataMapping = {
-  categoryId: 'metadata.instant.categoryId',
   avatarUrl: 'metadata.instant.avatarUrl',
-  twitterHandle: 'metadata.instant.twitterHandle',
   publicName: 'metadata.instant.publicName',
   profileTitle: 'metadata.instant.profileTitle',
-  profileSalary: 'metadata.instant.profileSalary',
   locations: 'metadata.instant.locations',
 
   images: 'metadata.images',
@@ -25,16 +20,7 @@ export const userMetadataMapping = {
 
   newEmail: 'platformData._private.newEmail',
 
-  taxId: 'metadata._private.taxId',
-
   emailVerified: 'platformData.instant.emailVerified',
-  phoneVerified: 'platformData.instant.phoneVerified',
-  taxIdVerified: 'platformData.instant.taxIdVerified',
-
-  assetId: 'platformData.instant.assetId',
-  availabilityId: 'platformData.instant.availabilityId',
-
-  experiences: 'metadata.instant.experiences',
 }
 
 export function isProvider (user) {
@@ -57,27 +43,14 @@ export function populateUser (user, {
   nbRecommendations,
   recommendedBy
 } = {}) {
-  // user can select a category on platform to get appropriate suggestion and offers
-  user.categoryId = get(user, userMetadataMapping.categoryId, '')
-  if (categoriesById && user.categoryId) {
-    user.category = categoriesById[user.categoryId] || '' // categories can be missing in store
-    user.categoryName = user.category ? user.category.name : ''
-  }
-
   user.avatarUrl = get(user, userMetadataMapping.avatarUrl, '')
   user.emailVerified = get(user, userMetadataMapping.emailVerified, false)
-  user.phoneVerified = get(user, userMetadataMapping.phoneVerified, false)
-  user.twitterHandle = get(user, userMetadataMapping.twitterHandle, '')
   user.publicName = get(user, userMetadataMapping.publicName, '')
   user.profileTitle = get(user, userMetadataMapping.profileTitle, '')
-  user.profileSalary = get(user, userMetadataMapping.profileSalary, '')
   user.locations = get(user, userMetadataMapping.locations) || []
   user.locationName = get(user.locations, '[0].shortDisplayName', '')
 
   user.images = get(user, userMetadataMapping.images, [])
-
-  user.assetId = get(user, userMetadataMapping.assetId, '')
-  user.availabilityId = get(user, userMetadataMapping.availabilityId, '')
 
   if (ratingsStatsByType && ratingsOptions) {
     const defaultAvgScore = get(ratingsStatsByType, `default.${user.id}.avg`, null)
@@ -110,15 +83,6 @@ export function populateUser (user, {
   }
 
   user.newEmail = get(user, userMetadataMapping.newEmail, '')
-
-  user.taxId = get(user, userMetadataMapping.taxId, '')
-  user.taxIdVerified = get(user, userMetadataMapping.taxIdVerified, '')
-
-  user.experiences = get(user, userMetadataMapping.experiences, [])
-}
-
-export function isValidTaxId (taxId) {
-  return isString(taxId) && taxIdRegex.test(taxId)
 }
 
 export function getDisplayName (firstname, lastname) {

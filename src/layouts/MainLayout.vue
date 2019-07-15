@@ -24,7 +24,6 @@ export default {
     AuthDialog,
     CheckoutButton,
     EmailValidationDialog,
-    PhoneValidationDialog: () => import(/* webpackChunkName: 'phone-validation' */ 'src/components/PhoneValidationDialog'),
     TheContextCard,
   },
   mixins: [
@@ -272,7 +271,6 @@ export default {
 
     <template v-if="currentUser.id">
       <EmailValidationDialog />
-      <PhoneValidationDialog />
     </template>
   </QLayout>
 </template>

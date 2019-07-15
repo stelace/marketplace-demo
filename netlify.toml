@@ -53,8 +53,6 @@
   VUE_APP_NOMINATIM_HOST = "Nominatim API provider like https://open.mapquestapi.com"
   VUE_APP_NOMINATIM_KEY = "Nominatim provider API key to to enable place search"
   VUE_APP_GOOGLE_ANALYTICS_ID = "Google Analytics ID: UA-XXXXXXXX-1"
-  NEXMO_API_KEY = "Nexmo API key to verify phone numbers"
-  NEXMO_API_SECRET = "Nexmo API secret"
 
 
 # Continuous deployment

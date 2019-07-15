@@ -362,7 +362,6 @@ module.exports = function (ctx) {
                 // Heaviest libraries to load only if needed
                 // Mapbox code takes much time to be evaluated, on mobile in particular
                 /mapbox/,
-                /phone-validation/,
                 // Don’t forget to add .map files included in default blacklist
                 /\.map$/,
               ]

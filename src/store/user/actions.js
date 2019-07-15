@@ -1,7 +1,7 @@
 /* eslint-disable camelcase */
 
 import stelace from 'src/utils/stelace'
-import { set, isEmpty, startCase, isUndefined, values } from 'lodash'
+import { set, isEmpty, isUndefined, values } from 'lodash'
 
 import * as types from 'src/store/mutation-types'
 
@@ -111,56 +111,4 @@ function prepareUpdateAttrsMetadata (attrs) {
   })
 
   return newAttrs
-}
-
-export async function signal_phoneValidationRequestCode ({ commit }, { message }) {
-  commit({
-    type: types.SET_VALIDATION_DIALOG_DATA,
-    formType: 'phone',
-    data: {
-      step: 'requestCode',
-      phone: message.phone,
-      requestId: message.requestId,
-      success: message.success
-    }
-  })
-}
-
-export async function signal_phoneValidationResult ({ commit }, { message }) {
-  commit({
-    type: types.SET_VALIDATION_DIALOG_DATA,
-    formType: 'phone',
-    data: {
-      step: 'validationResult',
-      requestId: message.requestId,
-      success: message.success,
-      wrongCode: message.wrongCode
-    }
-  })
-}
-
-export async function signal_taxIdValidationResult ({ commit }, { message }) {
-  commit({
-    type: types.ADD_CHECKED_TAX_ID,
-    taxId: message.taxId,
-    taxIdResult: {
-      success: message.success,
-      countryCode: message.countryCode,
-      companyName: message.companyName ? formatText(message.companyName) : null,
-      companyAddress: message.companyAddress ? formatText(message.companyAddress) : null,
-    }
-  })
-
-  commit({
-    type: types.SET_VALIDATION_DIALOG_DATA,
-    formType: 'taxId',
-    data: {
-      step: 'result',
-      taxId: message.taxId,
-    }
-  })
-}
-
-function formatText (str) {
-  return startCase(str.toLowerCase())
 }

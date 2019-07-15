@@ -231,57 +231,6 @@
               :input-label="$t({ id: 'user.organization_name_label' })"
             />
           </div>
-
-          <div class="q-pt-lg">
-            <div
-              v-if="showTaxIdVerificationLine"
-              class="q-mb-sm row justify-between"
-            >
-              <AppSwitchableEditor
-                v-if="showTaxIdValue"
-                tag="div"
-                class="flex-item--grow"
-                :value="selectedUser.taxId"
-                :active="isCurrentUser && !selectedUser.taxIdVerified"
-                :custom-save="updateUserFn('taxId')"
-                :input-label="$t({ id: 'user.tax_id_label' })"
-              >
-                <template v-slot:placeholder>
-                  <AppContent
-                    entry="form"
-                    field="error.missing_tax_id"
-                  />
-                </template>
-                <template v-slot:edition="{ content, saveDraft }">
-                  <TaxIdInput
-                    :initial-tax-id="selectedUser.taxId"
-                    :user-id="selectedUser.id"
-                    :label="$t({ id: 'user.tax_id_label' })"
-                    @cancel="saveDraft(selectedUser.taxId)"
-                    @change="saveDraft(null)"
-                    @validate="taxIdResult => onValidateTaxId({ taxIdResult, saveDraft })"
-                  />
-                </template>
-              </AppSwitchableEditor>
-              <AppContent
-                v-else
-                entry="user"
-                field="tax_id_label"
-              />
-              <QIcon
-                size="1.5rem"
-                :color="selectedUser.taxIdVerified ? 'positive' : 'negative'"
-                :name="selectedUser.taxIdVerified ? 'check_circle' : 'announcement'"
-              >
-                <AppContent
-                  v-if="!selectedUser.taxIdVerified"
-                  tag="QTooltip"
-                  entry="prompt"
-                  field="validate"
-                />
-              </QIcon>
-            </div>
-          </div>
         </template>
 
         <!-- Some info shared between user types -->
@@ -316,42 +265,6 @@
             >
               <AppContent
                 v-if="canValidateEmail && !selectedUser.emailVerified"
-                tag="QTooltip"
-                entry="prompt"
-                field="validate"
-              />
-            </QIcon>
-          </div>
-          <div
-            v-if="showPhoneVerificationLine"
-            :class="['q-mb-sm row justify-between', canValidatePhone ? 'cursor-pointer' : '']"
-            @click="openValidationDialogIfAllowed({ formType: 'phone' })"
-          >
-            <span
-              v-if="showPhoneValue"
-              class="flex-item--grow"
-            >
-              <span v-if="selectedUser.phone">
-                {{ selectedUser.phone }}
-              </span>
-              <AppContent
-                v-else
-                entry="form"
-                field="error.missing_phone"
-              />
-            </span>
-            <AppContent
-              v-else
-              entry="user"
-              field="phone_number_label"
-            />
-            <QIcon
-              size="1.5rem"
-              :color="selectedUser.phoneVerified ? 'positive' : 'negative'"
-              :name="selectedUser.phoneVerified ? 'check_circle' : 'announcement'"
-            >
-              <AppContent
-                v-if="canValidatePhone && !selectedUser.phoneVerified"
                 tag="QTooltip"
                 entry="prompt"
                 field="validate"
@@ -476,7 +389,6 @@ import { isAssetId } from 'src/utils/id'
 
 import DatePickerInput from 'src/components/DatePickerInput'
 import SelectCategories from 'src/components/SelectCategories'
-import TaxIdInput from 'src/components/TaxIdInput'
 
 import AppUpload from 'src/mixins/AppUpload'
 import AuthDialogMixin from 'src/mixins/authDialog'
@@ -491,7 +403,6 @@ export default {
       }),
     DatePickerInput,
     SelectCategories,
-    TaxIdInput,
   },
   mixins: [
     AppUpload,
@@ -630,12 +541,6 @@ export default {
         }
       }
     },
-    showTaxIdVerificationLine () {
-      return this.isCurrentUser || this.selectedUser.taxIdVerified
-    },
-    showTaxIdValue () {
-      return this.isCurrentUser
-    },
     showEmailVerificationLine () {
       return this.isCurrentUser || this.selectedUser.emailVerified
     },
@@ -643,15 +548,6 @@ export default {
       return this.isCurrentUser
     },
     canValidateEmail () {
-      return this.isCurrentUser
-    },
-    showPhoneVerificationLine () {
-      return this.isCurrentUser || this.selectedUser.phoneVerified
-    },
-    showPhoneValue () {
-      return this.isCurrentUser
-    },
-    canValidatePhone () {
       return this.isCurrentUser
     },
     canChangePassword () {
@@ -679,15 +575,6 @@ export default {
     this.$store.dispatch('fetchCategories')
   },
   methods: {
-    onValidateTaxId ({ taxIdResult, saveDraft }) {
-      if (taxIdResult.success) {
-        saveDraft(taxIdResult.taxId)
-
-        if (!this.selectedUser.displayName && taxIdResult.companyName) {
-          this.updateUserFn('displayName', { displayNotification: false })(taxIdResult.companyName)
-        }
-      }
-    },
     availabilityEventsFn (dateString) {
       if (!this.availabilityGraph) return false
 
@@ -812,12 +699,6 @@ export default {
         if (displayNotification) {
           this.notifySuccess('notification.saved')
         }
-
-        // refresh taxIdVerified status since only server workflow can update platformData
-        if (fieldName === 'taxId') {
-          await new Promise(resolve => setTimeout(resolve, 2000))
-          await this.$store.dispatch('fetchCurrentUser', { forceRefresh: true })
-        }
       }
     },
     afterMapLoaded (map) {
@@ -873,7 +754,6 @@ export default {
     },
     openValidationDialogIfAllowed ({ formType }) {
       if (formType === 'email' && !this.canValidateEmail) return
-      if (formType === 'phone' && !this.canValidatePhone) return
 
       return this.openValidationDialog({ formType })
     }

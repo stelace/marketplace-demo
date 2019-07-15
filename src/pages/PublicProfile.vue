@@ -8,7 +8,6 @@ import { get, compact, uniqBy } from 'lodash'
 import AppGalleryUploader from 'src/components/AppGalleryUploader'
 import OwnerAssetCard from 'src/components/OwnerAssetCard'
 import PlacesAutocomplete from 'src/components/PlacesAutocomplete'
-import PublicProfileExperienceList from 'src/components/PublicProfileExperienceList'
 import TransactionRatingsList from 'src/components/TransactionRatingsList'
 import TheContextCard from 'src/components/TheContextCard'
 
@@ -23,7 +22,6 @@ export default {
     AppGalleryUploader,
     OwnerAssetCard,
     PlacesAutocomplete,
-    PublicProfileExperienceList,
     TransactionRatingsList,
     TheContextCard,
     VuePhotoSwipe: () => import(/* webpackChunkName: 'photoswipe' */ 'src/components/VuePhotoSwipe'),
@@ -62,9 +60,6 @@ export default {
     },
     isCurrentUserProvider () {
       return isProvider(this.currentUser)
-    },
-    showPublicProfileExperiences () {
-      return this.isCurrentUser || (!this.isCurrentUser && this.selectedUser.experiences.length)
     },
     galleryItems () {
       return this.getResourceGalleryItems(this.selectedUser)
@@ -461,20 +456,6 @@ export default {
             :ratings-stats="userRatingsStatsByTransaction"
             :target="selectedUser"
             :show-cta="showRatingsListCta"
-          />
-        </section>
-
-        <section
-          v-if="isUser"
-          v-show="showPublicProfileExperiences"
-          class="q-mt-md"
-        >
-          <QSeparator class="q-mt-xl" />
-
-          <PublicProfileExperienceList
-            :experiences="selectedUser.experiences"
-            :editable="isCurrentUser"
-            @change="updateExperiences"
           />
         </section>
 

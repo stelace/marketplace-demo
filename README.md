@@ -49,7 +49,6 @@ Leverage these integrations to start running your platform even faster:
 - Automated and continuous deployment with [Netlify](https://www.netlify.com/)
 - Maps and place search with [OpenStreetMap](https://www.openstreetmap.org/) providers
 - [Sentry](https://sentry.io/) for logging in production environment
-- Phone validation with [Nexmo](https://www.nexmo.com/)
 - Google Analytics
 
 ## Stack
