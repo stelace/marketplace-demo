@@ -7,7 +7,6 @@ import AppCarousel from 'src/components/AppCarousel'
 import AppSVGActionButton from 'src/components/AppSVGActionButton'
 import DatePickerInput from 'src/components/DatePickerInput'
 import PlacesAutocomplete from 'src/components/PlacesAutocomplete'
-import Plans from 'src/components/Plans'
 import SelectCategories from 'src/components/SelectCategories'
 
 import * as types from 'src/store/mutation-types'
@@ -15,7 +14,6 @@ import * as types from 'src/store/mutation-types'
 import EventBus from 'src/utils/event-bus'
 
 import PageComponentMixin from 'src/mixins/pageComponent'
-import PaymentMixin from 'src/mixins/payment'
 
 export default {
   name: 'Home',
@@ -25,12 +23,10 @@ export default {
     AppSVGActionButton,
     DatePickerInput,
     PlacesAutocomplete,
-    Plans,
     SelectCategories,
   },
   mixins: [
     PageComponentMixin,
-    PaymentMixin,
   ],
   data () {
     return {
@@ -39,20 +35,13 @@ export default {
       query: '',
       startDate: '',
       showFeatures: false,
-      showPlans: false,
       searchByCategory: process.env.VUE_APP_SEARCH_BY_CATEGORY === 'true',
       assets: [],
       nbAssetsPerSlideDefault: 3,
       nbCarouselSlides: 4, // Can be less when there are few assets, set to 1 to disable
-      actionAfterAuthentication: null,
-      selectedPlan: null,
     }
   },
   computed: {
-    showFreePlan () {
-      // show free plan for unauthenticated user
-      return !this.currentUser.id
-    },
     nbAssetsVisiblePerSlide () {
       const nbAssetsWithoutCarousel = this.$q.screen.gt.xs ? (this.$q.screen.lt.md ? 4 : 3) : 2
       return this.showCarousel ? this.nbAssetsPerSlideDefault : nbAssetsWithoutCarousel
@@ -75,7 +64,6 @@ export default {
     }),
     ...mapGetters([
       'currentUser',
-      'canSubscribeToPlan',
       'defaultSearchMode',
       'homeHeroUrlTransformed',
       'mainOrganization',
@@ -93,10 +81,6 @@ export default {
     }).then(assets => { this.assets = assets })
   },
   async mounted () {
-    if (this.$router.currentRoute.hash === '#pricing') {
-      this.displayPlans()
-    }
-
     EventBus.$on('authStatusChanged', (status) => this.onAuthChange(status))
   },
   beforeDestroy () {
@@ -107,8 +91,7 @@ export default {
       const {
         'reset-password': resetPasswordToken,
         check,
-        status,
-        subscription_result: subscriptionResult
+        status
       } = this.$route.query
 
       if (resetPasswordToken) {
@@ -138,48 +121,6 @@ export default {
         delete newQuery.status
         delete newQuery.token
         this.$router.replace({ query: newQuery })
-      }
-
-      if (subscriptionResult) {
-        this.openCheckoutResultDialog(subscriptionResult, {
-          onClose: () => {
-            // replace the URL so the message won't display at each page refresh
-            const newQuery = Object.assign({}, this.$route.query)
-            delete newQuery.subscription_result
-            delete newQuery.plan
-            this.$router.replace({ query: newQuery })
-          }
-        })
-      }
-    },
-    onAuthChange (status) {
-      if (status === 'success' && this.actionAfterAuthentication) {
-        if (this.actionAfterAuthentication === 'subscribe') {
-          if (this.canSubscribeToPlan && this.selectedPlan) {
-            this.subscribe(this.selectedPlan)
-          } else {
-            this.notifyWarning('payment.error.not_authorized_subscription')
-          }
-        }
-
-        this.actionAfterAuthentication = null
-      } else if (status === 'closed') {
-        this.actionAfterAuthentication = null
-      }
-    },
-    async selectPlan (plan) {
-      if (plan.isFree) {
-        this.openAuthDialog({ formType: 'signup', redirectAfterSignup: true })
-      } else {
-        this.selectedPlan = plan
-
-        if (this.currentUser.id) {
-          this.subscribe(plan)
-        } else {
-          // need authentication before subscription
-          this.openAuthDialog({ formType: 'signup', action: 'subscribeToPlan' })
-          this.actionAfterAuthentication = 'subscribe'
-        }
       }
     },
     selectPlace (place) {
@@ -212,10 +153,6 @@ export default {
     },
     selectStartDate (startDate) {
       this.startDate = startDate
-    },
-    displayPlans () {
-      this.showPlans = true
-      this.loadStripe()
     },
     async searchAssets () {
       if (this.searchByCategory) {
@@ -425,36 +362,6 @@ export default {
         </div>
       </div>
     </section>
-
-    <AccessComponent action="viewPlanPricing">
-      <section
-        id="pricing"
-        class="home__pricing q-pa-lg q-pb-xl relative-position text-center"
-      >
-        <div
-          v-scroll-fire="displayPlans"
-          class="absolute-top"
-        />
-        <div class="home__pricing-background bg-primary-gradient absolute-full" />
-        <AppContent
-          tag="h2"
-          class="text-h5 text-weight-medium q-mt-none q-mb-lg text-white"
-          entry="pricing"
-          field="subscription_header"
-        />
-        <AppContent
-          tag="p"
-          class="text-body1 q-my-lg text-white home__pricing-description"
-          entry="pricing"
-          field="subscription_subheader"
-        />
-        <Plans
-          :show-plans="showPlans"
-          :show-free-plan="showFreePlan"
-          @selectPlan="selectPlan"
-        />
-      </section>
-    </AccessComponent>
 
     <section class="home__asset-gallery">
       <AppContent

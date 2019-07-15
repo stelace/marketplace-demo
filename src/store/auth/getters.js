@@ -66,9 +66,7 @@ export function authDialogActionConfig (state) {
     return actionConfig
   }
 
-  if (action === 'subscribeToPlan') {
-    actionConfig.userTypes = ['provider']
-  } else if (action === 'createAsset') {
+  if (action === 'createAsset') {
     actionConfig.userTypes = ['provider']
   }
 

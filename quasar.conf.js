@@ -451,7 +451,6 @@ module.exports = function (ctx) {
         VUE_APP_NOMINATIM_KEY: JSON.stringify(process.env.VUE_APP_NOMINATIM_KEY),
         VUE_APP_SENTRY_LOGGING_DSN: JSON.stringify(process.env.VUE_APP_SENTRY_LOGGING_DSN),
         VUE_APP_GIT_COMMIT_SHA: JSON.stringify(commitSHA),
-        STRIPE_PUBLISH_KEY: JSON.stringify(process.env.STRIPE_PUBLISH_KEY),
         VUE_APP_GOOGLE_ANALYTICS_ID: JSON.stringify(process.env.VUE_APP_GOOGLE_ANALYTICS_ID),
         VUE_APP_GOOGLE_ANALYTICS_DEBUG: JSON.stringify(process.env.VUE_APP_GOOGLE_ANALYTICS_DEBUG),
         VUE_APP_CDN_POLICY_ENDPOINT: JSON.stringify(cdnUploadUrl),

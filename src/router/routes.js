@@ -70,14 +70,6 @@ export const defaultRoutes = {
         mustBeLogged: true
       }
     },
-    {
-      name: 'subscription',
-      path: 'sub',
-      component: () => import(/* webpackChunkName: 'account' */ 'pages/Subscription.vue'),
-      meta: {
-        mustBeLogged: true
-      },
-    },
   ]
 }
 

@@ -8,7 +8,6 @@ import content from './content'
 import common from './common'
 import inbox from './inbox'
 import layout from './layout'
-import payment from './payment'
 import rating from './rating'
 import search from './search'
 import style from './style'
@@ -32,7 +31,6 @@ export default function (/* { ssrContext } */) {
       common,
       inbox,
       layout,
-      payment,
       rating,
       search,
       style,

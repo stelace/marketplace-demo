@@ -91,12 +91,7 @@ export default {
     </div>
 
     <div v-if="transformedRatingsStats.length" class="relative-position">
-      <QCard
-        :class="[
-          'transaction-ratings-container',
-          showCta ? 'app--blur' : ''
-        ]"
-      >
+      <QCard class="transaction-ratings-container">
         <TransactionRating
           v-for="ratingStat of transformedRatingsStats"
           :key="ratingStat.transactionId"
@@ -109,24 +104,6 @@ export default {
           :ratings="ratingStat.ratings"
         />
       </QCard>
-      <router-link
-        v-if="showCta"
-        :to="{ name: 'home', hash: '#pricing' }"
-        class="transaction-ratings-overlay absolute-full flex items-center text-center justify-center text-weight-bold"
-      >
-        <div>
-          <div>
-            <AppContent entry="rating" field="ratings_prerequisite_message" />
-          </div>
-
-          <QBtn
-            :rounded="style.roundedTheme"
-            color="secondary"
-            class="q-mt-md q-mb-none"
-            :label="$t({ id: 'payment.subscription.subscribe_label' })"
-          />
-        </div>
-      </router-link>
     </div>
     <div v-else class="text-center">
       <AppContent

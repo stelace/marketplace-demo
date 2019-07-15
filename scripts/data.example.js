@@ -297,12 +297,6 @@ module.exports = {
           logoUrl: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/a5b21e6f26dd2340dd7fc34529972db9-logo-email.png',
           locale: 'fr',
           currency: 'EUR',
-          stripePlansIds: [
-            'plan_EvVA3KmgWQ0f6Y',
-            'plan_EvVFMeAc3GZjgc',
-            'plan_EvVEehHBtlbJaV',
-            'plan_EvVCmsaZhnu4rh'
-          ],
           assetTypes: {
             'assetTypes::job': {
               isDefault: true,
@@ -1374,30 +1368,6 @@ module.exports = {
       ]
     },
 
-    removeStripeCustomer: {
-      name: '[Delete] Stripe customer',
-      description: 'When a user is deleted, delete its attached customer so current billing will stop',
-      event: 'user__deleted',
-      context: ['stripe'],
-      computed: {
-        stripeCustomer: 'S.get("user", "platformData._private.stripeCustomer", null)'
-      },
-      run: [
-        {
-          endpointMethod: 'DELETE',
-          stop: '!computed.stripeCustomer',
-          computed: {
-            // Node.js base64 encode
-            basicAuthValue: 'Buffer.from(`${env.STRIPE_SECRET_KEY}:`).toString("base64")',
-          },
-          endpointUri: 'https://api.stripe.com/v1/customers/${computed.stripeCustomer.id}',
-          endpointHeaders: {
-            authorization: 'Basic ${computed.basicAuthValue}:'
-          }
-        }
-      ]
-    },
-
     copyUserNamesIntoPremiumAtCreation: {
       name: '[Init] User names at creation',
       description: 'Copy user names into premium namespace at user creation',
@@ -1709,76 +1679,6 @@ module.exports = {
             platformData: {
               _private: {
                 assetsPublished: 'computed.accountActive'
-              }
-            }
-          }
-        }
-      ]
-    },
-
-    syncPremiumWithStripeCustomer: {
-      name: '[Update] Premium status by Stripe',
-      description: `
-        If Stripe subscription renew succeeds, keep the premium status.
-        If not, remove it.
-      `,
-      event: 'user__updated',
-      computed: {
-        isProvider: 'user.roles.includes("provider")',
-        currentPremiumEndDate: '_.get(user, "platformData._private.premiumEndDate")',
-        rawSubscriptionEndDate: '_.get(user, "platformData._private.stripeCustomer.subscriptions.data[0].current_period_end", null)'
-      },
-      run: [
-        {
-          endpointMethod: 'PATCH',
-          computed: {
-            subscriptionEndDate: 'new Date(computed.rawSubscriptionEndDate * 1000).toISOString()'
-          },
-          stop: `
-            !computed.isProvider ||
-            !computed.rawSubscriptionEndDate ||
-            computed.currentPremiumEndDate === computed.subscriptionEndDate
-          `,
-          endpointUri: '/users/${user.id}',
-          endpointPayload: {
-            roles: 'user.roles.includes("premium") ? user.roles : user.roles.concat(["premium"])',
-            platformData: {
-              _private: {
-                premiumEndDate: 'computed.subscriptionEndDate'
-              }
-            }
-          }
-        }
-      ]
-    },
-
-    updatePremiumEndDate: {
-      name: '[Update] Premium status by role update',
-      description: `
-        If the premium role is added, add a premium end date.
-        If it is removed, remove the date.
-      `,
-      event: 'user__updated',
-      computed: {
-        hasPremium: 'user.roles.includes("premium")',
-        currentPremiumEndDate: '_.get(user, "platformData._private.premiumEndDate")',
-        newPremiumEndDate: 'new Date(new Date().getTime() + 31 * 24 * 3600 * 1000).toISOString()'
-      },
-      run: [
-        {
-          stop: `
-            changesRequested.roles === "undefined" ||
-            (
-              (!computed.hasPremium || computed.currentPremiumEndDate) &&
-              (computed.hasPremium || !computed.currentPremiumEndDate)
-            )
-          `,
-          endpointMethod: 'PATCH',
-          endpointUri: '/users/${user.id}',
-          endpointPayload: {
-            platformData: {
-              _private: {
-                premiumEndDate: 'computed.hasPremium ? computed.newPremiumEndDate : null'
               }
             }
           }

@@ -64,19 +64,6 @@ export function canBookAsset (state, getters, rootState, rootGetters) {
   return rootGetters.isUser && rootGetters.isAccountActive
 }
 
-export function canViewPlanPricing (state, getters, rootState, rootGetters) {
-  return !isEmpty(rootGetters.plans) &&
-    (!rootGetters.currentUser.id ||
-      (rootGetters.isProvider &&
-        (rootGetters.isMainOrganization || !!rootGetters.mainOrganization)
-      )
-    )
-}
-
-export function canSubscribeToPlan (state, getters, rootState, rootGetters) {
-  return rootGetters.isProvider && (rootGetters.isMainOrganization || !!rootGetters.mainOrganization)
-}
-
 export function canPerformReverseSearch (state, getters, rootState, rootGetters) {
   return rootGetters.isProvider && rootGetters.isPremium && rootGetters.isAccountActive
 }

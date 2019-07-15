@@ -4,7 +4,6 @@ export default {
   computed: {
     ...mapGetters([
       'canCreateAsset',
-      'canSubscribeToPlan',
     ])
   },
 
@@ -15,10 +14,6 @@ export default {
       switch (action) {
         case 'createAsset':
           haveAccess = this.canCreateAsset
-          break
-
-        case 'subscribeToPlan':
-          haveAccess = this.canSubscribeToPlan
           break
 
         default:

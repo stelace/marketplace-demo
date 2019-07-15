@@ -23,8 +23,6 @@ export default {
     const {
       canViewCreateAssetCta,
       canCreateAsset,
-      canViewPlanPricing,
-      canSubscribeToPlan,
       canBookAsset,
       canViewBookAssetCta,
       canContactUser,
@@ -34,8 +32,6 @@ export default {
     const mapActionToAccess = {
       viewCreateAssetCta: canViewCreateAssetCta,
       createAsset: canCreateAsset,
-      viewPlanPricing: canViewPlanPricing,
-      subscribeToPlan: canSubscribeToPlan,
       viewBookAssetCta: canViewBookAssetCta,
       bookAsset: canBookAsset,
       viewContactUserCta: canViewContactUserCta,

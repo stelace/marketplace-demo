@@ -1,6 +1,5 @@
 const stelace = require('./admin-sdk')
-const Stripe = require('stripe')
-const { every, get, isEmpty, keyBy, mapValues, pick, set } = require('lodash')
+const { every, get, isEmpty, keyBy, mapValues, pick } = require('lodash')
 const pMap = require('p-map')
 const pProps = require('p-props')
 const chalk = require('chalk')
@@ -9,11 +8,6 @@ const path = require('path')
 const fs = require('fs')
 const { execSync } = require('child_process')
 const { importCategories } = require('./import-categories')
-
-let stripe
-if (process.env.STRIPE_SECRET_KEY) {
-  stripe = Stripe(process.env.STRIPE_SECRET_KEY)
-}
 
 const log = console.log
 const warn = (err, msg) => {
@@ -122,23 +116,6 @@ async function run () {
   if (data.config && data.config.default) {
     const payload = data.config.default
     const existingConfig = await stelace.config.read(payload)
-
-    const plansIds = get(data.config.default, 'stelace.instant.stripePlansIds')
-
-    if (plansIds && plansIds.length) {
-      const plans = await stripe.plans.list().autoPagingToArray({ limit: 10000 })
-      const plansById = keyBy(plans, 'id')
-
-      const storedPlans = plansIds.reduce((memo, planId) => {
-        const plan = plansById[planId]
-        if (plan) {
-          memo.push(plan)
-        }
-        return memo
-      }, [])
-
-      set(payload, 'stelace.instant.stripePlans', storedPlans)
-    }
 
     await stelace.config.update(payload)
 
