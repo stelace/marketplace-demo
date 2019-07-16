@@ -177,7 +177,6 @@ export default {
     ]),
     ...mapGetters([
       'currentUser',
-      'canPublishAsset',
     ]),
   },
   async preFetch ({ store }) {
@@ -284,7 +283,7 @@ export default {
             categoryId: this.selectedCategory ? this.selectedCategory.id : null,
             customAttributes: pick(this.editingCustomAttributes, this.editableCustomAttributeNames),
             active: true,
-            validated: this.canPublishAsset,
+            validated: true,
             metadata: {
               images,
               // Save dates to create custom availabilities with Workflows
@@ -339,21 +338,6 @@ export default {
 
           // Show that the asset is ready…
           this.$router.push({ name: 'asset', params: { id: asset.id } })
-
-          // …and prompt to validate account if needed
-          if (!this.canPublishAsset) {
-            this.$q.dialog({
-              title: this.$t({ id: 'user.account.validation_header' }),
-              message: this.$t({ id: 'user.account.validation_required_message' }),
-              ok: {
-                label: this.$t({ id: 'prompt.validate' }),
-                color: 'positive',
-                class: 'q-ma-sm'
-              }
-            }).onOk(() => {
-              this.$router.push({ name: 'publicProfile', params: { id: this.currentUser.id } })
-            })
-          }
         } catch (err) {
           this.creatingAsset = false
 

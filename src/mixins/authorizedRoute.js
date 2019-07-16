@@ -3,7 +3,7 @@ import { mapGetters } from 'vuex'
 export default {
   computed: {
     ...mapGetters([
-      'canCreateAsset',
+
     ])
   },
 
@@ -12,10 +12,6 @@ export default {
       let haveAccess = false
 
       switch (action) {
-        case 'createAsset':
-          haveAccess = this.canCreateAsset
-          break
-
         default:
           haveAccess = false
           break

@@ -21,21 +21,11 @@ export default {
     const getters = parent.$store.getters
 
     const {
-      canViewCreateAssetCta,
       canCreateAsset,
-      canBookAsset,
-      canViewBookAssetCta,
-      canContactUser,
-      canViewContactUserCta
     } = getters
 
     const mapActionToAccess = {
-      viewCreateAssetCta: canViewCreateAssetCta,
       createAsset: canCreateAsset,
-      viewBookAssetCta: canViewBookAssetCta,
-      bookAsset: canBookAsset,
-      viewContactUserCta: canViewContactUserCta,
-      contactUser: canContactUser
     }
 
     const showComponent = mapActionToAccess[props.action] || false

@@ -6,7 +6,6 @@ import EventBus from 'src/utils/event-bus'
 
 import MainLayoutHeader from 'src/layouts/MainLayoutHeader'
 
-import AccessComponent from 'src/components/AccessComponent'
 import AppUpdateDialog from 'src/components/AppUpdateDialog'
 import AuthDialog from 'src/components/AuthDialog'
 import CheckoutButton from 'src/components/CheckoutButton'
@@ -19,7 +18,6 @@ export default {
   components: {
     MainLayoutHeader,
 
-    AccessComponent,
     AppUpdateDialog,
     AuthDialog,
     CheckoutButton,
@@ -56,8 +54,7 @@ export default {
       return this.route.meta.hasLeftDrawer
     },
     isFooterDrawerOpened () {
-      return (this.isAssetPage && !this.isOwnerCurrentUser && this.canViewBookAssetCta) ||
-        (this.isProfilePage && this.isSelectedUserNatural && !this.isOwnerCurrentUser && this.canViewContactUserCta)
+      return (this.isAssetPage && !this.isOwnerCurrentUser && this.canViewBookAssetCta)
     },
     blurredPage () {
       return (this.auth.authDialogOpened && this.auth.authDialogPersistent) ||
@@ -76,10 +73,6 @@ export default {
       'activeAsset',
       'isActiveAssetAvailable',
       'isSelectedUserNatural',
-      'canContactUser',
-      'canViewContactUserCta',
-      'canBookAsset',
-      'canViewBookAssetCta',
     ]),
   },
   watch: {
@@ -119,11 +112,7 @@ export default {
         return
       }
 
-      if (this.canBookAsset) {
-        this.checkoutAfterAuth()
-      } else {
-        this.showCheckoutPrerequisiteDialog()
-      }
+      this.checkoutAfterAuth()
     },
     async checkoutAfterAuth () {
       // cannot checkout on her own asset
@@ -136,17 +125,6 @@ export default {
       this.$router.push({
         name: 'conversation',
         params: { id: message.conversationId }
-      })
-    },
-    showCheckoutPrerequisiteDialog () {
-      this.$q.dialog({
-        title: this.$t({ id: 'user.account.checkout_prerequisite_header' }),
-        message: this.$t({ id: 'user.account.checkout_prerequisite_message' }),
-        ok: {
-          label: this.$t({ id: 'prompt.continue_button' }),
-          color: 'positive',
-          class: 'q-ma-sm'
-        }
       })
     },
   },
@@ -223,38 +201,10 @@ export default {
           v-if="!isOwnerCurrentUser"
           class="col-6 col-sm-5 text-right"
         >
-          <AccessComponent action="viewBookAssetCta">
-            <CheckoutButton
-              :disabled="!isActiveAssetAvailable"
-              @click="checkout"
-            />
-          </AccessComponent>
-        </div>
-        <div class="col-1 gt-xs" />
-      </div>
-      <div
-        v-if="isProfilePage"
-        class="q-pa-md row"
-      >
-        <div class="col-1 gt-xs" />
-        <div class="col-6 col-sm-5">
-          <div>
-            {{ activeAsset.name || activeAsset.categoryName }}
-          </div>
-          <br>
-          <AppRatingStars
-            v-if="selectedUser.ratings && typeof selectedUser.ratings.default === 'number'"
-            :value="selectedUser.ratings.default"
-            readonly
+          <CheckoutButton
+            :disabled="!isActiveAssetAvailable"
+            @click="checkout"
           />
-        </div>
-        <div
-          v-if="!isOwnerCurrentUser"
-          class="col-6 col-sm-5 text-right items-center"
-        >
-          <AccessComponent action="viewContactUserCta">
-            <CheckoutButton @click="contactUser" />
-          </AccessComponent>
         </div>
         <div class="col-1 gt-xs" />
       </div>

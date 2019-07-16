@@ -262,9 +262,6 @@ export default {
       const newImages = this.selectedUser.images.filter(img => img.name !== removed.name)
       return this.updateUser('images', newImages)
     },
-    updateExperiences (experiences) {
-      return this.updateUser('experiences', experiences)
-    }
   }
 }
 </script>

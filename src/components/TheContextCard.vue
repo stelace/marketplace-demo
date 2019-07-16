@@ -117,7 +117,7 @@
         <!-- Natural user looking for offers -->
         <template v-if="isSelectedUserNatural">
           <div
-            v-if="isCurrentUser || canViewUserNames"
+            v-if="isCurrentUser"
             class="row justify-center text-h6"
           >
             <div class="text-center q-mr-md">
@@ -567,7 +567,6 @@ export default {
       'currentUser',
       'isSelectedUserNatural',
       'selectedUserIsCurrentUser',
-      'canViewUserNames',
     ]),
   },
   mounted () {

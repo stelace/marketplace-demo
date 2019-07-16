@@ -349,7 +349,6 @@ export default {
       'getResourceGalleryItems',
       'getResourceGalleryOptions',
       'currentUser',
-      'canViewAsset',
       'searchOptions',
       'suggestionSearchMode',
       'isActiveAssetAvailable',
@@ -378,9 +377,6 @@ export default {
   },
   methods: {
     async afterAuth () {
-      if (!this.canViewAsset) {
-        this.openAuthDialog({ persistent: true })
-      }
       // Not blocking. Move to (blocking) preFetch and remove $route watcher if optimizing for SEO
       // with server-side rendering (SSR)
       this.fetchRelatedAssets()

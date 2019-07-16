@@ -2,7 +2,6 @@
 import { mapState, mapGetters } from 'vuex'
 import { get } from 'lodash'
 
-import AccessComponent from 'src/components/AccessComponent'
 import AppCarousel from 'src/components/AppCarousel'
 import AppSVGActionButton from 'src/components/AppSVGActionButton'
 import DatePickerInput from 'src/components/DatePickerInput'
@@ -16,7 +15,6 @@ import PageComponentMixin from 'src/mixins/pageComponent'
 export default {
   name: 'Home',
   components: {
-    AccessComponent,
     AppCarousel,
     AppSVGActionButton,
     DatePickerInput,

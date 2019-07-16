@@ -2,7 +2,6 @@
 import { mapState, mapGetters } from 'vuex'
 import * as mutationTypes from 'src/store/mutation-types'
 
-import AccessComponent from 'src/components/AccessComponent'
 import AppLogo from 'src/components/AppLogo'
 import AppMiniLogo from 'src/components/AppMiniLogo'
 import SearchToolbar from 'src/components/SearchToolbar'
@@ -11,11 +10,8 @@ import PlacesAutocomplete from 'src/components/PlacesAutocomplete'
 
 import AuthDialogMixin from 'src/mixins/authDialog'
 
-import { isProvider } from 'src/utils/user'
-
 export default {
   components: {
-    AccessComponent,
     AppLogo,
     AppMiniLogo,
     PlacesAutocomplete,
@@ -70,9 +66,6 @@ export default {
     showAccountAvatar () {
       return this.$q.screen.gt.xs
     },
-    isCurrentUserProvider () {
-      return isProvider(this.currentUser)
-    },
     ...mapState([
       'common',
       'content',
@@ -85,7 +78,6 @@ export default {
     ...mapGetters([
       'conversations',
       'currentUser',
-      'isPremium',
       'currentOrganizations',
       'defaultSearchMode',
     ]),
@@ -95,7 +87,7 @@ export default {
       if (current.id !== previous.id) {
         this.$store.dispatch('selectSearchMode', { searchMode: this.defaultSearchMode })
 
-        if (isProvider(current) && current.locations.length) {
+        if (current.locations.length) {
           const loc = current.locations[0]
 
           this.$store.commit({
@@ -352,19 +344,17 @@ export default {
       <!-- Hidden right drawer -->
       <!-- <QBtn dense flat round icon="menu" @click="right = !right"/> -->
 
-      <AccessComponent action="viewCreateAssetCta">
-        <QBtn
-          class="create-assset-button q-px-md flex-item--auto"
-          :to="{ name: 'newAsset' }"
-          :loading="content.fetchingContentStatus"
-          :rounded="style.roundedTheme"
-          :label="$t({ id: 'navigation.new_listing' })"
-          icon="add_box"
-          color="secondary"
-          align="between"
-          dense
-        />
-      </AccessComponent>
+      <QBtn
+        class="create-assset-button q-px-md flex-item--auto"
+        :to="{ name: 'newAsset' }"
+        :loading="content.fetchingContentStatus"
+        :rounded="style.roundedTheme"
+        :label="$t({ id: 'navigation.new_listing' })"
+        icon="add_box"
+        color="secondary"
+        align="between"
+        dense
+      />
 
       <QBtn
         v-if="currentUser.id && showAccountAvatar"
@@ -382,16 +372,6 @@ export default {
                 class="text-h6"
                 entry="navigation"
                 field="account"
-              />
-              <AppContent
-                v-if="isPremium"
-                class="text-uppercase non-selectable q-ml-md"
-                tag="QChip"
-                entry="user"
-                field="account.premium_label"
-                square
-                color="secondary"
-                text-color="white"
               />
             </div>
             <div class="text-center text-body1 text-weight-medium q-mb-md">
