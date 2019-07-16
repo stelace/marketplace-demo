@@ -3,7 +3,6 @@
 
 import { mapGetters, mapState } from 'vuex'
 import * as mutationTypes from 'src/store/mutation-types'
-import { get, compact, uniqBy } from 'lodash'
 
 import AppGalleryUploader from 'src/components/AppGalleryUploader'
 import OwnerAssetCard from 'src/components/OwnerAssetCard'
@@ -14,8 +13,6 @@ import TheContextCard from 'src/components/TheContextCard'
 import PageComponentMixin from 'src/mixins/pageComponent'
 
 import { extractLocationDataFromPlace } from 'src/utils/places'
-import { isUser, isProvider } from 'src/utils/user'
-import { populateAsset } from 'src/utils/asset'
 
 export default {
   components: {
@@ -33,18 +30,15 @@ export default {
     return {
       suggestedOffers: [],
       isEditingImages: false,
-      maxNbLocations: 4,
+      maxNbLocations: 1,
       locationsChanged: false,
       userRatingsStatsByTransaction: [],
-      userRatingsLoaded: false
+      userRatingsLoaded: false,
     }
   },
   computed: {
     isCurrentUser () {
       return this.currentUser.id === this.selectedUser.id
-    },
-    isUser () {
-      return isUser(this.selectedUser)
     },
     selectedUserAssets () {
       return this.usersAssets[this.selectedUser.id] || []
@@ -52,46 +46,14 @@ export default {
     selectedUserLocations () {
       return this.selectedUser.locations || []
     },
-    underlyingUserAsset () {
-      return (this.isUser && this.selectedUser.assetId) || null
-    },
-    isProvider () {
-      return isProvider(this.selectedUser)
-    },
-    isCurrentUserProvider () {
-      return isProvider(this.currentUser)
-    },
-    galleryItems () {
-      return this.getResourceGalleryItems(this.selectedUser)
-    },
-    multipleLocationsEnabled () {
-      return this.isUser
-    },
     locationValue () {
-      if (this.multipleLocationsEnabled) {
-        // Hack to erase the content in locations AppSwitchableEditor
-        if (this.locationsChanged) return ' '
-        else return ''
-      } else {
-        return this.selectedUser.locationName
-      }
-    },
-    showRatingsList () {
-      return this.isUser && (this.isCurrentUser || this.canViewRatingsList || this.canViewRatingsListCta)
-    },
-    showRatingsListCta () {
-      return this.isUser && this.canViewRatingsListCta
+      return this.selectedUser.locationName
     },
     ...mapGetters([
       'selectedUser',
       'currentUser',
       'usersAssets',
-      'getResourceGalleryItems',
-      'getResourceGalleryOptions',
       'searchOptions',
-      'suggestionSearchMode',
-      'canViewRatingsList',
-      'canViewRatingsListCta',
     ]),
     ...mapState([
       'asset',
@@ -119,18 +81,11 @@ export default {
   },
   watch: {
     'currentUser.id' () {
-      if (this.showRatingsList) {
-        this.fetchUserRatingsStatsByTransaction({ userId: this.selectedUser.id })
-      }
-
-      // disable for dev
-      /* if (!this.canViewUserProfileDetails) {
-        this.openAuthDialog({ persistent: true })
-      } */
+      this.fetchUserRatingsStatsByTransaction({ userId: this.selectedUser.id })
     },
     async '$route' () {
       // ensure appropriate assets are displayed when switching profiles
-      await Promise.all([this.fetchUserAssets(), this.fetchSuggestions()])
+      await Promise.all([this.fetchUserAssets()])
     }
   },
   async created () {
@@ -144,76 +99,16 @@ export default {
 
       this.$store.dispatch('fetchRatingsStatsByType', { targetId: [this.userId] })
 
-      if (this.currentUser.id) {
-        this.fetchSuggestions()
-
-        if (!this.galleryItems.length) this.toggleImageEdition(true)
-      }
-
-      if (isUser(this.selectedUser)) {
-        this.$store.dispatch('fetchRecommendations', { userId: this.selectedUser.id })
-      }
-      if (this.showRatingsList) {
-        this.fetchUserRatingsStatsByTransaction({ userId: this.selectedUser.id })
-      }
+      this.fetchUserRatingsStatsByTransaction({ userId: this.selectedUser.id })
     },
     async fetchUserAssets () {
       return this.$store.dispatch('fetchUserAssets', {
         userId: this.selectedUser.id
       })
     },
-    async fetchSuggestions () {
-      const assetTypesIds = get(this.searchOptions, `modes.${this.suggestionSearchMode}.assetTypesIds`, [])
-
-      let query
-      const filters = {
-        quantity: 1
-      }
-
-      if (this.isUser) {
-        if (this.selectedUser.categoryId) {
-          filters.categoryId = this.selectedUser.categoryId
-        } else {
-          query = this.selectedUser.profileTitle
-        }
-      } else { // Suggest other offers with categories similar to this provider
-        const categoriesIds = compact(uniqBy(this.selectedUserAssets.map(asset => asset.categoryId)))
-
-        const showSuggestions = this.selectedUserAssets.some(asset => {
-          return asset.validated && asset.active
-        })
-        if (!showSuggestions) return []
-
-        filters.categoryId = categoriesIds
-      }
-
-      filters.assetTypeId = assetTypesIds
-
-      if (this.underlyingUserAsset) filters.without = [this.underlyingUserAsset]
-
-      const suggestedOffers = await this.$store.dispatch('fetchAssets', {
-        query,
-        filters,
-        nbResults: 4
-      })
-
-      this.suggestedOffers = suggestedOffers.map(asset => {
-        // populate assets to get the owner link
-        return populateAsset({
-          asset,
-          usersById: {},
-          categoriesById: this.common.categoriesById,
-          assetTypesById: this.common.assetTypesById
-        })
-      })
-    },
     async fetchUserRatingsStatsByTransaction ({ userId }) {
       this.userRatingsStatsByTransaction = await this.$store.dispatch('fetchRatingsStatsByTransaction', { targetId: userId })
       this.userRatingsLoaded = true
-    },
-    toggleImageEdition (editing) {
-      this.isEditingImages = typeof editing === 'boolean'
-        ? editing : !this.isEditingImages
     },
     updateUserFn (fieldName) {
       return async (value) => {
@@ -221,12 +116,7 @@ export default {
       }
     },
     prepareUpdatedLocations (place, handlerFn) {
-      if (this.multipleLocationsEnabled) {
-        const existingLocations = this.selectedUser.locations
-        extractLocationDataFromPlace(place, loc => { handlerFn(loc ? existingLocations.concat([ loc ]) : existingLocations) })
-      } else {
-        extractLocationDataFromPlace(place, loc => { handlerFn(loc ? [ loc ] : null) })
-      }
+      extractLocationDataFromPlace(place, loc => { handlerFn(loc ? [ loc ] : null) })
     },
     async removeLocationByIndex (index) {
       const locations = this.selectedUser.locations
@@ -250,13 +140,6 @@ export default {
         this.locationsChanged = false
       }
     },
-    uploadCompleted ({ uploadedOrReused }) {
-      return this.updateUser('images', uploadedOrReused)
-    },
-    removeImage (removed) { // one single image
-      const newImages = this.selectedUser.images.filter(img => img.name !== removed.name)
-      return this.updateUser('images', newImages)
-    },
   }
 }
 </script>
@@ -278,37 +161,11 @@ export default {
             :input-label="$t({ id: 'user.account.my_profile_title_label' })"
           />
 
-          <!-- Natural user profile page -->
-          <div
-            v-if="isUser"
-            class="q-my-md row justify-start"
-          >
-            <AppSwitchableEditor
-              tag="div"
-              class="flex-item--auto text-h5 text-weight-medium"
-              :value="selectedUser.profileSalary"
-              :active="isCurrentUser"
-              :custom-save="updateUserFn('profileSalary')"
-              :input-label="$t({ id: 'pricing.asking_price_label' })"
-              input-type="number"
-            >
-              <AppContent
-                v-if="selectedUser.profileSalary"
-                entry="pricing"
-                field="asking_price"
-                :options="{
-                  price: $fx(selectedUser.profileSalary),
-                  timeUnit: 'M'
-                }"
-              />
-            </AppSwitchableEditor>
-          </div>
-
           <div v-if="isCurrentUser || (!isCurrentUser && selectedUserLocations.length)">
             <div class="row justify-between q-my-md">
               <AppSwitchableEditor
                 :value="locationValue"
-                :active="isCurrentUser && selectedUserLocations.length < maxNbLocations"
+                :active="isCurrentUser && selectedUserLocations.length <= maxNbLocations"
                 :custom-save="updateUserFn('locations')"
                 :allow-falsy-save="true"
                 tag="div"
@@ -316,39 +173,13 @@ export default {
               >
                 <template v-slot:default>
                   <div class="row items-center">
-                    <AppContent
-                      v-if="isUser"
-                      v-show="isCurrentUser || selectedUserLocations.length > 0"
-                      class="text-h6 flex--grow-auto q-my-none q-mr-sm text-weight-medium"
-                      tag="h2"
-                      entry="user"
-                      field="favorite_places_label"
-                    />
-                    <template v-if="multipleLocationsEnabled">
-                      <QChip
-                        v-for="(location, index) in selectedUserLocations"
-                        :key="location.id"
-                        class="non-selectable text-weight-medium q-ml-none q-mr-sm"
-                        :removable="isCurrentUser"
-                        :square="!style.roundedTheme"
-                        outline
-                        color="primary"
-                        @remove="removeLocationByIndex(index)"
-                      >
-                        {{ location.shortDisplayName }}
-                      </QChip>
-                    </template>
-                    <div
-                      v-else
-                      class="text-h6 ellipsis"
-                    >
+                    <div class="text-h6 ellipsis">
                       {{ selectedUser.locationName }}
                     </div>
                   </div>
                 </template>
                 <template v-slot:placeholder>
                   <AppContent
-                    v-if="isProvider"
                     class="switchable-editor-placeholder"
                     entry="places"
                     field="address_placeholder"
@@ -368,46 +199,6 @@ export default {
 
         <div class="q-mt-xl">
           <TheContextCard :load="!layout.isLeftDrawerOpened" />
-        </div>
-
-        <div
-          v-if="isProvider"
-          class="text-center q-mb-md"
-        >
-          <div v-if="!isEditingImages">
-            <VuePhotoSwipe
-              v-if="galleryItems.length"
-              :options="getResourceGalleryOptions(selectedUser)"
-              :items="galleryItems"
-            />
-            <AppContent
-              v-if="isCurrentUser"
-              class="q-ma-lg"
-              tag="QBtn"
-              color="primary"
-              entry="prompt"
-              :field="galleryItems.length ? 'edit_pictures' : 'add_pictures'"
-              :rounded="style.roundedTheme"
-              @click="toggleImageEdition"
-            />
-          </div>
-          <div v-else-if="isCurrentUser">
-            <AppGalleryUploader
-              :reused-images="selectedUser.images"
-              @upload-completed="uploadCompleted"
-              @reorder="files => uploadCompleted({ uploadedOrReused: files })"
-              @remove="removeImage"
-            />
-            <AppContent
-              class="q-ma-md"
-              tag="QBtn"
-              color="positive"
-              entry="navigation"
-              field="close"
-              :rounded="style.roundedTheme"
-              @click="toggleImageEdition(false)"
-            />
-          </div>
         </div>
 
         <!-- Wait for API before hiding this so wa can show some skeleton screen in the future -->
@@ -439,7 +230,7 @@ export default {
         </section>
 
         <section
-          v-show="showRatingsList && userRatingsLoaded"
+          v-show="userRatingsLoaded"
           class="q-mt-md"
         >
           <QSeparator class="q-mt-xl" />
@@ -447,7 +238,7 @@ export default {
           <TransactionRatingsList
             :ratings-stats="userRatingsStatsByTransaction"
             :target="selectedUser"
-            :show-cta="showRatingsListCta"
+            :show-cta="false"
           />
         </section>
 
@@ -469,13 +260,11 @@ export default {
               :key="asset.id"
               class="col-10 col-sm-6"
               :asset="asset"
-              :to="suggestionSearchMode === 'reversed' ? asset.ownerLink : null"
             />
           </div>
         </section>
 
         <section
-          v-if="isProvider"
           v-show="selectedUserAssets.length"
           class="q-px-sm"
         >

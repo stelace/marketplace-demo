@@ -126,7 +126,6 @@ export async function searchAssets ({ state, rootState, rootGetters, commit, dis
 
     if (asset.owner) {
       populateUser(asset.owner, {
-        categoriesById,
         ratingsStatsByType: rootState.rating.ratingsStatsByType,
         ratingsOptions,
         isCurrentUser: currentUser.id === asset.owner.id,

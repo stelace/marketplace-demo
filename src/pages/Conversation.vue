@@ -3,8 +3,6 @@ import { mapState, mapGetters } from 'vuex'
 import { date } from 'quasar'
 import { get, values } from 'lodash'
 
-import { isUser } from 'src/utils/user'
-
 import EventBus from 'src/utils/event-bus'
 
 import TransactionActions from 'src/components/TransactionActions'
@@ -98,10 +96,6 @@ export default {
     currentUserAvatar () { // computed because we need afterAuth results first
       return this.getAvatarImageUrl(this.currentUser)
     },
-    assetSearchMode () {
-      const owner = get(this.inbox.asset, 'owner')
-      return isUser(owner) ? 'reversed' : 'default'
-    },
     ...mapState([
       'auth',
       'content',
@@ -113,7 +107,6 @@ export default {
       'getAvatarImageUrl',
       'currentUser',
       'conversations',
-      'isUser',
     ]),
   },
   async preFetch ({ store }) {
@@ -199,7 +192,6 @@ export default {
         await this.$store.dispatch('fetchMessages')
 
         const firstNotification = this.inbox.conversation.isEmpty ? true : undefined
-        const senderType = this.isUser ? 'user' : 'provider'
 
         await this.$store.dispatch('sendMessage', {
           topicId: this.inbox.transaction.id || this.inbox.asset.id,
@@ -209,7 +201,6 @@ export default {
           attachments: this.getTransformedUploadedFiles(),
           metadata: {
             instant: {
-              senderType,
               firstNotification,
             }
           }
@@ -243,7 +234,6 @@ export default {
         <div class="row justify-center">
           <AssetCard
             :asset="inbox.asset"
-            :to="assetSearchMode === 'reversed' ? inbox.asset.ownerLink : null"
             class="mobile-stacked"
           />
           <div class="mobile-stacked conversation__details">

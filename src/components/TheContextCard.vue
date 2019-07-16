@@ -148,33 +148,6 @@
             </div>
           </div>
 
-          <div class="text-center">
-            <AppSwitchableEditor
-              tag="h2"
-              class="text-subtitle2 text-uppercase inline-block"
-              :value="selectedUser.categoryName"
-              :active="isCurrentUser"
-              :custom-save="updateUserFn('categoryId')"
-            >
-              <template v-slot:default="{ content }">
-                {{ selectedUser.categoryName }}
-              </template>
-              <template v-slot:placeholder>
-                <AppContent
-                  entry="asset"
-                  field="category_label"
-                />
-              </template>
-              <template v-slot:edition="{ content, saveDraft }">
-                <SelectCategories
-                  :initial-category="{ id: selectedUser.categoryId, name: selectedUser.categoryName }"
-                  :label="$t({ id: 'asset.category_label' })"
-                  @change="cat => saveDraft(cat ? cat.id : null)"
-                />
-              </template>
-            </AppSwitchableEditor>
-          </div>
-
           <div
             v-if="selectedUser.averageRating"
             class="text-center"
@@ -303,9 +276,6 @@ import { get } from 'lodash'
 
 import { isAssetId } from 'src/utils/id'
 
-import DatePickerInput from 'src/components/DatePickerInput'
-import SelectCategories from 'src/components/SelectCategories'
-
 import AppUpload from 'src/mixins/AppUpload'
 import AuthDialogMixin from 'src/mixins/authDialog'
 import ValidationDialogMixin from 'src/mixins/validationDialog'
@@ -317,8 +287,6 @@ export default {
         if (window && !window.mapboxgl) window.mapboxgl = mapbox.default
         return import(/* webpackChunkName: 'mapbox' */ 'src/components/AppMap')
       }),
-    DatePickerInput,
-    SelectCategories,
   },
   mixins: [
     AppUpload,

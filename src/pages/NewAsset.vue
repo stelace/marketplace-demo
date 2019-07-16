@@ -232,9 +232,6 @@ export default {
         return
       }
 
-      // prevents unauthorized users from creating asset after authentication
-      if (!this.checkAccessOrRedirect('createAsset')) return
-
       if (this.step > 3) {
         try {
           const uploadPending = this.uploaderFiles.length && this.assetImages.length < this.uploaderFiles.length

@@ -36,7 +36,6 @@ export function isUser (user) {
 }
 
 export function populateUser (user, {
-  categoriesById,
   ratingsStatsByType,
   ratingsOptions,
   isCurrentUser,

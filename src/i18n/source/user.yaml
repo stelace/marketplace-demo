@@ -180,19 +180,3 @@ user:
       en: Validate my number
       fr: Vérifier mon numéro
       context: Give the user a hint about upcoming validation process once phone number has been filled in.
-  experiences:
-    my_experiences:
-      en: My experiences
-      fr: Mes expériences
-    company_name_label:
-      en: Company name
-      fr: Nom de l'entreprise
-    job_title_label:
-      en: Job title
-      fr: Intitulé du poste
-    description_label:
-      en: Description
-      fr: Description
-    location_label:
-      en: Location
-      fr: Lieu

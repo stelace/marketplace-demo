@@ -10,8 +10,6 @@
             isSearchMapVisible ? 'col-xl-3' : 'col-xl-2'
           ]"
           :asset="asset"
-          :to="search.searchMode === 'reversed' ? asset.ownerLink : null"
-          :show-ratings="search.searchMode === 'reversed'"
           @mouseenter.native="animateMarker(asset.id)"
           @mouseleave.native="animateMarker(asset.id, false)"
         />

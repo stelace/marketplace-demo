@@ -20,7 +20,6 @@ export function conversations (state, getters, rootState, rootGetters) {
   const {
     currentUser,
     ratingsOptions,
-    isUser,
     isProvider,
   } = rootGetters
   const {
@@ -72,7 +71,6 @@ export function conversations (state, getters, rootState, rootGetters) {
 
       if (asset.owner) {
         populateUser(asset.owner, {
-          categoriesById,
           ratingsStatsByType,
           ratingsOptions,
           isCurrentUser: currentUser.id === asset.owner.id,
@@ -94,7 +92,7 @@ export function conversations (state, getters, rootState, rootGetters) {
     const lastInterlocutorMessage = conversationMessages.find(message => message.senderId !== currentUser.id)
     const lastOwnMessage = conversationMessages.find(message => message.senderId === currentUser.id)
 
-    const transactionActions = transactionId ? getTransactionActions({ isUser, isProvider, transaction, isEmptyConversation }) : {}
+    const transactionActions = transactionId ? getTransactionActions({ currentUser, transaction, isEmptyConversation }) : {}
     const ratingsPrompt = transactionId ? getRatingsPrompt({ isProvider, transaction }) : false
     const ratingsReadonly = !!ratedTransactionsById[transactionId]
 
@@ -130,23 +128,26 @@ function getInterlocutorId ({ currentUser, messages }) {
     : messages[0].senderId
 }
 
-function getTransactionActions ({ isUser, isProvider, transaction, isEmptyConversation }) {
+function getTransactionActions ({ currentUser, transaction, isEmptyConversation }) {
   const transactionActions = {}
 
+  const isOwner = transaction.ownerId === currentUser.id
+  const isTaker = transaction.ownerId !== currentUser.id
+
   if (transaction.status === 'draft') {
-    if (isEmptyConversation && isUser) {
+    if (isEmptyConversation && isTaker) {
       transactionActions.cancel = true
       transactionActions.cancellationReason = 'withdrawn'
-    } else if (isProvider) {
+    } else if (isOwner) {
       transactionActions.accept = true
       transactionActions.cancel = true
       transactionActions.cancellationReason = 'refusedByOwner'
-    } else if (isUser) {
+    } else if (isTaker) {
       transactionActions.cancel = true
       transactionActions.cancellationReason = 'withdrawn'
     }
   } else if (transaction.status === 'accepted') {
-    if (isUser) {
+    if (isTaker) {
       transactionActions.confirmAndPay = true
       transactionActions.cancel = true
       transactionActions.cancellationReason = 'refusedByTaker'

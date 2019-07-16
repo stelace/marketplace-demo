@@ -5,12 +5,11 @@ import { populateUser } from 'src/utils/user'
 export function currentUser (state, getters, rootState, rootGetters) {
   const user = Object.assign({}, state.user)
 
-  const { categoriesById } = rootState.common
   const ratingsOptions = rootGetters.ratingsOptions
   const { ratingsStatsByType } = rootState.rating
 
   if (user.id) {
-    populateUser(user, { categoriesById, ratingsOptions, ratingsStatsByType, isCurrentUser: true })
+    populateUser(user, { ratingsOptions, ratingsStatsByType, isCurrentUser: true })
   }
 
   return user

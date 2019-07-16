@@ -142,31 +142,6 @@ export async function fetchRatedTransactions ({ commit, rootGetters }, { transac
   })
 }
 
-export async function fetchRecommendations ({ commit }, { userId }) {
-  const label = 'recommendation'
-
-  const nbRecommendationsToFetch = 3
-
-  const [
-    ratingsStats,
-    recommendations,
-  ] = await Promise.all([
-    stelace.ratings.getStats({ label, targetId: userId, groupBy: 'targetId' }),
-    stelace.ratings.list({ label, targetId: userId, nbResultsPerPage: nbRecommendationsToFetch })
-  ])
-
-  const ratingsStatsByTargetId = keyBy(ratingsStats, 'targetId')
-
-  const usersIds = uniqBy(recommendations.map(r => r.authorId))
-  const users = await stelace.users.list({ id: usersIds })
-
-  commit({
-    type: types.SET_RECOMMENDATIONS,
-    nbRecommendations: get(ratingsStatsByTargetId[userId], 'count', 0),
-    recommendedBy: users
-  })
-}
-
 export async function fetchRatings ({ commit }, { transactionId }) {
   const ratings = await stelace.ratings.list({ transactionId })
   return ratings

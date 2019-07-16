@@ -5,7 +5,7 @@ import { set, isEmpty, isUndefined, values } from 'lodash'
 
 import * as types from 'src/store/mutation-types'
 
-import { userMetadataMapping, isUser, getDisplayName } from 'src/utils/user'
+import { userMetadataMapping, getDisplayName } from 'src/utils/user'
 
 const metadataAttrs = Object.keys(userMetadataMapping)
 
@@ -27,7 +27,7 @@ export async function updateUser ({ commit, rootGetters }, { userId, attrs }) {
 
   const shouldUpdateDisplayName = !isUndefined(attrs.firstname) || !isUndefined(attrs.lastname)
 
-  if (isUser(currentUser) && shouldUpdateDisplayName) {
+  if (shouldUpdateDisplayName) {
     attrs.displayName = getDisplayName(attrs.firstname || currentUser.firstname, attrs.lastname || currentUser.lastname)
   }
 

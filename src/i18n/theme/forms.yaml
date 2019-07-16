@@ -1,0 +1,15 @@
+form:
+  search:
+    modes:
+      default:
+        en: All
+        fr: Tous
+        context: Default search mode, generally “offers” as opposed to “requests” or submissions
+      renting:
+        en: Renting
+        fr: Location
+        context: Renting search mode
+      selling:
+        en: Selling
+        fr: Vente
+        context: Selling search mode

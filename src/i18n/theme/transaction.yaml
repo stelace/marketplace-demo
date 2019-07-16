@@ -1,27 +1,15 @@
 transaction:
   status:
-    draft:
-      en: New application
-      fr: Nouvelle candidature
-    accepted:
-      en: Accepted application
-      fr: Candidature acceptée
-    validated:
-      en: Validated application
-      fr: Candidature validée
     completed:
-      en: Validated application
-      fr: Candidature validée
-    withdrawn:
-      en: Withdrawn
-      fr: Candidature retirée
+      en: Validated
+      fr: Validé
     cancelled:
       withdrawn:
         en: Withdrawn
-        fr: Candidature retirée
+        fr: Retiré
       refusedByOwner:
-        en: Rejected application
-        fr: Candidature rejetée
+        en: Rejected
+        fr: Rejeté
       refusedByTaker:
         en: Withdrawn
-        fr: Candidature retirée
+        fr: Retiré

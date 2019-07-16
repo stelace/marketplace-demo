@@ -24,30 +24,6 @@
             color="warning"
             text-color="white"
           />
-          <AppSwitchableEditor
-            tag="h2"
-            class="text-h6 text-uppercase"
-            :value="activeAsset.categoryName"
-            :active="isCurrentUserTheOwner"
-            :custom-save="updateAssetFn('categoryId')"
-          >
-            <template v-slot:default="{ content }">
-              {{ activeAsset.categoryName }}
-            </template>
-            <template v-slot:placeholder>
-              <AppContent
-                entry="asset"
-                field="category_label"
-              />
-            </template>
-            <template v-slot:edition="{ content, saveDraft }">
-              <SelectCategories
-                :initial-category="{ id: activeAsset.categoryId, name: activeAsset.categoryName }"
-                :label="$t({ id: 'asset.category_label' })"
-                @change="cat => saveDraft(cat ? cat.id : null)"
-              />
-            </template>
-          </AppSwitchableEditor>
 
           <AppContent
             v-if="activeAsset.startDate"
@@ -350,7 +326,6 @@ export default {
       'getResourceGalleryOptions',
       'currentUser',
       'searchOptions',
-      'suggestionSearchMode',
       'isActiveAssetAvailable',
     ]),
   },
@@ -399,7 +374,7 @@ export default {
     async fetchRelatedAssets () {
       await this.$store.dispatch('fetchAssetTypes')
 
-      const assetTypeId = get(this.searchOptions, `modes.${this.suggestionSearchMode}.assetTypesIds`, [])
+      const assetTypeId = get(this.searchOptions, `modes.default.assetTypesIds`, [])
 
       const ownerId = get(this.activeAsset, 'ownerId')
       if (!ownerId) return {}

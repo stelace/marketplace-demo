@@ -1,5 +1,5 @@
 import { populateAsset } from 'src/utils/asset'
-import { populateUser, isProvider } from 'src/utils/user'
+import { populateUser } from 'src/utils/user'
 import { get } from 'lodash'
 
 // used to map search config label to getters computed value
@@ -78,7 +78,6 @@ export function searchedAssets (state, getters, rootState, rootGetters) {
     if (asset.owner) {
       if (asset.owner) {
         populateUser(asset.owner, {
-          categoriesById,
           ratingsStatsByType,
           ratingsOptions,
           isCurrentUser: currentUser.id === asset.owner.id,
@@ -147,10 +146,6 @@ export function defaultSearchMode (state, getters, rootState, rootGetters) {
 
 export function searchModeConfig (state, getters, rootState, rootGetters) {
   return get(rootGetters.searchOptions, `modes.${rootState.search.searchMode}`)
-}
-
-export function suggestionSearchMode (state, getters, rootState, rootGetters) {
-  return isProvider(rootGetters.currentUser) ? 'reversed' : 'default'
 }
 
 export function searchAfterMapMoveActive () {

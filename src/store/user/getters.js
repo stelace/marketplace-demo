@@ -3,7 +3,6 @@ import { get } from 'lodash'
 import { populateUser } from 'src/utils/user'
 
 export function selectedUser (state, getters, rootState, rootGetters) {
-  const { categoriesById } = rootState.common
   const currentUser = rootGetters.currentUser
   const selectedUser = state.selectedUser
   const isCurrentUser = selectedUser.id === currentUser.id
@@ -17,7 +16,6 @@ export function selectedUser (state, getters, rootState, rootGetters) {
   } = rootState.rating
 
   populateUser(user, {
-    categoriesById,
     ratingsOptions,
     ratingsStatsByType,
     isCurrentUser,
