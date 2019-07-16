@@ -277,7 +277,6 @@
       <!-- Make it pluggable in a new TheContextCardBottom component (and add slot) -->
       <div
         v-if="showMap || mapLoaded"
-        v-show="!showAvailabilityCalendar"
         class="drawer__map-container"
       >
         <QNoSsr>
@@ -293,86 +292,6 @@
           />
         </QNoSsr>
       </div>
-      <div
-        v-else-if="showAvailabilityCalendar"
-        class="q-pa-xs q-my-md availability-calendar-container"
-      >
-        <AppContent
-          tag="div"
-          class="text-h6 text-center"
-          entry="prompt"
-          field="my_availability"
-        />
-        <div v-if="selectedUserIsCurrentUser">
-          <div class="q-my-md row justify-center items-center">
-            <QChip
-              clickable
-              :square="!style.roundedTheme"
-              color="secondary"
-              text-color="white"
-            >
-              {{ displayAvailabilityStartDate || $t({ id: 'time.start_date_label' }) }}
-              <q-popup-proxy
-                ref="startDatePopup"
-                :offset="[0,8]"
-              >
-                <div>
-                  <QDate
-                    :value="datePickerAvailabilityStartDate"
-                    @input="selectStartDate"
-                  />
-                </div>
-              </q-popup-proxy>
-            </QChip>
-            <div class="q-mx-md">
-              <QIcon
-                name="arrow_forward"
-                size="1.5rem"
-                color="default-color"
-              />
-            </div>
-            <QChip
-              clickable
-              :removable="!!displayAvailabilityEndDate"
-              :square="!style.roundedTheme"
-              color="secondary"
-              text-color="white"
-              @remove="selectEndDate(null)"
-            >
-              {{ displayAvailabilityEndDate || $t({ id: 'time.end_date_label' }) }}
-              <q-popup-proxy
-                ref="endDatePopup"
-                :offset="[0,8]"
-              >
-                <div>
-                  <QDate
-                    :value="datePickerAvailabilityEndDate"
-                    @input="selectEndDate"
-                  />
-                </div>
-              </q-popup-proxy>
-            </QChip>
-          </div>
-          <AppContent
-            v-show="!availabilityEndDate"
-            class="text-subtitle q-mb-sm text-center"
-            tag="div"
-            entry="time"
-            field="missing_end_date_meaning"
-          />
-        </div>
-        <div
-          v-else
-          class="flex flex-center"
-        >
-          <q-date
-            v-model="date"
-            :events="availabilityEventsFn"
-            event-color="positive"
-            minimal
-          />
-        </div>
-      </div>
     </component>
   </div>
 </template>
@@ -381,10 +300,7 @@
 /* global mapboxgl */
 import { mapState, mapGetters } from 'vuex'
 import { get } from 'lodash'
-import { date } from 'quasar'
 
-import { isValidDateString } from 'src/utils/time'
-import { isUser } from 'src/utils/user'
 import { isAssetId } from 'src/utils/id'
 
 import DatePickerInput from 'src/components/DatePickerInput'
@@ -451,65 +367,6 @@ export default {
 
       return this.route.name === 'asset'
     },
-    availabilityGraph () {
-      if (!this.selectedUser.assetId) return
-      return this.asset.availabilityGraphByAssetId[this.selectedUser.assetId]
-    },
-    availability () {
-      if (!this.selectedUser.availabilityId) return
-      return this.asset.availabilitiesById[this.selectedUser.availabilityId]
-    },
-    availabilityStartDate () {
-      if (!this.availability) return null
-
-      // to express an availability from a date (start date defined but no end date)
-      // we define an availability with quantity 0 from now minus one year (start date) to this date (end date)
-      // e.g. availability from 2019-01-01 is modeled as
-      // unavailability from 2018-01-01 to 2019-01-01
-
-      // the reason is because assets are created with quantity equals to 1 by default,
-      // so they are available
-      if (this.isUnavailability(this.availability)) {
-        return this.availability.endDate
-      } else {
-        return this.availability.startDate
-      }
-    },
-    availabilityEndDate () {
-      if (!this.availability) return null
-
-      if (this.isUnavailability(this.availability)) {
-        return null
-      } else {
-        return this.availability.endDate
-      }
-    },
-    availabilitySaveButtonDisabled () {
-      if (!this.availabilityStartDate || !this.availabilityEndDate) return true
-
-      return !isValidDateString(this.availabilityStartDate) ||
-        !isValidDateString(this.availabilityEndDate) ||
-        this.availabilityStartDate > this.availabilityEndDate
-    },
-    showAvailabilityCalendar () {
-      return this.isProfilePage && this.availability && isUser(this.selectedUser)
-    },
-    displayAvailabilityStartDate () {
-      if (!this.availabilityStartDate) return null
-      return this.$t({ id: 'time.date_short' }, { date: new Date(this.availabilityStartDate) })
-    },
-    displayAvailabilityEndDate () {
-      if (!this.availabilityEndDate) return null
-      return this.$t({ id: 'time.date_short' }, { date: new Date(this.availabilityEndDate) })
-    },
-    datePickerAvailabilityStartDate () {
-      if (!this.availabilityStartDate) return null
-      return date.formatDate(this.availabilityStartDate, 'YYYY/MM/DD')
-    },
-    datePickerAvailabilityEndDate () {
-      if (!this.availabilityEndDate) return null
-      return date.formatDate(this.availabilityEndDate, 'YYYY/MM/DD')
-    },
     contextResource () {
       return (this.isProfilePage ? this.selectedUser : this.activeAsset) || {}
     },
@@ -574,118 +431,6 @@ export default {
     this.$store.dispatch('fetchCategories')
   },
   methods: {
-    availabilityEventsFn (dateString) {
-      if (!this.availabilityGraph) return false
-
-      const dateFormat = 'YYYY-MM-DD'
-
-      const selectedDate = date.formatDate(dateString, dateFormat)
-      const startDate = date.formatDate(this.availability.startDate, dateFormat)
-      const endDate = date.formatDate(this.availability.endDate, dateFormat)
-
-      if (endDate < startDate) return false
-
-      const defaultQuantity = this.availabilityGraph.defaultQuantity
-      const graphDates = this.availabilityGraph.graphDates
-      const firstGraphDate = graphDates[0]
-
-      if (!graphDates.length || selectedDate < firstGraphDate.date) {
-        return defaultQuantity > 0
-      }
-
-      let available = false
-
-      for (let i = 1; i < graphDates.length; i++) {
-        const graphDate = graphDates[i]
-        const previousGraphDate = graphDates[i - 1]
-
-        if (previousGraphDate.date <= selectedDate && selectedDate < graphDate.date) {
-          available = previousGraphDate.availableQuantity - previousGraphDate.usedQuantity > 0
-          break
-        }
-
-        const isLastGraphDate = i === graphDates.length - 1
-        if (isLastGraphDate && graphDate.date <= selectedDate) {
-          available = graphDate.availableQuantity - graphDate.usedQuantity > 0
-          break
-        }
-      }
-
-      return available
-    },
-    isUnavailability (availability) {
-      return availability.quantity === 0
-    },
-    hideStartDatePopup () {
-      this.$refs.startDatePopup.hide()
-    },
-    hideEndDatePopup () {
-      this.$refs.endDatePopup.hide()
-    },
-    selectStartDate (startDate) {
-      this.saveAvailability({
-        startDate: startDate ? new Date(startDate).toISOString() : null,
-        endDate: this.availabilityEndDate
-      })
-    },
-    selectEndDate (endDate) {
-      this.saveAvailability({
-        startDate: this.availabilityStartDate,
-        endDate: endDate ? new Date(endDate).toISOString() : null
-      })
-    },
-    async saveAvailability ({ startDate, endDate }) {
-      if (!startDate) return
-
-      if (endDate && startDate >= endDate) {
-        this.notifyWarning('time.error.incorrect_dates')
-        return
-      }
-
-      const isAnUnavailability = !endDate
-
-      const asset = this.asset.activeAsset
-
-      let assetQuantity = asset.quantity
-      const attrs = {}
-
-      if (!isAnUnavailability) {
-        attrs.startDate = startDate
-        attrs.endDate = endDate
-        attrs.quantity = 1
-        assetQuantity = 0
-      } else {
-        attrs.startDate = date.addToDate(new Date(), { year: -1 }).toISOString()
-        attrs.endDate = startDate
-        attrs.quantity = 0
-        assetQuantity = 1
-      }
-
-      try {
-        await this.$store.dispatch('updateAvailability', {
-          availabilityId: this.availability.id,
-          attrs
-        })
-
-        if (asset.quantity !== assetQuantity) {
-          await this.$store.dispatch('updateActiveAsset', {
-            assetId: asset.id,
-            attrs: {
-              quantity: assetQuantity
-            }
-          })
-        }
-
-        // hide popups only if save is successful
-        this.hideStartDatePopup()
-        this.hideEndDatePopup()
-
-        // short notification duration
-        this.notifySuccess('notification.saved', { timeout: 1000 })
-      } catch (err) {
-        this.notifyWarning('error.unknown_happened_header')
-      }
-    },
     updateUserFn (fieldName, { displayNotification = true } = {}) {
       return async (value) => {
         await this.$store.dispatch('updateUser', {
@@ -789,9 +534,6 @@ $owner-avatar-container-height = 7rem
   position relative
   background-color $map-background-color
   height $drawer-map-height
-
-.availability-calendar-container .q-date
-  box-shadow none
 
 .avatar-placeholder
   border-radius 50%

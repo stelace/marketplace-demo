@@ -150,11 +150,6 @@ export default {
         if (!this.galleryItems.length) this.toggleImageEdition(true)
       }
 
-      if (this.underlyingUserAsset) {
-        this.$store.dispatch('fetchAvailabilities', { assetId: this.underlyingUserAsset })
-        this.$store.dispatch('fetchActiveAsset', { assetId: this.underlyingUserAsset })
-        this.$store.dispatch('fetchAvailabilityGraph', { assetId: this.underlyingUserAsset })
-      }
       if (isUser(this.selectedUser)) {
         this.$store.dispatch('fetchRecommendations', { userId: this.selectedUser.id })
       }
