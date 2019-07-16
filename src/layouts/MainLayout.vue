@@ -10,7 +10,6 @@ import AppUpdateDialog from 'src/components/AppUpdateDialog'
 import AuthDialog from 'src/components/AuthDialog'
 import CheckoutButton from 'src/components/CheckoutButton'
 import EmailValidationDialog from 'src/components/EmailValidationDialog'
-import TheContextCard from 'src/components/TheContextCard'
 
 import AuthDialogMixin from 'src/mixins/authDialog'
 
@@ -22,7 +21,6 @@ export default {
     AuthDialog,
     CheckoutButton,
     EmailValidationDialog,
-    TheContextCard,
   },
   mixins: [
     AuthDialogMixin,
@@ -143,22 +141,6 @@ export default {
       color="secondary"
       size="3px"
     />
-
-    <QDrawer
-      v-if="hasLeftDrawer"
-      :value="layout.isLeftDrawerOpened"
-      bordered
-      show-if-above
-      side="left"
-      content-class="no-scroll"
-      @input="toggleLeftDrawer"
-    >
-      <!-- drawer content -->
-      <TheContextCard
-        :load="layout.isLeftDrawerOpened"
-        :in-drawer="true"
-      />
-    </QDrawer>
 
     <!-- <QDrawer v-model="right" side="right" elevated content-class="bg-accent">
     </QDrawer> -->

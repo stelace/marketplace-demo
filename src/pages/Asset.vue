@@ -204,7 +204,7 @@
         </section>
 
         <div class="q-mt-xl">
-          <TheContextCard :load="!layout.isLeftDrawerOpened" />
+          <ProfileCard />
         </div>
 
         <section
@@ -255,7 +255,7 @@ import { populateAsset } from 'src/utils/asset'
 import OwnerAssetCard from 'src/components/OwnerAssetCard'
 import PlacesAutocomplete from 'src/components/PlacesAutocomplete'
 import SelectCategories from 'src/components/SelectCategories'
-import TheContextCard from 'src/components/TheContextCard'
+import ProfileCard from 'src/components/ProfileCard'
 
 import PageComponentMixin from 'src/mixins/pageComponent'
 
@@ -264,7 +264,7 @@ export default {
     OwnerAssetCard,
     PlacesAutocomplete,
     SelectCategories,
-    TheContextCard,
+    ProfileCard,
     VuePhotoSwipe: () => import(/* webpackChunkName: 'photoswipe' */ 'src/components/VuePhotoSwipe'),
   },
   mixins: [

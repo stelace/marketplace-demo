@@ -7,7 +7,7 @@ import EventBus from 'src/utils/event-bus'
 
 import TransactionActions from 'src/components/TransactionActions'
 import TransactionStatus from 'src/components/TransactionStatus'
-import TheContextCard from 'src/components/TheContextCard'
+import ProfileCard from 'src/components/ProfileCard'
 
 import PageComponentMixin from 'src/mixins/pageComponent'
 import AppUpload from 'src/mixins/AppUpload'
@@ -16,7 +16,7 @@ export default {
   components: {
     TransactionActions,
     TransactionStatus,
-    TheContextCard,
+    ProfileCard,
   },
   mixins: [
     AppUpload,
@@ -443,7 +443,7 @@ export default {
           v-if="!layout.isLeftDrawerOpened"
           class="q-my-lg"
         />
-        <TheContextCard :load="!layout.isLeftDrawerOpened" />
+        <ProfileCard />
       </div>
     </div>
   </QPage>

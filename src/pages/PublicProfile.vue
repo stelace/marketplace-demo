@@ -8,7 +8,7 @@ import AppGalleryUploader from 'src/components/AppGalleryUploader'
 import OwnerAssetCard from 'src/components/OwnerAssetCard'
 import PlacesAutocomplete from 'src/components/PlacesAutocomplete'
 import TransactionRatingsList from 'src/components/TransactionRatingsList'
-import TheContextCard from 'src/components/TheContextCard'
+import ProfileCard from 'src/components/ProfileCard'
 
 import PageComponentMixin from 'src/mixins/pageComponent'
 
@@ -20,7 +20,7 @@ export default {
     OwnerAssetCard,
     PlacesAutocomplete,
     TransactionRatingsList,
-    TheContextCard,
+    ProfileCard,
     VuePhotoSwipe: () => import(/* webpackChunkName: 'photoswipe' */ 'src/components/VuePhotoSwipe'),
   },
   mixins: [
@@ -198,7 +198,7 @@ export default {
         </section>
 
         <div class="q-mt-xl">
-          <TheContextCard :load="!layout.isLeftDrawerOpened" />
+          <ProfileCard />
         </div>
 
         <!-- Wait for API before hiding this so wa can show some skeleton screen in the future -->

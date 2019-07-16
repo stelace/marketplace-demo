@@ -1,12 +1,7 @@
 <template>
   <div
-    v-if="load || componentLoaded"
-    v-show="load"
     :key="contextResource.id"
-    :class="[
-      'full-height context-card',
-      inDrawer ? 'context-card--in-drawer' : 'q-card'
-    ]"
+    class="full-height context-card q-card"
   >
     <div
       :class="[
@@ -105,15 +100,10 @@
     </div>
 
     <component
-      :is="inDrawer ? 'q-scroll-area' : 'div'"
+      :is="'div'"
       class="user-card-container"
     >
-      <div
-        :class="[
-          'user-card-content',
-          inDrawer ? 'q-pa-md' : 'q-pa-lg'
-        ]"
-      >
+      <div class="user-card-content q-pa-lg">
         <!-- Natural user looking for offers -->
         <template v-if="isSelectedUserNatural">
           <div
@@ -303,7 +293,6 @@ export default {
   data () {
     return {
       // map: null, // DON’T keep map object in Vue, this BREAKS the map (probably reactivity)
-      componentLoaded: false, // cache whole component
       mapLoaded: false, // caching map too
       date: '',
       newAvatarUrl: '',
