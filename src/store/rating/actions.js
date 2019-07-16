@@ -1,8 +1,7 @@
-import { get, keyBy, uniqBy, values, compact, groupBy } from 'lodash'
+import { keyBy, uniqBy, compact } from 'lodash'
 import * as types from 'src/store/mutation-types'
 import stelace, { fetchAllResults } from 'src/utils/stelace'
 import * as api from './api'
-import { populateUser } from 'src/utils/user'
 
 import {
   isRatingOptional,
@@ -29,86 +28,43 @@ export async function fetchRatingsStatsByType ({ commit, rootGetters }, { target
  * doesn't store the result into vuex store
  * result format:
  * [
+ *
+ *
  *   {
- *     transactionId: transactionId1,
- *     transaction: transaction1,
  *     owner: owner1,
- *     ratingsStats: {
- *       [ratingsStatsLabel1]: ratingsStats1,
- *       [ratingsStatsLabel2]: ratingsStats2
- *     },
- *     ratings: {
- *       [ratingLabel1]: rating1,
- *       [ratingLabel2]: rating2,
- *       [ratingLabel3]: rating3
- *     }
+ *     rating: rating1,
+ *     assetName: assetName1,
+ *     transactionDuration: duration1
  *   },
  *   {
- *     transactionId: transactionId2,
+ *     owner: owner2,
+ *     rating: rating2,
  *     ...
  *   }
  *   ...
  * }
  */
-export async function fetchRatingsStatsByTransaction ({ rootGetters }, { targetId }) {
-  const ratingsOptions = rootGetters.ratingsOptions
-  const ratingTypes = Object.keys(ratingsOptions.stats)
-
+export async function fetchRatingsByTransaction ({ rootGetters }, { targetId }) {
   const fetchRatings = (...args) => stelace.ratings.list(...args)
 
-  const [
-    ratingsStatsByType,
-    ratings
-  ] = await Promise.all([
-    api.fetchRatingsStatsByType({ targetId, groupBy: 'transactionId', ratingsOptions }),
-    fetchAllResults(fetchRatings, { targetId })
-  ])
+  const ratings = await fetchAllResults(fetchRatings, { targetId, label: 'main' })
 
-  const groupedRatings = groupBy(ratings, 'transactionId')
+  const usersIds = uniqBy(compact(ratings.map(rating => rating.authorId)))
 
-  const result = {}
-
-  ratingTypes.forEach(ratingType => {
-    const statsByType = ratingsStatsByType[ratingType]
-
-    statsByType.forEach(transactionStats => {
-      result[transactionStats.transactionId] = result[transactionStats.transactionId] || {
-        stats: {},
-        ratings: groupedRatings[transactionStats.transactionId] || [],
-        transactionId: transactionStats.transactionId
-      }
-      result[transactionStats.transactionId].stats[ratingType] = transactionStats
-    })
-  })
-
-  const statsByTransaction = values(result)
-
-  const fetchTransactionsRequest = (...args) => stelace.transactions.list(...args)
   const fetchUsersRequest = (...args) => stelace.users.list(...args)
 
-  const transactionsIds = compact(statsByTransaction.map(stat => stat.transactionId))
-
-  // needs to filter on `targetId` for taker who can only have the permission 'transaction:list' (without 'all')
-  const transactions = await fetchAllResults(fetchTransactionsRequest, { id: transactionsIds, takerId: targetId })
-
-  const usersIds = uniqBy(compact(transactions.map(transaction => transaction.ownerId)))
-
   const users = await fetchAllResults(fetchUsersRequest, { id: usersIds })
-
-  const transactionsById = keyBy(transactions, 'id')
   const usersById = keyBy(users, 'id')
 
-  statsByTransaction.forEach(stat => {
-    stat.transaction = transactionsById[stat.transactionId]
-
-    const ownerId = get(stat.transaction, 'ownerId')
-    stat.owner = usersById[ownerId]
-    if (stat.owner) {
-      populateUser(stat.owner)
+  return ratings.map(rating => {
+    return {
+      rating,
+      owner: usersById[rating.authorId],
+      apiScore: rating.score,
+      assetName: rating.metadata.assetName,
+      transactionDuration: rating.metadata.transactionDuration
     }
   })
-
-  return statsByTransaction
 }
 
 export async function fetchRatedTransactions ({ commit, rootGetters }, { transactionsIds }) {

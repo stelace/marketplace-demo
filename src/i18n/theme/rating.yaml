@@ -1,23 +1,5 @@
 rating:
   labels:
-    main:presentation:
-      en: Overall impression
-      fr: Présentation
-    main:punctuality:
-      en: Punctuality
-      fr: Ponctualité
-    main:consistency:
-      en: Consistency
-      fr: Régularité
-    main:teamSpirit:
-      en: Team spirit
-      fr: Esprit d'équipe
-    main:involvement:
-      en: Involvement
-      fr: Implication
-    completionScore:
-      en: Completed mission
-      fr: A accompli l'intégralité de la mission
-    recommendation:
-      en: I recommend {name}
-      fr: Je recommande {name}
+    main:
+      en: Score
+      fr: Note

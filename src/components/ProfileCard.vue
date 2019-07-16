@@ -147,38 +147,6 @@
               size="1.25rem"
               readonly
             />
-            <div class="q-my-md q-px-lg">
-              <AppRatingSlider
-                v-if="typeof selectedUser.score === 'number'"
-                color="primary"
-                :value="selectedUser.score"
-                readonly
-              />
-            </div>
-          </div>
-          <div
-            v-if="selectedUser.nbRecommendations > 0"
-            class="row justify-center items-center"
-          >
-            <AppContent
-              entry="rating"
-              field="recommendations_count"
-              :options="{ nb_recommendations: selectedUser.nbRecommendations }"
-            />
-            <div class="q-ml-md">
-              <router-link
-                v-for="user in selectedUser.recommendedBy"
-                :key="user.id"
-                class="anchor-text--reset anchor-text--underline-focus"
-                :to="{ name: 'publicProfile', params: { id: user.id } }"
-              >
-                <AppAvatar
-                  class="recommendation"
-                  :user="user"
-                  size="1.5rem"
-                />
-              </router-link>
-            </div>
           </div>
         </template>
 

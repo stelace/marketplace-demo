@@ -37,18 +37,6 @@
                   :target="target"
                   readonly
                 />
-                <div class="row">
-                  <div class="col-8">
-                    <AppRatingSlider
-                      v-if="typeof target.score === 'number'"
-                      color="secondary"
-                      label
-                      label-color="secondary"
-                      :value="target.score"
-                      readonly
-                    />
-                  </div>
-                </div>
               </q-item-section>
             </div>
           </div>
@@ -221,7 +209,11 @@ export default {
                 authorId: this.author.id,
                 targetId: this.target.id,
                 transactionId: this.transaction.id,
-                label
+                label,
+                metadata: {
+                  assetName: this.transaction.assetSnapshot.name,
+                  duration: this.transaction.duration
+                }
               }
             }).catch(() => null) // handle the error so we know which ratings is successfully saved
             promises.push(promise)

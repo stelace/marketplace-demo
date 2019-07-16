@@ -32,7 +32,7 @@ export default {
       isEditingImages: false,
       maxNbLocations: 1,
       locationsChanged: false,
-      userRatingsStatsByTransaction: [],
+      userRatingsByTransaction: [],
       userRatingsLoaded: false,
     }
   },
@@ -73,6 +73,8 @@ export default {
         type: mutationTypes.SET_SELECTED_USER,
         user
       })
+
+      await store.dispatch('fetchAssetTypes')
     } catch (err) {
       const code = err.statusCode
       if (code >= 400 && code < 500) redirect(`/${code}`) // needs a string for SSR
@@ -81,7 +83,7 @@ export default {
   },
   watch: {
     'currentUser.id' () {
-      this.fetchUserRatingsStatsByTransaction({ userId: this.selectedUser.id })
+      this.fetchUserRatingsByTransaction({ userId: this.selectedUser.id })
     },
     async '$route' () {
       // ensure appropriate assets are displayed when switching profiles
@@ -99,15 +101,15 @@ export default {
 
       this.$store.dispatch('fetchRatingsStatsByType', { targetId: [this.userId] })
 
-      this.fetchUserRatingsStatsByTransaction({ userId: this.selectedUser.id })
+      this.fetchUserRatingsByTransaction({ userId: this.selectedUser.id })
     },
     async fetchUserAssets () {
       return this.$store.dispatch('fetchUserAssets', {
         userId: this.selectedUser.id
       })
     },
-    async fetchUserRatingsStatsByTransaction ({ userId }) {
-      this.userRatingsStatsByTransaction = await this.$store.dispatch('fetchRatingsStatsByTransaction', { targetId: userId })
+    async fetchUserRatingsByTransaction ({ userId }) {
+      this.userRatingsByTransaction = await this.$store.dispatch('fetchRatingsByTransaction', { targetId: userId })
       this.userRatingsLoaded = true
     },
     updateUserFn (fieldName) {
@@ -236,9 +238,8 @@ export default {
           <QSeparator class="q-mt-xl" />
 
           <TransactionRatingsList
-            :ratings-stats="userRatingsStatsByTransaction"
+            :ratings="userRatingsByTransaction"
             :target="selectedUser"
-            :show-cta="false"
           />
         </section>
 

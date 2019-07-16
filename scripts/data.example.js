@@ -237,67 +237,20 @@ module.exports = {
           ratingsOptions: {
             stats: {
               default: {
-                labels: ['main:*'],
+                labels: ['main'],
                 maxScore: 5,
                 form: 'star',
-              },
-              completionScore: {
-                labels: ['completionScore'],
-                maxScore: 100,
-                form: 'slider',
-              },
-              recommendation: {
-                labels: ['recommendation'],
-                maxScore: 100,
-                form: 'boolean',
               }
             },
             types: {
-              'main:presentation': {
-                label: 'main:presentation',
+              'main': {
+                label: 'main',
                 maxScore: 5,
                 form: 'star',
               },
-              'main:punctuality': {
-                label: 'main:punctuality',
-                maxScore: 5,
-                form: 'star',
-              },
-              'main:consistency': {
-                label: 'main:consistency',
-                maxScore: 5,
-                form: 'star',
-              },
-              'main:teamSpirit': {
-                label: 'main:teamSpirit',
-                maxScore: 5,
-                form: 'star',
-              },
-              'main:involvement': {
-                label: 'main:involvement',
-                maxScore: 5,
-                form: 'star',
-              },
-              'completionScore': {
-                label: 'completionScore',
-                form: 'boolean',
-              },
-              'recommendation': {
-                label: 'recommendation',
-                form: 'boolean',
-                choices: [
-                  { value: true, score: 100 }
-                ],
-              }
             },
             editOrder: [
-              'main:presentation',
-              'main:punctuality',
-              'main:consistency',
-              'main:teamSpirit',
-              'main:involvement',
-              'completionScore',
-              'recommendation',
+              'main',
             ],
           },
 

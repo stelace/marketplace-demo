@@ -39,8 +39,6 @@ export function populateUser (user, {
   ratingsStatsByType,
   ratingsOptions,
   isCurrentUser,
-  nbRecommendations,
-  recommendedBy
 } = {}) {
   user.avatarUrl = get(user, userMetadataMapping.avatarUrl, '')
   user.emailVerified = get(user, userMetadataMapping.emailVerified, false)
@@ -53,23 +51,12 @@ export function populateUser (user, {
 
   if (ratingsStatsByType && ratingsOptions) {
     const defaultAvgScore = get(ratingsStatsByType, `default.${user.id}.avg`, null)
-    const completionAvgScore = get(ratingsStatsByType, `completionScore.${user.id}.avg`, null)
 
     user.averageRating = convertApiToDisplayScore(
       defaultAvgScore,
       { displayMaxScore: get(ratingsOptions, 'stats.default.maxScore') }
     )
-    user.score = convertApiToDisplayScore(
-      completionAvgScore,
-      { displayMaxScore: get(ratingsOptions, 'stats.completionScore.maxScore') }
-    )
   }
-
-  user.nbRecommendations = nbRecommendations
-  user.recommendedBy = (recommendedBy || []).map(u => {
-    populateUser(u, { isCurrentUser: false }) // only get avatar information
-    return u
-  })
 
   // Visibility can depend on viewing user access rights
   if (isCurrentUser) {

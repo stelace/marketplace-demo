@@ -112,10 +112,6 @@ export async function searchAssets ({ state, rootState, rootGetters, commit, dis
     })
   }
 
-  if (state.searchMode === 'reversed') {
-    await dispatch('fetchRatingsStatsByType', { targetId: usersIds })
-  }
-
   const populatedAssets = assets.map(ast => {
     const asset = populateAsset({
       asset: ast,

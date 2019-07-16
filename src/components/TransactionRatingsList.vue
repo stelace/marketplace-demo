@@ -10,7 +10,7 @@ export default {
     TransactionRating,
   },
   props: {
-    ratingsStats: {
+    ratings: {
       type: Array,
       required: true
     },
@@ -18,22 +18,10 @@ export default {
       type: Object,
       default: () => {}
     },
-    showCta: {
-      type: Boolean,
-      default: false
-    }
   },
   computed: {
-    transformedRatingsStats () {
-      let ratingsStats = this.sortRatingsStats(this.ratingsStats)
-      ratingsStats = this.populateScores(ratingsStats)
-
-      if (this.showCta) {
-        // do not show a too large area of blur for CTA
-        return ratingsStats.slice(0, 3)
-      } else {
-        return ratingsStats
-      }
+    transformedRatings () {
+      return this.sortRatings(this.ratings).map(this.populateScore)
     },
     isCurrentUser () {
       return this.target && this.target.id === this.currentUser.id
@@ -47,31 +35,16 @@ export default {
     ])
   },
   methods: {
-    sortRatingsStats (ratingsStats) {
-      return sortBy(ratingsStats, ratingStat => {
-        const createdDate = get(ratingStat, 'transaction.createdDate')
-        return createdDate
-      }).reverse()
+    sortRatings (ratings) {
+      return sortBy(ratings, rating => rating.createdDate).reverse()
     },
-    populateScores (ratingsStats) {
-      return ratingsStats.map(ratingStat => {
-        const defaultAvgScore = get(ratingStat, 'stats.default.avg', 0)
-        const completionAvgScore = get(ratingStat, 'stats.completionScore.avg', 0)
+    populateScore (rating) {
+      const score = convertApiToDisplayScore(
+        rating.apiScore,
+        { displayMaxScore: get(this.ratingsOptions, 'stats.default.maxScore') }
+      )
 
-        const averageRating = convertApiToDisplayScore(
-          defaultAvgScore,
-          { displayMaxScore: get(this.ratingsOptions, 'stats.default.maxScore') }
-        )
-        const score = convertApiToDisplayScore(
-          completionAvgScore,
-          { displayMaxScore: get(this.ratingsOptions, 'stats.completionScore.maxScore') }
-        )
-
-        return Object.assign({}, ratingStat, {
-          averageRating,
-          score
-        })
-      })
+      return Object.assign({ score }, rating)
     }
   },
 }
@@ -90,18 +63,17 @@ export default {
       </slot>
     </div>
 
-    <div v-if="transformedRatingsStats.length" class="relative-position">
+    <div v-if="transformedRatings.length" class="relative-position">
       <QCard class="transaction-ratings-container">
         <TransactionRating
-          v-for="ratingStat of transformedRatingsStats"
-          :key="ratingStat.transactionId"
+          v-for="rating of transformedRatings"
+          :key="rating.transactionId"
           class="q-pa-md"
-          :transaction="ratingStat.transaction"
-          :author="ratingStat.owner"
+          :author="rating.owner"
           :target="target"
-          :average-rating="ratingStat.averageRating"
-          :score="ratingStat.score"
-          :ratings="ratingStat.ratings"
+          :score="rating.score"
+          :asset-name="rating.assetName"
+          :duration="rating.transactionDuration"
         />
       </QCard>
     </div>

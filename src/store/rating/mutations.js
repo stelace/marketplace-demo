@@ -11,9 +11,4 @@ export default {
   [types.SET_RATED_TRANSACTIONS] (state, { ratedTransactions }) {
     state.ratedTransactionsById = Object.assign({}, state.ratedTransactionsById, ratedTransactions)
   },
-
-  [types.SET_RECOMMENDATIONS] (state, { nbRecommendations, recommendedBy }) {
-    state.nbRecommendations = nbRecommendations
-    state.recommendedBy = recommendedBy
-  },
 }
