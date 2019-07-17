@@ -82,8 +82,8 @@
               <!-- Start at ~5% -->
               <QCircularProgress
                 v-if="uploadingAvatarSrc"
-                v-show="uploader.uploadProgress > 0.02"
-                :value="(0.05 + uploader.uploadProgress) / 1.05 * 100"
+                v-show="scope.uploadProgress > 0.02"
+                :value="(0.05 + scope.uploadProgress) / 1.05 * 100"
                 class="absolute-center overflow-hidden"
                 size="4rem"
                 color="secondary"
