@@ -57,7 +57,7 @@ user:
     fr: "Photo {user, select, undefined {du profil} other {de {user}}}"
   assets_title:
     en: |
-      {user, select, _SELF_{My} other{{user}}’s undefined{}} {hasOther, select,
+      {user, select, _SELF_{My} other{{user}’s} undefined{}} {hasOther, select,
           true{Other}
           other{}
       } Listings
