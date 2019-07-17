@@ -111,10 +111,12 @@ export async function fetchMessages ({ commit, dispatch, state, rootGetters }, {
     assets
   })
 
-  const transactionsIds = uniqBy(allTransactions.map(b => b.id))
+  if (rootGetters.ratingsActive) {
+    const transactionsIds = uniqBy(allTransactions.map(b => b.id))
 
-  await dispatch('fetchRatingsStatsByType', { targetId: usersIds })
-  await dispatch('fetchRatedTransactions', { transactionsIds })
+    await dispatch('fetchRatingsStatsByType', { targetId: usersIds })
+    await dispatch('fetchRatedTransactions', { transactionsIds })
+  }
 }
 
 export async function setConversationArchivedStatus ({ commit, state, getters }, { conversationId, archived }) {

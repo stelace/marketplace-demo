@@ -1,6 +1,6 @@
 <script>
 import { isNil } from 'lodash'
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 
 import RatingDialog from 'src/components/RatingDialog'
 
@@ -60,6 +60,9 @@ export default {
     ...mapState([
       'style',
     ]),
+    ...mapGetters([
+      'ratingsActive',
+    ]),
     isFlat () {
       return !isNil(this.flat) ? this.flat : !this.style.colorfulTheme
     },
@@ -111,6 +114,8 @@ export default {
       }
     },
     async openRatingDialog () {
+      if (!this.ratingsActive) return
+
       const ratings = await this.$store.dispatch('fetchRatings', { transactionId: this.transaction.id })
       this.savedRatings = ratings
 
@@ -123,6 +128,8 @@ export default {
       this.savedRatings = this.savedRatings.concat(savedRatings)
     },
     onSaveRatings () {
+      if (!this.ratingsActive) return
+
       this.$emit('save', { transactionId: this.transaction.id })
     },
   },
@@ -162,7 +169,7 @@ export default {
     </QBtn>
 
     <RatingDialog
-      v-if="promptRatings"
+      v-if="promptRatings && ratingsActive"
       :opened="ratingsDialogOpened"
       :author="ratingsAuthor"
       :target="ratingsTarget"

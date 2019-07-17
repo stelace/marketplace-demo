@@ -34,6 +34,7 @@ export default {
     ...mapGetters([
       'baseImageRatio',
       'getBaseImageUrl',
+      'ratingsActive',
     ])
   }
 }
@@ -71,7 +72,7 @@ export default {
           <div class="row justify-between">
             <div class="text-subtitle2 asset-location text-grey-6 ellipsis">
               <AppRatingStars
-                v-if="showRatings"
+                v-if="showRatings && ratingsActive"
                 :target="asset"
                 readonly
               />

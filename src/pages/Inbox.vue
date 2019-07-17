@@ -75,7 +75,8 @@ export default {
     ]),
     ...mapGetters([
       'currentUser',
-      'conversations'
+      'conversations',
+      'ratingsActive'
     ]),
     // do not display conversations without any visible message
     visibleConversations () {
@@ -273,7 +274,7 @@ export default {
                     {{ props.row.interlocutor.displayName }}
                   </QItemLabel>
                   <AppRatingStars
-                    v-if="typeof props.row.interlocutor.ratings.default === 'number'"
+                    v-if="ratingsActive && typeof props.row.interlocutor.ratings.default === 'number'"
                     :value="props.row.interlocutor.ratings.default"
                     readonly
                   />

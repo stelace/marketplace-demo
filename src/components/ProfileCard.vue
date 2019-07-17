@@ -139,7 +139,7 @@
           </div>
 
           <div
-            v-if="selectedUser.averageRating"
+            v-if="selectedUser.averageRating && ratingsActive"
             class="text-center"
           >
             <AppRatingStars
@@ -349,6 +349,7 @@ export default {
       'currentUser',
       'isSelectedUserNatural',
       'selectedUserIsCurrentUser',
+      'ratingsActive',
     ]),
   },
   mounted () {

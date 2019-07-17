@@ -78,23 +78,33 @@ export function conversations (state, getters, rootState, rootGetters) {
       }
     }
 
-    // populate the different types of ratings
-    interlocutor.ratings = {}
+    if (rootGetters.ratingsActive) {
+      // populate the different types of ratings
+      interlocutor.ratings = {}
 
-    const ratingTypes = Object.keys(ratingsOptions.stats)
-    ratingTypes.forEach(ratingType => {
-      const ratingConfig = ratingsOptions.stats[ratingType]
+      const ratingTypes = Object.keys(ratingsOptions.stats)
+      ratingTypes.forEach(ratingType => {
+        const ratingConfig = ratingsOptions.stats[ratingType]
 
-      const apiAvgScore = get(ratingsStatsByType, `${ratingType}.${interlocutorId}.avg`, null)
-      interlocutor.ratings[ratingType] = convertApiToDisplayScore(apiAvgScore, { displayMaxScore: ratingConfig.maxScore })
-    })
+        const apiAvgScore = get(ratingsStatsByType, `${ratingType}.${interlocutorId}.avg`, null)
+        interlocutor.ratings[ratingType] = convertApiToDisplayScore(apiAvgScore, { displayMaxScore: ratingConfig.maxScore })
+      })
+    }
 
     const lastInterlocutorMessage = conversationMessages.find(message => message.senderId !== currentUser.id)
     const lastOwnMessage = conversationMessages.find(message => message.senderId === currentUser.id)
 
     const transactionActions = transactionId ? getTransactionActions({ currentUser, transaction, isEmptyConversation }) : {}
-    const ratingsPrompt = transactionId ? getRatingsPrompt({ isProvider, transaction }) : false
-    const ratingsReadonly = !!ratedTransactionsById[transactionId]
+
+    let ratingsPrompt
+    let ratingsReadonly
+    if (rootGetters.ratingsActive) {
+      ratingsPrompt = transactionId ? getRatingsPrompt({ isProvider, transaction }) : false
+      ratingsReadonly = !!ratedTransactionsById[transactionId]
+    } else {
+      ratingsPrompt = false
+      ratingsReadonly = true
+    }
 
     const conversation = {
       id: conversationId,

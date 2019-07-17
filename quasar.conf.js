@@ -457,6 +457,7 @@ module.exports = function (ctx) {
         VUE_APP_CDN_S3_URL: JSON.stringify(cdnS3Url),
         VUE_APP_CDN_UPLOAD_PREFIX: JSON.stringify(process.env.VUE_APP_CDN_UPLOAD_PREFIX),
         VUE_APP_SEARCH_BY_CATEGORY: JSON.stringify(process.env.VUE_APP_SEARCH_BY_CATEGORY),
+        VUE_APP_DISABLE_RATINGS: JSON.stringify(process.env.VUE_APP_DISABLE_RATINGS),
         VUE_APP_INSTANT_PAGE_PREFIX: JSON.stringify('/l'),
       }
     },

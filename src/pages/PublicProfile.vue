@@ -54,6 +54,7 @@ export default {
       'currentUser',
       'usersAssets',
       'searchOptions',
+      'ratingsActive',
     ]),
     ...mapState([
       'asset',
@@ -94,7 +95,7 @@ export default {
     loadProfile () {
       return Promise.all([
         this.fetchUserAssets(),
-        this.$store.dispatch('fetchRatingsStatsByType', { targetId: [this.selectedUserId] }),
+        this.fetchRatingsStatsByType({ targetId: [this.selectedUserId] }),
         this.fetchUserRatingsByTransaction({ userId: this.selectedUser.id })
       ])
     },
@@ -103,7 +104,14 @@ export default {
         userId: this.selectedUser.id
       })
     },
+    fetchRatingsStatsByType ({ targetId }) {
+      if (!this.ratingsActive) return
+
+      return this.$store.dispatch('fetchRatingsStatsByType', { targetId })
+    },
     async fetchUserRatingsByTransaction ({ userId }) {
+      if (!this.ratingsActive) return
+
       this.userRatingsByTransaction = await this.$store.dispatch('fetchRatingsByTransaction', { targetId: userId })
       this.userRatingsLoaded = true
     },
@@ -227,7 +235,7 @@ export default {
         </section>
 
         <section
-          v-show="userRatingsLoaded"
+          v-show="userRatingsLoaded && ratingsActive"
           class="q-mt-md"
         >
           <QSeparator class="q-mt-xl" />
