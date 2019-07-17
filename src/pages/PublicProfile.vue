@@ -82,26 +82,21 @@ export default {
     }
   },
   watch: {
-    'currentUser.id' () {
-      this.fetchUserRatingsByTransaction({ userId: this.selectedUser.id })
-    },
     async '$route' () {
-      // ensure appropriate assets are displayed when switching profiles
-      await Promise.all([this.fetchUserAssets()])
+      // ensure appropriate objects are displayed when switching profiles
+      this.loadProfile()
     }
   },
   async created () {
-    this.fetchUserAssets() // not blocking here
+    this.loadProfile() // not blocking here
   },
   methods: {
-    async afterAuth () {
-      this.userId = this.$route.params.id
-
-      await this.$store.dispatch('fetchAssetTypes')
-
-      this.$store.dispatch('fetchRatingsStatsByType', { targetId: [this.userId] })
-
-      this.fetchUserRatingsByTransaction({ userId: this.selectedUser.id })
+    loadProfile () {
+      return Promise.all([
+        this.fetchUserAssets(),
+        this.$store.dispatch('fetchRatingsStatsByType', { targetId: [this.selectedUserId] }),
+        this.fetchUserRatingsByTransaction({ userId: this.selectedUser.id })
+      ])
     },
     async fetchUserAssets () {
       return this.$store.dispatch('fetchUserAssets', {
