@@ -11,9 +11,13 @@ const branchDeploy = process.env.DEV && process.env.CONTEXT ? process.env.BRANCH
 let remoteLogger = { capture: _ => _ }
 
 export default async ({ Vue }) => {
-  // `info` is a Vue-specific error info, e.g. which lifecycle hook
-  // the error was found in. Only available in 2.2.0+
+  // Note that Vue errorHandler is called by Sentry.
+  // Some error handling logic must be shared with
+  // Sentry handling further below, in case Sentry is not used.
   Vue.config.errorHandler = function (err, vm, info) {
+    // `info` is a Vue-specific error info, e.g. which lifecycle hook
+    // the error was found in. Only available in 2.2.0+
+
     // already handled by App.vue
     if (err.message.toLowerCase().includes('user session expired')) return
 
@@ -27,7 +31,7 @@ export default async ({ Vue }) => {
     handleChunkError(err)
   }
 
-  // Must init sentry after customizing Vue.config.errorHandler
+  // Must init sentry _after_ customizing Vue.config.errorHandler
   // https://github.com/getsentry/sentry-javascript/blob/master/packages/integrations/src/vue.ts#L72
   if (!process.env.DEV && sentryDSN) {
     const [Sentry, { Vue: SentryVue }] = await Promise.all([
@@ -55,8 +59,11 @@ export default async ({ Vue }) => {
 
     Vue.prototype.$sentry = Sentry
     remoteLogger.capture = err => {
+      if (err.message.toLowerCase().includes('user session expired')) return
+
+      const { name, message } = err
       Sentry.captureException(err)
-      handleChunkError(err)
+      handleChunkError({ name, message })
     }
     remoteLogger.message = msg => Sentry.captureMessage(msg)
   }
@@ -78,6 +85,9 @@ function handleChunkError (err) {
     /Unexpected token </i.test(err.message) ||
     /expect.+</i.test(err.message)
   )
+
+  // DEBUGGING for now
+  console.error(err, isChunkError) // eslint-disable-line
 
   if (isChunkError && window.location.hash !== '#reload') {
     window.location.hash = '#reload'
