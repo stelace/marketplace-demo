@@ -439,7 +439,9 @@ async function removeUsers () {
   for (let i = 0; i < existingData.users.length; i++) {
     const user = existingData.users[i]
     if (!shouldOnlyRemoveScriptObjects || user.metadata[initDataScript]) {
+      // `user.organizations[orgId]` can be null after organization removal
       const organizationsIds = Object.keys(user.organizations)
+        .filter(orgId => !!user.organizations[orgId])
 
       for (let j = 0; j < organizationsIds.length; j++) {
         const organizationId = organizationsIds[j]

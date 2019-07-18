@@ -1577,7 +1577,7 @@ module.exports = {
           computed: {
             objects: `
               Object.keys(_.get(responses, "user.organizations", {}))
-                .filter(orgId => orgId !== computed.parentOrgId)
+                .filter(orgId => orgId !== computed.parentOrgId && _.get(responses, "user.organizations." + orgId))
                 .map(orgId => {
                   return {
                     objectId: orgId,
