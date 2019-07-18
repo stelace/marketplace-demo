@@ -232,7 +232,7 @@ export default {
           v-if="!searchByCategory"
           :value="search.query"
           :input-class="search.query ? 'text-right' : ''"
-          :placeholder="$t({ id: 'form.search.query_placeholder' })"
+          :label="$t({ id: 'form.search.query_placeholder' })"
           :debounce="500"
           dense
           @input="updateQuery"
