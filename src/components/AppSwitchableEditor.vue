@@ -98,12 +98,8 @@ export default {
 
     <!-- Default slot for "public" content -->
     <slot :display="{ content }">
-      <p
-        v-if="hasTextarea"
-        class="preserve-lines"
-      >
-        {{ content }}
-      </p>
+      <!-- eslint-disable-next-line vue/singleline-html-element-content-newline -->
+      <p v-if="hasTextarea" class="preserve-lines">{{ content }}</p>
       <template v-else>
         {{ content }}
       </template>

@@ -65,9 +65,8 @@ export default {
         <div class="text-grey-7">
           {{ locationName }}
         </div>
-        <div class="q-mt-md preserve-lines">
-          {{ experience.description }}
-        </div>
+        <!-- eslint-disable-next-line vue/singleline-html-element-content-newline -->
+        <div class="q-mt-md preserve-lines">{{ experience.description }}</div>
       </div>
       <div class="col-1">
         <div class="row justify-center">
