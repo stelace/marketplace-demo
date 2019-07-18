@@ -66,8 +66,10 @@ export default {
       return this.$t({ id: 'time.date_short' }, { date: new Date(this.search.endDate) })
     },
     showDates () {
-      const assetTypesIds = uniqBy(get(this.searchModeConfig, 'assetTypesIds') || [])
+      const cfg = this.searchModeConfig
+      const assetTypesIds = uniqBy(get(cfg, 'assetTypesIds') || [])
       const assetTypes = compact(assetTypesIds.map(assetTypeId => this.common.assetTypesById[assetTypeId]))
+
       return assetTypes.some(assetType => assetType.timeBased)
     },
     ...mapState([
