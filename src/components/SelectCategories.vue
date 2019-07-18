@@ -13,9 +13,10 @@
     :value="selectedCategory"
     :options="filteredCategories"
     :option-value="cat => cat && cat.id"
-    :option-label="cat => cat && cat.name"
+    :option-label="cat => cat && cat.nameWithLvlSpaces"
     :use-input="!(hideInputOnSelect && selectedCategory)"
     :loading="!!(textQueryLength && common.fetchingCategories)"
+    :display-value="selectedCategory && selectedCategory.name"
     @input="cat => selectCategory(cat)"
     @filter="filterCategories"
     @keyup.down.native="focusChanged"
@@ -73,7 +74,7 @@
 </template>
 
 <script>
-import { values } from 'lodash'
+import { values, cloneDeep, sortBy, groupBy, times, constant } from 'lodash'
 import { mapState } from 'vuex'
 
 export default {
@@ -124,7 +125,8 @@ export default {
     },
     categories () {
       let categoriesById = this.common.categoriesById
-      return values(categoriesById)
+
+      return this.sortCategoriesByLvl(values(categoriesById))
     },
     ...mapState([
       'common'
@@ -134,6 +136,43 @@ export default {
     this.$store.dispatch('fetchCategories')
   },
   methods: {
+    sortCategoriesByLvl (categories) {
+      const initialCategories = cloneDeep(categories)
+      const categoriesByParentId = groupBy(initialCategories, 'parentId')
+
+      const categoriesSortedByLvl = []
+
+      const sortCategoriesByName = (categories) => sortBy(categories, 'name')
+
+      const lvlSpace = '    '
+      const addLvlSpaces = (number) => times(number, constant(lvlSpace)).join('')
+
+      const addChildrenCategories = (cat, lvl) => {
+        cat.nameWithLvlSpaces = addLvlSpaces(lvl - 1) + cat.name
+        cat.lvl = lvl
+
+        const children = categoriesByParentId[cat.id]
+        if (children && children.length) {
+          cat.children = sortCategoriesByName(children)
+          cat.children.forEach(c => addChildrenCategories(c, lvl + 1))
+        }
+
+        cat.disable = !!cat.children
+      }
+
+      const addToFinalSort = (cat) => {
+        categoriesSortedByLvl.push(cat)
+        if (cat.children) {
+          cat.children.forEach(addToFinalSort)
+        }
+      }
+
+      const rootCategories = sortCategoriesByName(categoriesByParentId.null)
+      rootCategories.forEach(cat => addChildrenCategories(cat, 1))
+      rootCategories.forEach(addToFinalSort)
+
+      return categoriesSortedByLvl
+    },
     filterCategories (value, update, abort) {
       if (typeof update !== 'function') {
         this.textQueryLength = value // @blur event
