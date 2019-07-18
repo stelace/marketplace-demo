@@ -259,7 +259,7 @@ export default {
             field="price_label"
           />:&nbsp;
           <AppContent
-            v-if="activeAsset.assetType.timeBased"
+            v-if="activeAsset.assetType && activeAsset.assetType.timeBased"
             entry="pricing"
             field="price_per_time_unit_label"
             :options="{
