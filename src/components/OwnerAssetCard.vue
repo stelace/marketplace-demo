@@ -53,9 +53,8 @@ export default {
     unavailable () {
       const asset = this.asset
       const availabilityGraphByAssetId = this.assetState.availabilityGraphByAssetId
-      const availabilitiesById = this.assetState.availabilitiesById
 
-      return !isAvailable({ asset, availabilityGraphByAssetId, availabilitiesById })
+      return !isAvailable({ asset, availabilityGraphByAssetId })
     },
     status () { // Order matters
       if (this.unavailable) return 'unavailable'

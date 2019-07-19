@@ -178,6 +178,9 @@ time:
     en: Indefinite period
     fr: Durée indéterminée
     context: Can be open-ended contract or any other type of unlimited duration
+  clear_dates:
+    en: Clear dates
+    fr: Effacer les dates
   delay:
     few_minutes:
       en: Few minutes

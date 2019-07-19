@@ -36,6 +36,18 @@ export default {
       type: Function,
       default: undefined
     },
+    getValidEndDates: {
+      type: Function,
+      default: undefined
+    },
+    hideCalendarIcon: {
+      type: Boolean,
+      default: false
+    },
+    hideCloseIcon: {
+      type: Boolean,
+      default: false
+    },
   },
   computed: {
     localizedDate () {
@@ -89,6 +101,8 @@ export default {
         :hint="!startDate ? missingStartDateHint : ''"
         v-bind="startDateInputAttrs"
         :get-valid-dates="getValidStartDates"
+        :hide-calendar-icon="hideCalendarIcon"
+        :hide-close-icon="hideCloseIcon"
         @change="selectStartDate"
       />
     </div>
@@ -97,8 +111,10 @@ export default {
         :date="endDate"
         :label="$t({ id: 'time.end_date_label' })"
         :hint="!endDate ? missingEndDateHint : ''"
-        :get-valid-dates="forceEndDateAfterStartDate"
+        :get-valid-dates="getValidEndDates || forceEndDateAfterStartDate"
         :disabled="!startDate"
+        :hide-calendar-icon="hideCalendarIcon"
+        :hide-close-icon="hideCloseIcon"
         v-bind="endDateInputAttrs"
         @change="selectEndDate"
       />

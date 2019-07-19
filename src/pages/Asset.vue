@@ -6,26 +6,7 @@
     <div class="row justify-center">
       <div class="gt-md">
         <QPageSticky position="top-right" :offset="[50, 20]">
-          <div class="booking-card q-pa-md">
-            <AppContent
-              tag="div"
-              class="q-pb-md text-weight-medium"
-              entry="time"
-              field="calendar_prompt_date"
-            />
-            <!-- Ratings -->
-            <QSeparator />
-            <div class="q-py-md booking-card__content">
-              <!-- DateRangePicker -->
-              <!-- And/or quantity select depending on Asset Type -->
-            </div>
-            <div class="row">
-              <CheckoutButton
-                class="full-width"
-                @click="checkout"
-              />
-            </div>
-          </div>
+          <TransactionCard />
         </QPageSticky>
       </div>
       <div class="full-width stl-content-container q-pb-xl">
@@ -39,7 +20,7 @@
             :input-label="$t({ id: 'asset.name_label' })"
           />
           <AppContent
-            v-if="activeAsset.id && !isAvailable"
+            v-if="activeAsset.id && (!isAvailable || !activeAsset.active)"
             class="text-uppercase non-selectable"
             tag="QChip"
             entry="asset"
@@ -274,22 +255,26 @@ import { mapState, mapGetters } from 'vuex'
 import { get, map, sortBy, values } from 'lodash'
 
 import { extractLocationDataFromPlace } from 'src/utils/places'
-import { populateAsset } from 'src/utils/asset'
 
-import CheckoutButton from 'src/components/CheckoutButton'
+import {
+  populateAsset,
+} from 'src/utils/asset'
+
+import * as mutationTypes from 'src/store/mutation-types'
 import OwnerAssetCard from 'src/components/OwnerAssetCard'
 import PlacesAutocomplete from 'src/components/PlacesAutocomplete'
 import SelectCategories from 'src/components/SelectCategories'
+import TransactionCard from 'src/components/TransactionCard'
 import ProfileCard from 'src/components/ProfileCard'
 
 import PageComponentMixin from 'src/mixins/pageComponent'
 
 export default {
   components: {
-    CheckoutButton,
     OwnerAssetCard,
     PlacesAutocomplete,
     SelectCategories,
+    TransactionCard,
     ProfileCard,
     VuePhotoSwipe: () => import(/* webpackChunkName: 'photoswipe' */ 'src/components/VuePhotoSwipe'),
   },
@@ -301,6 +286,7 @@ export default {
       ownerSimilarAssets: [],
       similarAssets: [],
       shortTextMaxLength: 128,
+      checkoutDialogOpened: false,
     }
   },
   meta () { // SEO, overriding any hard-coded content in translations
@@ -344,6 +330,7 @@ export default {
       'common',
       'layout',
       'route',
+      'transaction',
     ]),
     ...mapGetters([
       'activeAsset',
@@ -363,6 +350,13 @@ export default {
     },
     $route () {
       this.fetchRelatedAssets()
+      this.resetTransactionParameters()
+      this.$store.dispatch('resetTransactionPreview')
+    },
+    maxAvailableQuantity () {
+      if (this.maxAvailableQuantity < this.quantity) {
+        this.selectQuantity(this.maxAvailableQuantity)
+      }
     }
   },
   async preFetch ({ store, currentRoute, redirect }) {
@@ -381,9 +375,6 @@ export default {
       // Not blocking. Move to (blocking) preFetch and remove $route watcher if optimizing for SEO
       // with server-side rendering (SSR)
       this.fetchRelatedAssets()
-    },
-    async checkout () {
-      return true
     },
     updateAssetFn (fieldName) {
       return async (value) => {
@@ -452,7 +443,14 @@ export default {
           assetTypesById: this.common.assetTypesById
         })
       })
-    }
+    },
+    resetTransactionParameters () {
+      this.$store.commit(mutationTypes.SET_TRANSACTION_OPTIONS, {
+        startDate: null,
+        endDate: null,
+        quantity: 1
+      })
+    },
   },
 }
 </script>
@@ -463,8 +461,8 @@ export default {
   @media (min-width: $breakpoint-sm-min)
     justify-content: start
 
-.booking-card
+.transaction-card
   width: 300px
   border: 1px solid $grey-3
-// .booking-card__content
+// .transaction-card__content
 </style>

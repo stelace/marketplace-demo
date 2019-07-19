@@ -49,7 +49,6 @@ export function usersAssets (state, getters, rootState) {
 export function isActiveAssetAvailable (state) {
   const asset = state.activeAsset
   const availabilityGraphByAssetId = state.availabilityGraphByAssetId
-  const availabilitiesById = state.availabilitiesById
 
-  return isAvailable({ asset, availabilityGraphByAssetId, availabilitiesById })
+  return isAvailable({ asset, availabilityGraphByAssetId })
 }

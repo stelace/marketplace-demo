@@ -3,22 +3,20 @@ import stelace, { fetchAllResults } from 'src/utils/stelace'
 import * as types from 'src/store/mutation-types'
 
 export async function createTransaction ({ state }, { asset } = {}) {
-  const availabilities = await stelace.availabilities.list({ assetId: asset.id })
-  const availability = availabilities.length ? availabilities[0] : null
-
   const {
     startDate,
     endDate,
-    duration,
-  } = getTransactionDates({ availability })
+    quantity
+  } = state
 
-  const transaction = await stelace.transactions.create({
-    assetId: asset.id,
-    startDate,
-    endDate,
-    duration,
-    quantity: 1
-  })
+  const transactionAttrs = {
+    assetId: asset.id
+  }
+  if (startDate) transactionAttrs.startDate = startDate
+  if (endDate) transactionAttrs.endDate = endDate
+  if (quantity) transactionAttrs.quantity = quantity
+
+  const transaction = await stelace.transactions.create(transactionAttrs)
 
   const message = await stelace.messages.create({
     content: ' ',
@@ -50,30 +48,6 @@ function commitTransaction ({ commit, state }, { transaction }) {
   })
 }
 
-function getTransactionDates ({ availability }) {
-  const now = new Date().toISOString()
-
-  const result = {
-    startDate: now,
-    duration: undefined,
-    endDate: undefined
-  }
-
-  if (!availability) {
-    return result
-  }
-
-  result.startDate = availability.endDate < now ? now : availability.endDate
-
-  const isUnavailability = availability.quantity === 0
-
-  if (!isUnavailability && availability.endDate >= now) {
-    result.endDate = availability.endDate
-  }
-
-  return result
-}
-
 export async function fetchTransactions ({ commit }, { userId, assetId, asTaker, asOwner }) {
   const fetchTransactionsRequest = (...args) => stelace.transactions.list(...args)
 
@@ -97,4 +71,27 @@ export async function fetchTransactions ({ commit }, { userId, assetId, asTaker,
   const allTransactions = transactionsAsOwner.concat(transactionsAsTaker)
 
   return uniqBy(allTransactions, transaction => transaction.id)
+}
+
+export async function previewTransaction ({ commit }, { assetId, startDate, endDate, quantity }) {
+  const previewAttrs = { assetId }
+  if (startDate) previewAttrs.startDate = startDate
+  if (endDate) previewAttrs.endDate = endDate
+  if (quantity) previewAttrs.quantity = quantity
+
+  const preview = await stelace.transactions.preview(previewAttrs)
+
+  commit({
+    type: types.SET_TRANSACTION_PREVIEW,
+    preview
+  })
+
+  return preview
+}
+
+export function resetTransactionPreview ({ commit }) {
+  commit({
+    type: types.SET_TRANSACTION_PREVIEW,
+    preview: null
+  })
 }

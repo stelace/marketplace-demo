@@ -2,14 +2,13 @@
 import { mapState, mapGetters } from 'vuex'
 import * as mutationTypes from 'src/store/mutation-types'
 
-import EventBus from 'src/utils/event-bus'
-
 import MainLayoutHeader from 'src/layouts/MainLayoutHeader'
 
 import AppUpdateDialog from 'src/components/AppUpdateDialog'
 import AuthDialog from 'src/components/AuthDialog'
 import CheckoutButton from 'src/components/CheckoutButton'
 import EmailValidationDialog from 'src/components/EmailValidationDialog'
+import TransactionCard from 'src/components/TransactionCard'
 
 import AuthDialogMixin from 'src/mixins/authDialog'
 
@@ -21,6 +20,7 @@ export default {
     AuthDialog,
     CheckoutButton,
     EmailValidationDialog,
+    TransactionCard,
   },
   mixins: [
     AuthDialogMixin,
@@ -28,7 +28,7 @@ export default {
   data () {
     return {
       routeTransitionName: '',
-      actionAfterAuthentication: null,
+      checkoutOpenedDialog: false,
     }
   },
   computed: {
@@ -84,47 +84,12 @@ export default {
           : toDepth < fromDepth ? 'fadeInLeft' : 'fadeInRight'
     },
   },
-  async mounted () {
-    EventBus.$on('authStatusChanged', (status) => this.onAuthChange(status))
-  },
-  beforeDestroy () {
-    EventBus.$off('authStatusChanged', (status) => this.onAuthChange(status))
-  },
   methods: {
-    onAuthChange (status) {
-      if (status === 'success' && this.actionAfterAuthentication) {
-        if (this.actionAfterAuthentication === 'checkout') {
-          this.checkoutAfterAuth()
-        }
-        this.actionAfterAuthentication = null
-      } else if (status === 'closed') {
-        this.actionAfterAuthentication = null
-      }
-    },
     toggleLeftDrawer (visible = !this.isLeftDrawerOpened) {
       this.$store.commit(mutationTypes.LAYOUT__TOGGLE_LEFT_DRAWER, { visible })
     },
-    async checkout () {
-      if (!this.currentUser.id) {
-        this.actionAfterAuthentication = 'checkout'
-        this.openAuthDialog()
-        return
-      }
-
-      this.checkoutAfterAuth()
-    },
-    async checkoutAfterAuth () {
-      // cannot checkout on her own asset
-      if (this.isOwnerCurrentUser) return
-
-      const asset = this.asset.activeAsset
-
-      const { message } = await this.$store.dispatch('createTransaction', { asset })
-
-      this.$router.push({
-        name: 'conversation',
-        params: { id: message.conversationId }
-      })
+    checkout () {
+      this.checkoutOpenedDialog = true
     },
   },
 }
@@ -205,6 +170,13 @@ export default {
     <template v-if="currentUser.id">
       <EmailValidationDialog />
     </template>
+
+    <QDialog
+      :value="checkoutOpenedDialog"
+      @hide="checkoutOpenedDialog = false"
+    >
+      <TransactionCard class="bg-white" />
+    </QDialog>
   </QLayout>
 </template>
 

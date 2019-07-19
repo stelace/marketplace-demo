@@ -9,7 +9,7 @@
   >
     <template v-slot:prepend>
       <QBtn
-        v-if="calendarIconPosition === 'left'"
+        v-if="calendarIconPosition === 'left' && !hideCalendarIcon"
         :aria-label="$t({ id: 'form.date_placeholder' })"
         :color="iconColor"
         :disabled="$attrs.disabled"
@@ -30,11 +30,11 @@
 
     <template v-slot:append>
       <QBtn
-        v-if="calendarIconPosition === 'right'"
+        v-if="calendarIconPosition === 'right' || hideCalendarIcon"
+        :class="[hideCalendarIcon ? 'no-pointer-events' : '']"
         :aria-label="$t({ id: 'form.date_placeholder' })"
         :color="iconColor"
         :disabled="$attrs.disabled"
-        icon="event"
         rounded
         dense
         flat
@@ -49,7 +49,7 @@
       </QBtn>
 
       <QBtn
-        v-show="date"
+        v-show="date && !hideCloseIcon"
         :aria-label="$t({ id: 'prompt.reset_button' })"
         icon="close"
         rounded
@@ -82,7 +82,15 @@ export default {
     getValidDates: {
       type: Function,
       default: () => true // all dates are valid
-    }
+    },
+    hideCalendarIcon: {
+      type: Boolean,
+      default: false
+    },
+    hideCloseIcon: {
+      type: Boolean,
+      default: false
+    },
   },
   computed: {
     localizedDate () {
