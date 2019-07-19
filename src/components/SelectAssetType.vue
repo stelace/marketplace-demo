@@ -73,8 +73,7 @@
 </template>
 
 <script>
-import { values, pick } from 'lodash'
-import { mapState } from 'vuex'
+import { mapGetters } from 'vuex'
 
 export default {
   props: {
@@ -127,16 +126,16 @@ export default {
       return this.$refs.select.optionIndex
     },
     assetTypes () {
-      let assetTypesById = this.common.assetTypesById
+      const assetTypes = this.activeAssetTypes
 
       if (this.filteredIds) {
-        return values(pick(assetTypesById, this.filteredIds))
+        return assetTypes.filter(assetType => this.filteredIds.includes(assetType.id))
       } else {
-        return values(assetTypesById)
+        return assetTypes
       }
     },
-    ...mapState([
-      'common'
+    ...mapGetters([
+      'activeAssetTypes'
     ])
   },
   mounted () {

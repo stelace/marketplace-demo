@@ -76,18 +76,6 @@ export default {
       if (defaultType) return defaultType
       else return this.assetTypes[0]
     },
-    showSelectAssetType () {
-      if (this.filteredAssetTypesIds) return this.filteredAssetTypesIds.length > 1
-      else return this.assetTypes.length > 1
-    },
-    filteredAssetTypesIds () {
-      const config = this.common.config
-      const assetTypesConfig = get(config, 'stelace.instant.assetTypes')
-
-      if (!assetTypesConfig) return null
-
-      return Object.keys(assetTypesConfig)
-    },
     isAssetTypeReadonly () {
       return !!this.asset.asset.id
     },
@@ -178,6 +166,7 @@ export default {
     ...mapGetters([
       'currentUser',
       'canPublishAsset',
+      'activeAssetTypes',
     ]),
   },
   async preFetch ({ store }) {
@@ -418,8 +407,7 @@ export default {
           </div>
           <div class="q-mt-md row justify-center">
             <SelectAssetType
-              v-if="showSelectAssetType"
-              :filtered-ids="filteredAssetTypesIds"
+              v-if="activeAssetTypes.length > 1"
               :initial-asset-type="selectedAssetType"
               :label="$t({ id: 'asset.asset_type_label' })"
               :show-search-icon="false"
