@@ -1,4 +1,4 @@
-import { get, pick } from 'lodash'
+import { get, pick, values } from 'lodash'
 
 export function assetsInUniqueCountry (state) {
   const uniqueCountry = get(state.config, 'stelace.instant.assetsInUniqueCountry')
@@ -45,4 +45,24 @@ export function ratingsOptions (state) {
   }
 
   return ratingsOptions
+}
+
+export function activeAssetTypes (state) {
+  const {
+    assetTypesById,
+    config
+  } = state
+
+  let assetTypes = values(assetTypesById)
+  assetTypes = assetTypes.filter(assetType => assetType.active)
+
+  const assetTypesConfig = get(config, 'stelace.instant.assetTypes')
+  if (assetTypesConfig) {
+    const filteredIds = Object.keys(assetTypesConfig)
+    if (filteredIds.length) {
+      assetTypes = assetTypes.filter(assetType => filteredIds.includes(assetType.id))
+    }
+  }
+
+  return assetTypes
 }
