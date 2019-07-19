@@ -3,7 +3,31 @@
     :key="activeAsset.id"
     class="stl-footer--bottom"
   >
-    <div class="row flex-center">
+    <div class="row justify-center">
+      <div class="gt-md">
+        <QPageSticky position="top-right" :offset="[50, 20]">
+          <div class="booking-card q-pa-md">
+            <AppContent
+              tag="div"
+              class="q-pb-md text-weight-medium"
+              entry="time"
+              field="calendar_prompt_date"
+            />
+            <!-- Ratings -->
+            <QSeparator />
+            <div class="q-py-md booking-card__content">
+              <!-- DateRangePicker -->
+              <!-- And/or quantity select depending on Asset Type -->
+            </div>
+            <div class="row">
+              <CheckoutButton
+                class="full-width"
+                @click="checkout"
+              />
+            </div>
+          </div>
+        </QPageSticky>
+      </div>
       <div class="full-width stl-content-container q-pb-xl">
         <div class="q-px-lg q-pt-lg">
           <AppSwitchableEditor
@@ -252,6 +276,7 @@ import { get, map, sortBy, values } from 'lodash'
 import { extractLocationDataFromPlace } from 'src/utils/places'
 import { populateAsset } from 'src/utils/asset'
 
+import CheckoutButton from 'src/components/CheckoutButton'
 import OwnerAssetCard from 'src/components/OwnerAssetCard'
 import PlacesAutocomplete from 'src/components/PlacesAutocomplete'
 import SelectCategories from 'src/components/SelectCategories'
@@ -261,6 +286,7 @@ import PageComponentMixin from 'src/mixins/pageComponent'
 
 export default {
   components: {
+    CheckoutButton,
     OwnerAssetCard,
     PlacesAutocomplete,
     SelectCategories,
@@ -356,6 +382,9 @@ export default {
       // with server-side rendering (SSR)
       this.fetchRelatedAssets()
     },
+    async checkout () {
+      return true
+    },
     updateAssetFn (fieldName) {
       return async (value) => {
         await this.$store.dispatch('updateActiveAsset', {
@@ -433,4 +462,9 @@ export default {
   justify-content: center
   @media (min-width: $breakpoint-sm-min)
     justify-content: start
+
+.booking-card
+  width: 300px
+  border: 1px solid $grey-3
+// .booking-card__content
 </style>

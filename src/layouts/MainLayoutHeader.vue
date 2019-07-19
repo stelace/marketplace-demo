@@ -351,7 +351,7 @@ export default {
         :rounded="style.roundedTheme"
         :label="$t({ id: 'navigation.new_listing' })"
         icon="add_box"
-        color="secondary"
+        color="info"
         align="between"
         dense
       />

@@ -52,7 +52,8 @@ export default {
       return this.route.meta.hasLeftDrawer
     },
     isFooterDrawerOpened () {
-      return (this.isAssetPage && !this.isOwnerCurrentUser && this.canViewBookAssetCta)
+      const showOnAssetPage = this.isAssetPage && !this.$q.screen.gt.md && !this.isOwnerCurrentUser
+      return showOnAssetPage
     },
     blurredPage () {
       return (this.auth.authDialogOpened && this.auth.authDialogPersistent) ||
