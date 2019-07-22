@@ -63,6 +63,24 @@
           </div>
         </div>
         <div class="row q-mt-md">
+          <div class="col-12 col-md-4" />
+          <div class="col-12 col-md-6">
+            <div
+              v-for="ratingConfig in ratingConfigs"
+              :key="ratingConfig.label"
+            >
+              <QInput
+                v-if="ratingConfig.hasComment"
+                type="textarea"
+                :placeholder="$t({ id: 'rating.comment_label' })"
+                :value="editingRatingsComments[ratingConfig.label]"
+                :readonly="readonly || (!readonly && !canEditRatingByLabel[ratingConfig.label] && !isSaving)"
+                @input="comment => changeComment(ratingConfig.label, comment)"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="row q-mt-md">
           <div class="col-12 col-md-10" />
           <div class="col-12 col-md-2 flex justify-end items-end">
             <div class="items-end">
@@ -139,6 +157,7 @@ export default {
   data () {
     return {
       editingRatingsScores: {},
+      editingRatingsComments: {},
       ratingConfigs: [],
       isSaving: false,
     }
@@ -203,19 +222,25 @@ export default {
             const skipSave = isNil(this.editingRatingsScores[label])
             if (skipSave) return
 
-            const promise = this.$store.dispatch('createRating', {
-              attrs: {
-                score: this.editingRatingsScores[label],
-                authorId: this.author.id,
-                targetId: this.target.id,
-                transactionId: this.transaction.id,
-                label,
-                metadata: {
-                  assetName: this.transaction.assetSnapshot.name,
-                  duration: this.transaction.duration
-                }
+            const attrs = {
+              score: this.editingRatingsScores[label],
+              authorId: this.author.id,
+              targetId: this.target.id,
+              assetId: this.transaction.assetId,
+              transactionId: this.transaction.id,
+              label,
+              metadata: {
+                assetName: this.transaction.assetSnapshot.name,
+                duration: this.transaction.duration
               }
-            }).catch(() => null) // handle the error so we know which ratings is successfully saved
+            }
+
+            if (ratingConfig.hasComment) {
+              attrs.comment = this.editingRatingsComments[label]
+            }
+
+            const promise = this.$store.dispatch('createRating', { attrs })
+              .catch(() => null) // handle the error so we know which ratings is successfully saved
             promises.push(promise)
           }
         })
@@ -244,6 +269,11 @@ export default {
         [label]: score
       })
     },
+    changeComment (label, comment) {
+      this.editingRatingsComments = Object.assign({}, this.editingRatingsComments, {
+        [label]: comment
+      })
+    },
 
     onOpenDialog () {
       if (this.ratingsOptions.editOrder) {
@@ -255,6 +285,7 @@ export default {
       this.ratingConfigs.forEach(ratingConfig => {
         if (this.savedRatingsByLabel[ratingConfig.label]) {
           this.editingRatingsScores[ratingConfig.label] = this.savedRatingsByLabel[ratingConfig.label].score
+          this.editingRatingsComments[ratingConfig.label] = this.savedRatingsByLabel[ratingConfig.label].comment
         }
       })
     },

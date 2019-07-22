@@ -7,15 +7,28 @@ import {
   isRatingOptional,
 } from 'src/utils/rating'
 
-export async function fetchRatingsStatsByType ({ commit, rootGetters }, { targetId }) {
+export async function fetchRatingsStats ({ commit, rootGetters }, { assetId, targetId, groupBy }) {
   const ratingsOptions = rootGetters.ratingsOptions
   const ratingTypes = Object.keys(ratingsOptions.stats)
 
-  const ratingsStatsByType = await api.fetchRatingsStatsByType({ targetId, groupBy: 'targetId', ratingsOptions })
+  const allowedGroupByValues = ['assetId', 'targetId']
+
+  if (!allowedGroupByValues.includes(groupBy)) {
+    throw new Error(`Allowed values for groupBy: ${allowedGroupByValues.join(', ')}`)
+  }
+
+  const ratingsStatsByType = await api.fetchRatingsStatsByType({ assetId, targetId, groupBy, ratingsOptions })
+
+  let type
+  if (groupBy === 'targetId') {
+    type = types.SET_RATING_STATS_BY_TARGET_ID
+  } else if (groupBy === 'assetId') {
+    type = types.SET_RATING_STATS_BY_ASSET_ID
+  }
 
   ratingTypes.forEach(ratingType => {
     commit({
-      type: types.SET_RATING_STATS,
+      type,
       ratingsStats: ratingsStatsByType[ratingType],
       ratingType
     })
@@ -25,29 +38,12 @@ export async function fetchRatingsStatsByType ({ commit, rootGetters }, { target
 }
 
 /**
- * doesn't store the result into vuex store
- * result format:
- * [
- *
- *
- *   {
- *     owner: owner1,
- *     rating: rating1,
- *     assetName: assetName1,
- *     transactionDuration: duration1
- *   },
- *   {
- *     owner: owner2,
- *     rating: rating2,
- *     ...
- *   }
- *   ...
- * }
+ * Returns an array of ratings with property owner added
  */
-export async function fetchRatingsByTransaction ({ rootGetters }, { targetId }) {
+export async function fetchRatingsByTransaction ({ rootGetters }, { targetId, assetId }) {
   const fetchRatings = (...args) => stelace.ratings.list(...args)
 
-  const ratings = await fetchAllResults(fetchRatings, { targetId, label: 'main' })
+  const ratings = await fetchAllResults(fetchRatings, { targetId, assetId, label: 'main' })
 
   const usersIds = uniqBy(compact(ratings.map(rating => rating.authorId)))
 
@@ -57,13 +53,9 @@ export async function fetchRatingsByTransaction ({ rootGetters }, { targetId }) 
   const usersById = keyBy(users, 'id')
 
   return ratings.map(rating => {
-    return {
-      rating,
-      owner: usersById[rating.authorId],
-      apiScore: rating.score,
-      assetName: rating.metadata.assetName,
-      transactionDuration: rating.metadata.transactionDuration
-    }
+    return Object.assign({}, rating, {
+      owner: usersById[rating.authorId]
+    })
   })
 }
 

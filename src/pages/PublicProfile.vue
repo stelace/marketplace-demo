@@ -95,7 +95,7 @@ export default {
     loadProfile () {
       return Promise.all([
         this.fetchUserAssets(),
-        this.fetchRatingsStatsByType({ targetId: [this.selectedUserId] }),
+        this.fetchRatingsStatsByTargetId({ targetId: [this.selectedUserId] }),
         this.fetchUserRatingsByTransaction({ userId: this.selectedUser.id })
       ])
     },
@@ -104,10 +104,10 @@ export default {
         userId: this.selectedUser.id
       })
     },
-    fetchRatingsStatsByType ({ targetId }) {
+    fetchRatingsStatsByTargetId ({ targetId }) {
       if (!this.ratingsActive) return
 
-      return this.$store.dispatch('fetchRatingsStatsByType', { targetId })
+      return this.$store.dispatch('fetchRatingsStats', { targetId, groupBy: 'targetId' })
     },
     async fetchUserRatingsByTransaction ({ userId }) {
       if (!this.ratingsActive) return

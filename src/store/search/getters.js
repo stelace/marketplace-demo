@@ -60,7 +60,8 @@ export function searchedAssets (state, getters, rootState, rootGetters) {
     assetTypesById
   } = rootState.common
   const {
-    ratingsStatsByType
+    ratingsStatsByTargetId,
+    ratingsStatsByAssetId,
   } = rootState.rating
   const {
     currentUser,
@@ -72,13 +73,15 @@ export function searchedAssets (state, getters, rootState, rootGetters) {
       asset: ast,
       usersById,
       categoriesById,
-      assetTypesById
+      assetTypesById,
+      ratingsStatsByAssetId,
+      ratingsOptions,
     })
 
     if (asset.owner) {
       if (asset.owner) {
         populateUser(asset.owner, {
-          ratingsStatsByType,
+          ratingsStatsByTargetId,
           ratingsOptions,
           isCurrentUser: currentUser.id === asset.owner.id,
         })

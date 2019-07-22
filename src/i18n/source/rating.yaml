@@ -5,6 +5,9 @@ rating:
   rating_placeholder:
     en: Rating*
     fr: Avis*
+  ratings_label:
+    en: Ratings
+    fr: Évaluations
   my_ratings:
     en: My ratings
     fr: Mes évaluations

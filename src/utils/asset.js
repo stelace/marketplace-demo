@@ -1,7 +1,15 @@
 import { get } from 'lodash'
+import { convertApiToDisplayScore } from 'src/utils/rating'
 import bounds from 'binary-search-bounds'
 
-export function populateAsset ({ asset, usersById, categoriesById, assetTypesById }) {
+export function populateAsset ({
+  asset,
+  usersById,
+  categoriesById,
+  assetTypesById,
+  ratingsStatsByAssetId,
+  ratingsOptions,
+}) {
   const newAsset = Object.assign({}, asset)
   newAsset.owner = usersById[asset.ownerId]
   newAsset.category = categoriesById[asset.categoryId]
@@ -14,6 +22,15 @@ export function populateAsset ({ asset, usersById, categoriesById, assetTypesByI
   newAsset.timeUnit = get(newAsset, 'assetType.timing.timeUnit', '')
 
   newAsset.ownerLink = { name: 'publicProfile', params: { id: newAsset.ownerId } }
+
+  if (ratingsStatsByAssetId && ratingsOptions) {
+    const defaultAvgScore = get(ratingsStatsByAssetId, `default.${newAsset.id}.avg`, null)
+
+    newAsset.averageRating = convertApiToDisplayScore(
+      defaultAvgScore,
+      { displayMaxScore: get(ratingsOptions, 'stats.default.maxScore') }
+    )
+  }
 
   return newAsset
 }

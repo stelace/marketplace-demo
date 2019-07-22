@@ -14,7 +14,11 @@ export default {
     size: {
       type: String,
       default: '0.75rem'
-    }
+    },
+    ownerRating: { // use owner ratings' score, useful to not fallback to owner scoring in asset card
+      type: Boolean,
+      default: false
+    },
   },
   data () {
     return {}
@@ -25,7 +29,7 @@ export default {
       // enclosed in lodash as below
       if (Number.isFinite(this.value)) return this.value
       if (Number.isFinite(get(t, 'averageRating'))) return get(t, 'averageRating')
-      if (Number.isFinite(get(t, 'owner.averageRating'))) return get(t, 'owner.averageRating')
+      if (this.ownerRating && Number.isFinite(get(t, 'owner.averageRating'))) return get(t, 'owner.averageRating')
       return null
     }
   }

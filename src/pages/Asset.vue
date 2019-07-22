@@ -187,6 +187,19 @@
         </div>
 
         <section
+          v-show="assetRatingsLoaded && ratingsActive"
+          class="q-mt-md"
+        >
+          <QSeparator class="q-mt-xl" />
+
+          <TransactionRatingsList
+            :ratings="assetRatingsByTransaction"
+            :target="activeAsset.owner"
+            :show-asset-name="false"
+          />
+        </section>
+
+        <section
           v-if="similarAssets.length"
           class="q-px-sm"
         >
@@ -266,6 +279,7 @@ import PlacesAutocomplete from 'src/components/PlacesAutocomplete'
 import SelectCategories from 'src/components/SelectCategories'
 import TransactionCard from 'src/components/TransactionCard'
 import ProfileCard from 'src/components/ProfileCard'
+import TransactionRatingsList from 'src/components/TransactionRatingsList'
 
 import PageComponentMixin from 'src/mixins/pageComponent'
 
@@ -275,6 +289,7 @@ export default {
     PlacesAutocomplete,
     SelectCategories,
     TransactionCard,
+    TransactionRatingsList,
     ProfileCard,
     VuePhotoSwipe: () => import(/* webpackChunkName: 'photoswipe' */ 'src/components/VuePhotoSwipe'),
   },
@@ -287,6 +302,8 @@ export default {
       similarAssets: [],
       shortTextMaxLength: 128,
       checkoutDialogOpened: false,
+      assetRatingsByTransaction: [],
+      assetRatingsLoaded: false,
     }
   },
   meta () { // SEO, overriding any hard-coded content in translations
@@ -331,6 +348,7 @@ export default {
       'layout',
       'route',
       'transaction',
+      'rating',
     ]),
     ...mapGetters([
       'activeAsset',
@@ -340,6 +358,8 @@ export default {
       'currentUser',
       'searchOptions',
       'isActiveAssetAvailable',
+      'ratingsOptions',
+      'ratingsActive'
     ]),
   },
   watch: {
@@ -352,6 +372,7 @@ export default {
       this.fetchRelatedAssets()
       this.resetTransactionParameters()
       this.$store.dispatch('resetTransactionPreview')
+      this.fetchAssetRatingsByTransaction()
     },
     maxAvailableQuantity () {
       if (this.maxAvailableQuantity < this.quantity) {
@@ -375,6 +396,7 @@ export default {
       // Not blocking. Move to (blocking) preFetch and remove $route watcher if optimizing for SEO
       // with server-side rendering (SSR)
       this.fetchRelatedAssets()
+      this.fetchAssetRatingsByTransaction()
     },
     updateAssetFn (fieldName) {
       return async (value) => {
@@ -390,6 +412,12 @@ export default {
     prepareUpdatedLocations (place, handlerFn) {
       extractLocationDataFromPlace(place, loc => { handlerFn(loc ? [ loc ] : null) })
       // Note: array of locations expected, app handles only one for now.
+    },
+    async fetchAssetRatingsByTransaction () {
+      if (!this.ratingsActive) return
+
+      this.assetRatingsByTransaction = await this.$store.dispatch('fetchRatingsByTransaction', { assetId: this.activeAsset.id })
+      this.assetRatingsLoaded = true
     },
     async fetchRelatedAssets () {
       await this.$store.dispatch('fetchAssetTypes')
@@ -412,12 +440,19 @@ export default {
           nbResults: 4
         })
 
+        if (this.ratingActive) {
+          const ownerSimilarAssetIds = this.ownerSimilarAssets.map(asset => asset.id)
+          await this.$dispatch('fetchRatingsStats', { assetId: ownerSimilarAssetIds, groupBy: 'assetId' })
+        }
+
         this.ownerSimilarAssets = this.ownerSimilarAssets.map(asset => {
           return populateAsset({
             asset,
             usersById: {},
             categoriesById: this.common.categoriesById,
-            assetTypesById: this.common.assetTypesById
+            assetTypesById: this.common.assetTypesById,
+            ratingsStatsByAssetId: this.rating.ratingsStatsByAssetId,
+            ratingsOptions: this.ratingsOptions,
           })
         })
       }
@@ -435,12 +470,19 @@ export default {
         nbResults: 4
       })
 
+      if (this.ratingActive) {
+        const similarAssetIds = this.similarAssets.map(asset => asset.id)
+        await this.$dispatch('fetchRatingsStats', { assetId: similarAssetIds, groupBy: 'assetId' })
+      }
+
       this.similarAssets = this.similarAssets.map(asset => {
         return populateAsset({
           asset,
           usersById: {},
           categoriesById: this.common.categoriesById,
-          assetTypesById: this.common.assetTypesById
+          assetTypesById: this.common.assetTypesById,
+          ratingsStatsByAssetId: this.rating.ratingsStatsByAssetId,
+          ratingsOptions: this.ratingsOptions,
         })
       })
     },

@@ -113,9 +113,13 @@ export async function fetchMessages ({ commit, dispatch, state, rootGetters }, {
 
   if (rootGetters.ratingsActive) {
     const transactionsIds = uniqBy(allTransactions.map(b => b.id))
+    const assetIds = uniqBy(assets.map(asset => asset.id))
 
-    await dispatch('fetchRatingsStatsByType', { targetId: usersIds })
-    await dispatch('fetchRatedTransactions', { transactionsIds })
+    await Promise.all([
+      dispatch('fetchRatingsStats', { targetId: usersIds, groupBy: 'targetId' }),
+      dispatch('fetchRatingsStats', { assetId: assetIds, groupBy: 'assetId' }),
+      dispatch('fetchRatedTransactions', { transactionsIds })
+    ])
   }
 }
 

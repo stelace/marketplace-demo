@@ -8,7 +8,6 @@ export default {
   messagesFetchedForUserId: null,
 
   usersById: {},
-  ratingsStatsByType: {},
   transactionsById: {},
   assetsById: {},
 

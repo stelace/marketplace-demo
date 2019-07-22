@@ -36,7 +36,7 @@ export function isUser (user) {
 }
 
 export function populateUser (user, {
-  ratingsStatsByType,
+  ratingsStatsByTargetId,
   ratingsOptions,
   isCurrentUser,
 } = {}) {
@@ -49,8 +49,8 @@ export function populateUser (user, {
 
   user.images = get(user, userMetadataMapping.images, [])
 
-  if (ratingsStatsByType && ratingsOptions) {
-    const defaultAvgScore = get(ratingsStatsByType, `default.${user.id}.avg`, null)
+  if (ratingsStatsByTargetId && ratingsOptions) {
+    const defaultAvgScore = get(ratingsStatsByTargetId, `default.${user.id}.avg`, null)
 
     user.averageRating = convertApiToDisplayScore(
       defaultAvgScore,

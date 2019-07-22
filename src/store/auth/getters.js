@@ -6,10 +6,10 @@ export function currentUser (state, getters, rootState, rootGetters) {
   const user = Object.assign({}, state.user)
 
   const ratingsOptions = rootGetters.ratingsOptions
-  const { ratingsStatsByType } = rootState.rating
+  const { ratingsStatsByTargetId } = rootState.rating
 
   if (user.id) {
-    populateUser(user, { ratingsOptions, ratingsStatsByType, isCurrentUser: true })
+    populateUser(user, { ratingsOptions, ratingsStatsByTargetId, isCurrentUser: true })
   }
 
   return user

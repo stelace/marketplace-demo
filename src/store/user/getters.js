@@ -10,12 +10,12 @@ export function selectedUser (state, getters, rootState, rootGetters) {
 
   const ratingsOptions = rootGetters.ratingsOptions
   const {
-    ratingsStatsByType,
+    ratingsStatsByTargetId,
   } = rootState.rating
 
   populateUser(user, {
     ratingsOptions,
-    ratingsStatsByType,
+    ratingsStatsByTargetId,
     isCurrentUser,
   })
 

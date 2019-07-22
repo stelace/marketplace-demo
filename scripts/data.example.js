@@ -240,6 +240,7 @@ module.exports = {
                 labels: ['main'],
                 maxScore: 5,
                 form: 'star',
+                hasComment: true
               }
             },
             types: {
@@ -247,6 +248,7 @@ module.exports = {
                 label: 'main',
                 maxScore: 5,
                 form: 'star',
+                hasComment: true,
               },
             },
             editOrder: [

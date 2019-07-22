@@ -41,6 +41,7 @@ export async function searchAssets ({ state, rootState, rootGetters, commit, dis
   const {
     currentUser,
     ratingsOptions,
+    ratingsActive,
   } = rootGetters
 
   if (resetPagination) {
@@ -112,17 +113,29 @@ export async function searchAssets ({ state, rootState, rootGetters, commit, dis
     })
   }
 
+  if (ratingsActive) {
+    const assetIds = assets.map(asset => asset.id)
+    await dispatch('fetchRatingsStats', { assetId: assetIds, groupBy: 'assetId' })
+  }
+
+  const {
+    ratingsStatsByTargetId,
+    ratingsStatsByAssetId,
+  } = rootState.rating
+
   const populatedAssets = assets.map(ast => {
     const asset = populateAsset({
       asset: ast,
       usersById: state.usersById,
       categoriesById,
-      assetTypesById
+      assetTypesById,
+      ratingsStatsByAssetId,
+      ratingsOptions,
     })
 
     if (asset.owner) {
       populateUser(asset.owner, {
-        ratingsStatsByType: rootState.rating.ratingsStatsByType,
+        ratingsStatsByTargetId,
         ratingsOptions,
         isCurrentUser: currentUser.id === asset.owner.id,
       })
@@ -151,7 +164,11 @@ export async function fetchAssets ({ state }, { query, filters, nbResults = 3 } 
   return assets
 }
 
-export async function fetchActiveAsset ({ state, commit, dispatch }, { assetId }) {
+export async function fetchActiveAsset ({ state, commit, dispatch, rootGetters }, { assetId }) {
+  const {
+    ratingsActive,
+  } = rootGetters
+
   const [
     categories,
     assetTypes,
@@ -187,7 +204,9 @@ export async function fetchActiveAsset ({ state, commit, dispatch }, { assetId }
     user
   })
 
-  await dispatch('fetchRatingsStatsByType', { targetId: [asset.ownerId] })
+  if (ratingsActive) {
+    await dispatch('fetchRatingsStats', { targetId: [asset.id], groupBy: 'assetId' })
+  }
 
   return {
     asset,

@@ -1,5 +1,5 @@
 <script>
-import { values } from 'lodash'
+import { get, values } from 'lodash'
 import { mapState, mapGetters } from 'vuex'
 import { date } from 'quasar'
 
@@ -72,9 +72,16 @@ export default {
 
       return this.preview.takerAmount - this.preview.value
     },
+    ratingAverageScore () {
+      return get(this.rating.ratingsStatsByAssetId, `default.${this.activeAsset.id}.avg`, 0)
+    },
+    nbRatings () {
+      return get(this.rating.ratingsStatsByAssetId, `default.${this.activeAsset.id}.count`, 0)
+    },
     ...mapState([
       'asset',
       'transaction',
+      'rating',
     ]),
     ...mapGetters([
       'currentUser',
@@ -225,22 +232,40 @@ export default {
 
 <template>
   <div class="transaction-card q-pa-md">
-    <div class="q-pb-md text-weight-bold">
-      <AppContent
-        v-if="activeAsset.assetType && activeAsset.assetType.timeBased"
-        entry="pricing"
-        field="price_per_time_unit_label"
-        :options="{
-          price: $fx(activeAsset.price),
-          timeUnit: activeAsset.timeUnit
-        }"
-      />
-      <AppContent
-        v-else
-        entry="pricing"
-        field="price_with_currency"
-        :options="{ price: $fx(activeAsset.price) }"
-      />
+    <div class="q-pb-md">
+      <div class="text-weight-bold">
+        <AppContent
+          v-if="activeAsset.assetType && activeAsset.assetType.timeBased"
+          entry="pricing"
+          field="price_per_time_unit_label"
+          :options="{
+            price: $fx(activeAsset.price),
+            timeUnit: activeAsset.timeUnit
+          }"
+        />
+        <AppContent
+          v-else
+          entry="pricing"
+          field="price_with_currency"
+          :options="{ price: $fx(activeAsset.price) }"
+        />
+      </div>
+      <div v-if="nbRatings">
+        <div class="row items-center">
+          <AppRating
+            class="asset-score"
+            :score="ratingAverageScore"
+            rating-label="default"
+            :show-label="false"
+            rating-class="q-mr-sm"
+            readonly
+            size="0.8rem"
+          />
+          <div class="text-weigh-bold">
+            {{ nbRatings }}
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Ratings -->
@@ -411,5 +436,8 @@ export default {
 
   @media (max-width $breakpoint-sm-min)
     justify-content: center
+
+.asset-score
+  display: inline-block
 
 </style>

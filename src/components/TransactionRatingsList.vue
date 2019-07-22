@@ -18,6 +18,10 @@ export default {
       type: Object,
       default: () => {}
     },
+    showAssetName: {
+      type: Boolean,
+      default: true
+    },
   },
   computed: {
     transformedRatings () {
@@ -40,11 +44,14 @@ export default {
     },
     populateScore (rating) {
       const score = convertApiToDisplayScore(
-        rating.apiScore,
+        rating.score,
         { displayMaxScore: get(this.ratingsOptions, 'stats.default.maxScore') }
       )
 
-      return Object.assign({ score }, rating)
+      return Object.assign({}, rating, {
+        score,
+        assetName: get(rating, 'metadata.assetName')
+      })
     }
   },
 }
@@ -58,7 +65,7 @@ export default {
           tag="h2"
           class="text-h4 text-weight-medium"
           entry="rating"
-          field="my_ratings"
+          field="ratings_label"
         />
       </slot>
     </div>
@@ -73,7 +80,9 @@ export default {
           :target="target"
           :score="rating.score"
           :asset-name="rating.assetName"
-          :duration="rating.transactionDuration"
+          :comment="rating.comment"
+          :date="rating.createdDate"
+          :show-asset-name="showAssetName"
         />
       </QCard>
     </div>

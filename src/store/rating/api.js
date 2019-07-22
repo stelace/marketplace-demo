@@ -2,7 +2,7 @@ import stelace, { fetchAllResults } from 'src/utils/stelace'
 
 const fetchRatingsStatsRequest = (...args) => stelace.ratings.getStats(...args)
 
-export async function fetchRatingsStatsByType ({ targetId, transactionId, groupBy, ratingsOptions }) {
+export async function fetchRatingsStatsByType ({ assetId, targetId, transactionId, groupBy, ratingsOptions }) {
   const ratingTypes = Object.keys(ratingsOptions.stats)
   const ratingsStatsByType = {}
 
@@ -12,6 +12,7 @@ export async function fetchRatingsStatsByType ({ targetId, transactionId, groupB
 
     const fetchRatingsStats = fetchAllResults(fetchRatingsStatsRequest, {
       groupBy,
+      assetId,
       targetId,
       transactionId,
       label: ratingConfig.labels.join(',')
@@ -24,9 +25,10 @@ export async function fetchRatingsStatsByType ({ targetId, transactionId, groupB
   return ratingsStatsByType
 }
 
-export async function fetchRatingsStats ({ targetId, transactionId, groupBy }) {
+export async function fetchRatingsStats ({ assetId, targetId, transactionId, groupBy }) {
   const ratingsStats = await fetchAllResults(fetchRatingsStatsRequest, {
     groupBy,
+    assetId,
     targetId,
     transactionId,
   })

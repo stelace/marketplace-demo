@@ -14,13 +14,13 @@ export function conversations (state, getters, rootState, rootGetters) {
     assetsById,
   } = state
   const {
-    ratingsStatsByType,
+    ratingsStatsByTargetId,
+    ratingsStatsByAssetId,
     ratedTransactionsById,
   } = rootState.rating
   const {
     currentUser,
     ratingsOptions,
-    isProvider,
   } = rootGetters
   const {
     categoriesById,
@@ -66,12 +66,14 @@ export function conversations (state, getters, rootState, rootGetters) {
         asset,
         usersById,
         categoriesById,
-        assetTypesById
+        assetTypesById,
+        ratingsStatsByAssetId,
+        ratingsOptions,
       })
 
       if (asset.owner) {
         populateUser(asset.owner, {
-          ratingsStatsByType,
+          ratingsStatsByTargetId,
           ratingsOptions,
           isCurrentUser: currentUser.id === asset.owner.id,
         })
@@ -86,7 +88,7 @@ export function conversations (state, getters, rootState, rootGetters) {
       ratingTypes.forEach(ratingType => {
         const ratingConfig = ratingsOptions.stats[ratingType]
 
-        const apiAvgScore = get(ratingsStatsByType, `${ratingType}.${interlocutorId}.avg`, null)
+        const apiAvgScore = get(ratingsStatsByTargetId, `${ratingType}.${interlocutorId}.avg`, null)
         interlocutor.ratings[ratingType] = convertApiToDisplayScore(apiAvgScore, { displayMaxScore: ratingConfig.maxScore })
       })
     }
@@ -99,7 +101,7 @@ export function conversations (state, getters, rootState, rootGetters) {
     let ratingsPrompt
     let ratingsReadonly
     if (rootGetters.ratingsActive) {
-      ratingsPrompt = transactionId ? getRatingsPrompt({ isProvider, transaction }) : false
+      ratingsPrompt = transactionId ? getRatingsPrompt({ currentUser, transaction }) : false
       ratingsReadonly = !!ratedTransactionsById[transactionId]
     } else {
       ratingsPrompt = false
@@ -117,7 +119,9 @@ export function conversations (state, getters, rootState, rootGetters) {
         categoriesById,
         assetTypesById: {
           [transaction.assetTypeId]: assetType
-        }
+        },
+        ratingsStatsByAssetId,
+        ratingsOptions,
       })
     }
 
@@ -182,8 +186,10 @@ function getTransactionActions ({ currentUser, transaction, isEmptyConversation 
   return transactionActions
 }
 
-function getRatingsPrompt ({ isProvider, transaction }) {
-  if (!isProvider) return false
+function getRatingsPrompt ({ currentUser, transaction }) {
+  const isTaker = transaction.ownerId !== currentUser.id
+
+  if (!isTaker) return false
 
   return ['validated', 'completed'].includes(transaction.status)
 }

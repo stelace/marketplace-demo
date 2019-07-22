@@ -41,12 +41,28 @@ export async function fetchLastAssets ({ dispatch, rootState, rootGetters }, { n
     categoriesById,
   } = rootState.common
 
+  const {
+    ratingsOptions,
+    ratingsActive,
+  } = rootGetters
+
+  if (ratingsActive) {
+    const assetIds = assets.map(asset => asset.id)
+    await dispatch('fetchRatingsStats', { assetId: assetIds, groupBy: 'assetId' })
+  }
+
+  const {
+    ratingsStatsByAssetId
+  } = rootState.rating
+
   return assets.map(asset => {
     return populateAsset({
       asset,
       usersById: {},
       categoriesById,
-      assetTypesById
+      assetTypesById,
+      ratingsStatsByAssetId,
+      ratingsOptions,
     })
   })
 }
@@ -79,6 +95,10 @@ export async function fetchUserAssets ({ commit, dispatch, rootState, rootGetter
     categoriesById,
     assetTypesById,
   } = rootState.common
+  const {
+    ratingsOptions,
+    ratingsActive,
+  } = rootGetters
 
   const ownerId = userId || (rootGetters.currentUser || {})['id']
 
@@ -103,12 +123,23 @@ export async function fetchUserAssets ({ commit, dispatch, rootState, rootGetter
     }, { concurrency: 4 }) // limit to 4 concurrent promises to not put too much load on API
   }
 
+  if (ratingsActive) {
+    const assetIds = assets.map(asset => asset.id)
+    await dispatch('fetchRatingsStats', { assetId: assetIds, groupBy: 'assetId' })
+  }
+
+  const {
+    ratingsStatsByAssetId
+  } = rootState.rating
+
   return assets.map(asset => {
     return populateAsset({
       asset,
       usersById: {},
       categoriesById,
-      assetTypesById
+      assetTypesById,
+      ratingsStatsByAssetId,
+      ratingsOptions,
     })
   })
 }

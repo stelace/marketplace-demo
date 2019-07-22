@@ -1,6 +1,6 @@
 import { populateAsset, isAvailable } from 'src/utils/asset'
 
-export function activeAsset (state, getters, rootState) {
+export function activeAsset (state, getters, rootState, rootGetters) {
   const {
     activeAsset
   } = state
@@ -11,16 +11,24 @@ export function activeAsset (state, getters, rootState) {
   const {
     selectedUser
   } = rootState.user
+  const {
+    ratingsStatsByAssetId
+  } = rootState.rating
+  const {
+    ratingsOptions
+  } = rootGetters
 
   return populateAsset({
     asset: activeAsset,
     usersById: { [selectedUser.id]: selectedUser },
     categoriesById,
-    assetTypesById
+    assetTypesById,
+    ratingsStatsByAssetId,
+    ratingsOptions,
   })
 }
 
-export function usersAssets (state, getters, rootState) {
+export function usersAssets (state, getters, rootState, rootGetters) {
   const {
     usersAssets
   } = state
@@ -28,6 +36,12 @@ export function usersAssets (state, getters, rootState) {
     categoriesById,
     assetTypesById
   } = rootState.common
+  const {
+    ratingsStatsByAssetId
+  } = rootState.rating
+  const {
+    ratingsOptions
+  } = rootGetters
 
   const usersIds = Object.keys(usersAssets)
 
@@ -39,7 +53,9 @@ export function usersAssets (state, getters, rootState) {
         asset,
         usersById: {},
         categoriesById,
-        assetTypesById
+        assetTypesById,
+        ratingsStatsByAssetId,
+        ratingsOptions,
       })
     })
     return populatedUsersAssets
