@@ -87,7 +87,8 @@ export default {
       if (current.id !== previous.id) {
         this.$store.dispatch('selectSearchMode', { searchMode: this.defaultSearchMode })
 
-        if (current.locations.length) {
+        // current can be an empty object if the user isn't authenticated
+        if (current.locations && current.locations.length) {
           const loc = current.locations[0]
 
           this.$store.commit({
