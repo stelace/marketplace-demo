@@ -11,6 +11,12 @@ authentication:
   sign_up_action:
     en: Sign Up
     fr: S'inscrire
+  log_in_success:
+    en: Successfully logged in
+    fr: Connexion réussie
+  log_in_with_github:
+    en: Log In with Github
+    fr: Connexion avec Github
   lost_password_button:
     en: Forgot password?
     fr: Mot de passe oublié

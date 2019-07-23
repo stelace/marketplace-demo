@@ -318,6 +318,23 @@
           {{ $t({ id: 'authentication.lost_password_button' }) }}
         </q-btn>
 
+        <div
+          v-if="type === 'login' && showSSOSection"
+          class="text-center"
+        >
+          <div class="q-my-md">
+            <AppContent entry="prompt" field="binary_or_separator" />
+          </div>
+
+          <QBtn
+            no-caps
+            text-color="primary"
+            @click="ssoLogin('github')"
+          >
+            <AppContent entry="authentication" field="log_in_with_github" />
+          </QBtn>
+        </div>
+
         <q-separator
           v-if="showAuthenticationForm"
           class="q-my-md"
@@ -379,6 +396,7 @@ import EventBus from 'src/utils/event-bus'
 import { getInstantRoutePath } from 'src/router/routes'
 
 import { getDisplayName } from 'src/utils/user'
+import { getSSOLoginUrl } from 'src/utils/auth'
 
 const passwordMinLength = 8
 
@@ -410,7 +428,9 @@ export default {
       newPassword: null,
       actionPending: false,
       termsAccepted: false,
-      errorType: null
+      errorType: null,
+
+      showSSOSection: process.env.VUE_APP_SSO_ENABLED === 'true',
     }
   },
   validations: {
@@ -672,7 +692,11 @@ export default {
     },
     shake () {
       this.$refs.authDialog.shake()
-    }
+    },
+    ssoLogin (provider) {
+      const loginUrl = getSSOLoginUrl('github')
+      window.location.href = loginUrl
+    },
   }
 }
 </script>
