@@ -147,6 +147,15 @@ export async function login ({ dispatch }, { username, password }) {
   await dispatch('fetchCurrentUser')
 }
 
+export async function getAuthTokens ({ dispatch }, { code }) {
+  await stelace.auth.getTokens({
+    grantType: 'authorizationCode',
+    code
+  })
+
+  await dispatch('fetchCurrentUser')
+}
+
 export async function signup ({ commit, dispatch }, { userAttrs, noLogin = false }) {
   await stelace.users.create(userAttrs)
 

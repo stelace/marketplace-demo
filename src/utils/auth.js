@@ -40,3 +40,9 @@ export function removeOrganizationIdInLocalStorage () {
     window.localStorage.removeItem('stelaceOrganizationId')
   }
 }
+
+export function getSSOLoginUrl (provider) {
+  const publicPlatformId = process.env.STELACE_PUBLIC_PLATFORM_ID
+
+  return `${process.env.STELACE_API_URL}/auth/sso/${publicPlatformId}/${provider}`
+}
