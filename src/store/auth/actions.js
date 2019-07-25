@@ -147,7 +147,7 @@ export async function login ({ dispatch }, { username, password }) {
   await dispatch('fetchCurrentUser')
 }
 
-export async function getAuthTokens ({ dispatch }, { code }) {
+export async function getAuthTokensAndUser ({ dispatch }, { code }) {
   await stelace.auth.getTokens({
     grantType: 'authorizationCode',
     code

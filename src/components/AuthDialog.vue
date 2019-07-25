@@ -328,9 +328,13 @@
 
           <QBtn
             no-caps
-            text-color="primary"
+            text-color="white"
+            class="bg-github"
             @click="ssoLogin('github')"
           >
+            <svg class="q-icon on-left">
+              <use xlink:href="statics/images/custom-icons.svg#github" />
+            </svg>
             <AppContent entry="authentication" field="log_in_with_github" />
           </QBtn>
         </div>
@@ -711,4 +715,7 @@ export default {
 
 .auth-card .error-message
   color: $negative
+
+.bg-github
+  background: #24292E
 </style>

@@ -108,7 +108,7 @@ export default {
         this.removeQueryParams(['check', 'status', 'token'])
       } else if (code) {
         if (status === 'success') {
-          this.$store.dispatch('getAuthTokens', { code })
+          this.$store.dispatch('getAuthTokensAndUser', { code })
 
           // replace the URL so getting auth tokens won't happen at each page refresh
           this.removeQueryParams(['status', 'code'])
