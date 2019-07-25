@@ -364,7 +364,7 @@ export default {
       <div class="col-12 flex flex-center">
         <div
           v-scroll-fire="() => { showFeatures = true }"
-          class="stl-content-container stl-content-container--large row q-pt-xl justify-center"
+          class="full-width stl-content-container stl-content-container--large row q-pt-xl justify-center"
         >
           <div
             v-if="$q.screen.gt.xs"
