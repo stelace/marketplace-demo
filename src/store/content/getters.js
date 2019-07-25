@@ -120,7 +120,7 @@ export function getBaseImageUrl (state, getters) {
         .resize(getters.baseImageWidth, getters.baseImageHeight)
         .filter(state.acceptWebP ? webPFilter : '')
         .buildUrl()
-      : (isDevDebuggingStyles ? getters.placeholderImage : imgUri)
+      : imgUri || (isDevDebuggingStyles ? getters.placeholderImage : '')
   }
 }
 
@@ -133,7 +133,7 @@ export function getLargeImageUrl (state, getters) {
         .resize(getters.largeImageWidth, getters.largeImageHeight)
         .filter(state.acceptWebP ? webPFilter : '')
         .buildUrl()
-      : (isDevDebuggingStyles ? getters.placeholderImage : imgUri)
+      : imgUri || (isDevDebuggingStyles ? getters.placeholderImage : '')
   }
 }
 
