@@ -7,7 +7,6 @@ import { getImageUrl } from 'src/utils/image'
 const isDevDebuggingStyles = process.env.DEV && process.env.VUE_APP_DEBUG_STYLES === 'true'
 const cdnUrl = process.env.VUE_APP_CDN_WITH_IMAGE_HANDLER_URL
 const cdnS3Url = process.env.VUE_APP_CDN_S3_URL
-const webPFilter = 'format(webp)'
 
 export function entries (state) {
   const { apiEntries, localEntries, locale } = state
@@ -61,10 +60,9 @@ export function termsPath (state, getters) {
 
 export function homeHeroUrlTransformed (state, getters, rootState) {
   const url = rootState.style.homeHeroUrl || ''
-  const hasThumborFilters = url.indexOf('filters:') > -1
 
-  if (url && servedFromCdn(url) && !hasThumborFilters && state.acceptWebP) {
-    return getImageUrl(url).filter(webPFilter).buildUrl()
+  if (url && servedFromCdn(url) && state.acceptWebP) {
+    return getImageUrl(url)
   }
 
   return url
@@ -99,13 +97,10 @@ export function largeImageHeight (state, getters, rootState, rootGetters) {
 export function getAvatarImageUrl (state, getters) {
   return (user, { resolution = 2 } = {}) => {
     const imgUri = user.avatarUrl || ''
-    const avatarSquareSize = Math.round(resolution) * getters.avatarImageWidth
+    // const avatarSquareSize = Math.round(resolution) * getters.avatarImageWidth
 
     return servedFromCdn(imgUri)
       ? getImageUrl(imgUri)
-        .resize(avatarSquareSize, avatarSquareSize)
-        .filter(state.acceptWebP ? webPFilter : '')
-        .buildUrl()
       : imgUri
   }
 }
@@ -117,9 +112,6 @@ export function getBaseImageUrl (state, getters) {
 
     return servedFromCdn(imgUri)
       ? getImageUrl(imgUri)
-        .resize(getters.baseImageWidth, getters.baseImageHeight)
-        .filter(state.acceptWebP ? webPFilter : '')
-        .buildUrl()
       : imgUri || (isDevDebuggingStyles ? getters.placeholderImage : '')
   }
 }
@@ -130,9 +122,6 @@ export function getLargeImageUrl (state, getters) {
 
     return servedFromCdn(imgUri)
       ? getImageUrl(imgUri)
-        .resize(getters.largeImageWidth, getters.largeImageHeight)
-        .filter(state.acceptWebP ? webPFilter : '')
-        .buildUrl()
       : imgUri || (isDevDebuggingStyles ? getters.placeholderImage : '')
   }
 }
