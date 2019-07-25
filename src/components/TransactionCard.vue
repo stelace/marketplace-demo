@@ -12,8 +12,7 @@ import SelectNumber from 'src/components/SelectNumber'
 import AuthDialogMixin from 'src/mixins/authDialog'
 
 import {
-  getAvailableQuantityByDate,
-  getAvailableQuantityByDatesRange
+  getAvailableQuantityByDate
 } from 'src/utils/asset'
 
 import * as mutationTypes from 'src/store/mutation-types'
@@ -156,7 +155,7 @@ export default {
       if (this.startDate) {
         valid = valid &&
           this.startDate < d &&
-          getAvailableQuantityByDatesRange({
+          getAvailableQuantityByDate({
             availabilityGraph: this.availabilityGraph,
             startDate: this.startDate,
             endDate: d

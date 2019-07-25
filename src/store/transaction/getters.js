@@ -1,4 +1,4 @@
-import { getAvailableQuantityByDate, getAvailableQuantityByDatesRange } from 'src/utils/asset'
+import { getAvailableQuantityByDate } from 'src/utils/asset'
 
 export function transactionDatesRequired (state, getters, rootState, rootGetters) {
   const { activeAsset } = rootGetters
@@ -24,7 +24,7 @@ export function validTransactionOptions (state, getters, rootState, rootGetters)
     if (!startDate || !endDate) return false
     if (endDate < startDate) return false
 
-    const availableQuantity = getAvailableQuantityByDatesRange({ availabilityGraph, startDate, endDate })
+    const availableQuantity = getAvailableQuantityByDate({ availabilityGraph, startDate, endDate })
     return availableQuantity >= quantity
   } else {
     const availableQuantity = getAvailableQuantityByDate({ availabilityGraph, date: now })
@@ -53,7 +53,7 @@ export function maxAvailableQuantity (state, getters, rootState, rootGetters) {
   const { graphDates, defaultQuantity } = availabilityGraph
 
   if (promptTransactionDates && startDate && endDate) {
-    return getAvailableQuantityByDatesRange({ availabilityGraph, startDate, endDate })
+    return getAvailableQuantityByDate({ availabilityGraph, startDate, endDate })
   } else {
     if (!graphDates.length) return defaultQuantity
 

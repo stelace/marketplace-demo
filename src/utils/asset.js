@@ -51,58 +51,54 @@ export function isAvailable ({ asset, availabilityGraphByAssetId }) {
   })
 }
 
-export function getAvailableQuantityByDate ({ availabilityGraph, date }) {
+export function getAvailableQuantityByDate ({ availabilityGraph, date, startDate, endDate }) {
+  if (date && startDate && endDate) throw new Error('Expected date OR startDate and endDate')
+
+  const isDateRange = startDate && endDate
+  const incorrectDatesRange = endDate < startDate
+
   if (!availabilityGraph) return 0
+  if (isDateRange && incorrectDatesRange) return 0
 
   const { defaultQuantity, graphDates } = availabilityGraph
-  if (!graphDates.length) return defaultQuantity
+  if (!graphDates.length) return defaultQuantity || 0
 
   // convert graph dates into numeric values
   // numeric values are needed to perform binary search
   const timestamps = graphDates.map(graphDate => getTimestamp(graphDate.date))
+
+  const getRemainingQuantityForGraphDates = (index) => {
+    const isBeforeFirstGraphDate = index === -1
+
+    if (isBeforeFirstGraphDate) return defaultQuantity || 0
+    else return getRemainingQuantity(graphDates[index])
+  }
 
   // get the graph date to be the closest inferior or equals to the provided date
   // this graph date will define the available quantity for the date
-  const lowerBoundsIndex = bounds.le(timestamps, getTimestamp(date))
-  const isBeforeFirstGraphDate = lowerBoundsIndex === -1
-
-  if (isBeforeFirstGraphDate) return defaultQuantity
-  else return getRemainingQuantity(graphDates[lowerBoundsIndex])
-}
-
-export function getAvailableQuantityByDatesRange ({ availabilityGraph, startDate, endDate }) {
-  const incorrectDatesRange = endDate < startDate
-  if (!availabilityGraph || incorrectDatesRange) return 0
-
-  const { defaultQuantity, graphDates } = availabilityGraph
-  if (!graphDates.length) return defaultQuantity
-
-  // convert graph dates into numeric values
-  // numeric values are needed to perform binary search
-  const timestamps = graphDates.map(graphDate => getTimestamp(graphDate.date))
-
-  // get the graph date to be the closest inferior or equals to the start/end dates
-  const lowerBoundsIndexForStartDate = bounds.le(timestamps, getTimestamp(startDate))
-  const lowerBoundsIndexForEndDate = bounds.le(timestamps, getTimestamp(endDate))
-  const isStartDateBeforeFirstGraphDate = lowerBoundsIndexForStartDate === -1
-
-  // if start and end dates match the same graph date,
-  // then the available quantity is computed based on this graph date
-  if (lowerBoundsIndexForStartDate === lowerBoundsIndexForEndDate) {
-    if (isStartDateBeforeFirstGraphDate) return defaultQuantity
-    else return getRemainingQuantity(graphDates[lowerBoundsIndexForStartDate])
-  // otherwise, the available quantity is the minimum available quantity
-  // when looping from the start graph date to the end graph date
+  if (!isDateRange) {
+    const lowerBoundsIndex = bounds.le(timestamps, getTimestamp(date))
+    return getRemainingQuantityForGraphDates(lowerBoundsIndex)
   } else {
-    let remainingQuantity = isStartDateBeforeFirstGraphDate
-      ? defaultQuantity
-      : getRemainingQuantity(graphDates[lowerBoundsIndexForStartDate])
+    // get the graph date to be the closest inferior or equals to the start/end dates
+    const lowerBoundsIndexForStartDate = bounds.le(timestamps, getTimestamp(startDate))
+    const lowerBoundsIndexForEndDate = bounds.le(timestamps, getTimestamp(endDate))
 
-    for (let i = lowerBoundsIndexForStartDate + 1; i <= lowerBoundsIndexForEndDate; i++) {
-      remainingQuantity = Math.min(remainingQuantity, getRemainingQuantity(graphDates[i]))
+    let remainingQuantity = getRemainingQuantityForGraphDates(lowerBoundsIndexForStartDate)
+
+    // if start and end dates match the same graph date,
+    // then the available quantity is computed based on this graph date
+    if (lowerBoundsIndexForStartDate === lowerBoundsIndexForEndDate) {
+      return remainingQuantity
+    // otherwise, the available quantity is the minimum available quantity
+    // when looping from the start graph date to the end graph date
+    } else {
+      for (let i = lowerBoundsIndexForStartDate + 1; i <= lowerBoundsIndexForEndDate; i++) {
+        remainingQuantity = Math.min(remainingQuantity, getRemainingQuantity(graphDates[i]))
+      }
+
+      return remainingQuantity
     }
-
-    return remainingQuantity
   }
 }
 
