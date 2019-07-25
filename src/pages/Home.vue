@@ -30,7 +30,6 @@ export default {
       selectedCategory: null,
       query: '',
       startDate: '',
-      showFeatures: false,
       searchByCategory: process.env.VUE_APP_SEARCH_BY_CATEGORY === 'true',
       assets: [],
       nbAssetsPerSlideDefault: 3,
@@ -301,27 +300,8 @@ export default {
         </div>
       </div>
       <div class="col-12 flex flex-center">
-        <div
-          v-scroll-fire="() => { showFeatures = true }"
-          class="stl-content-container stl-content-container--large row q-pt-xl justify-center"
-        >
-          <div
-            v-if="$q.screen.gt.xs"
-            class="col-sm-10 col-md-7 flex items-start"
-          >
-            <transition
-              v-if="showFeatures"
-              appear
-              enter-active-class="animated fadeInLeft"
-            >
-              <img
-                src="statics/images/recruit-list.svg"
-                alt=""
-                class="full-width"
-              >
-            </transition>
-          </div>
-          <div class="q-pa-lg col-12 col-md-5 home__features-list">
+        <div class="stl-content-container stl-content-container--large q-pt-xl">
+          <div class="q-pa-lg home__features-list">
             <q-timeline
               layout="dense"
               :dark="style.colorfulTheme"
