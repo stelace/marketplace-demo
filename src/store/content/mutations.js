@@ -1,4 +1,4 @@
-import { keyBy } from 'lodash'
+import { keyBy, isNil } from 'lodash'
 import * as types from 'src/store/mutation-types'
 
 export default {
@@ -31,5 +31,28 @@ export default {
 
   [types.SET_ACCEPT_WEBP] (state, { accept = true } = {}) {
     state.acceptWebP = accept
+  },
+
+  [types.SET_CONTENT_EDITION] (state, { active }) {
+    state.contentEdition = active
+  },
+
+  [types.SELECT_ENTRY] (state, { entry, field }) {
+    state.selectedEntry = { entry, field }
+  },
+
+  [types.EDIT_ENTRY] (state, { entry, field, value }) {
+    const newEditingEntries = Object.assign({}, state.editingEntries)
+
+    if (isNil(value)) {
+      if (newEditingEntries[entry]) {
+        delete newEditingEntries[entry][field]
+      }
+    } else {
+      newEditingEntries[entry] = newEditingEntries[entry] || {}
+      newEditingEntries[entry][field] = value
+    }
+
+    state.editingEntries = newEditingEntries
   },
 }

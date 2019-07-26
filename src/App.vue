@@ -12,7 +12,7 @@
 import { mapState, mapGetters } from 'vuex'
 import * as mutationTypes from 'src/store/mutation-types'
 
-import { get, debounce } from 'lodash'
+import { get, debounce, isPlainObject, isBoolean, isString } from 'lodash'
 
 import { getAuthToken } from 'src/utils/auth'
 import EventBus from 'src/utils/event-bus'
@@ -53,6 +53,9 @@ export default {
     }
   },
   computed: {
+    allowedMessageOrigins () {
+      return process.env.VUE_APP_MESSAGE_ALLOWED_SOURCE_ORIGINS
+    },
     ...mapState([
       'content'
     ]),
@@ -102,6 +105,9 @@ export default {
         loadingBackground.classList.add('-hide')
       }
     })
+
+    window.addEventListener('message', this.receiveMessage, false)
+    EventBus.$on('postContentMessage', this.postContentMessage)
   },
   methods: {
     async hideLoadingScreen () {
@@ -144,7 +150,57 @@ export default {
       stelace.onError('userSessionExpired', () => {
         debouncedEmitUserSessionExpiredError()
       })
-    }
+    },
+    // messages received from Stelace Dashboard
+    receiveMessage (event) {
+      const origins = this.allowedMessageOrigins.split(',')
+
+      if (this.allowedMessageOrigins !== '*' && !origins.includes(event.origin)) return
+      if (!isString(event.type) || !isPlainObject(event.data)) return
+
+      const data = event.data
+
+      if (data.type === 'stelaceContentEdition') {
+        const { active } = data
+
+        if (isBoolean(active)) {
+          this.$store.commit({
+            type: mutationTypes.SET_CONTENT_EDITION,
+            active
+          })
+        }
+      } else if (data.type === 'stelaceContentEdited') {
+        const { entry, field, value } = data
+
+        if (isString(entry) && isString(field)) {
+          this.$store.commit({
+            type: mutationTypes.EDIT_ENTRY,
+            entry,
+            field,
+            value
+          })
+        }
+      }
+    },
+    // emits messages to Stelace Dashboard
+    postContentMessage (payload) {
+      if (!isPlainObject(payload)) return
+
+      const { type } = payload
+      if (!isString(type)) return
+
+      if (type === 'stelaceContentSelected') {
+        const { entry, field } = payload
+        if (!isString(entry) || !isString(field)) return
+      } else if (type === 'stelaceContentError') {
+        const { entry, field, error } = payload
+        if (!isString(entry) || !isString(field) || !isString(error)) return
+      } else {
+        return
+      }
+
+      window.postMessage(payload)
+    },
   },
 }
 </script>

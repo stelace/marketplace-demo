@@ -21,4 +21,10 @@ export default {
 
   placeholderImageBaseUrl: 'https://placeimg.com',
   acceptWebP: false,
+
+  contentEdition: false,
+
+  // from post message
+  editingEntries: {},
+  selectedEntry: {},
 }
