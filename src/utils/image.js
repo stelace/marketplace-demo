@@ -1,4 +1,4 @@
-const base = process.env.VUE_APP_CDN_WITH_IMAGE_HANDLER_URL
+const base = process.env.VUE_APP_CDN_S3_URL
 
 /**
  * @param {String} uri - File path such as images/example.png or full URL (like S3 object)
