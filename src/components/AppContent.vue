@@ -57,7 +57,7 @@ export default {
   },
   methods: {
     onClick (event) {
-      // click event should be not stopped if content edition is enabled
+      // click event should not be propagated if content edition is enabled
       if (!this.contentEdition) return
       if (event) {
         event.stopPropagation()

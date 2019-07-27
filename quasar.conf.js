@@ -102,7 +102,7 @@ module.exports = function (ctx) {
   const cdnS3Bucket = process.env.VUE_APP_CDN_S3_BUCKET || 'stelace-instant-files'
 
   const postMessageAllowedOrigins = process.env.VUE_APP_POST_MESSAGE_ALLOWED_ORIGINS ||
-    'https://dashboard.stelace.com'
+    'https://stelace.com'
 
   // ///////////// //
   // Quasar config //

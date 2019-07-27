@@ -153,9 +153,9 @@ export default {
     },
     // messages received from Stelace Dashboard
     receiveMessage (event) {
-      const origins = this.allowedMessageOrigins.split(',')
+      const origins = this.allowedMessageOrigins.split(',').map(o => o.trim())
 
-      if (this.allowedMessageOrigins !== '*' && !origins.includes(event.origin)) return
+      if (!origins.includes('*') && !origins.includes(event.origin)) return
       if (!isString(event.type) || !isPlainObject(event.data)) return
 
       const data = event.data
