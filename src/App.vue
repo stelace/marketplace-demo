@@ -11,6 +11,7 @@
 <script>
 import { mapState, mapGetters } from 'vuex'
 import * as mutationTypes from 'src/store/mutation-types'
+import * as escapeRegexp from 'escape-string-regexp'
 
 import { get, debounce, isPlainObject, isBoolean, isString } from 'lodash'
 
@@ -49,7 +50,8 @@ export default {
   data () {
     return {
       hasLoadingScreen: true,
-      hideLoadingScreenTimeout: null
+      hideLoadingScreenTimeout: null,
+      originRegExps: null,
     }
   },
   computed: {
@@ -151,11 +153,23 @@ export default {
         debouncedEmitUserSessionExpiredError()
       })
     },
+    isAllowedOrigin (origin) {
+      if (!this.originRegExps) {
+        const origins = process.env.VUE_APP_POST_MESSAGE_ALLOWED_ORIGINS
+          .split(',')
+          .map(o => o.trim())
+
+        this.originRegExps = origins.map(o => {
+          const str = `^${escapeRegexp(o).replace(/\\\*/g, '.*')}$`
+          return new RegExp(str)
+        })
+      }
+
+      return this.originRegExps.some(regexp => regexp.test(origin))
+    },
     // messages received from Stelace Dashboard
     receiveMessage (event) {
-      const origins = this.allowedMessageOrigins.split(',').map(o => o.trim())
-
-      if (!origins.includes('*') && !origins.includes(event.origin)) return
+      if (!this.isAllowedOrigin(event.origin)) return
       if (!isString(event.type) || !isPlainObject(event.data)) return
 
       const data = event.data
