@@ -209,7 +209,8 @@ export default {
       if (!allowedTypes.includes(type) || !isString(entry) || !isString(field)) return
       else if (type === 'stelaceContentError' && !isString(error)) return
 
-      window.postMessage(payload, this.content.messageOrigin)
+      const w = window.top || window
+      w.postMessage(payload, this.content.messageOrigin)
     },
   },
 }
