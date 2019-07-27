@@ -55,9 +55,6 @@ export default {
     }
   },
   computed: {
-    allowedMessageOrigins () {
-      return process.env.VUE_APP_POST_MESSAGE_ALLOWED_ORIGINS
-    },
     ...mapState([
       'content'
     ]),
@@ -160,7 +157,9 @@ export default {
           .map(o => o.trim())
 
         this.originRegExps = origins.map(o => {
-          const str = `^${escapeRegexp(o).replace(/\\\*/g, '.*')}$`
+          if (o === '*') return /^.*$/
+
+          const str = `^${escapeRegexp(o).replace(/\\\*/g, '[^/]*')}$`
           return new RegExp(str)
         })
       }
