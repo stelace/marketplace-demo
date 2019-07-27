@@ -27,4 +27,5 @@ export default {
   // from post message
   editingEntries: {},
   selectedEntry: {},
+  messageOrigin: null,
 }

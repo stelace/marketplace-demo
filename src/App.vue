@@ -54,7 +54,7 @@ export default {
   },
   computed: {
     allowedMessageOrigins () {
-      return process.env.VUE_APP_MESSAGE_ALLOWED_SOURCE_ORIGINS
+      return process.env.VUE_APP_POST_MESSAGE_ALLOWED_ORIGINS
     },
     ...mapState([
       'content'
@@ -166,6 +166,7 @@ export default {
         if (isBoolean(active)) {
           this.$store.commit({
             type: mutationTypes.SET_CONTENT_EDITION,
+            origin: event.origin,
             active
           })
         }
@@ -186,20 +187,16 @@ export default {
     postContentMessage (payload) {
       if (!isPlainObject(payload)) return
 
-      const { type } = payload
-      if (!isString(type)) return
+      const allowedTypes = [
+        'stelaceContentError',
+        'stelaceContentSelected'
+      ]
 
-      if (type === 'stelaceContentSelected') {
-        const { entry, field } = payload
-        if (!isString(entry) || !isString(field)) return
-      } else if (type === 'stelaceContentError') {
-        const { entry, field, error } = payload
-        if (!isString(entry) || !isString(field) || !isString(error)) return
-      } else {
-        return
-      }
+      const { type, entry, field, error } = payload
+      if (!allowedTypes.includes(type) || !isString(entry) || !isString(field)) return
+      else if (type === 'stelaceContentError' && !isString(error)) return
 
-      window.postMessage(payload)
+      window.postMessage(payload, this.content.messageOrigin)
     },
   },
 }

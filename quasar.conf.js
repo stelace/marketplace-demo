@@ -101,6 +101,9 @@ module.exports = function (ctx) {
     'https://upload.instant.stelace.com/upload/policy'
   const cdnS3Bucket = process.env.VUE_APP_CDN_S3_BUCKET || 'stelace-instant-files'
 
+  const postMessageAllowedOrigins = process.env.VUE_APP_POST_MESSAGE_ALLOWED_ORIGINS ||
+    'https://dashboard.stelace.com'
+
   // ///////////// //
   // Quasar config //
   // ///////////// //
@@ -466,7 +469,7 @@ module.exports = function (ctx) {
         VUE_APP_SEARCH_BY_CATEGORY: JSON.stringify(process.env.VUE_APP_SEARCH_BY_CATEGORY),
         VUE_APP_DISABLE_RATINGS: JSON.stringify(process.env.VUE_APP_DISABLE_RATINGS),
         VUE_APP_INSTANT_PAGE_PREFIX: JSON.stringify('/l'),
-        VUE_APP_MESSAGE_ALLOWED_SOURCE_ORIGINS: JSON.stringify(process.env.VUE_APP_MESSAGE_ALLOWED_SOURCE_ORIGINS),
+        VUE_APP_POST_MESSAGE_ALLOWED_ORIGINS: JSON.stringify(postMessageAllowedOrigins),
       }
     },
 

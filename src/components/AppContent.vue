@@ -70,7 +70,7 @@ export default {
         field: this.field,
       }
 
-      if (isPlainObject && !isEmpty(this.options)) {
+      if (isPlainObject(this.options) && !isEmpty(this.options)) {
         payload.options = this.options
       }
 
@@ -106,7 +106,7 @@ export default {
     v-if="renderAsHTML"
     :class="[
       'stl-content-entry',
-      contentEdition ? 'selectable' : ''
+      contentEdition ? 'editable' : ''
     ]"
     :stl-content-entry="entry"
     :stl-content-field="field"
@@ -125,7 +125,7 @@ export default {
     v-else
     :class="[
       'stl-content-entry',
-      contentEdition ? 'selectable' : ''
+      contentEdition ? 'editable' : ''
     ]"
     :stl-content-entry="entry"
     :stl-content-field="field"
@@ -148,8 +148,14 @@ export default {
   &:focus, &:hover
     text-decoration: underline
 
-.stl-content-entry.selectable
-  background-color: rgba(28, 54, 97, 0.5)
+.stl-content-entry.editable
+  background: rgba($primary, 0.4)
+  border: 2px dashed #FFF
+  min-height: 1em
+  min-width: 2em
   cursor: pointer
+  border-radius: 5px
+  padding-left: 0.25em
+  padding-right: 0.25em
 
 </style>

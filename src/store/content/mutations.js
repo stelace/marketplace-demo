@@ -33,8 +33,9 @@ export default {
     state.acceptWebP = accept
   },
 
-  [types.SET_CONTENT_EDITION] (state, { active }) {
+  [types.SET_CONTENT_EDITION] (state, { active, origin }) {
     state.contentEdition = active
+    state.messageOrigin = origin
   },
 
   [types.SELECT_ENTRY] (state, { entry, field }) {
