@@ -1,9 +1,7 @@
 import VueIntl from 'vue-intl'
 import { get } from 'lodash'
-import * as parser from 'intl-messageformat-parser'
 
 import logger from 'src/utils/logger'
-import EventBus from 'src/utils/event-bus'
 
 const isProdEnv = process.env.NODE_ENV === 'production'
 
@@ -48,29 +46,6 @@ export default async ({ Vue, store }) => {
 
     while ((valueSearch = optionalValuesRegex.exec(translation)) !== null) {
       fallbackValues[valueSearch[1].trim()] = undefined
-    }
-
-    const contentEdition = store.state.content.contentEdition
-    const selectedEntry = store.state.content.selectedEntry
-
-    // emits the ICU format error only if content edition is enabled
-    // and if an entry is selected
-    if (contentEdition && selectedEntry) {
-      const { entry, field } = selectedEntry
-      const selectedEntryKey = `${entry}.${field}`
-
-      if (key === selectedEntryKey) {
-        try {
-          parser.parse(translation)
-        } catch (err) {
-          EventBus.$emit('postContentMessage', {
-            type: 'stelaceContentError',
-            entry,
-            field,
-            error: err.message
-          })
-        }
-      }
     }
 
     return Vue.prototype.$formatMessage(messageDescriptor, Object.assign({}, fallbackValues, values))

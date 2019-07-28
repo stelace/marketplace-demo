@@ -9,17 +9,21 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex'
+import { mapGetters } from 'vuex'
 import * as mutationTypes from 'src/store/mutation-types'
-import * as escapeRegexp from 'escape-string-regexp'
 
-import { get, debounce, isPlainObject, isBoolean, isString } from 'lodash'
+import { get, debounce } from 'lodash'
 
 import { getAuthToken } from 'src/utils/auth'
 import EventBus from 'src/utils/event-bus'
 import stelace from 'src/utils/stelace'
 
+import ContentEditionMixin from 'src/mixins/contentEdition'
+
 export default {
+  mixins: [
+    ContentEditionMixin,
+  ],
   sockets: {
     // Move these to mixin if needed in other components
     /* eslint-disable camelcase */
@@ -51,13 +55,9 @@ export default {
     return {
       hasLoadingScreen: true,
       hideLoadingScreenTimeout: null,
-      originRegExps: null,
     }
   },
   computed: {
-    ...mapState([
-      'content'
-    ]),
     ...mapGetters([
       'isNaturalUser',
       'currentUser'
@@ -104,9 +104,6 @@ export default {
         loadingBackground.classList.add('-hide')
       }
     })
-
-    window.addEventListener('message', this.receiveMessage, false)
-    EventBus.$on('postContentMessage', this.postContentMessage)
   },
   methods: {
     async hideLoadingScreen () {
@@ -149,68 +146,6 @@ export default {
       stelace.onError('userSessionExpired', () => {
         debouncedEmitUserSessionExpiredError()
       })
-    },
-    isAllowedOrigin (origin) {
-      if (!this.originRegExps) {
-        const origins = process.env.VUE_APP_POST_MESSAGE_ALLOWED_ORIGINS
-          .split(',')
-          .map(o => o.trim())
-
-        this.originRegExps = origins.map(o => {
-          if (o === '*') return /^.*$/
-
-          const str = `^${escapeRegexp(o).replace(/\\\*/g, '[^/]*')}$`
-          return new RegExp(str)
-        })
-      }
-
-      return this.originRegExps.some(regexp => regexp.test(origin))
-    },
-    // messages received from Stelace Dashboard
-    receiveMessage (event) {
-      if (!this.isAllowedOrigin(event.origin)) return
-      if (!isString(event.type) || !isPlainObject(event.data)) return
-
-      const data = event.data
-
-      if (data.type === 'stelaceContentEdition') {
-        const { active } = data
-
-        if (isBoolean(active)) {
-          this.$store.commit({
-            type: mutationTypes.SET_CONTENT_EDITION,
-            origin: event.origin,
-            active
-          })
-        }
-      } else if (data.type === 'stelaceContentEdited') {
-        const { entry, field, value } = data
-
-        if (isString(entry) && isString(field)) {
-          this.$store.commit({
-            type: mutationTypes.EDIT_ENTRY,
-            entry,
-            field,
-            value
-          })
-        }
-      }
-    },
-    // emits messages to Stelace Dashboard
-    postContentMessage (payload) {
-      if (!isPlainObject(payload)) return
-
-      const allowedTypes = [
-        'stelaceContentError',
-        'stelaceContentSelected'
-      ]
-
-      const { type, entry, field, error } = payload
-      if (!allowedTypes.includes(type) || !isString(entry) || !isString(field)) return
-      else if (type === 'stelaceContentError' && !isString(error)) return
-
-      const w = window.top || window
-      w.postMessage(payload, this.content.messageOrigin)
     },
   },
 }
