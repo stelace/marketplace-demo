@@ -26,14 +26,14 @@ export default {
       // console.log('Stelace Signal connected')
     },
     authentication (signal_id, authCallback) {
-      const publicKey = process.env.STELACE_PUBLISHABLE_API_KEY
+      const publishableKey = process.env.STELACE_PUBLISHABLE_API_KEY
       const authToken = getAuthToken()
       let channels = []
       const organizationId = !this.isNaturalUser ? this.currentUser.id : undefined
 
       if (organizationId) channels = [...channels, organizationId]
 
-      if (typeof authCallback === 'function' && publicKey) authCallback({ publicKey, authToken, channels })
+      if (typeof authCallback === 'function' && publishableKey) authCallback({ publishableKey, authToken, channels })
 
       this.$socket.signal_id = signal_id
     },
