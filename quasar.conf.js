@@ -448,6 +448,7 @@ module.exports = function (ctx) {
         VUE_APP_MAPBOX_TOKEN: JSON.stringify(process.env.VUE_APP_MAPBOX_TOKEN),
         VUE_APP_DISABLE_AUTO_SEARCH_ON_MAP_MOVE: JSON.stringify(process.env.VUE_APP_DISABLE_AUTO_SEARCH_ON_MAP_MOVE),
         VUE_APP_DEFAULT_LANGUAGE: JSON.stringify(process.env.VUE_APP_DEFAULT_LANGUAGE),
+        VUE_APP_LOCALE_SWITCH: JSON.stringify(process.env.VUE_APP_LOCALE_SWITCH),
         VUE_APP_DEFAULT_CURRENCY: JSON.stringify(process.env.VUE_APP_DEFAULT_CURRENCY),
         VUE_APP_DEBUG_STYLES: JSON.stringify(process.env.VUE_APP_DEBUG_STYLES),
         VUE_APP_USE_PROD_FONTS_CSS: JSON.stringify(process.env.VUE_APP_USE_PROD_FONTS_CSS),

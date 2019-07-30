@@ -2,6 +2,7 @@
 import { mapState, mapGetters } from 'vuex'
 import * as mutationTypes from 'src/store/mutation-types'
 
+import AppLocaleSwitch from 'src/components/AppLocaleSwitch'
 import AppLogo from 'src/components/AppLogo'
 import AppMiniLogo from 'src/components/AppMiniLogo'
 import SearchToolbar from 'src/components/SearchToolbar'
@@ -12,6 +13,7 @@ import AuthDialogMixin from 'src/mixins/authDialog'
 
 export default {
   components: {
+    AppLocaleSwitch,
     AppLogo,
     AppMiniLogo,
     PlacesAutocomplete,
@@ -65,6 +67,9 @@ export default {
     },
     showAccountAvatar () {
       return this.$q.screen.gt.xs
+    },
+    showLocaleSwitch () {
+      return process.env.VUE_APP_LOCALE_SWITCH === 'true'
     },
     ...mapState([
       'common',
@@ -341,6 +346,8 @@ export default {
       >
         {{ $t({ id: 'authentication.log_in_button' }) }}
       </QBtn>
+
+      <AppLocaleSwitch v-if="showLocaleSwitch" />
 
       <!-- Hidden right drawer -->
       <!-- <QBtn dense flat round icon="menu" @click="right = !right"/> -->

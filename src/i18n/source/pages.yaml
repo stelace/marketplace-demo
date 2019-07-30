@@ -54,20 +54,20 @@ pages:
         en: Title
         fr: Titre
       feature_1_content:
-        en: ""
-        fr: ""
+        en: Feature 1
+        fr: Présentation 1
       feature_2_title:
         en: Title
         fr: Titre
       feature_2_content:
-        en: ""
-        fr: ""
+        en: Feature 2
+        fr: Présentation 2
       feature_3_title:
         en: Title
         fr: Titre
       feature_3_content:
-        en: ""
-        fr: ""
+        en: Feature 3
+        fr: Présentation 3
   new_asset:
     page_title:
       en: New listing - {SERVICE_NAME}
