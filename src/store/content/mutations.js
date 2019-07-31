@@ -7,7 +7,7 @@ export default {
   },
 
   [types.SET_API_ENTRIES] (state, { entries }) {
-    state.apiEntries = keyBy(entries, 'id')
+    state.apiEntries = keyBy(entries, 'name')
   },
 
   [types.SET_LOCALE] (state, { locale }) {
