@@ -52,18 +52,24 @@ export default {
 
       if (data.type === 'stelaceContentEdition') {
         const { active } = data
+        if (!isBoolean(active)) return
 
-        if (isBoolean(active)) {
-          this.$store.commit({
-            type: mutationTypes.SET_CONTENT_EDITION,
-            origin: event.origin,
-            active
-          })
-        }
+        this.$store.commit({
+          type: mutationTypes.SET_CONTENT_EDITION,
+          origin: event.origin,
+          active
+        })
+        this.postContentMessage({
+          type: 'stelaceContentEditionEnabled',
+          enabled: active,
+          locale: this.content.locale
+        })
       } else if (data.type === 'stelaceContentEdited') {
-        const { entry, field, value } = data
+        const { entry, field, value, locale } = data
 
-        if (isString(entry) && isString(field)) {
+        this.checkICUContent()
+
+        if (isString(entry) && isString(field) && locale === this.content.locale) {
           this.$store.commit({
             type: mutationTypes.EDIT_ENTRY,
             entry,
@@ -80,12 +86,18 @@ export default {
 
       const allowedTypes = [
         'stelaceContentError',
-        'stelaceContentSelected'
+        'stelaceContentSelected',
+        'stelaceContentEditionEnabled'
       ]
 
-      const { type, entry, field, error } = payload
-      if (!allowedTypes.includes(type) || !isString(entry) || !isString(field)) return
-      else if (type === 'stelaceContentError' && !isString(error)) return
+      const { type, entry, field, error, locale, enabled } = payload
+      if (!allowedTypes.includes(type)) return
+      if (type === 'stelaceContentError' && !isString(error)) return
+      if (type === 'stelaceContentEditionEnabled') {
+        if (!isString(locale) || !isBoolean(enabled)) return
+      } else if (!isString(entry) || !isString(field)) {
+        return
+      }
 
       const w = window.top || window
       w.postMessage(payload, this.content.messageOrigin)
