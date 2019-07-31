@@ -21,6 +21,7 @@ export async function fetchAppContent ({ state, commit, getters, dispatch }, { l
   currency = currency || state.defaultCurrency
 
   commit({ type: types.FETCHING_CONTENT, status: true })
+  commit({ type: types.RESET_EDITING_ENTRIES, status: true })
 
   const newCurrency = currency || state.currency
 

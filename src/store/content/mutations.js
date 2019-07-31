@@ -42,19 +42,21 @@ export default {
     state.selectedEntry = { entry, field }
   },
 
-  [types.EDIT_ENTRY] (state, { entry, field, value }) {
+  [types.EDIT_ENTRY] (state, { entry, field, value, defaultValue }) {
     const newEditingEntries = Object.assign({}, state.editingEntries)
+    newEditingEntries[entry] = newEditingEntries[entry] || {}
 
     if (isNil(value)) {
-      if (newEditingEntries[entry]) {
-        delete newEditingEntries[entry][field]
-      }
+      newEditingEntries[entry][field] = defaultValue || null
     } else {
-      newEditingEntries[entry] = newEditingEntries[entry] || {}
       newEditingEntries[entry][field] = value
     }
 
     state.editingEntries = newEditingEntries
+  },
+
+  [types.RESET_EDITING_ENTRIES] (state) {
+    state.editingEntries = {}
   },
 
   [types.SET_CONTENT_UPDATED_DATE] (state) {

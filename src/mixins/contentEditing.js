@@ -65,7 +65,7 @@ export default {
           locale: this.content.locale
         })
       } else if (data.type === 'stelaceContentEdited') {
-        const { entry, field, value, locale } = data
+        const { entry, field, value, defaultValue, locale } = data
 
         this.checkICUContent()
 
@@ -74,7 +74,8 @@ export default {
             type: mutationTypes.EDIT_ENTRY,
             entry,
             field,
-            value
+            value,
+            defaultValue
           })
           this.$store.commit(mutationTypes.SET_CONTENT_UPDATED_DATE)
         }

@@ -13,10 +13,10 @@ export const TRANSFORMED_KEYS = 'TRANSFORMED_KEYS'
  * @param {Object} entries.apiEntries - Expected to have entry names as keys mapping to API Entry objects,
  *   including a `fields` property containing flattened keys like 'home.title' mapping to
  *   content strings or object values (for transformed contents)
- * @param {Object} entries.localeEntries - Expected to have entry names as keys, _directly_ mapping to
+ * @param {Object} entries.localEntries - Expected to have entry names as keys, _directly_ mapping to
  *   objects of string and objects properties (unlike Content API Entry having nested `fields`).
  * @param {Object} entries.editingEntries - Expected to have entry names as keys, _directly_ mapping to
- *   objects of string and objects properties (same as `localeEntries`).
+ *   objects of string and objects properties (same as `localEntries`).
  * @returns entries object
  */
 export function mergeEntries ({ apiEntries, localEntries, editingEntries }) {
