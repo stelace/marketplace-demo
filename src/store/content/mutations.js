@@ -56,4 +56,8 @@ export default {
 
     state.editingEntries = newEditingEntries
   },
+
+  [types.SET_CONTENT_UPDATED_DATE] (state) {
+    state.lastContentUpdatedDate = new Date().toISOString()
+  },
 }

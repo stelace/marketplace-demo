@@ -1,7 +1,7 @@
 <template>
   <div
     id="q-app"
-    :key="content.locale + content.currency"
+    :key="content.locale + content.currency + '-' + content.lastContentUpdatedDate"
   >
     <!-- Hack to re-render the app when locale or currency change -->
     <router-view />

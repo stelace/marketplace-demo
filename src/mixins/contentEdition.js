@@ -70,8 +70,7 @@ export default {
             field,
             value
           })
-
-          this.checkICUContent()
+          this.$store.commit(mutationTypes.SET_CONTENT_UPDATED_DATE)
         }
       }
     },

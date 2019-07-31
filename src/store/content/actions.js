@@ -92,6 +92,7 @@ export async function fetchAppContent ({ state, commit, getters, dispatch }, { l
     fetchAllResults(entriesRequest, { collection: 'website', locale })
       .then(entries => {
         commit({ type: types.SET_API_ENTRIES, entries })
+        commit({ type: types.SET_CONTENT_UPDATED_DATE })
         dispatch('registerNewPages')
       })
       .catch(handleContentError)

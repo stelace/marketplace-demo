@@ -8,9 +8,10 @@ export default {
 
   // from local JSON translation files
   localEntries: {},
-
   // from Content Entry API
   apiEntries: {},
+  // used to refresh app when contents change
+  lastContentUpdatedDate: '',
 
   addedRoutes: [],
 
