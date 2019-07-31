@@ -177,6 +177,9 @@ module.exports = {
       stelace: {
         instant: {
           serviceName: process.env.VUE_APP_SERVICE_NAME,
+          // The following is kept in sync with STELACE_INSTANT_WEBSITE_URL when deploying translations
+          // And needed to enable dashboard live content editor
+          // platformUrl: 'https://example.com,
           logoUrl: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/a5b21e6f26dd2340dd7fc34529972db9-logo-email.png',
           locale: 'fr',
           currency: 'EUR',

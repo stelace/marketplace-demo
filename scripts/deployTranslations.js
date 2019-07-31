@@ -2,6 +2,7 @@
 // and your .env.[development|production] files
 const stelace = require('./admin-sdk')
 
+const script = require('commander')
 const pMap = require('p-map')
 const _ = require('lodash')
 const path = require('path')
@@ -17,6 +18,19 @@ const warn = (err, msg) => {
   log(`\n${chalk.yellow(msg || 'Translations upload with Content API has failed.')}\n`)
   if (err) log(err)
 }
+
+// Context translations can be useful in dashboard and do not count towards API plan count of locales
+let locales = ['context', process.env.VUE_APP_DEFAULT_LANGUAGE || 'en']
+let allLocales = false
+let ignoredLocales = []
+const commaSeparatedList = value => value.split(',')
+script
+  .option('-a, --all', 'Deploy all translations rather than default locale only')
+  .option('-l, --locales <list>', 'Deploy this comma-separated list of locales', commaSeparatedList)
+
+script.parse(process.argv)
+if (script.all === true) allLocales = true
+else if (Array.isArray(script.locales)) locales = _.uniq([...script.locales, 'context'])
 
 const {
   collection: defaultCollection,
@@ -37,6 +51,17 @@ async function run () {
   const emailEntries = await fetchAllResults(fetchEntriesPage, { collection: emailCollection })
   apiEntries.push(...emailEntries)
 
+  // Sync website URL to enable Stelace dashboard live content editor
+  const config = await stelace.config.read()
+  const platformUrl = _.get(config, 'stelace.instant.platformUrl')
+  if (platformUrl !== process.env.STELACE_INSTANT_WEBSITE_URL) {
+    stelace.config.update({
+      stelace: {
+        instant: { platformUrl: process.env.STELACE_INSTANT_WEBSITE_URL }
+      }
+    })
+  }
+
   const filesToUpload = translationFiles
     .filter(f => f.startsWith(defaultFilePrefix) || f.startsWith(emailFilePrefix))
 
@@ -48,6 +73,10 @@ async function run () {
       .replace(emailFilePrefix, '')
       .replace(defaultFilePrefix, '')
       .split('.')[0]
+
+    if (!allLocales && !locales.includes(locale)) {
+      ignoredLocales = _.uniq([...ignoredLocales, locale])
+    }
 
     const collection = isEmailFile ? emailCollection : defaultCollection
     const entries = Object.keys(translations)
@@ -87,7 +116,7 @@ async function run () {
       if (shouldUpdate) {
         const updated = await stelace.entries.update(existingEntry.id, updateAttrs)
         stats.updated.push(`${collection} ${locale} -> ${updated.name}`)
-      } else if (!existingEntry) { // TODO: remove this check once fixed in API (#63)
+      } else if (!existingEntry) {
         const createAttrs = Object.assign({}, updateAttrs, { collection, locale, name: n })
         const created = await stelace.entries.create(createAttrs)
         stats.created.push(`${collection} ${locale} -> ${created.name}`)
@@ -105,6 +134,7 @@ ${stats.created.length} entr${stats.created.length > 1 ? 'ies' : 'y'} created${
 }${stats.updated.length} entr${stats.updated.length > 1 ? 'ies' : 'y'} updated${
   stats.updated.length ? ':\n' + stats.updated.join('\n') : ''
 }
+${ignoredLocales.length ? `Skipped ${ignoredLocales} contents.` : ''}
     `)
   })
   .catch(warn)

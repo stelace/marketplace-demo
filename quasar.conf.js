@@ -27,7 +27,6 @@ module.exports = function (ctx) {
   })
 
   // Ensuring we have local translations up-to-date. Runs once.
-  // TODO: allow to distinguish between live and test environments in buildTranslationFiles.js
   execSync(ctx.dev ? 'npm run translate' : 'npm run translate:prod', { stdio: 'inherit' })
 
   // ///////// //
