@@ -42,8 +42,8 @@ export default {
 
       return this.$t(messageDescriptor, this.options)
     },
-    contentEdition () {
-      return this.content.contentEdition
+    contentEditing () {
+      return this.content.contentEditing
     },
     renderAsHTML () {
       return this.isTransformedContent(this.contentKey) === 'markdown'
@@ -58,7 +58,7 @@ export default {
   methods: {
     onClick (event) {
       // click event should not be propagated if content edition is enabled
-      if (!this.contentEdition) return
+      if (!this.contentEditing) return
       if (event) {
         event.stopPropagation()
         event.preventDefault()
@@ -109,13 +109,13 @@ export default {
     v-if="renderAsHTML"
     :class="[
       'stl-content-entry',
-      contentEdition ? 'editable' : ''
+      contentEditing ? 'editable' : ''
     ]"
     :stl-content-entry="entry"
     :stl-content-field="field"
     v-bind="$attrs"
     @click="onClick($event)"
-    v-on="contentEdition ? null : $listeners"
+    v-on="contentEditing ? null : $listeners"
     v-html="value"
   />
   <!-- eslint-enable vue/no-v-html -->
@@ -128,13 +128,13 @@ export default {
     v-else
     :class="[
       'stl-content-entry',
-      contentEdition ? 'editable' : ''
+      contentEditing ? 'editable' : ''
     ]"
     :stl-content-entry="entry"
     :stl-content-field="field"
     v-bind="$attrs"
     @click="onClick($event)"
-    v-on="contentEdition ? null : $listeners"
+    v-on="contentEditing ? null : $listeners"
   >
     {{ value }}
   </component>

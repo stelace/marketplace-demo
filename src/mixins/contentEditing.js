@@ -55,7 +55,7 @@ export default {
         if (!isBoolean(active)) return
 
         this.$store.commit({
-          type: mutationTypes.SET_CONTENT_EDITION,
+          type: mutationTypes.SET_CONTENT_EDITING,
           origin: event.origin,
           active
         })

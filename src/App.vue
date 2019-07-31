@@ -18,11 +18,11 @@ import { getAuthToken } from 'src/utils/auth'
 import EventBus from 'src/utils/event-bus'
 import stelace from 'src/utils/stelace'
 
-import ContentEditionMixin from 'src/mixins/contentEdition'
+import contentEditingMixin from 'src/mixins/contentEditing'
 
 export default {
   mixins: [
-    ContentEditionMixin,
+    contentEditingMixin,
   ],
   sockets: {
     // Move these to mixin if needed in other components

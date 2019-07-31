@@ -23,7 +23,7 @@ export default {
   placeholderImageBaseUrl: 'https://placeimg.com',
   acceptWebP: false,
 
-  contentEdition: false,
+  contentEditing: false,
 
   // from post message
   editingEntries: {},

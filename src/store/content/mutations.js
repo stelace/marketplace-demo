@@ -33,8 +33,8 @@ export default {
     state.acceptWebP = accept
   },
 
-  [types.SET_CONTENT_EDITION] (state, { active, origin }) {
-    state.contentEdition = active
+  [types.SET_CONTENT_EDITING] (state, { active, origin }) {
+    state.contentEditing = active
     state.messageOrigin = origin
   },
 
