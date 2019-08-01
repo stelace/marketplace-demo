@@ -30,8 +30,6 @@ export function getS3SignedUrl (file, { folder = 'files' } = {}) {
     .then(({ data: S3Sign }) => {
       const fields = Object.keys(S3Sign.params).map(name => {
         let value = S3Sign.params[name]
-        // only encode filename
-        if (name === 'key') value.replace(file.name, encodeURIComponent)
         return { name, value }
       })
       fields.push({ name: 'content-type', value: file.type })

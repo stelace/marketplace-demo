@@ -96,11 +96,10 @@ module.exports = function (ctx) {
 
   const apiBaseUrl = process.env.STELACE_API_URL || 'https://api.stelace.com'
   const cdnUrl = process.env.VUE_APP_CDN_WITH_IMAGE_HANDLER_URL ||
-    'https://cdn.instant.stelace.com/'
+    'https://cdn.stelace.com/'
   const cdnUploadUrl = process.env.VUE_APP_CDN_POLICY_ENDPOINT ||
     'https://upload.instant.stelace.com/upload/policy'
-  const cdnS3Url = process.env.VUE_APP_CDN_S3_URL ||
-    'https://stelace-instant-files.s3.amazonaws.com/'
+  const cdnS3Bucket = process.env.VUE_APP_CDN_S3_BUCKET || 'stelace-instant-files'
 
   // ///////////// //
   // Quasar config //
@@ -456,7 +455,7 @@ module.exports = function (ctx) {
         VUE_APP_GOOGLE_ANALYTICS_DEBUG: JSON.stringify(process.env.VUE_APP_GOOGLE_ANALYTICS_DEBUG),
         VUE_APP_CDN_POLICY_ENDPOINT: JSON.stringify(cdnUploadUrl),
         VUE_APP_CDN_WITH_IMAGE_HANDLER_URL: JSON.stringify(cdnUrl),
-        VUE_APP_CDN_S3_URL: JSON.stringify(cdnS3Url),
+        VUE_APP_CDN_S3_BUCKET: JSON.stringify(cdnS3Bucket),
         VUE_APP_CDN_UPLOAD_PREFIX: JSON.stringify(process.env.VUE_APP_CDN_UPLOAD_PREFIX),
         VUE_APP_SEARCH_BY_CATEGORY: JSON.stringify(process.env.VUE_APP_SEARCH_BY_CATEGORY),
         VUE_APP_INSTANT_PAGE_PREFIX: JSON.stringify('/l'),
