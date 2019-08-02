@@ -1,10 +1,10 @@
 import Vue from 'vue'
 import { get, isArrayLike, isEmpty } from 'lodash'
+import { Cdn } from 'sharp-aws-image-handler-client'
 
 import { mergeLocalAndAPIEntries, TRANSFORMED_KEYS } from 'src/utils/content'
-import { CdnImage } from 'src/utils/sharp-aws-image-handler-client'
 
-const cdn = new CdnImage({
+const cdn = new Cdn({
   base: process.env.VUE_APP_CDN_WITH_IMAGE_HANDLER_URL,
   bucket: process.env.VUE_APP_CDN_S3_BUCKET,
   servedFromCdnBucket: (uri, base, bucketUrl) => {
