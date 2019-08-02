@@ -46,6 +46,9 @@ export class CdnImage {
     let path
     const cdnBucket = this.servedFromCdnBucket(uri)
 
+    // aws sharp handler seems to considers mere key presence to enable webp, even with falsy value
+    if (Object.keys(edits).includes('webp') && !edits.webp) delete edits.webp
+
     try {
       const url = new URL(uri)
       path = url.pathname
