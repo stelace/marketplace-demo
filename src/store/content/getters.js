@@ -7,12 +7,25 @@ import { CdnImage } from 'src/utils/sharp-aws-image-handler-client'
 const cdn = new CdnImage({
   base: process.env.VUE_APP_CDN_WITH_IMAGE_HANDLER_URL,
   bucket: process.env.VUE_APP_CDN_S3_BUCKET,
-  isServedFromCdn: (uri, base, bucketUrl) => {
-    return typeof uri === 'string' && (
+  servedFromCdnBucket: (uri, base, bucketUrl) => {
+    const devBucket = process.env.VUE_APP_CDN_S3_DEV_BUCKET
+
+    if (
       uri.startsWith(base) ||
       uri.startsWith(bucketUrl) ||
-      /^https:\/\/(dev-)?cdn\.instant\.stelace\.com/.test(uri)
-    )
+      uri.startsWith('https://cdn.instant.stelace.com') // legacy domain
+    ) {
+      return true
+    } else if (
+      devBucket && (
+        uri.startsWith(`https://${devBucket}.s3.amazonaws.com`) ||
+        uri.startsWith('https://dev-cdn.instant.stelace.com') // legacy domain
+      )
+    ) {
+      return devBucket
+    }
+
+    return false
   }
 })
 const isDevDebuggingStyles = process.env.DEV && process.env.VUE_APP_DEBUG_STYLES === 'true'
@@ -70,7 +83,7 @@ export function termsPath (state, getters) {
 export function homeHeroUrlTransformed (state, getters, rootState) {
   const url = rootState.style.homeHeroUrl || ''
 
-  if (url && cdn.isServedFromCdn(url)) {
+  if (url && cdn.servedFromCdnBucket(url)) {
     return cdn.getUrl(url, {
       webp: state.acceptWebP
     })
@@ -109,7 +122,7 @@ export function getAvatarImageUrl (state, getters) {
     const imgUri = user.avatarUrl || ''
     const avatarSquareSize = Math.round(resolution) * getters.avatarImageWidth
 
-    return cdn.isServedFromCdn(imgUri)
+    return cdn.servedFromCdnBucket(imgUri)
       ? cdn.getUrl(imgUri, {
         webp: state.acceptWebP,
         resize: { width: avatarSquareSize, height: avatarSquareSize }
@@ -123,7 +136,7 @@ export function getBaseImageUrl (state, getters) {
   return (resource, { accessorString, index = 0 } = {}) => {
     const imgUri = getImageUri(resource, { accessorString, index })
 
-    return cdn.isServedFromCdn(imgUri)
+    return cdn.servedFromCdnBucket(imgUri)
       ? cdn.getUrl(imgUri, {
         webp: state.acceptWebP,
         resize: { width: getters.baseImageWidth, height: getters.baseImageHeight }
@@ -136,7 +149,7 @@ export function getLargeImageUrl (state, getters) {
   return (resource, { accessorString, index = 0 } = {}) => {
     const imgUri = getImageUri(resource, { accessorString, index })
 
-    return cdn.isServedFromCdn(imgUri)
+    return cdn.servedFromCdnBucket(imgUri)
       ? cdn.getUrl(imgUri, {
         webp: state.acceptWebP,
         resize: { width: getters.largeImageWidth, height: getters.largeImageHeight }
