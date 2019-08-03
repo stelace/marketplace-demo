@@ -470,6 +470,7 @@ import { mapState, mapGetters } from 'vuex'
 import { get } from 'lodash'
 import { date } from 'quasar'
 
+import * as mutationTypes from 'src/store/mutation-types'
 import { isValidDateString } from 'src/utils/time'
 import { isUser, isProvider } from 'src/utils/user'
 import { isAssetId } from 'src/utils/id'
@@ -481,6 +482,8 @@ import TaxIdInput from 'src/components/TaxIdInput'
 import AppUpload from 'src/mixins/AppUpload'
 import AuthDialogMixin from 'src/mixins/authDialog'
 import ValidationDialogMixin from 'src/mixins/validationDialog'
+
+let fetchingUserId
 
 export default {
   components: {
@@ -672,7 +675,28 @@ export default {
       'isSelectedUserNatural',
       'selectedUserIsCurrentUser',
       'canViewUserNames',
+      'isPremium',
     ]),
+  },
+  watch: {
+    async isPremium (newValue, oldValue) {
+      // premium user can view more user data
+      // trigger a new fetch to have the data from the namespace premium
+      if (newValue && !oldValue && this.selectedUser.id !== fetchingUserId) {
+        fetchingUserId = this.selectedUser.id
+
+        try {
+          const user = await this.$store.dispatch('fetchUser', { userId: this.selectedUser.id })
+
+          this.$store.commit({
+            type: mutationTypes.SET_SELECTED_USER,
+            user
+          })
+        } finally {
+          fetchingUserId = null
+        }
+      }
+    }
   },
   mounted () {
     // fetch categories in background so we can display the category name as user information
