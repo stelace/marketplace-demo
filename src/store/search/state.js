@@ -41,7 +41,7 @@ export default {
 
   searchFilters: {
     page: 1,
-    nbResultsPerPage: 20,
+    nbResultsPerPage: 24,
     orderBy: 'createdDate',
     order: 'desc',
     filters: {},
