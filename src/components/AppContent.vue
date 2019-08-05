@@ -1,5 +1,10 @@
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapState } from 'vuex'
+import { isPlainObject, isEmpty } from 'lodash'
+
+import EventBus from 'src/utils/event-bus'
+
+import * as mutationTypes from 'src/store/mutation-types'
 
 export default {
   props: {
@@ -37,13 +42,50 @@ export default {
 
       return this.$t(messageDescriptor, this.options)
     },
+    contentEditing () {
+      return this.content.contentEditing
+    },
     renderAsHTML () {
       return this.isTransformedContent(this.contentKey) === 'markdown'
     },
+    ...mapState([
+      'content',
+    ]),
     ...mapGetters([
       'isTransformedContent'
     ])
   },
+  methods: {
+    onClick (event) {
+      // click event should not be propagated if content edition is enabled
+      if (!this.contentEditing) return
+      if (event) {
+        event.stopPropagation()
+        event.preventDefault()
+      }
+
+      this.selectEntry()
+    },
+    selectEntry () {
+      const payload = {
+        type: 'stelaceContentSelected',
+        entry: this.entry,
+        field: this.field,
+      }
+
+      if (isPlainObject(this.options) && !isEmpty(this.options)) {
+        payload.options = this.options
+      }
+
+      this.$store.commit({
+        type: mutationTypes.SELECT_ENTRY,
+        entry: this.entry,
+        field: this.field
+      })
+
+      EventBus.$emit('postContentMessage', payload)
+    },
+  }
 }
 </script>
 
@@ -58,14 +100,22 @@ export default {
       https://github.com/markdown-it/markdown-it/blob/master/docs/security.md
   -->
   <!-- eslint-disable vue/no-v-html -->
+  <!--
+    Remove all listeners if content edition is enabled
+    to prevent navigation when selecting an AppContent component
+  -->
   <div
     is="div"
     v-if="renderAsHTML"
-    class="stl-content-entry"
+    :class="[
+      'stl-content-entry',
+      contentEditing ? 'editable' : ''
+    ]"
     :stl-content-entry="entry"
     :stl-content-field="field"
     v-bind="$attrs"
-    v-on="$listeners"
+    @click="onClick($event)"
+    v-on="contentEditing ? null : $listeners"
     v-html="value"
   />
   <!-- eslint-enable vue/no-v-html -->
@@ -76,11 +126,15 @@ export default {
   <component
     :is="tag"
     v-else
-    class="stl-content-entry"
+    :class="[
+      'stl-content-entry',
+      contentEditing ? 'editable' : ''
+    ]"
     :stl-content-entry="entry"
     :stl-content-field="field"
     v-bind="$attrs"
-    v-on="$listeners"
+    @click="onClick($event)"
+    v-on="contentEditing ? null : $listeners"
   >
     {{ value }}
   </component>
@@ -96,4 +150,15 @@ export default {
   text-decoration: none
   &:focus, &:hover
     text-decoration: underline
+
+.stl-content-entry.editable
+  background: rgba($primary, 0.4)
+  border: 2px dashed #FFF
+  min-height: 1em
+  min-width: 2em
+  cursor: pointer
+  border-radius: 5px
+  padding-left: 0.25em
+  padding-right: 0.25em
+
 </style>

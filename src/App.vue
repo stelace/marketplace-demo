@@ -1,7 +1,7 @@
 <template>
   <div
     id="q-app"
-    :key="content.locale + content.currency"
+    :key="content.locale + content.currency + '-' + content.lastContentUpdatedDate"
   >
     <!-- Hack to re-render the app when locale or currency change -->
     <router-view />
@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex'
+import { mapGetters } from 'vuex'
 import * as mutationTypes from 'src/store/mutation-types'
 
 import { get, debounce } from 'lodash'
@@ -18,7 +18,12 @@ import { getAuthToken } from 'src/utils/auth'
 import EventBus from 'src/utils/event-bus'
 import stelace from 'src/utils/stelace'
 
+import contentEditingMixin from 'src/mixins/contentEditing'
+
 export default {
+  mixins: [
+    contentEditingMixin,
+  ],
   sockets: {
     // Move these to mixin if needed in other components
     /* eslint-disable camelcase */
@@ -49,13 +54,10 @@ export default {
   data () {
     return {
       hasLoadingScreen: true,
-      hideLoadingScreenTimeout: null
+      hideLoadingScreenTimeout: null,
     }
   },
   computed: {
-    ...mapState([
-      'content'
-    ]),
     ...mapGetters([
       'isNaturalUser',
       'currentUser'
@@ -144,7 +146,7 @@ export default {
       stelace.onError('userSessionExpired', () => {
         debouncedEmitUserSessionExpiredError()
       })
-    }
+    },
   },
 }
 </script>
