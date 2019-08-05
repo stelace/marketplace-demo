@@ -48,9 +48,8 @@ i18nCompile(
 
 const { collection, defaultFilePrefix, emailFilePrefix } = require('./translationEntriesParams')
 const filesNotToMergePrefixes = [defaultFilePrefix, emailFilePrefix]
-// Rebuilding translations with local defaults only,
-// for we’re not merging Content API entries into email and defaults files,
-// but just in website files
+// We’re not merging Content API entries into email and defaults files,
+// but just in website files for web app performance
 i18nCompile(
   [
     path.join(__dirname, '../src/i18n/source/*.yaml'),
@@ -90,7 +89,7 @@ async function run () {
 
     const localEntries = transformAndFlatten(JSON.parse(file, locale))
 
-    if (filesNotToMergePrefixes.some(p => tr.startsWith(p))) {
+    if (!filesNotToMergePrefixes.some(p => tr.startsWith(p))) {
       apiEntries.filter(e => e.locale === locale).forEach(e => {
         localEntries[e.name] = Object.assign({}, localEntries[e.name], e.fields)
       })

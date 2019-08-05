@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import stelace from 'src/utils/stelace'
+import stelace, { fetchAllResults } from 'src/utils/stelace'
 import { Quasar } from 'quasar'
 import { get, mapKeys, pickBy, uniq } from 'lodash'
 import { testWebP } from 'sharp-aws-image-handler-client'
@@ -21,6 +21,7 @@ export async function fetchAppContent ({ state, commit, getters, dispatch }, { l
   currency = currency || state.defaultCurrency
 
   commit({ type: types.FETCHING_CONTENT, status: true })
+  commit({ type: types.RESET_EDITING_ENTRIES, status: true })
 
   const newCurrency = currency || state.currency
 
@@ -87,9 +88,12 @@ export async function fetchAppContent ({ state, commit, getters, dispatch }, { l
 
     // Content API translations are already included in build
     // and we just check for updates in a non-blocking way
-    stelace.entries.list({ collection: 'website', locale })
+    const entriesRequest = (...args) => stelace.entries.list(...args)
+
+    fetchAllResults(entriesRequest, { collection: 'website', locale })
       .then(entries => {
         commit({ type: types.SET_API_ENTRIES, entries })
+        commit({ type: types.SET_CONTENT_UPDATED_DATE })
         dispatch('registerNewPages')
       })
       .catch(handleContentError)

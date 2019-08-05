@@ -13,7 +13,7 @@
   for = "/*"
   [headers.values]
     # Allowing sameorigin for stelace dashboard content live-editor
-    X-Frame-Options = "SAMEORIGIN"
+    Content-Security-Policy = "frame-ancestors 'self' stelace.com localhost:*"
     X-XSS-Protection = "1; mode=block"
     # Only changing this to "all" on production branch (cf. production context below)
     X-Robots-Tag = "noindex, nofollow"
@@ -61,8 +61,8 @@
 # Continuous deployment
 
 [context.production]
-  # Production-specific X-Robots-Tag header
-  command = "sed -i 's/noindex, nofollow/all/g' netlify.toml && yarn build"
+  # Production-specific X-Robots-Tag and Content-Security-Policy headers
+  command = "sed -i 's/noindex, nofollow/all/g; s/localhost:[*]//g' netlify.toml && yarn build"
 
   [context.production.environment]
     VUE_APP_SERVICE_NAME = "Stellar Jobs"

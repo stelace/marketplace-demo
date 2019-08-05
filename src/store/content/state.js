@@ -8,9 +8,10 @@ export default {
 
   // from local JSON translation files
   localEntries: {},
-
   // from Content Entry API
   apiEntries: {},
+  // used to refresh app when contents change
+  lastContentUpdatedDate: '',
 
   addedRoutes: [],
 
@@ -21,4 +22,11 @@ export default {
 
   placeholderImageBaseUrl: 'https://placeimg.com',
   acceptWebP: false,
+
+  contentEditing: false,
+
+  // from post message
+  editingEntries: {},
+  selectedEntry: {},
+  messageOrigin: null,
 }

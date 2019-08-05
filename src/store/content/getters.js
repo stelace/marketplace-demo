@@ -2,7 +2,7 @@ import Vue from 'vue'
 import { get, isArrayLike, isEmpty } from 'lodash'
 import { Cdn } from 'sharp-aws-image-handler-client'
 
-import { mergeLocalAndAPIEntries, TRANSFORMED_KEYS } from 'src/utils/content'
+import { mergeEntries, TRANSFORMED_KEYS } from 'src/utils/content'
 
 const cdn = new Cdn({
   base: process.env.VUE_APP_CDN_WITH_IMAGE_HANDLER_URL,
@@ -31,9 +31,9 @@ const cdn = new Cdn({
 const isDevDebuggingStyles = process.env.DEV && process.env.VUE_APP_DEBUG_STYLES === 'true'
 
 export function entries (state) {
-  const { apiEntries, localEntries, locale } = state
+  const { apiEntries, localEntries, editingEntries, locale } = state
 
-  const merged = mergeLocalAndAPIEntries({ apiEntries, localEntries })
+  const merged = mergeEntries({ apiEntries, localEntries, editingEntries })
 
   // Breaking rules here to trigger a local side effect in a (fortunately cached) getter
   // every time locale or entries are updated
