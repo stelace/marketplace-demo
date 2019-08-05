@@ -2,9 +2,11 @@
   <QPage class="stl-footer--bottom">
     <section class="hero hero__background-container">
       <div class="hero__background bg-primary-gradient" />
-      <div class="hero__content text-center text-white">
-        <slot name="heroContent" />
-      </div>
+      <slot name="heroContentContainer">
+        <div class="hero__content text-center text-white">
+          <slot name="heroContent" />
+        </div>
+      </slot>
     </section>
 
     <slot />
