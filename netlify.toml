@@ -45,17 +45,11 @@
 # For "Netlify deploy" template button
 [template.environment]
   STELACE_PUBLISHABLE_API_KEY = "Required: Stelace publishable API key (pubk_test_…)"
-  VUE_APP_SERVICE_NAME = "Service name: injected in various contents"
-  VUE_APP_DEFAULT_LANGUAGE = "Language: currently en (default) or fr"
-  VUE_APP_DEFAULT_CURRENCY = "Currency: ISO code like USD (default) or EUR"
+  VUE_APP_SERVICE_NAME = "Platform name: injected in various contents"
   VUE_APP_MAPBOX_STYLE = "Map tiles provider style URL (we suggest Maptiler)"
-  VUE_APP_MAPBOX_TOKEN = "Map token: not needed if token is included in style URL"
   VUE_APP_NOMINATIM_HOST = "Nominatim API provider like https://open.mapquestapi.com"
-  VUE_APP_NOMINATIM_KEY = "Nominatim provider API key to to enable place search"
+  VUE_APP_NOMINATIM_KEY = "Nominatim provider API key to enable place search"
   VUE_APP_GOOGLE_ANALYTICS_ID = "Google Analytics ID: UA-XXXXXXXX-1"
-  STRIPE_PUBLISH_KEY = "Stripe publishable API key for subscriptions"
-  NEXMO_API_KEY = "Nexmo API key to verify phone numbers"
-  NEXMO_API_SECRET = "Nexmo API secret"
 
 
 # Continuous deployment
