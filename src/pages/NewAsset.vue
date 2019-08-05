@@ -423,6 +423,7 @@ export default {
           </div>
           <div class="q-mt-md row justify-center">
             <SelectAssetType
+              v-if="activeAssetTypes.length > 1"
               :initial-asset-type="selectedAssetType"
               :label="$t({ id: 'asset.asset_type_label' })"
               :show-search-icon="false"
