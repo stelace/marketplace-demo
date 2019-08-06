@@ -99,6 +99,10 @@ export default {
     }
   },
   mounted () {
+    if (!this.promptTransactionDates && !this.promptTransactionQuantity) {
+      this.fetchTransactionPreview()
+    }
+
     EventBus.$on('authStatusChanged', (status) => this.onAuthChange(status))
   },
   beforeDestroy () {
@@ -326,7 +330,7 @@ export default {
 
       <div
         v-if="preview && validTransactionOptions"
-        class="q-mt-md"
+        :class="[promptTransactionDates || promptTransactionQuantity ? 'q-mt-md' : '']"
       >
         <div class="row q-py-sm justify-between">
           <div>
@@ -429,6 +433,9 @@ export default {
 </template>
 
 <style lang="stylus" scoped>
+
+.transaction-card
+  min-width: 20rem
 
 .transaction-dates
   justify-content: space-between
