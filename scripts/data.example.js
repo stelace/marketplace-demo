@@ -308,7 +308,6 @@ module.exports = {
           ],
           assetTypes: {
             'assetTypes::job': {
-              isDefault: true,
               customAttributes: [
                 'fed',
                 'lodged',
