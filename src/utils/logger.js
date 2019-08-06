@@ -26,6 +26,9 @@ export default function logger (err, options = {}) {
   }
   /* eslint-enable no-console */
 
+  // already handled by `handleUserSessionExpiration` in App.vue
+  if (err.message.toLowerCase().includes('user session expired')) return
+
   // Send error to App.vue to be able to use notify mixin in UI
   // Note that we have to pass notification set to true or to translation content key string
   // for a notification to show up, to avoid duplicate with some notification shown previously.
