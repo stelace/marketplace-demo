@@ -145,7 +145,7 @@ export default {
         isValidEndDate = isValidDateString(this.endDate)
       }
 
-      if (!this.showAvailabilityDates || (this.showAvailabilityDates && this.startDate && isValidStartDate && isValidEndDate)) {
+      if (!this.showAvailabilityDates || (this.showAvailabilityDates && isValidStartDate && isValidEndDate)) {
         // endDate is optional, so is quantity
         steps[4] = true
       }
