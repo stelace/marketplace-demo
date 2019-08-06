@@ -69,18 +69,10 @@ export function activeAssetTypes (state) {
 
 export function defaultActiveAssetType (state, getters, rootState, rootGetters) {
   const {
-    config
-  } = state
-  const {
     activeAssetTypes,
   } = rootGetters
 
   if (activeAssetTypes.length === 1) return activeAssetTypes[0]
 
-  const assetTypesConfig = get(config, 'stelace.instant.assetTypes')
-
-  return activeAssetTypes.find(assetType => {
-    const assetTypeConfig = assetTypesConfig[assetType.id]
-    return assetTypeConfig && assetTypeConfig.isDefault
-  })
+  return activeAssetTypes.find(assetType => assetType.isDefault)
 }

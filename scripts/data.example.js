@@ -185,7 +185,6 @@ module.exports = {
           currency: 'EUR',
           assetTypes: {
             'assetTypes::renting': {
-              isDefault: false,
               customAttributes: [
                 'reference',
                 'brand',
@@ -194,7 +193,6 @@ module.exports = {
               ]
             },
             'assetTypes::selling': {
-              isDefault: false,
               customAttributes: [
                 'reference',
                 'brand',
