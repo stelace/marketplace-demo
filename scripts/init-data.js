@@ -465,13 +465,24 @@ async function cancelTransactions () {
   }
 }
 
-async function removeObjects (type) {
-  for (let i = 0; i < existingData[type].length; i++) {
-    const object = existingData[type][i]
+async function removeObjects (type, data = null) {
+  let objects = data || existingData[type]
+
+  for (let i = 0; i < objects.length; i++) {
+    const object = objects[i]
     if (!shouldOnlyRemoveScriptObjects || object.metadata[initDataScript]) {
-      await stelace[type].remove(object.id)
-      log(`removed ${object.id}`)
+      if (type === 'categories') {
+        const childrenCategories = objects.filter(c => c.parentId === object.id)
+        await removeObjects(type, childrenCategories)
+        // Avoid deleting too many times
+        objects = objects.filter(c => c.parentId !== object.id)
+      }
+      await removeObject(object.id)
     }
+  }
+  async function removeObject (id) {
+    await stelace[type].remove(id)
+    log(`removed ${id}`)
   }
 }
 
