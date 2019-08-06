@@ -101,7 +101,7 @@ export default {
     },
     autocompleteMinChars: {
       type: Number,
-      default: 2 // Set to 0 to always show autocomplete
+      default: 0 // Set to positive number to only show options after typing chars
     },
     hideInputOnSelect: { // useful when line wrap should not happen
       type: Boolean,
