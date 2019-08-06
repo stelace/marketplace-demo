@@ -299,48 +299,45 @@ export default {
           />
         </div>
       </div>
-      <div class="col-12 flex flex-center">
-        <div class="stl-content-container stl-content-container--large q-pt-xl">
-          <div class="q-pa-lg home__features-list">
-            <q-timeline
-              layout="dense"
-              :dark="style.colorfulTheme"
-              :color="style.colorfulTheme ? 'white' : 'default-color'"
-            >
-              <q-timeline-entry
-                :title="$t({ id: 'pages.home.features.feature_1_title' })"
-                side="left"
-              >
-                <AppContent
-                  tag="p"
-                  entry="pages"
-                  field="home.features.feature_1_content"
-                />
-              </q-timeline-entry>
-
-              <q-timeline-entry
-                :title="$t({ id: 'pages.home.features.feature_2_title' })"
-                side="right"
-              >
-                <AppContent
-                  tag="p"
-                  entry="pages"
-                  field="home.features.feature_2_content"
-                />
-              </q-timeline-entry>
-
-              <q-timeline-entry
-                :title="$t({ id: 'pages.home.features.feature_3_title' })"
-                side="left"
-              >
-                <AppContent
-                  tag="p"
-                  entry="pages"
-                  field="home.features.feature_3_content"
-                />
-              </q-timeline-entry>
-            </q-timeline>
-          </div>
+      <div class="col-12 stl-content-container stl-content-container--large row text-center q-mb-xl">
+        <div class="col-12 col-md-4">
+          <AppContent
+            tag="h3"
+            class="text-h6"
+            entry="pages"
+            field="home.features.feature_1_title"
+          />
+          <AppContent
+            tag="p"
+            entry="pages"
+            field="home.features.feature_1_content"
+          />
+        </div>
+        <div class="col-12 col-md-4">
+          <AppContent
+            tag="h3"
+            class="text-h6"
+            entry="pages"
+            field="home.features.feature_2_title"
+          />
+          <AppContent
+            tag="p"
+            entry="pages"
+            field="home.features.feature_2_content"
+          />
+        </div>
+        <div class="col-12 col-md-4">
+          <AppContent
+            tag="h3"
+            class="text-h6"
+            entry="pages"
+            field="home.features.feature_3_title"
+          />
+          <AppContent
+            tag="p"
+            entry="pages"
+            field="home.features.feature_3_content"
+          />
         </div>
       </div>
     </section>

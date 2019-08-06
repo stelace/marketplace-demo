@@ -207,8 +207,8 @@ module.exports = function (ctx) {
         // 'QTd',
 
         // Timeline
-        'QTimeline',
-        'QTimelineEntry',
+        // 'QTimeline',
+        // 'QTimelineEntry',
 
         'QSlideTransition',
         'QToggle',
