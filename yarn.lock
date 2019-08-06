@@ -7988,9 +7988,9 @@ sharkdown@^0.1.0:
     minimist "0.0.5"
     split "~0.2.10"
 
-"sharp-aws-image-handler-client@https://github.com/stelace/sharp-aws-image-handler-client.git#0.1.0":
-  version "0.1.0"
-  resolved "https://github.com/stelace/sharp-aws-image-handler-client.git#5ea36e5a7250d92f2569d206ce9ef8f0a925aca4"
+"sharp-aws-image-handler-client@https://github.com/stelace/sharp-aws-image-handler-client.git#0.1.1":
+  version "0.1.1"
+  resolved "https://github.com/stelace/sharp-aws-image-handler-client.git#f56673d5edc626b6f7a17aa917ebdd759639e5da"
 
 shebang-command@^1.2.0:
   version "1.2.0"
