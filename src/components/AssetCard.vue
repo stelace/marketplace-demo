@@ -85,7 +85,7 @@ export default {
               class="text-weight-bold text-grey-8 ellipsis"
             >
               <AppContent
-                v-if="asset.assetType.timeBased"
+                v-if="asset.assetType && asset.assetType.timeBased"
                 entry="pricing"
                 field="price_per_time_unit_short_label"
                 :options="{
