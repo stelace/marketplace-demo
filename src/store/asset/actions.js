@@ -58,6 +58,7 @@ export async function initEditAssetPage ({ state, commit, dispatch }, { assetId 
   ] = await Promise.all([
     assetId ? stelace.assets.read(assetId) : null,
     assetId ? stelace.availabilities.list({ assetId }) : [],
+    dispatch('fetchCategories'),
     dispatch('fetchAssetsRelatedResources'),
   ])
 
