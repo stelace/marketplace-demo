@@ -59,13 +59,13 @@ module.exports = {
       },
       metadata: {
         images: [
-          { url: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/6b5bca6e96d095228fd070ffade9f4c5-IMG_0044.JPG' },
-          { url: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/94b61699afbdfdb249c69d58d50b65fa-IMG_0088.JPG' },
-          { url: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/fe30b4130841a5df3b286b827c6ec715-IMG_0066.JPG' },
-          { url: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/f89bd281daf4d3f3d586ba1448693c86-IMG_0120.JPG' },
-          { url: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/69fc77bfd7b6edf19828e1c9d69b817e-IMG_0170.JPG' },
-          { url: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/db36c7b812ab5c752541d65a554f861f-IMG_0213.JPG' },
-          { url: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/516ce7283219eea9a9929cd885b05fe9-IMG_0197.JPG' }
+          { name: 'image1', url: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/6b5bca6e96d095228fd070ffade9f4c5-IMG_0044.JPG' },
+          { name: 'image2', url: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/94b61699afbdfdb249c69d58d50b65fa-IMG_0088.JPG' },
+          { name: 'image3', url: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/fe30b4130841a5df3b286b827c6ec715-IMG_0066.JPG' },
+          { name: 'image4', url: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/f89bd281daf4d3f3d586ba1448693c86-IMG_0120.JPG' },
+          { name: 'image5', url: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/69fc77bfd7b6edf19828e1c9d69b817e-IMG_0170.JPG' },
+          { name: 'image6', url: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/db36c7b812ab5c752541d65a554f861f-IMG_0213.JPG' },
+          { name: 'image7', url: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/516ce7283219eea9a9929cd885b05fe9-IMG_0197.JPG' }
         ]
       }
     },
@@ -89,7 +89,7 @@ module.exports = {
       },
       metadata: {
         images: [
-          { url: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/37417d8fdee7f756889e9251f696b159-Juste-4.jpg' }
+          { name: 'image1', url: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/37417d8fdee7f756889e9251f696b159-Juste-4.jpg' }
         ]
       }
     },
@@ -110,9 +110,9 @@ module.exports = {
       active: true,
       metadata: {
         images: [
-          { url: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/2bedecf2e22bebb4b78d8bf656139afa-ClanMaMa-1.jpg' },
-          { url: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/db235d3732d7d21bd012d889a364c36e-ClanMaMa-2.jpg' },
-          { url: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/c13f4981551c3f2471fd06dba8c27b9d-ClanMaMa-3.jpg' }
+          { name: 'image1', url: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/2bedecf2e22bebb4b78d8bf656139afa-ClanMaMa-1.jpg' },
+          { name: 'image2', url: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/db235d3732d7d21bd012d889a364c36e-ClanMaMa-2.jpg' },
+          { name: 'image3', url: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/c13f4981551c3f2471fd06dba8c27b9d-ClanMaMa-3.jpg' }
         ]
       }
     },
@@ -133,12 +133,12 @@ module.exports = {
       active: true,
       metadata: {
         images: [
-          { url: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/4c542ffebd490cfc73373a754bd144d8-Belvedere1.jpg' },
-          { url: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/07bbb8c7fe7b5ca5e13f5668124a9c47-Belvedere2.jpg' },
-          { url: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/7d1afc8b6ae1ee97e3ea1774ecd97604-Belvedere3.jpg' },
-          { url: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/7ca02f3f0ba85ca344e4dc0b4d76f8f1-Belvedere4.jpg' },
-          { url: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/0b888640db8d6245b792ca2c38e4ad6e-Belvedere5.jpg' },
-          { url: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/a77ec5be0cea668dfbd6ca0104d1fa7e-Belvedere6.jpg' }
+          { name: 'image1', url: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/4c542ffebd490cfc73373a754bd144d8-Belvedere1.jpg' },
+          { name: 'image2', url: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/07bbb8c7fe7b5ca5e13f5668124a9c47-Belvedere2.jpg' },
+          { name: 'image3', url: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/7d1afc8b6ae1ee97e3ea1774ecd97604-Belvedere3.jpg' },
+          { name: 'image4', url: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/7ca02f3f0ba85ca344e4dc0b4d76f8f1-Belvedere4.jpg' },
+          { name: 'image5', url: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/0b888640db8d6245b792ca2c38e4ad6e-Belvedere5.jpg' },
+          { name: 'image6', url: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/a77ec5be0cea668dfbd6ca0104d1fa7e-Belvedere6.jpg' }
         ],
       }
     },
@@ -159,11 +159,11 @@ module.exports = {
       active: true,
       metadata: {
         images: [
-          { url: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/819117a2ebcb1843770df00a6d62fc43-42840329_267734193795979_8786764997486182400_o.jpg' },
-          { url: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/3d3794bbf0591a70b67d8724898d7410-31649378_186219878614078_6013957557415051264_n.jpg' },
-          { url: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/e7d6b98b0be913b09a9c8dc81f10beb0-48123040_292455064657225_7619080182749462528_o.jpg' },
-          { url: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/f5c9218d019d262f3d15295596b09551-48366346_290948278141237_4912170395836088320_o.jpg' },
-          { url: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/77d9be123efa469932ab2454fb9f95eb-53632226_324173318152066_6784837503384813568_o.jpg' }
+          { name: 'image1', url: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/819117a2ebcb1843770df00a6d62fc43-42840329_267734193795979_8786764997486182400_o.jpg' },
+          { name: 'image2', url: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/3d3794bbf0591a70b67d8724898d7410-31649378_186219878614078_6013957557415051264_n.jpg' },
+          { name: 'image3', url: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/e7d6b98b0be913b09a9c8dc81f10beb0-48123040_292455064657225_7619080182749462528_o.jpg' },
+          { name: 'image4', url: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/f5c9218d019d262f3d15295596b09551-48366346_290948278141237_4912170395836088320_o.jpg' },
+          { name: 'image5', url: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/77d9be123efa469932ab2454fb9f95eb-53632226_324173318152066_6784837503384813568_o.jpg' }
         ]
       }
     },
@@ -202,7 +202,7 @@ module.exports = {
       active: true,
       metadata: {
         images: [
-          { url: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/f5c9218d019d262f3d15295596b09551-48366346_290948278141237_4912170395836088320_o.jpg' }
+          { name: 'image1', url: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/f5c9218d019d262f3d15295596b09551-48366346_290948278141237_4912170395836088320_o.jpg' }
         ]
       }
     },
@@ -223,7 +223,7 @@ module.exports = {
       active: true,
       metadata: {
         images: [
-          { url: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/48ea4fe7281ea6e2c3b732cb3455d9fc-japanese-gardens.jpg' }
+          { name: 'image1', url: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/48ea4fe7281ea6e2c3b732cb3455d9fc-japanese-gardens.jpg' }
         ]
       }
     },
@@ -249,7 +249,7 @@ module.exports = {
       },
       metadata: {
         images: [
-          { url: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/69fc77bfd7b6edf19828e1c9d69b817e-IMG_0170.JPG' }
+          { name: 'image1', url: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/69fc77bfd7b6edf19828e1c9d69b817e-IMG_0170.JPG' }
         ]
       }
     },
@@ -270,7 +270,7 @@ module.exports = {
       active: true,
       metadata: {
         images: [
-          { url: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/b641d42803ac2dee7dbc3112a70e0e68-roland-garros.jpg' }
+          { name: 'image1', url: 'https://dev-cdn.instant.stelace.com/test/workingoo/images/b641d42803ac2dee7dbc3112a70e0e68-roland-garros.jpg' }
         ]
       }
     }
