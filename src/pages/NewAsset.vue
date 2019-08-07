@@ -230,10 +230,11 @@ export default {
           // the logic will be triggered at the end of the upload from afterUploadCompleted
           if (uploadPending) return
 
-          const images = this.assetImages.map(img => {
-            delete img.reused
-            return img
-          })
+          const images = this.assetImages
+          /* .map(img => { // clean reused images
+              delete img.reused
+              return img
+            }) */
 
           let assetQuantity = this.quantity
 
@@ -541,7 +542,6 @@ export default {
                 field="new_asset.picture_incentive"
               />
               <AppGalleryUploader
-                :reused-images="reusableImages"
                 @uploader-files-changed="uploaderFilesChanged"
                 @upload-completed="uploadCompleted"
                 @remove="removeImage"
