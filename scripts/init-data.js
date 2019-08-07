@@ -465,8 +465,8 @@ async function cancelTransactions () {
   }
 }
 
-async function removeObjects (type, data = null) {
-  let objects = data || existingData[type]
+async function removeObjects (type, data) {
+  let objects = Array.isArray(data) ? data : existingData[type]
 
   for (let i = 0; i < objects.length; i++) {
     const object = objects[i]
