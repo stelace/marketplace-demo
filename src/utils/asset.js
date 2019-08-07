@@ -15,6 +15,8 @@ export function populateAsset ({
   newAsset.category = categoriesById[asset.categoryId]
   newAsset.assetType = assetTypesById[asset.assetTypeId]
 
+  newAsset.images = get(newAsset, 'metadata.images')
+
   newAsset.categoryName = get(newAsset, 'category.name')
 
   newAsset.locationName = get(newAsset, 'locations[0].shortDisplayName')

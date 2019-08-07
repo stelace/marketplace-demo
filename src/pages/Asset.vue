@@ -95,10 +95,52 @@
           </AppSwitchableEditor>
         </div>
 
-        <VuePhotoSwipe
-          :options="getResourceGalleryOptions(activeAsset)"
-          :items="getResourceGalleryItems(activeAsset)"
-        />
+        <div
+          v-if="isCurrentUserTheOwner"
+          class="text-center q-mb-md"
+        >
+          <div v-if="!isEditingImages">
+            <VuePhotoSwipe
+              v-if="galleryItems.length"
+              :options="getResourceGalleryOptions(activeAsset)"
+              :items="galleryItems"
+            />
+            <AppContent
+              v-if="isCurrentUserTheOwner"
+              class="q-ma-lg"
+              tag="QBtn"
+              color="primary"
+              entry="prompt"
+              :field="galleryItems.length ? 'edit_pictures' : 'add_pictures'"
+              :rounded="style.roundedTheme"
+              @click="toggleImageEdition"
+            />
+          </div>
+          <div v-else-if="isCurrentUserTheOwner">
+            <AppGalleryUploader
+              :reused-images="activeAsset.images"
+              @upload-completed="uploadCompleted"
+              @reorder="files => uploadCompleted({ uploadedOrReused: files })"
+              @remove="removeImage"
+            />
+            <AppContent
+              class="q-ma-md"
+              tag="QBtn"
+              color="positive"
+              entry="navigation"
+              field="close"
+              :rounded="style.roundedTheme"
+              @click="toggleImageEdition(false)"
+            />
+          </div>
+        </div>
+        <div v-else class="text-center q-mb-md">
+          <VuePhotoSwipe
+            v-if="galleryItems.length"
+            :options="getResourceGalleryOptions(activeAsset)"
+            :items="galleryItems"
+          />
+        </div>
 
         <div class="q-pa-sm text-body1">
           <AppContent
@@ -274,6 +316,7 @@ import {
 } from 'src/utils/asset'
 
 import * as mutationTypes from 'src/store/mutation-types'
+import AppGalleryUploader from 'src/components/AppGalleryUploader'
 import OwnerAssetCard from 'src/components/OwnerAssetCard'
 import PlacesAutocomplete from 'src/components/PlacesAutocomplete'
 import SelectCategories from 'src/components/SelectCategories'
@@ -285,6 +328,7 @@ import PageComponentMixin from 'src/mixins/pageComponent'
 
 export default {
   components: {
+    AppGalleryUploader,
     OwnerAssetCard,
     PlacesAutocomplete,
     SelectCategories,
@@ -304,6 +348,7 @@ export default {
       checkoutDialogOpened: false,
       assetRatingsByTransaction: [],
       assetRatingsLoaded: false,
+      isEditingImages: false,
     }
   },
   meta () { // SEO, overriding any hard-coded content in translations
@@ -325,6 +370,9 @@ export default {
       })
 
       return sortBy(populatedAssetAttrs, ca => -ca.priority)
+    },
+    galleryItems () {
+      return this.getResourceGalleryItems(this.activeAsset)
     },
     isCurrentUserTheOwner () {
       return this.currentUser.id === this.activeAsset.ownerId
@@ -349,6 +397,7 @@ export default {
       'route',
       'transaction',
       'rating',
+      'style',
     ]),
     ...mapGetters([
       'activeAsset',
@@ -398,13 +447,31 @@ export default {
       this.fetchRelatedAssets()
       this.fetchAssetRatingsByTransaction()
     },
+    toggleImageEdition (editing) {
+      this.isEditingImages = typeof editing === 'boolean'
+        ? editing : !this.isEditingImages
+    },
+    uploadCompleted ({ uploadedOrReused }) {
+      return this.updateAssetFn('images')(uploadedOrReused)
+    },
+    removeImage (removed) { // one single image
+      const newImages = this.activeAsset.images.filter(img => img.name !== removed.name)
+      return this.updateAssetFn('images')(newImages)
+    },
     updateAssetFn (fieldName) {
       return async (value) => {
+        const attrs = {}
+        if (fieldName === 'images') {
+          attrs.metadata = {
+            images: value
+          }
+        } else {
+          attrs[fieldName] = value
+        }
+
         await this.$store.dispatch('updateActiveAsset', {
           assetId: this.activeAsset.id,
-          attrs: {
-            [fieldName]: value
-          }
+          attrs
         })
         this.notifySuccess('notification.saved')
       }
