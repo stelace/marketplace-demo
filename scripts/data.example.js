@@ -57,7 +57,7 @@ module.exports = {
       },
       metadata: {
         images: [
-          { url: 'https://stelace-instant-dev-eu.s3.amazonaws.com/dev/wingon/images/2b183c466e30b2ea7977f3ab1b560009-armoire-de-transfert-froide-1-5-c-monocoque-57682.jpg' }
+          { name: 'image1', url: 'https://stelace-instant-dev-eu.s3.amazonaws.com/dev/wingon/images/2b183c466e30b2ea7977f3ab1b560009-armoire-de-transfert-froide-1-5-c-monocoque-57682.jpg' }
         ]
       }
     },
@@ -84,7 +84,7 @@ module.exports = {
       },
       metadata: {
         images: [
-          { url: 'https://stelace-instant-dev-eu.s3.amazonaws.com/dev/wingon/images/4959e12f23e6b4b296360631a70c12ec-congelateur-coffre-803-litres-525253.jpg' }
+          { name: 'image1', url: 'https://stelace-instant-dev-eu.s3.amazonaws.com/dev/wingon/images/4959e12f23e6b4b296360631a70c12ec-congelateur-coffre-803-litres-525253.jpg' }
         ]
       }
     },
@@ -105,7 +105,7 @@ module.exports = {
       active: true,
       metadata: {
         images: [
-          { url: 'https://stelace-instant-dev-eu.s3.amazonaws.com/dev/wingon/images/8ca4e44957fc38547ce3c335156c916d-cuiseur-pommes-de-terre-mat-riau-acier-inoxydable-18-10-qualit-lourde-contenance-25-0-l-32-0-cm-contacto-5666768.jpg' },
+          { name: 'image1', url: 'https://stelace-instant-dev-eu.s3.amazonaws.com/dev/wingon/images/8ca4e44957fc38547ce3c335156c916d-cuiseur-pommes-de-terre-mat-riau-acier-inoxydable-18-10-qualit-lourde-contenance-25-0-l-32-0-cm-contacto-5666768.jpg' },
         ]
       }
     },
@@ -132,7 +132,7 @@ module.exports = {
       active: true,
       metadata: {
         images: [
-          { url: 'https://stelace-instant-dev-eu.s3.amazonaws.com/dev/wingon/images/cf63b2383ed277c383715e4c71edb495-Lave vaisselle capot.png' },
+          { name: 'image1', url: 'https://stelace-instant-dev-eu.s3.amazonaws.com/dev/wingon/images/cf63b2383ed277c383715e4c71edb495-Lave vaisselle capot.png' },
         ],
       }
     },
@@ -153,7 +153,7 @@ module.exports = {
       active: true,
       metadata: {
         images: [
-          { url: 'https://stelace-instant-dev-eu.s3.amazonaws.com/dev/wingon/images/15c7fb9feb258b070dea18e49d241829-rotissoire-autonettoyante-acr-automatique-sur-placard-technique-a-roulette-6056319.jpg' },
+          { name: 'image1', url: 'https://stelace-instant-dev-eu.s3.amazonaws.com/dev/wingon/images/15c7fb9feb258b070dea18e49d241829-rotissoire-autonettoyante-acr-automatique-sur-placard-technique-a-roulette-6056319.jpg' },
         ]
       }
     }
