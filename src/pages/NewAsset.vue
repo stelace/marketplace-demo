@@ -67,6 +67,9 @@ export default {
       const categories = values(this.common.categoriesById)
       return !!categories.length
     },
+    showCategory () { // could depend on some env variable or config
+      return this.categoryRequired
+    },
     assetTypeRequired () {
       const assetTypes = values(this.common.assetTypesById)
       return !!assetTypes.length
@@ -381,7 +384,6 @@ export default {
     <section class="q-pa-sm">
       <form
         class="text-center stl-content-container stl-content-container--large margin-h-center q-mb-xl"
-        novalidate
         @submit.prevent="createAsset"
       >
         <div class="step-1 q-py-lg">
@@ -404,9 +406,8 @@ export default {
               required
             />
           </div>
-          <div class="q-mt-md row justify-center">
+          <div v-if="assetTypeRequired" class="q-mt-md row justify-center">
             <SelectAssetType
-              v-if="activeAssetTypes.length > 1"
               :initial-asset-type="selectedAssetType"
               :label="$t({ id: 'asset.asset_type_label' })"
               :show-search-icon="false"
@@ -428,8 +429,8 @@ export default {
             v-if="step > 1"
             class="step-2 q-py-lg"
           >
-            <div class="row justify-between">
-              <div class="flex-item--grow-shrink-auto q-pr-lg">
+            <div class="row justify-around">
+              <div v-if="showCategory" class="flex-item--grow-shrink-auto q-pr-lg">
                 <SelectCategories
                   :initial-category="selectedCategory"
                   :label="$t({ id: 'asset.category_label' })"
@@ -443,7 +444,7 @@ export default {
                   @change="selectCategory"
                 />
               </div>
-              <div style="flex: 1 2 auto">
+              <div :style="showCategory ? 'flex: 1 2 auto;' : ''">
                 <QInput
                   v-model="price"
                   type="number"
