@@ -103,6 +103,9 @@ module.exports = function (ctx) {
   const postMessageAllowedOrigins = process.env.VUE_APP_POST_MESSAGE_ALLOWED_ORIGINS ||
     'https://stelace.com'
 
+  const phoneApiEnabled = Boolean(process.env.NEXMO_API_KEY && process.env.NEXMO_API_SECRET)
+  const taxNumberApiEnabled = Boolean(process.env.VATSENSE_API_KEY)
+
   // ///////////// //
   // Quasar config //
   // ///////////// //
@@ -468,6 +471,8 @@ module.exports = function (ctx) {
         VUE_APP_SEARCH_BY_CATEGORY: JSON.stringify(process.env.VUE_APP_SEARCH_BY_CATEGORY),
         VUE_APP_INSTANT_PAGE_PREFIX: JSON.stringify('/l'),
         VUE_APP_POST_MESSAGE_ALLOWED_ORIGINS: JSON.stringify(postMessageAllowedOrigins),
+        VUE_APP_PHONE_API_ENABLED: JSON.stringify(phoneApiEnabled),
+        VUE_APP_TAX_NUMBER_API_ENABLED: JSON.stringify(taxNumberApiEnabled),
       }
     },
 

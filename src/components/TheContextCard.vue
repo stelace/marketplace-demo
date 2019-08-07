@@ -346,12 +346,13 @@
               field="phone_number_label"
             />
             <QIcon
+              v-if="canValidatePhone"
               size="1.5rem"
               :color="selectedUser.phoneVerified ? 'positive' : 'negative'"
               :name="selectedUser.phoneVerified ? 'check_circle' : 'announcement'"
             >
               <AppContent
-                v-if="canValidatePhone && !selectedUser.phoneVerified"
+                v-if="!selectedUser.phoneVerified"
                 tag="QTooltip"
                 entry="prompt"
                 field="validate"
@@ -633,8 +634,11 @@ export default {
         }
       }
     },
+    taxNumberApiEnabled () {
+      return Boolean(process.env.VUE_APP_TAX_NUMBER_API_ENABLED)
+    },
     showTaxIdVerificationLine () {
-      return this.isCurrentUser || this.selectedUser.taxIdVerified
+      return this.taxNumberApiEnabled && (this.isCurrentUser || this.selectedUser.taxIdVerified)
     },
     showTaxIdValue () {
       return this.isCurrentUser
@@ -648,14 +652,17 @@ export default {
     canValidateEmail () {
       return this.isCurrentUser
     },
+    phoneApiEnabled () {
+      return Boolean(process.env.VUE_APP_PHONE_API_ENABLED)
+    },
     showPhoneVerificationLine () {
-      return this.isCurrentUser || this.selectedUser.phoneVerified
+      return (this.isCurrentUser && this.phoneApiEnabled) || this.selectedUser.phoneVerified
     },
     showPhoneValue () {
       return this.isCurrentUser
     },
     canValidatePhone () {
-      return this.isCurrentUser
+      return this.isCurrentUser && this.phoneApiEnabled
     },
     canChangePassword () {
       return this.isCurrentUser

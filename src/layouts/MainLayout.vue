@@ -64,6 +64,9 @@ export default {
       return (this.auth.authDialogOpened && this.auth.authDialogPersistent) ||
         this.layout.isPageBlurred
     },
+    phoneApiEnabled () {
+      return Boolean(process.env.VUE_APP_PHONE_API_ENABLED)
+    },
     ...mapState([
       'asset',
       'auth',
@@ -326,7 +329,7 @@ export default {
 
     <template v-if="currentUser.id">
       <EmailValidationDialog />
-      <PhoneValidationDialog />
+      <PhoneValidationDialog v-if="phoneApiEnabled" />
     </template>
   </QLayout>
 </template>
