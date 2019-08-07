@@ -95,10 +95,7 @@
           </AppSwitchableEditor>
         </div>
 
-        <div
-          v-if="isCurrentUserTheOwner"
-          class="text-center q-mb-md"
-        >
+        <div class="text-center q-mb-md">
           <div v-if="!isEditingImages">
             <VuePhotoSwipe
               v-if="galleryItems.length"
@@ -133,13 +130,6 @@
               @click="toggleImageEdition(false)"
             />
           </div>
-        </div>
-        <div v-else class="text-center q-mb-md">
-          <VuePhotoSwipe
-            v-if="galleryItems.length"
-            :options="getResourceGalleryOptions(activeAsset)"
-            :items="galleryItems"
-          />
         </div>
 
         <div class="q-pa-sm text-body1">
