@@ -1,5 +1,5 @@
 <script>
-import { get, values, pick } from 'lodash'
+import { compact, flatten, get, groupBy, values, pick } from 'lodash'
 import { mapState, mapGetters } from 'vuex'
 import { date } from 'quasar'
 
@@ -102,6 +102,10 @@ export default {
 
       return values(attrs).filter((ca) => activeNames.includes(ca.name))
     },
+    customAttributesByType () {
+      const customAttributes = this.customAttributes // ensure Vue reactivity
+      return groupBy(customAttributes, ca => ca.type)
+    },
     assetTypes () {
       return values(this.common.assetTypesById)
     },
@@ -189,6 +193,10 @@ export default {
     },
     changeCustomAttributes (customAttributes) {
       this.editingCustomAttributes = customAttributes
+    },
+    customAttributesOfTypes (types) {
+      if (!Array.isArray(types)) return []
+      return compact(flatten(types.map(t => this.customAttributesByType[t])))
     },
     selectAssetType (assetType) {
       this.editingAssetType = assetType
@@ -425,7 +433,10 @@ export default {
               required
             />
           </div>
-          <div v-if="assetTypeRequired" class="q-mt-md row justify-center">
+          <div
+            v-if="assetTypeRequired && activeAssetTypes.length > 1"
+            class="q-mt-md row justify-center"
+          >
             <SelectAssetType
               :initial-asset-type="selectedAssetType"
               :label="$t({ id: 'asset.asset_type_label' })"
@@ -496,8 +507,8 @@ export default {
               @changeEndDate="selectEndDate"
             />
 
-            <div class="row justify-between">
-              <div class="col-sm-5">
+            <div class="row justify-around">
+              <div class="col-12 col-sm-5">
                 <PlacesAutocomplete
                   :label="$t({ id: 'places.address_placeholder' })"
                   :initial-query="locationName"
@@ -505,9 +516,11 @@ export default {
                   @selectPlace="selectPlace"
                 />
               </div>
-              <div class="col-sm-5">
+              <div
+                v-show="!selectedAssetType || !selectedAssetType.infiniteStock"
+                class="col-12 col-sm-5"
+              >
                 <QInput
-                  v-show="!selectedAssetType || !selectedAssetType.infiniteStock"
                   v-model="quantity"
                   :label="$t({ id: 'asset.quantity_label' })"
                   required
@@ -529,7 +542,7 @@ export default {
             v-if="step > 3"
             class="step-4 q-py-lg"
           >
-            <div class="row justify-between">
+            <div class="row justify-around">
               <div class="col-12 col-md-7">
                 <QInput
                   v-model="description"
@@ -541,17 +554,46 @@ export default {
                     description => !!description ||
                       $t({ id: 'form.error.missing_description' })
                   ]"
+                  :input-style="customAttributesByType['boolean']
+                    ? `min-height: ${customAttributesByType['boolean'].length * 3}rem;` : ''"
                   type="textarea"
                   required
                 />
               </div>
-              <div class="col-12 col-sm-6 col-md-5 q-pl-md">
+              <div
+                v-if="customAttributesByType['boolean']"
+                class="col-12 col-sm-6 col-md-5 q-pl-md"
+              >
                 <CustomAttributesEditor
-                  :definitions="customAttributes"
+                  :definitions="customAttributesByType['boolean']"
                   :values="editingCustomAttributes"
                   @change="changeCustomAttributes"
                 />
               </div>
+            </div>
+
+            <div class="row q-py-lg justify-around">
+              <CustomAttributesEditor
+                :definitions="customAttributesOfTypes(['text', 'number'])"
+                :values="editingCustomAttributes"
+                class="col-12 col-sm-5"
+                @change="changeCustomAttributes"
+              />
+              <CustomAttributesEditor
+                :definitions="customAttributesByType['select']"
+                :values="editingCustomAttributes"
+                class="col-12 col-sm-5"
+                @change="changeCustomAttributes"
+              />
+            </div>
+
+            <div v-if="customAttributesByType['tags']" class="row q-py-lg justify-around">
+              <CustomAttributesEditor
+                :definitions="customAttributesByType['tags']"
+                :values="editingCustomAttributes"
+                class="col-12 col-sm-10"
+                @change="changeCustomAttributes"
+              />
             </div>
 
             <div class="step-asset-picture q-py-lg">
