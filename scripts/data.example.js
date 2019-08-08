@@ -591,9 +591,9 @@ module.exports = {
   },
   users: {
     company1: {
-      username: `jobs-marketplace-test-premium1@example.com`,
-      password: 'jobs-marketplace-test-premium1@example.com',
-      email: 'jobs-marketplace-test-premium1@example.com',
+      username: `marketplace-test-provider-premium1@example.com`,
+      password: 'marketplace-test-provider-premium1@example.com',
+      email: 'marketplace-test-provider-premium1@example.com',
       displayName: 'Company 1',
       roles: ['provider', 'premium'],
       metadata: {
@@ -620,9 +620,9 @@ module.exports = {
       }
     },
     company2: {
-      username: `jobs-marketplace-test-recruteur2@example.com`,
-      password: 'jobs-marketplace-test-recruteur2@example.com',
-      email: `jobs-marketplace-test-recruteur2@example.com`,
+      username: `marketplace-test-provider2@example.com`,
+      password: 'marketplace-test-provider2@example.com',
+      email: `marketplace-test-provider2@example.com`,
       displayName: 'Company 2',
       roles: ['provider'],
       metadata: {
@@ -632,9 +632,9 @@ module.exports = {
       }
     },
     company3: {
-      username: `jobs-marketplace-test-recruteur3@example.com`,
-      password: 'jobs-marketplace-test-recruteur3@example.com',
-      email: 'jobs-marketplace-test-recruteur3@example.com',
+      username: `marketplace-test-provider3@example.com`,
+      password: 'marketplace-test-provider3@example.com',
+      email: 'marketplace-test-provider3@example.com',
       displayName: 'Company 3',
       roles: ['provider'],
       metadata: {
@@ -644,9 +644,9 @@ module.exports = {
       }
     },
     company4: {
-      username: `jobs-marketplace-test-recruteur4@example.com`,
-      password: 'jobs-marketplace-test-recruteur4@example.com',
-      email: 'jobs-marketplace-test-recruteur4@example.com',
+      username: `marketplace-test-provider4@example.com`,
+      password: 'marketplace-test-provider4@example.com',
+      email: 'marketplace-test-provider4@example.com',
       displayName: 'Company 4',
       roles: ['provider'],
       metadata: {
@@ -656,9 +656,9 @@ module.exports = {
       }
     },
     applicant1: {
-      username: `jobs-marketplace-test-candidat1@example.com`,
-      password: `jobs-marketplace-test-candidat1@example.com`,
-      email: `jobs-marketplace-test-candidat1@example.com`,
+      username: `marketplace-test-user1@example.com`,
+      password: `marketplace-test-user1@example.com`,
+      email: `marketplace-test-user1@example.com`,
       displayName: 'Jordan',
       firstname: 'Jordan',
       lastname: 'Rossignol',
@@ -684,9 +684,9 @@ module.exports = {
       }
     },
     applicant2: {
-      username: `jobs-marketplace-test-candidat2@example.com`,
-      password: `jobs-marketplace-test-candidat2@example.com`,
-      email: `jobs-marketplace-test-candidat2@example.com`,
+      username: `marketplace-test-user2@example.com`,
+      password: `marketplace-test-user2@example.com`,
+      email: `marketplace-test-user2@example.com`,
       displayName: 'Sophie',
       firstname: 'Sophie',
       lastname: 'Bleue',
@@ -712,9 +712,9 @@ module.exports = {
       }
     },
     applicant3: {
-      username: `jobs-marketplace-test-candidat3@example.com`,
-      password: `jobs-marketplace-test-candidat3@example.com`,
-      email: `jobs-marketplace-test-candidat3@example.com`,
+      username: `marketplace-test-user3@example.com`,
+      password: `marketplace-test-user3@example.com`,
+      email: `marketplace-test-user3@example.com`,
       displayName: 'Cyril',
       firstname: 'Cyril',
       lastname: 'Petit',
