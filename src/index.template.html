@@ -40,6 +40,18 @@
     <link rel="preconnect" href="<%= htmlWebpackPlugin.options.cdnUrl %>">
     <% } %>
 
+    <!-- Webpack chunks errors usually happen before Vue app boot -->
+    <script>
+      window.onerror = function (msg) {
+        var isChunkError = /Loading( CSS)? chunk .+ failed/i.test(msg) ||
+          /expect.+(?=token|char|<)</i.test(msg);
+        if (isChunkError && window.location.hash !== '#reload') {
+          window.location.hash = '#reload';
+          window.location.reload(true);
+        }
+        return false;
+      }
+    </script>
     <!-- Performance tracking: must come before any style to record first-paint -->
     <script>
       try {
