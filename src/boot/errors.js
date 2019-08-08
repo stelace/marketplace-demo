@@ -19,7 +19,7 @@ export default async ({ Vue }) => {
     // the error was found in. Only available in 2.2.0+
 
     // already handled by App.vue
-    if (err.message.toLowerCase().includes('user session expired')) return
+    if (err.message && err.message.toLowerCase().includes('user session expired')) return
 
     EventBus.$emit('error')
 
@@ -59,7 +59,7 @@ export default async ({ Vue }) => {
 
     Vue.prototype.$sentry = Sentry
     remoteLogger.capture = err => {
-      if (err.message.toLowerCase().includes('user session expired')) return
+      if (err.message && err.message.toLowerCase().includes('user session expired')) return
 
       const { name, message } = err
       Sentry.captureException(err)
