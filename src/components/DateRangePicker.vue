@@ -93,8 +93,8 @@ export default {
 </script>
 
 <template>
-  <div :class="['row', containerClass || 'justify-between']">
-    <div :class="[columnClass || 'col-sm-5']">
+  <div :class="['row', containerClass || 'justify-around']">
+    <div :class="[columnClass || 'col-12 col-sm-5']">
       <DatePickerInput
         :date="startDate"
         :label="$t({ id: 'time.start_date_label' })"
@@ -106,7 +106,7 @@ export default {
         @change="selectStartDate"
       />
     </div>
-    <div :class="[columnClass || 'col-sm-5']">
+    <div :class="[columnClass || 'col-12 col-sm-5']">
       <DatePickerInput
         :date="endDate"
         :label="$t({ id: 'time.end_date_label' })"
