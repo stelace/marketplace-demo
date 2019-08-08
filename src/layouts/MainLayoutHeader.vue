@@ -473,7 +473,6 @@ export default {
               </QBtn>
             </div>
             <div class="column items-stretch">
-              <!-- TODO: switch organizations / create new new ones as provider -->
               <AppContent
                 v-close-popup
                 tag="QBtn"
