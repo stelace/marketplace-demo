@@ -465,7 +465,13 @@ async function cancelTransactions () {
   }
 }
 
-async function removeObjects (type, data) {
+/**
+ * Asynchronously delete API objects of a given `type`
+ * @param {String} type
+ * @param {Array} data - Some safeguard is need as second argument of pMap is an integer
+ * @param {Array} [removedIds] - shared by reference in 'categories' type recursion
+ */
+async function removeObjects (type, data, removedIds = []) {
   let objects = Array.isArray(data) ? data : existingData[type]
 
   for (let i = 0; i < objects.length; i++) {
@@ -473,15 +479,15 @@ async function removeObjects (type, data) {
     if (!shouldOnlyRemoveScriptObjects || object.metadata[initDataScript]) {
       if (type === 'categories') {
         const childrenCategories = objects.filter(c => c.parentId === object.id)
-        await removeObjects(type, childrenCategories)
-        // Avoid deleting too many times
-        objects = objects.filter(c => c.parentId !== object.id)
+        await removeObjects(type, childrenCategories, removedIds)
       }
       await removeObject(object.id)
     }
   }
   async function removeObject (id) {
+    if (removedIds.includes(id)) return
     await stelace[type].remove(id)
+    removedIds.push(id)
     log(`removed ${id}`)
   }
 }
