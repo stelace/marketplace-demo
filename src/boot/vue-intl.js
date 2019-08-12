@@ -34,7 +34,7 @@ export default async ({ Vue, store }) => {
 
     if (isMissing) {
       if (isProdEnv) {
-        return ''
+        return messageDescriptor.defaultMessage || ''
       } else if (!hasDefault) { // vue-intl already throws an error when defaultMessage is set
         logger(`Missing message: "${key}" for locale: "${store.state.content.locale}`)
         return key
