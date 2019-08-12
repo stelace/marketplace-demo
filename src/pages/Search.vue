@@ -246,7 +246,7 @@ export default {
 
         const fitBoundsDuration = 2000
         this.map.fitBounds(bounds, {
-          padding: 50,
+          padding: { top: 75, right: 25, bottom: 150, left: 25 },
           duration: fitBoundsDuration
         })
         this.mapFitBoundsTimeout = setTimeout(() => {
