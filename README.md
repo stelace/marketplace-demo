@@ -2,7 +2,7 @@
 
 [![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/stelace/jobs-marketplace-template)
 
-# Vue marketplace starter kit (jobs)
+# Vue marketplace starter kit
 
 > This Stelace starter kit is free to use, under the terms of the [MIT license](./LICENSE).
 Feel free to fork, contribute or just make it your own :heart:.
@@ -11,7 +11,9 @@ Feel free to fork, contribute or just make it your own :heart:.
 
 This starter kit offers **a full Vue.js marketplace front-end with pre-configured serverless deployment**.
 
-![stellar-jobs-screenshot](https://user-images.githubusercontent.com/12909094/60470099-762d0980-9c5f-11e9-8d78-0bade89101c4.jpg)
+__[Live Demo](https://marketplace.demo.stelace.com)__
+
+[![stellar-jobs-screenshot](https://user-images.githubusercontent.com/12909094/60470099-762d0980-9c5f-11e9-8d78-0bade89101c4.jpg)](https://marketplace.demo.stelace.com)
 
 A lighter platform template focused on search and automation is [also available](https://github.com/stelace/heroes-platform-demo).
 
@@ -67,8 +69,6 @@ You will be able to use [official Stelace dashboard](https://stelace.com), enabl
 ## Getting started
 
 You first need to get your Stelace API Keys. Good news: [it’s free](https://stelace.com/pricing).
-
-> Note: this template uses advanced features available in _Business_ plans or higher, such as Organizations.
 
 1. Clone this repository
 
