@@ -553,9 +553,9 @@ module.exports = {
       ]
     },
 
-    sendEmailToTakerWhenTransactionAcceptedByOwner: {
-      name: '[Email] Accepted transaction to taker',
-      description: 'Send an email to taker when a transaction is accepted by owner',
+    sendEmailToTakerWhenTransactionStatusChanged: {
+      name: '[Email] Transaction update to taker',
+      description: 'Send an email to taker when a transaction is accepted or refused by owner',
       event: 'transaction__status_changed',
       computed: {
         // fallback to empty strings for email content
@@ -566,11 +566,10 @@ module.exports = {
       },
       run: [
         {
+          name: 'acceptedByOwnerEmail',
           endpointMethod: 'POST',
-          stop: `
-            !computed.toEmail ||
-            transaction.status !== "accepted"
-          `,
+          stop: '!computed.toEmail',
+          skip: 'transaction.status !== "accepted"',
           endpointUri: '/emails/send-template',
           endpointPayload: {
             name: '"transactionAcceptedByOwnerToTaker"',
@@ -582,26 +581,11 @@ module.exports = {
             toEmail: 'computed.toEmail',
             toName: 'computed.toName'
           }
-        }
-      ]
-    },
-
-    sendEmailToTakerWhenTransactionRefusedByOwner: {
-      name: '[Email] Refused transaction to taker',
-      description: 'Send email to taker when transaction is refused by owner',
-      event: 'transaction__status_changed',
-      computed: {
-        // fallback to empty strings for email content
-        organizationName: 'owner.displayName || ""',
-        assetName: '_.get(transaction, "assetSnapshot.name", "")',
-        toName: 'taker.displayName || ""',
-        toEmail: 'taker.email'
-      },
-      run: [
+        },
         {
+          name: 'refusedByOwnerEmail',
           endpointMethod: 'POST',
-          stop: `
-            !computed.toEmail ||
+          skip: `
             transaction.status !== "cancelled" ||
             transaction.cancellationReason !== "refusedByOwner"
           `,
@@ -620,21 +604,26 @@ module.exports = {
       ]
     },
 
-    sendEmailToOwnerWhenTransactionAcceptedByTaker: {
-      name: '[Email] Accepted transaction to owner',
-      description: 'Send email to owner when transaction is accepted by taker',
+    sendEmailToOwnerWhenTransactionStatusChanged: {
+      name: '[Email] Transaction update to owner',
+      description: 'Send email to owner when transaction is accepted or refused by taker',
       event: 'transaction__status_changed',
+      context: ['stelace'],
       computed: {
         // fallback to empty strings for email content
+        transactionId: 'transaction.id',
         takerDisplayName: 'taker.displayName || ""',
         assetName: '_.get(transaction, "assetSnapshot.name", "")',
         toName: 'owner.displayName || ""',
         toEmail: 'owner.email'
       },
       run: [
+        // accepted
         {
+          name: 'acceptedByTakerEmail',
           endpointMethod: 'POST',
-          stop: '!computed.toEmail || transaction.status !== "validated"',
+          stop: '!computed.toEmail',
+          skip: 'transaction.status !== "validated"',
           endpointUri: '/emails/send-template',
           endpointPayload: {
             name: '"transactionAcceptedByTakerToOwner"',
@@ -646,28 +635,11 @@ module.exports = {
             toEmail: 'computed.toEmail',
             toName: 'computed.toName'
           }
-        }
-      ]
-    },
-
-    sendEmailToOwnerWhenTransactionRefusedByTaker: {
-      name: '[Email] Refused transaction to owner',
-      description: 'Send email to owner when transaction is refused by taker',
-      event: 'transaction__status_changed',
-      context: ['stelace'],
-      computed: {
-        // fallback to empty strings for email content
-        transactionId: 'transaction.id',
-        takerDisplayName: 'taker.displayName || ""',
-        assetName: '_.get(transaction, "assetSnapshot.name", "")',
-        toName: 'taker.displayName || ""',
-        toEmail: 'taker.email'
-      },
-      run: [
+        },
+        // refused
         {
           name: 'messages',
           stop: `
-            !computed.toEmail ||
             transaction.status !== "cancelled" ||
             !["refusedByTaker", "withdrawn"].includes(transaction.cancellationReason)
           `,
@@ -675,6 +647,7 @@ module.exports = {
           endpointUri: '/messages?topicId=${computed.transactionId}',
         },
         {
+          name: 'refusedByTakerEmail',
           stop: '!responses.messages.results.length',
           endpointMethod: 'POST',
           computed: {
