@@ -1,5 +1,5 @@
 import { mapState, mapGetters } from 'vuex'
-import { isPlainObject, isBoolean, isString, get } from 'lodash'
+import { isPlainObject, isBoolean, isString } from 'lodash'
 
 import * as mutationTypes from 'src/store/mutation-types'
 import * as escapeRegexp from 'escape-string-regexp'
@@ -44,7 +44,7 @@ export default {
       return this.originRegExps.some(regexp => regexp.test(origin))
     },
     // messages received from Stelace Dashboard
-    receiveMessage (event) {
+    async receiveMessage (event) {
       if (!this.isAllowedOrigin(event.origin)) return
       if (!isString(event.type) || !isPlainObject(event.data)) return
 
@@ -62,14 +62,15 @@ export default {
         this.postContentMessage({
           type: 'stelaceContentEditingEnabled',
           enabled: active,
-          locale: this.content.locale
+          locale: this.content.locale,
+          publishableKey: process.env.STELACE_PUBLISHABLE_API_KEY
         })
       } else if (data.type === 'stelaceContentEdited') {
         const { entry, field, value, defaultValue, locale } = data
 
-        this.checkICUContent()
+        const parsed = await this.isValidICUContent(value)
 
-        if (isString(entry) && isString(field) && locale === this.content.locale) {
+        if (parsed && isString(entry) && isString(field) && locale === this.content.locale) {
           this.$store.commit({
             type: mutationTypes.EDIT_ENTRY,
             entry,
@@ -103,25 +104,17 @@ export default {
       const w = window.top || window
       w.postMessage(payload, this.content.messageOrigin)
     },
-    async checkICUContent () {
+    async isValidICUContent (value) {
+      if (!value) return true
       const contentEditing = this.content.contentEditing
       const selectedEntry = this.content.selectedEntry
 
-      // emits the ICU format error only if content edition is enabled
-      // and if an entry is selected
-      if (contentEditing && selectedEntry) {
-        const { entry, field } = selectedEntry
-        const selectedEntryKey = `${entry}.${field}`
-
-        const content = get(this.entries, selectedEntryKey)
-        if (!content) return
+      if (contentEditing) {
+        const { entry, field } = selectedEntry || {}
 
         try {
-          if (!parser) {
-            parser = await import('intl-messageformat-parser')
-          }
-
-          parser.parse(content)
+          if (!parser) parser = await import('intl-messageformat-parser')
+          parser.parse(value)
         } catch (err) {
           EventBus.$emit('postContentMessage', {
             type: 'stelaceContentError',
@@ -129,7 +122,9 @@ export default {
             field,
             error: err.message
           })
+          return false
         }
+        return true
       }
     },
   }

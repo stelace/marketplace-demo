@@ -119,10 +119,6 @@ export default {
     v-html="value"
   />
   <!-- eslint-enable vue/no-v-html -->
-  <!--
-    TODO: insert stl-content-x attributes only when needed to avoid bloating template
-          like when receiving an instruction from dashboard editor (postMessage)
-  -->
   <component
     :is="tag"
     v-else
@@ -130,8 +126,8 @@ export default {
       'stl-content-entry',
       contentEditing ? 'editable' : ''
     ]"
-    :stl-content-entry="entry"
-    :stl-content-field="field"
+    :stl-content-entry="contentEditing ? entry : false"
+    :stl-content-field="contentEditing ? field : false"
     v-bind="$attrs"
     @click="onClick($event)"
     v-on="contentEditing ? null : $listeners"
