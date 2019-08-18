@@ -54,10 +54,11 @@ async function run () {
   // Sync website URL to enable Stelace dashboard live content editor
   const config = await stelace.config.read()
   const platformUrl = _.get(config, 'stelace.instant.platformUrl')
-  if (platformUrl !== process.env.STELACE_INSTANT_WEBSITE_URL) {
+  const configUrl = process.env.STELACE_INSTANT_WEBSITE_URL
+  if (configUrl && platformUrl !== process.env.STELACE_INSTANT_WEBSITE_URL) {
     stelace.config.update({
       stelace: {
-        instant: { platformUrl: process.env.STELACE_INSTANT_WEBSITE_URL }
+        instant: { platformUrl: configUrl }
       }
     })
   }
