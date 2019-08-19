@@ -58,7 +58,7 @@ export default {
   },
   methods: {
     onClick (event) {
-      // click event should not be propagated if content edition is enabled
+      // click event should not be propagated if content editing is enabled
       if (!this.contentEditing) return
       if (event) {
         event.stopPropagation()
@@ -107,7 +107,7 @@ export default {
   -->
   <!-- eslint-disable vue/no-v-html -->
   <!--
-    Remove all listeners if content edition is enabled
+    Remove all listeners if content editing is enabled
     to prevent navigation when selecting an AppContent component
   -->
   <div
@@ -117,8 +117,8 @@ export default {
       'stl-content-entry',
       contentEditing ? 'editable' : ''
     ]"
-    :stl-content-entry="entry"
-    :stl-content-field="field"
+    :stl-content-entry="contentEditing ? entry : false"
+    :stl-content-field="contentEditing ? field : false"
     v-bind="$attrs"
     @click="onClick($event)"
     v-on="contentEditing ? null : $listeners"

@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import stelace, { fetchAllResults } from 'src/utils/stelace'
 import { Quasar } from 'quasar'
-import { get, mapKeys, pickBy, uniq } from 'lodash'
+import { get, has, keyBy, mapKeys, pickBy, reduce, uniq } from 'lodash'
 import { testWebP } from 'sharp-aws-image-handler-client'
 
 import * as types from 'src/store/mutation-types'
@@ -92,8 +92,7 @@ export async function fetchAppContent ({ state, commit, getters, dispatch }, { l
 
     fetchAllResults(entriesRequest, { collection: 'website', locale })
       .then(entries => {
-        commit({ type: types.SET_API_ENTRIES, entries })
-        commit({ type: types.SET_CONTENT_UPDATED_DATE })
+        dispatch('setApiEntries', { entries })
         dispatch('registerNewPages')
       })
       .catch(handleContentError)
@@ -115,6 +114,28 @@ export async function fetchAppContent ({ state, commit, getters, dispatch }, { l
   commit({ type: types.FETCHING_CONTENT, status: false })
 
   return true
+}
+
+/**
+ * This actions refreshes the app only after checking new Stelace API contents is different
+ * from local content (deep comparison).
+ */
+export function setApiEntries ({ commit, getters }, { entries }) {
+  const entriesByName = keyBy(entries, 'name')
+  const refreshContents = reduce(entriesByName, (someEntryChanged, value, entry) => {
+    return someEntryChanged || reduce(value.fields, (updatedEntry, value, field) => {
+      const currentField = get(getters.entries, `['${entry}.${field}']`)
+      const hasFieldChanged = !currentField || (
+        has(value, 'transformed') // e.g. markdown source content
+          ? currentField !== value.transformed
+          : currentField !== value
+      )
+      return updatedEntry || hasFieldChanged
+    }, false)
+  }, false)
+
+  commit({ type: types.SET_API_ENTRIES, entriesByName })
+  if (refreshContents) commit({ type: types.SET_CONTENT_UPDATED_DATE })
 }
 
 /**

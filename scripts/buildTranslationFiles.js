@@ -47,9 +47,10 @@ i18nCompile(
 )
 
 const { collection, defaultFilePrefix, emailFilePrefix } = require('./translationEntriesParams')
+// We’re not merging Content API entries into these email and defaults files,
+// but just in `website` collection files that we use in Vue app
+// to avoid waiting for a content API call on app load to show fresh contents
 const filesNotToMergePrefixes = [defaultFilePrefix, emailFilePrefix]
-// We’re not merging Content API entries into email and defaults files,
-// but just in website files for web app performance
 i18nCompile(
   [
     path.join(__dirname, '../src/i18n/source/*.yaml'),
