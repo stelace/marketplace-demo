@@ -36,6 +36,7 @@ export default {
         this.originRegExps = origins.map(o => {
           if (o === '*') return /^.*$/
 
+          // all (sub)domains wildcards such as http://*.example.com
           const str = `^${escapeRegexp(o).replace(/\\\*/g, '[^/]*')}$`
           return new RegExp(str)
         })

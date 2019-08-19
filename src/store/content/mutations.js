@@ -6,8 +6,8 @@ export default {
     state.localEntries = entries
   },
 
-  [types.SET_API_ENTRIES] (state, { entries }) {
-    state.apiEntries = keyBy(entries, 'name')
+  [types.SET_API_ENTRIES] (state, { entries, entriesByName }) {
+    state.apiEntries = entriesByName || keyBy(entries, 'name')
   },
 
   [types.SET_LOCALE] (state, { locale }) {
