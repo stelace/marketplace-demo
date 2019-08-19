@@ -71,7 +71,30 @@ export function getContents (state, getters) {
   return getterFn
 }
 
-export function isTransformedContent (state, getters) {
+export function getRawContent (state) {
+  const { apiEntries, localEntries } = state
+  /**
+   * Getter function (not cached).
+   * @param {String} key
+   * @returns {String|Object} Raw content entry field. Object for transformed fields (markdown)
+   */
+  return (key) => {
+    if (!key || typeof key !== 'string') return ''
+    const entries = mergeEntries({
+      apiEntries,
+      localEntries,
+      useRawFields: true
+    })
+    return get(entries, key, '')
+  }
+}
+
+/**
+ * Getter function (not cached):
+ * @param {String} key - must include both entry and field like `${entry}.${field}`
+ * @returns {String|Boolean} transform type like `'markdown'` or `false` value
+ */
+export function getContentTransformType (state, getters) {
   // key must include both entry and field like `${entry}.${field}`
   return key => getters.entries[TRANSFORMED_KEYS][key] || false
 }
