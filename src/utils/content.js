@@ -10,16 +10,18 @@ export const TRANSFORMED_KEYS = 'TRANSFORMED_KEYS'
  *   to 'entry.field.path' keys like 'pages.home.title' for easier use
  * - maps content values to transformed fields when they exist + adds corresponding keys to
  *   TRANSFORMED_KEYS in returned entries object
- * @param {Object} entries.apiEntries - Expected to have entry names as keys mapping to API Entry objects,
+ * @param {Object} [entries.apiEntries] - Expected to have entry names as keys mapping to API Entry objects,
  *   including a `fields` property containing flattened keys like 'home.title' mapping to
  *   content strings or object values (for transformed contents)
- * @param {Object} entries.localEntries - Expected to have entry names as keys, _directly_ mapping to
+ * @param {Object} [entries.localEntries] - Expected to have entry names as keys, _directly_ mapping to
  *   objects of string and objects properties (unlike Content API Entry having nested `fields`).
- * @param {Object} entries.editingEntries - Expected to have entry names as keys, _directly_ mapping to
+ * @param {Object} [entries.editingEntries] - Expected to have entry names as keys, _directly_ mapping to
  *   objects of string and objects properties (same as `localEntries`).
+ * @param {Boolean} [useRawFields] - If true, field keys map to field strings _or_ raw objects
+ *   rather than extracting strings from transformed fields (like markdown fields).
  * @returns entries object
  */
-export function mergeEntries ({ apiEntries, localEntries, editingEntries }) {
+export function mergeEntries ({ apiEntries = {}, localEntries = {}, editingEntries = {}, useRawFields }) {
   let allEntries = { [TRANSFORMED_KEYS]: {} }
   let allEntryNames = union(Object.keys(localEntries), Object.keys(apiEntries), Object.keys(editingEntries))
     .filter(k => k !== TRANSFORMED_KEYS)
@@ -55,9 +57,9 @@ export function mergeEntries ({ apiEntries, localEntries, editingEntries }) {
       // We could run transform here but markdown was already pre-rendered to HTML
       // to avoid markdown-it dependency in client bundle
       allEntries[TRANSFORMED_KEYS][key] = value.transform // only 'markdown' is supported currently
-      allEntries[key] = value.transformed
+      allEntries[key] = useRawFields ? value
         // Unescape ICU Message Format values (allowing dynamic URLs in markdown too)
-        .replace(/"%7B([^"\s]+)%7D"/, '"{$1}"')
+        : value.transformed.replace(/"%7B([^"\s]+)%7D"/, '"{$1}"')
     }
   })
 

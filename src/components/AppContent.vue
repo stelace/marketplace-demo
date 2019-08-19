@@ -46,13 +46,14 @@ export default {
       return this.content.contentEditing
     },
     renderAsHTML () {
-      return this.isTransformedContent(this.contentKey) === 'markdown'
+      return this.getContentTransformType(this.contentKey) === 'markdown'
     },
     ...mapState([
       'content',
     ]),
     ...mapGetters([
-      'isTransformedContent'
+      'getContentTransformType',
+      'getRawContent',
     ])
   },
   methods: {
@@ -67,10 +68,15 @@ export default {
       this.selectEntry()
     },
     selectEntry () {
+      const rawValue = this.getRawContent(this.contentKey)
+
       const payload = {
         type: 'stelaceContentSelected',
         entry: this.entry,
         field: this.field,
+        value: this.value,
+        rawValue: rawValue,
+        transform: this.getContentTransformType(this.contentKey)
       }
 
       if (isPlainObject(this.options) && !isEmpty(this.options)) {

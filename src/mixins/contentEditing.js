@@ -1,5 +1,5 @@
 import { mapState, mapGetters } from 'vuex'
-import { isPlainObject, isBoolean, isString } from 'lodash'
+import { get, isPlainObject, isBoolean, isString } from 'lodash'
 
 import * as mutationTypes from 'src/store/mutation-types'
 import * as escapeRegexp from 'escape-string-regexp'
@@ -68,7 +68,8 @@ export default {
       } else if (data.type === 'stelaceContentEdited') {
         const { entry, field, value, defaultValue, locale } = data
 
-        const parsed = await this.isValidICUContent(value)
+        const content = typeof get(value, 'transformed') === 'string' ? value.transformed : value
+        const parsed = await this.isValidICUContent(content)
 
         if (parsed && isString(entry) && isString(field) && locale === this.content.locale) {
           this.$store.commit({
