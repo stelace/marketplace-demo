@@ -159,7 +159,7 @@ exports.handler = async function(event, context) {
   let errorMessage
 
   let params = event
-  // Handle both AWS Lamda and API Gateway (body nested) formats
+  // Handle both AWS Lambda and API Gateway (body nested) formats
   if (event.body) {
     params = JSON.parse(event.body)
   }
@@ -210,8 +210,9 @@ You can also get this in Lambda console by clicking on API gateway in function d
 It probably looks like `https://******.execute-api.eu-central-1.amazonaws.com/Prod/upload/policy`
 Paste this into Stelace Instant `VUE_APP_CDN_POLICY_ENDPOINT` .env variable.
 
-You’ll also need to set `VUE_APP_CDN_WITH_IMAGE_HANDLER_URL` CloudFront URL, like `https://******.cloudfront.net/`.
-You can get this one in CloudFormation Stack page in Outputs tab, from "Sample Request".
+You’ll also need to set `VUE_APP_CDN_S3_BUCKET` and `VUE_APP_CDN_WITH_IMAGE_HANDLER_URL` CloudFront URL, like `https://******.cloudfront.net/`.
+
+You can get this last one in CloudFormation Stack page in Outputs tab, from "Sample Request".
 
 ## Conclusion
 
