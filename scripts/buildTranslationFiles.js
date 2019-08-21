@@ -1,9 +1,10 @@
 const { initStelaceSdk } = require('../src/utils/init-sdk')
 
+const dotenv = require('dotenv')
 const i18nCompile = require('i18n-compile')
 const markdownIt = require('markdown-it')
 const pMap = require('p-map')
-const dotenv = require('dotenv')
+const _ = require('lodash')
 const path = require('path')
 const fs = require('fs')
 const util = require('util')
@@ -11,6 +12,7 @@ const readFile = util.promisify(fs.readFile)
 const readDir = util.promisify(fs.readdir)
 const writeFile = util.promisify(fs.writeFile)
 
+const script = require('commander')
 const chalk = require('chalk')
 const log = console.log
 const success = str => log(`\n${chalk.green(str)}\n`)
@@ -36,6 +38,11 @@ const md = markdownIt({
   linkify: false, // Auto-convert URL-like text to links
   typographer: false, // language-neutral replacement + quotes beautification
 })
+
+script
+  .option('-v, --verbose', 'Show API changes for website each entry')
+  .parse(process.argv)
+const verbose = script.verbose
 
 i18nCompile(
   [
@@ -83,6 +90,7 @@ async function run () {
   let apiEntries = await stelace.entries.list({ collection })
     .catch(err => warn(err, '\nError when fetching apiEntries\n\n')) || []
 
+  log('')
   await pMap(translationFiles, async tr => {
     const filePath = path.join(translationsPath, tr)
     const file = await readFile(filePath, 'utf8')
@@ -92,6 +100,10 @@ async function run () {
 
     if (!filesNotToMergePrefixes.some(p => tr.startsWith(p))) {
       apiEntries.filter(e => e.locale === locale).forEach(e => {
+        if (verbose) {
+          const changes = listUpdatedFields(e, localEntries[e.name])
+          if (changes.length) log(`New "${e.name}" entry contents:\n `, changes.join('\n  '), '\n')
+        }
         localEntries[e.name] = Object.assign({}, localEntries[e.name], e.fields)
       })
     }
@@ -148,4 +160,17 @@ function transformAndFlatten (data) {
   }
 
   return result
+}
+
+function listUpdatedFields (apiEntry, localEntry) {
+  return _.reduce(apiEntry.fields, (changes, value, field) => {
+    const currentField = _.get(localEntry, field)
+    const hasFieldChanged = !currentField || (
+      _.has(value, 'transformed') && _.has(value, 'transformed') // e.g. markdown source content
+        ? currentField.transformed !== value.transformed
+        : currentField !== value
+    )
+    if (hasFieldChanged) changes.push(`${field} -> ${value}`)
+    return changes
+  }, [])
 }
