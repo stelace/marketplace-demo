@@ -1,6 +1,7 @@
 instant:
   config:
     customAttributes:
+      # Goods marketplace
       reference_label:
         en: Reference
         fr: Référence
@@ -13,3 +14,10 @@ instant:
       transport_label:
         en: Transport
         fr: Transport
+      # Housing marketplace
+      passive_label:
+        en: Passive House
+        fr: Habitat passif
+      scenery_label:
+        en: Breathtaking Scenery
+        fr: Paysage unique
