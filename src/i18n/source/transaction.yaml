@@ -54,8 +54,8 @@ transaction:
       en: Status
       fr: Statut
     draft:
-      en: Draft
-      fr: En brouillon
+      en: Pending
+      fr: En attente
     accepted:
       en: Accepted
       fr: Accepté
