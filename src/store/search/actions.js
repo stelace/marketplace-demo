@@ -270,13 +270,13 @@ export function setSearchParamsFromUrl ({ state, commit }, { route }) {
   if (minPrice && !isNaN(minPrice)) {
     priceRange.min = parseInt(minPrice, 10)
   } else {
-    priceRange.min = state.priceDefaultMin
+    priceRange.min = state.priceDefault.min
   }
 
   if (maxPrice && !isNaN(maxPrice)) {
     priceRange.max = parseInt(maxPrice, 10)
   } else {
-    priceRange.max = state.priceDefaultMax
+    priceRange.max = state.priceDefault.max
   }
 
   commit(Object.assign({}, priceRange, {

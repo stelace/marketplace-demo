@@ -1,9 +1,11 @@
 import pMap from 'p-map'
 import stelace, { fetchAllResults } from 'src/utils/stelace'
 import * as types from 'src/store/mutation-types'
-import { get, values, keyBy } from 'lodash'
+import { get, isEmpty, keyBy, values } from 'lodash'
+
 import * as searchApi from 'src/store/search/api'
 import { populateAsset } from 'src/utils/asset'
+import { roundUpPower10 } from 'src/utils/number'
 
 export async function fetchLastAssets ({ dispatch, rootState, rootGetters }, { nbResults = 3 } = {}) {
   await dispatch('fetchConfig')
@@ -112,6 +114,29 @@ export async function fetchUserAssets ({ commit, dispatch, rootState, rootGetter
       assetTypesById
     })
   })
+}
+
+export async function getHighestPrice ({ rootState, commit }, { setPriceRange = true } = {}) {
+  const assetTypeIds = rootState.search.assetTypesIds
+  const params = {
+    nbResultsPerPage: 1,
+    orderBy: 'price',
+    order: 'desc'
+  }
+  if (!isEmpty(assetTypeIds)) params.assetTypeId = assetTypeIds
+
+  const assets = await stelace.assets.list(params)
+  const max = get(assets, '[0].price')
+
+  if (Number.isFinite(max) && setPriceRange) {
+    commit({
+      type: types.SET_PRICE_RANGE,
+      min: rootState.search.priceRange.min,
+      max: roundUpPower10(max),
+      defaults: true
+    })
+  }
+  return max
 }
 
 export async function createAsset ({ commit }, { attrs }) {
