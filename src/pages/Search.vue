@@ -179,6 +179,9 @@ export default {
   mounted () {
     this.$store.dispatch('getHighestPrice')
   },
+  updated () { // e.g. when switching locale
+    this.refreshMap()
+  },
   beforeDestroy () {
     this.$store.commit(mutationTypes.TOGGLE_FILTER_DIALOG, { visible: false })
 
@@ -328,7 +331,7 @@ export default {
     destroyMarkers ({ keep } = {}) {
       // Don’t keep all markers in memory when results change
       const assetMarkersToKeep = keep || []
-      Object.keys(window.stlMapMarkers).forEach(assetId => {
+      Object.keys(window.stlMapMarkers || {}).forEach(assetId => {
         if (!assetMarkersToKeep.includes(assetId)) {
           window.stlMapMarkers[assetId].remove()
           // Mapbox marker.remove destroys attached listeners and popups internally
