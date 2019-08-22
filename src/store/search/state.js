@@ -28,16 +28,19 @@ export default {
 
   startDate: '',
   endDate: '',
+
   displayPriceRange: {
-    min: priceDefaultMin,
-    max: priceDefaultMax
+    min: null,
+    max: null
   },
   priceRange: {
+    min: null,
+    max: null
+  },
+  priceDefault: {
     min: priceDefaultMin,
     max: priceDefaultMax
   },
-  priceDefaultMin,
-  priceDefaultMax,
 
   searchFilters: {
     page: 1,

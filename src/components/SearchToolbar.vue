@@ -34,8 +34,8 @@ export default {
       return this.search.queryLocation
     },
     showPriceRangeFilter () {
-      return this.search.priceRange.min !== this.search.priceDefaultMin ||
-        this.search.priceRange.max !== this.search.priceDefaultMax
+      const range = this.search.priceRange
+      return Number.isFinite(range.min) || Number.isFinite(range.max)
     },
     showFilterDialog () {
       return this.search.showFilterDialog
@@ -129,8 +129,8 @@ export default {
     },
     setDisplayPriceRange ({ min, max } = {}) {
       this.$store.commit(mutationTypes.SET_DISPLAY_PRICE_RANGE, {
-        min: typeof min === 'number' ? min : this.search.priceDefaultMin,
-        max: typeof max === 'number' ? max : this.search.priceDefaultMax
+        min: Number.isFinite(min) ? min : null,
+        max: Number.isFinite(max) ? max : null
       })
     },
     setPriceRange () {
@@ -144,6 +144,11 @@ export default {
 
       this.$store.dispatch('selectSearchMode', { searchMode })
       this.searchAssets()
+
+      // price scale can be very different across platform Asset Types
+      this.resetPriceRange() // this reset can be removed if not
+      // Update price filter boundaries
+      this.$store.dispatch('getHighestPrice')
     },
     changeCustomAttributes (customAttributes) {
       this.selectedCustomAttributes = customAttributes
@@ -275,6 +280,7 @@ export default {
       :square="!style.roundedTheme"
       color="primary"
       @remove="resetPriceRange()"
+      @click="toggleFilterDialog"
     >
       <AppContent
         entry="pricing"
@@ -338,16 +344,15 @@ export default {
               entry="pricing"
               field="price_range_short"
               :options="{
-                lower_price: search.displayPriceRange.min,
-                upper_price: search.displayPriceRange.max
+                lower_price: search.displayPriceRange.min || search.priceDefault.min,
+                upper_price: search.displayPriceRange.max || search.priceDefault.max
               }"
             />
           </div>
           <QRange
-            :value="search.displayPriceRange"
-            :min="search.priceDefaultMin"
-            :max="search.priceDefaultMax"
-            :step="200"
+            :value="search.displayPriceRange.max ? search.displayPriceRange : search.priceDefault"
+            :min="search.priceDefault.min"
+            :max="search.priceDefault.max"
             snap
             @input="setDisplayPriceRange"
           />

@@ -174,6 +174,9 @@ export default {
 
     await store.dispatch('searchAssets')
   },
+  mounted () {
+    this.$store.dispatch('getHighestPrice')
+  },
   beforeDestroy () {
     this.$store.commit(mutationTypes.TOGGLE_FILTER_DIALOG, { visible: false })
 
