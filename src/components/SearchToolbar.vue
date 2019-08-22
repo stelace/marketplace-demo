@@ -59,6 +59,9 @@ export default {
       const ca = this.search.searchFilters.customAttributesFilters
       return Object.keys(pickBy(ca)).length
     },
+    nbActiveFilters () {
+      return (this.nbActiveCustomAttributes || 0) + this.currentCategory ? 1 : 0
+    },
     displayStartDate () {
       if (!this.search.startDate) return
       return this.$t({ id: 'time.date_short' }, { date: new Date(this.search.startDate) })
@@ -317,22 +320,22 @@ export default {
     <QChip
       clickable
       outline
-      :removable="nbActiveCustomAttributes > 0"
+      :removable="nbActiveFilters > 0"
       :square="!style.roundedTheme"
       color="primary"
       @click="toggleFilterDialog"
-      @remove="resetCustomAttributes(); triggerSearch()"
+      @remove="resetCustomAttributes(); selectCategory(null); triggerSearch()"
     >
       <AppContent
         entry="form"
         field="search.filters"
       />
       <QBadge
-        v-show="nbActiveCustomAttributes"
+        v-show="nbActiveFilters"
         class="filter-count-badge q-ml-sm"
         color="primary"
       >
-        {{ nbActiveCustomAttributes || '' }}
+        {{ nbActiveFilters || '' }}
       </QBadge>
     </QChip>
 
@@ -383,7 +386,7 @@ export default {
 
           <div class="row q-my-lg q-py-md justify-center">
             <SelectCategories
-              class="col-12 col-sm-8"
+              class="col-12 col-sm-5"
               :label="$t({ id: 'asset.category_label' })"
               :show-search-icon="false"
               :initial-category="currentCategory"
