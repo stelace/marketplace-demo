@@ -223,7 +223,7 @@ export default {
 <template>
   <QPage padding>
     <div class="row flex-center">
-      <div class="stl-content-container">
+      <div class="stl-content-container conversation-container">
         <AppContent
           tag="h1"
           class="text-h4 text-weight-medium"
@@ -395,9 +395,9 @@ export default {
             </template>
             <template v-slot:append>
               <QBtn
-                :class="style.colorfulTheme ? 'text-primary' : ''"
                 :disabled="!draftMessage"
                 icon="send"
+                color="primary"
                 round
                 dense
                 flat
@@ -450,6 +450,9 @@ export default {
 </template>
 
 <style lang="stylus" scoped>
+.conversation-container
+  min-width: 50vw
+
 .conversation__messages-container
   max-height: "calc(80vh - %s)" % $toolbar-min-height
 
