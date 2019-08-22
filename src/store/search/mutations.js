@@ -1,4 +1,4 @@
-import { keyBy, isUndefined } from 'lodash'
+import { keyBy, isUndefined, pickBy } from 'lodash'
 import * as types from 'src/store/mutation-types'
 
 export default {
@@ -69,26 +69,14 @@ export default {
   },
 
   [types.SEARCH__SET_SEARCH_FILTERS] (state, { page, nbResultsPerPage, orderBy, order, filters, customAttributesFilters, query }) {
-    if (typeof page !== 'undefined') {
-      state.searchFilters.page = page
-    }
-    if (typeof nbResultsPerPage !== 'undefined') {
-      state.searchFilters.nbResultsPerPage = nbResultsPerPage
-    }
-    if (typeof orderBy !== 'undefined') {
-      state.searchFilters.orderBy = orderBy
-    }
-    if (typeof order !== 'undefined') {
-      state.searchFilters.order = order
-    }
+    const newFilters = pickBy({ page, nbResultsPerPage, orderBy, order, query })
+    state.searchFilters = Object.assign({}, state.searchFilters, newFilters)
+
     if (typeof filters !== 'undefined') {
       state.searchFilters.filters = Object.assign({}, filters)
     }
     if (typeof customAttributesFilters !== 'undefined') {
       state.searchFilters.customAttributesFilters = Object.assign({}, customAttributesFilters)
-    }
-    if (typeof query !== 'undefined') {
-      state.searchFilters.query = query
     }
   },
 

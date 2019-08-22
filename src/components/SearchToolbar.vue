@@ -7,12 +7,14 @@ import { date } from 'quasar'
 import AppSVGActionButton from 'src/components/AppSVGActionButton'
 import CustomAttributesEditor from 'src/components/CustomAttributesEditor'
 import DateRangePicker from 'src/components/DateRangePicker'
+import SelectCategories from 'src/components/SelectCategories'
 
 export default {
   components: {
     AppSVGActionButton,
     CustomAttributesEditor,
     DateRangePicker,
+    SelectCategories
   },
   data () {
     return {
@@ -71,6 +73,11 @@ export default {
       const assetTypes = compact(assetTypesIds.map(assetTypeId => this.common.assetTypesById[assetTypeId]))
 
       return assetTypes.some(assetType => assetType.timeBased)
+    },
+    currentCategory () {
+      const id = this.search.searchFilters.filters.categoryId
+      if (!id) return null
+      return this.common.categoriesById[id]
     },
     ...mapState([
       'layout',
@@ -149,6 +156,12 @@ export default {
       this.resetPriceRange() // this reset can be removed if not
       // Update price filter boundaries
       this.$store.dispatch('getHighestPrice')
+    },
+    selectCategory (category) {
+      this.$store.commit({
+        type: mutationTypes.SEARCH__SET_SEARCH_FILTERS,
+        filters: { categoryId: (category && category.id) || null }
+      })
     },
     changeCustomAttributes (customAttributes) {
       this.selectedCustomAttributes = customAttributes
@@ -367,6 +380,16 @@ export default {
             @changeStartDate="startDate => setDates({ startDate })"
             @changeEndDate="endDate => setDates({ endDate })"
           />
+
+          <div class="row q-my-lg q-py-md justify-center">
+            <SelectCategories
+              class="col-12 col-sm-8"
+              :label="$t({ id: 'asset.category_label' })"
+              :show-search-icon="false"
+              :initial-category="currentCategory"
+              @change="selectCategory"
+            />
+          </div>
 
           <div
             v-if="displayCustomAttributes.length"

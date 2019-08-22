@@ -47,7 +47,9 @@ export default {
     nbResultsPerPage: 24,
     orderBy: 'createdDate',
     order: 'desc',
-    filters: {},
+    filters: {
+      categoryId: null
+    },
     customAttributesFilters: {}
   },
   paginationMeta: {
