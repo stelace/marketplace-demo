@@ -12,8 +12,8 @@ instant:
         en: Dimension
         fr: Dimensions
       transport_label:
-        en: Transport
-        fr: Transport
+        en: Freight included
+        fr: Transport fourni
       # Housing marketplace
       passive_label:
         en: Passive House

@@ -1,0 +1,16 @@
+asset:
+  checkout_action:
+    en: |
+      {timeBased, select,
+          true {Book}
+          false {Buy}
+          other {Buy}
+          undefined {Contact}
+      }
+    fr: |
+      {timeBased, select,
+          true {Réserver}
+          false {Acheter}
+          other {Acheter}
+          undefined {Contacter}
+      }
