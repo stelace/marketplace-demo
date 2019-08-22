@@ -429,7 +429,7 @@ export default {
               :label="$t({ id: 'navigation.search' })"
               :to="{ name: 'search' }"
               :rounded="style.roundedTheme"
-              color="secondary"
+              color="info"
               size="lg"
               no-caps
               @click="triggerSearch"

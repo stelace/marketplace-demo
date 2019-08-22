@@ -35,12 +35,16 @@ module.exports = {
   },
   assets: {
     passiveHouse: {
-      name: 'Passive House ❤️',
-      description: 'Rehabilitated to a cosy studio surrounded by nature. 10 minutes from Aix. For sale, please get in touch.',
+      name: 'Passive House ☀️',
+      description: `Rehabilitated to a cosy studio surrounded by nature.
+        Equipped with solar panels and saltwater batteries built to last 20 years.
+        10 minutes from Aix.
+        For sale, please get in touch.
+      `,
       assetTypeId: 'assetTypes::selling',
       categoryId: 'categories::house',
       ownerId: 'users::user1',
-      price: 100000,
+      price: 120000,
       locations: [
         {
           latitude: 43.54,
@@ -90,10 +94,10 @@ module.exports = {
     },
     cassisFlat: {
       name: 'Flat with panoramic view',
-      description: 'Beautiful fully furnished flat with an awesome panoramic view. Perfect for a couple who wants to enjoy a week at Cassis.',
+      description: 'Beautiful fully furnished flat with an awesome panoramic view. Perfect for a couple who wants to enjoy a week in Cassis.',
       assetTypeId: 'assetTypes::renting',
       categoryId: 'categories::flat',
-      ownerId: 'users::user2',
+      ownerId: 'users::user1',
       price: 120,
       locations: [
         {
@@ -174,7 +178,7 @@ module.exports = {
       description: 'Recent and spacious house, built in 2008 on a large wooded plot of 5500 M2 for 12 people, two or three families.',
       assetTypeId: 'assetTypes::renting',
       categoryId: 'categories::house',
-      ownerId: 'users::user2',
+      ownerId: 'users::user1',
       price: 115,
       locations: [
         {
@@ -251,11 +255,11 @@ module.exports = {
       }
     },
     rouetMarseille: {
-      name: 'Small flat at Marseille',
-      description: 'Small and nice 45m² flat at Marseille. Ideal for a weekend or a week of vacation. Beautiful furnishings: living / dining room with TV (flat screen). 2 rooms, each room with 1 double bed (140 cm). Open kitchen (4 hotplates, dishwasher, electric coffee machine, combination microwave).',
+      name: 'Small flat in Marseille',
+      description: 'Small and nice 45m² flat in Marseille. Ideal for a weekend or a week of vacation. Beautiful furnishings: living / dining room with TV (flat screen). 2 rooms, each room with 1 double bed (140 cm). Open kitchen (4 hotplates, dishwasher, electric coffee machine, combination microwave).',
       assetTypeId: 'assetTypes::renting',
       categoryId: 'categories::flat',
-      ownerId: 'users::user2',
+      ownerId: 'users::user1',
       price: 75,
       locations: [
         {
@@ -309,7 +313,7 @@ module.exports = {
       description: 'Superb apartment very bright and cozy in the heart of Marseille, close to the metro, tram and bus that leads directly to beaches and coves.',
       assetTypeId: 'assetTypes::selling',
       categoryId: 'categories::flat',
-      ownerId: 'users::user2',
+      ownerId: 'users::user1',
       price: 250000,
       locations: [
         {

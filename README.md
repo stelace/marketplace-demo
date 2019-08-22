@@ -1,25 +1,27 @@
 [![Stelace-platform-runner](https://user-images.githubusercontent.com/12909094/59638847-c41f1900-9159-11e9-9fa5-6d7806d57c92.png)](https://stelace.com)
 
-[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/stelace/jobs-marketplace-template)
+[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/stelace/marketplace-demo)
 
 # Vue marketplace starter kit
 
 > This Stelace starter kit is free to use, under the terms of the [MIT license](./LICENSE).
-Feel free to fork, contribute or just make it your own :heart:.
+Feel free to [fork](
+  https://app.netlify.com/start/deploy?repository=https://github.com/stelace/marketplace-demo
+), contribute or just make it your own :heart:.
 
 ---
 
-This starter kit offers **a full Vue.js marketplace front-end with pre-configured serverless deployment**.
+This starter kit offers **a full AirBnB-like marketplace front-end (Vue.js) with pre-configured serverless deployment**.
 
 __[Live Demo](https://marketplace.demo.stelace.com)__
 
-[![stellar-jobs-screenshot](https://user-images.githubusercontent.com/12909094/60470099-762d0980-9c5f-11e9-8d78-0bade89101c4.jpg)](https://marketplace.demo.stelace.com)
+[![marketplace-demo-screenshot](https://stelace-instant-files.s3.amazonaws.com/p/238393/test/images/22d115c4e340b125120ce0f29ab36db8-stelace-marketplace-demo-laptop.png)](https://marketplace.demo.stelace.com)
 
-A lighter platform template focused on search and automation is [also available](https://github.com/stelace/heroes-platform-demo).
+A platform template focused on search, automation and real-time is [also available](https://github.com/stelace/heroes-platform-demo).
 
 **What is Stelace?**
 
-[Stelace API](https://stelace.com/) provides search, inventory and user management infrastructure for Web platforms, ranging from search-intensive marketplaces to online community apps.
+[Stelace API](https://stelace.com/) provides search, inventory and user management infrastructure and APIs for Web platforms, ranging from search-intensive marketplaces to online community apps.
 Stelace offers powerful backend and APIs including advanced search, automation, and content delivery, to let you focus on what makes your platform unique.
 
 [API Docs](https://stelace.com/docs)
@@ -55,26 +57,33 @@ Leverage these integrations to start running your platform even faster:
 
 ## Stack
 
-- [Vue.js](https://github.com/vuejs/vue) and [Quasar](https://github.com/quasarframework/quasar)
-- [Stelace Backend](https://stelace.com)
+Serverless [JAMStack architecture](https://jamstack.org/):
+
+- [Vue.js](https://github.com/vuejs/vue)
+- [Quasar](https://github.com/quasarframework/quasar) framework
+- [Stelace API](https://stelace.com) as backend
+- [Stelace headless CMS](https://stelace.com/docs/content)
 - [Stelace.js](https://github.com/stelace/stelace.js) SDK
-- Node.js >= 8.9 for tooling
+
+Node.js >= 8.9 is used for tooling.
 
 ## Stelace Dashboard
 
-You will be able to use [official Stelace dashboard](https://stelace.com), enabling your team to access real-time stats, settings, live design and content editing with translation tools, asset and user management and much more.
+You will be able to use [official Stelace dashboard](
+  https://stelace.com
+), enabling your team to access real-time stats, settings, live design and content editing with translation tools, asset and user management, and much more.
 
 [![Stelace Dashboard](https://user-images.githubusercontent.com/12909094/38527674-415ac06c-3c5c-11e8-89d3-c92c3be1d377.png)](https://stelace.com)
 
 ## Getting started
 
-You first need to get your Stelace API Keys. Good news: [it’s free](https://stelace.com/pricing).
+You need your Stelace API Keys to get started. Good news: [it’s free](https://stelace.com/pricing).
 
 1. Clone this repository
 
 ```sh
-git clone https://github.com/stelace/jobs-marketplace-template.git
-cd jobs-marketplace-template
+git clone https://github.com/stelace/marketplace-demo.git
+cd marketplace-demo
 ```
 
 2. Install node_modules
@@ -119,14 +128,14 @@ yarn seed
 ```
 
 <details>
-<summary>For Stelace Team or partners developing with on-premise API server.</summary>
+<summary>For Stelace Team or partners developing with local API server.</summary>
 
 Stelace Core API server has to be launched locally before starting this project's server.
 
 First we need to launch services needed by Stelace Core API.
 
 ```sh
-docker-compose up -d elasticsearch postgresql redis
+yarn docker:db
 ```
 
 Then we need to initialize the database with Instant configuration.
@@ -142,7 +151,7 @@ Secret and publishable api keys will be displayed so you can use it as environme
 Let’s start the server.
 
 ```sh
-yarn start
+yarn dev
 ```
 
 You’ll probably need to set some environment variables such as STELACE_API_URL (http://127.0.0.1:API_PORT).

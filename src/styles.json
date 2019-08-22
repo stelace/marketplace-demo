@@ -1,5 +1,5 @@
 {
-  "name": "Stelace Instant - Work",
+  "name": "Stelace Instant Marketplace Demo",
 
   "userFont": "Fira Sans",
 
@@ -26,7 +26,7 @@
   "avatarImageWidth": 96,
 
   "primaryColor": "#1C3661",
-  "secondaryColor": "#ED7F12",
+  "secondaryColor": "#AC0B70",
   "accentColor": "#0F1D34",
   "positiveColor": "#139933",
   "negativeColor": "#C10015",

@@ -71,6 +71,9 @@ export default {
     showLocaleSwitch () {
       return process.env.VUE_APP_LOCALE_SWITCH === 'true'
     },
+    showGithubForkButton () {
+      return process.env.VUE_APP_GITHUB_FORK_BUTTON === 'true'
+    },
     ...mapState([
       'common',
       'content',
@@ -347,19 +350,35 @@ export default {
         {{ $t({ id: 'authentication.log_in_button' }) }}
       </QBtn>
 
-      <AppLocaleSwitch v-if="showLocaleSwitch" />
+      <AppLocaleSwitch v-if="showLocaleSwitch" text-color="default-color" />
 
-      <!-- Hidden right drawer -->
-      <!-- <QBtn dense flat round icon="menu" @click="right = !right"/> -->
+      <AppLink
+        v-if="showGithubForkButton"
+        to="https://github.com/stelace/marketplace-demo"
+        class="q-mr-md gt-md flex-item--auto"
+      >
+        <QBtn
+          class="bg-github text-white q-px-sm text-weight-bold"
+          :loading="content.fetchingContentStatus"
+          :rounded="style.roundedTheme"
+          align="between"
+          dense
+        >
+          <svg class="q-icon on-left">
+            <use xlink:href="statics/images/custom-icons.svg#github" />
+          </svg>
+          <AppContent entry="navigation" field="github_button" />
+        </QBtn>
+      </AppLink>
 
       <QBtn
-        class="create-assset-button q-px-md flex-item--auto"
+        class="create-asset-button q-px-md flex-item--auto text-weight-bold"
         :to="{ name: 'newAsset' }"
         :loading="content.fetchingContentStatus"
         :rounded="style.roundedTheme"
         :label="$t({ id: 'navigation.new_listing' })"
         icon="add_box"
-        color="info"
+        color="secondary"
         align="between"
         dense
       />
@@ -539,7 +558,7 @@ $header-min-breakpoint = 359px
   pointer-events: none
   border-radius: $badge-rounded-border-radius
 
-.create-assset-button
+.create-asset-button
   @media (max-width: 850px)
     display: none
 

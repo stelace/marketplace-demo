@@ -715,7 +715,4 @@ export default {
 
 .auth-card .error-message
   color: $negative
-
-.bg-github
-  background: #24292E
 </style>

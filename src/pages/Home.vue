@@ -265,7 +265,7 @@ export default {
               class="text-weight-medium"
               :rounded="style.roundedTheme"
               :label="$t({ id: 'pages.home.form_button' })"
-              color="secondary"
+              color="info"
               size="lg"
               no-caps
               @click="searchAssets"
