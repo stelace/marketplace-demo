@@ -8,12 +8,19 @@ export default {
   computed: {
     footerLinks () { // return URLs to render as plain <a> tag if name is missing
       return [
-        { name: 'histoire', entry: 'navigation', field: 'about_us' },
-        { name: 'cgu', entry: 'navigation', field: 'terms' },
+        { name: 'about-us', entry: 'navigation', field: 'about_us' },
+        { name: 'terms', entry: 'navigation', field: 'terms' },
       ]
     },
     socialIconFooterLinks () {
       const links = []
+      if (this.socialInfo.twitterUsername) {
+        links.unshift({
+          url: `https://twitter.com/${this.socialInfo.twitterUsername}`,
+          icon: 'statics/images/custom-icons.svg#tw',
+          label: this.$t({ id: 'social.twitter' })
+        })
+      }
       if (this.socialInfo.facebookUrl) {
         links.unshift({
           url: this.socialInfo.facebookUrl,
@@ -87,7 +94,7 @@ export default {
     </div>
     <h3
       v-if="route.name === 'home'"
-      class="text-subtitle2 text-center q-mt-xl q-mb-none"
+      class="text-subtitle2 text-center q-my-xl"
     >
       <AppContent
         tag="a"
@@ -103,7 +110,7 @@ export default {
 <style lang="stylus" scoped>
 .stl-footer
   position: relative
-  padding: 10vw $spaces.lg.x 5vw
+  padding: 10vw $spaces.lg.x 8vw
   font-size: 1.25em
 
 .shape
@@ -113,8 +120,8 @@ export default {
 
 .s-icon
   fill: currentColor
-  height: 4rem
-  width: 4rem
+  height: 3.5rem
+  width: 3.5rem
 </style>
 
 <style lang="stylus">
