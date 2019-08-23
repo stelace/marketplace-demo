@@ -14,7 +14,7 @@ export function makeSafeForUrl (string, options) {
 function safePath (str) {
   const opts = {
     maxLength: 100,
-    regexRemovePattern: /((?!([a-z0-9])).)/gi, // matches opposite of [a-z0-9]
+    regexRemovePattern: /((?!([a-z0-9-])).)/gi, // matches opposite of [a-z0-9-]
     joinString: '-'
   }
 

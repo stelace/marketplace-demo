@@ -16,7 +16,7 @@ instant_pages:
     header:
       en: Help center
       fr: Centre d’aide
-    content:
+    content[markdown]:
       en: ""
       fr: ""
     content__EDITOR_LABEL:
@@ -33,9 +33,11 @@ instant_pages:
     last_update_date:
       en: "Last Updated: {date}"
       fr: "Dernière mise à jour\_: {date}"
-    content:
-      en: ""
-      fr: ""
+    content[markdown]:
+      en: |-
+        Available soon
+      fr: |-
+        Bientôt disponible
     content__EDITOR_LABEL:
       en: Terms page text
       fr: Contenu des conditions et mentions légales
@@ -50,9 +52,24 @@ instant_pages:
     header__EDITOR_LABEL:
       en: Contact page title
       fr: Titre de la page Contact
-    content:
+    content[markdown]:
       en: ""
       fr: ""
     content__EDITOR_LABEL:
       en: Contact page text
       fr: Contenu de la page Contact
+  about_us:
+    header:
+      en: About us
+      fr: Qui sommes-nous ?
+    subheader:
+      en: About us
+      fr: Qui sommes-nous ?
+    INSTANT_PAGE_PATH:
+      en: about-us
+      fr: about-us
+    content[markdown]:
+      en: |-
+        Available soon
+      fr: |-
+        Bientôt disponible

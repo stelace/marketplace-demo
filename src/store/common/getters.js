@@ -8,14 +8,6 @@ export function assetsInUniqueCountry (state) {
   return uniqueCountry
 }
 
-export function countriesCovered (state) {
-  const countriesCovered = get(state.config, 'stelace.instant.countriesCovered')
-  const countriesCoveredActive = get(state.config, 'stelace.instant.countriesCoveredActive', false)
-
-  if (!countriesCoveredActive) return []
-  return countriesCovered
-}
-
 export function socialInfo (state) {
   const d = get(state.config, 'stelace.instant', {})
 

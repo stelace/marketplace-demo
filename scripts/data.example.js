@@ -455,11 +455,11 @@ module.exports = {
 
           assetsInUniqueCountry: 'fr',
           assetsInUniqueCountryActive: true,
-          countriesCovered: ['fr'],
-          countriesCoveredActive: true,
           googleAnalyticsTrackingActive: true,
           googleAnalyticsTrackingId: 'UA-XXXXXX-1', // for development
-          facebookUrl: 'https://www.facebook.com/GunsGermsAndSteel/'
+
+          twitterUsername: 'StelaceAPI',
+          // facebookUrl: ''
         }
       }
     }
