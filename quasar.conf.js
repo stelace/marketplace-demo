@@ -27,7 +27,13 @@ module.exports = function (ctx) {
   })
 
   // Ensuring we have local translations up-to-date. Runs once.
-  execSync(ctx.dev ? 'npm run translate' : 'npm run translate:prod', { stdio: 'inherit' })
+  execSync(`npm run translate${ctx.dev ? '' : ':prod'}`, { stdio: 'inherit' })
+
+  // Upload latest translations in default locale to enable Stelace Dashboard editing
+  // This must be done manually in production
+  if (ctx.dev && process.env.STELACE_SECRET_API_KEY) {
+    execSync(`npm run deploy:translations${ctx.dev ? '' : ':prod'}`, { stdio: 'inherit' })
+  }
 
   // ///////// //
   // Dev tools //
