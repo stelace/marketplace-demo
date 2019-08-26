@@ -94,3 +94,9 @@
     VUE_APP_NOMINATIM_HOST = "https://open.mapquestapi.com"
     VUE_APP_GOOGLE_ANALYTICS_ID = "UA-XXXXXXXX-1"
     VUE_APP_CDN_UPLOAD_PREFIX = "dev/cd"
+
+[context.branch-deploy]
+  [context.branch-deploy.environment]
+    VUE_APP_NOMINATIM_HOST = "https://open.mapquestapi.com"
+    VUE_APP_GOOGLE_ANALYTICS_ID = "UA-XXXXXXXX-1"
+    VUE_APP_CDN_UPLOAD_PREFIX = "dev/cd"
