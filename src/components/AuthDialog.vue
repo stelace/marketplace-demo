@@ -314,7 +314,7 @@
         </q-btn>
 
         <div
-          v-if="type === 'login' && showSSOSection"
+          v-if="type === 'login' && SSOProviders.length"
           class="text-center"
         >
           <div class="q-my-md">
@@ -322,11 +322,33 @@
           </div>
 
           <QBtn
+            v-if="SSOProviders.includes('github')"
             no-caps
             text-color="primary"
             @click="ssoLogin('github')"
           >
-            <AppContent entry="authentication" field="log_in_with_github" />
+            <svg class="q-icon on-left">
+              <use xlink:href="statics/images/custom-icons.svg#github" />
+            </svg>
+            <AppContent
+              entry="authentication"
+              field="log_in_with_provider"
+              :options="{ provider: 'Github' }"
+            />
+          </QBtn>
+
+          <QBtn
+            v-for="provider in customSSOProviders"
+            :key="provider"
+            no-caps
+            color="primary"
+            @click="ssoLogin(provider)"
+          >
+            <AppContent
+              entry="authentication"
+              field="log_in_with_provider"
+              :options="{ provider: upperFirst(provider) }"
+            />
           </QBtn>
         </div>
 
@@ -384,6 +406,7 @@
 
 <script>
 import { mapState, mapGetters } from 'vuex'
+import { upperFirst } from 'lodash'
 import * as mutationTypes from 'src/store/mutation-types'
 import { required, email, minLength } from 'vuelidate/lib/validators'
 
@@ -428,9 +451,7 @@ export default {
       validUserType: false,
       actionPending: false,
       termsAccepted: false,
-      errorType: null,
-
-      showSSOSection: process.env.VUE_APP_SSO_ENABLED === 'true',
+      errorType: null
     }
   },
   validations: {
@@ -464,6 +485,14 @@ export default {
     },
     isPersistent () {
       return !!(this.auth.authDialogPersistent || this.redirectUrl)
+    },
+    SSOProviders () {
+      if (!process.env.VUE_APP_SSO_PROVIDERS) return []
+      return process.env.VUE_APP_SSO_PROVIDERS.split(',').map(p => p.trim())
+    },
+    customSSOProviders () {
+      const builtInProviders = ['github']
+      return this.SSOProviders.filter(p => !builtInProviders.includes(p))
     },
     showAuthenticationForm () {
       return ['signup', 'login'].includes(this.type)
@@ -700,9 +729,12 @@ export default {
       this.$refs.authDialog.shake()
     },
     ssoLogin (provider) {
-      const loginUrl = getSSOLoginUrl('github')
+      const loginUrl = getSSOLoginUrl(provider)
       window.location.href = loginUrl
     },
+    upperFirst (str) {
+      return upperFirst(str)
+    }
   }
 }
 </script>

@@ -453,7 +453,7 @@ module.exports = function (ctx) {
         STELACE_PUBLISHABLE_API_KEY: JSON.stringify(process.env.STELACE_PUBLISHABLE_API_KEY),
         STELACE_INSTANT_WEBSITE_URL: JSON.stringify(websiteUrl),
         STELACE_PUBLIC_PLATFORM_ID: JSON.stringify(process.env.STELACE_PUBLIC_PLATFORM_ID),
-        VUE_APP_SSO_ENABLED: JSON.stringify(process.env.VUE_APP_SSO_ENABLED),
+        VUE_APP_SSO_PROVIDERS: JSON.stringify(process.env.VUE_APP_SSO_PROVIDERS),
         VUE_APP_STELACE_SIGNAL_URL: JSON.stringify(process.env.VUE_APP_STELACE_SIGNAL_URL),
         VUE_APP_SERVICE_NAME: JSON.stringify(process.env.VUE_APP_SERVICE_NAME),
         VUE_APP_MAPBOX_STYLE: JSON.stringify(process.env.VUE_APP_MAPBOX_STYLE),

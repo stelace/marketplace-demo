@@ -14,9 +14,17 @@ authentication:
   log_in_success:
     en: Successfully logged in
     fr: Connexion réussie
-  log_in_with_github:
-    en: Log In with Github
-    fr: Connexion avec Github
+  log_in_with_provider:
+    en: |-
+      Log In with {provider, select,
+        undefined {external provider}
+        other {{provider}}
+      }
+    fr: |-
+      Connexion {provider, select,
+        undefined {externe}
+        other {avec {provider}}
+      }
   lost_password_button:
     en: Forgot password?
     fr: Mot de passe oublié
