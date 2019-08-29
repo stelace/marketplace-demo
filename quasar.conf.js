@@ -488,13 +488,6 @@ module.exports = function (ctx) {
       // https: true,
       // port: 8080,
       open: false, // opens browser window automatically
-
-      proxy: {
-        '/stelace': {
-          target: process.env.STELACE_DASHBOARD_URL,
-          changeOrigin: false,
-        }
-      }
     },
 
     // animations: 'all' --- includes all animations
