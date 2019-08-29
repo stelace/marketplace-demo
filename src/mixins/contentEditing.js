@@ -2,9 +2,9 @@ import { mapState, mapGetters } from 'vuex'
 import { get, isPlainObject, isBoolean, isString } from 'lodash'
 
 import * as mutationTypes from 'src/store/mutation-types'
-import * as escapeRegexp from 'escape-string-regexp'
 
 import EventBus from 'src/utils/event-bus'
+import { escapeRegexp } from 'src/utils/string'
 
 let parser
 

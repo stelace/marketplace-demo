@@ -92,7 +92,7 @@ import * as mutationTypes from 'src/store/mutation-types'
 
 import { get, set } from 'lodash'
 import getDistance from 'geolib/es/getDistance'
-import pMap from 'p-map'
+import p from 'src/utils/promise'
 
 import AssetCard from 'src/components/AssetCard'
 
@@ -266,7 +266,7 @@ export default {
       }
 
       // add new markers to map
-      pMap(mapFeatures, async f => {
+      p.map(mapFeatures, async f => {
         const assetId = f.properties.assetId
         const asset = this.searchedAssets.find(a => a.id === assetId)
         const markerId = `marker-${assetId}`

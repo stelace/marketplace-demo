@@ -1,4 +1,3 @@
-import pMap from 'p-map'
 import stelace, { fetchAllResults } from 'src/utils/stelace'
 import * as types from 'src/store/mutation-types'
 import { get, isEmpty, keyBy, values } from 'lodash'
@@ -6,6 +5,7 @@ import { get, isEmpty, keyBy, values } from 'lodash'
 import * as searchApi from 'src/store/search/api'
 import { populateAsset } from 'src/utils/asset'
 import { roundUpPower10 } from 'src/utils/number'
+import p from 'src/utils/promise'
 
 export async function fetchLastAssets ({ dispatch, rootState, rootGetters }, { nbResults = 3 } = {}) {
   await dispatch('fetchConfig')
@@ -98,7 +98,7 @@ export async function fetchUserAssets ({ commit, dispatch, rootState, rootGetter
   })
 
   if (fetchAssetAvailabilities) {
-    await pMap(assets, async (asset) => {
+    await p.map(assets, async (asset) => {
       await Promise.all([
         dispatch('fetchAvailabilities', { assetId: asset.id }),
         dispatch('fetchAvailabilityGraph', { assetId: asset.id })
