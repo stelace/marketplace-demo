@@ -26,14 +26,18 @@ Stelace offers powerful backend and APIs including advanced search, automation, 
 
 [API Docs](https://stelace.com/docs)
 
-[![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg)](https://conventionalcommits.org)
+[![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg)](
+  https://conventionalcommits.org
+)[ ![Netlify Status](https://api.netlify.com/api/v1/badges/b3500c61-82b1-4cdd-a002-890a718ad5ea/deploy-status)](
+  https://app.netlify.com/sites/stelace-marketplace-test/deploys
+)
 ---
 
 ## Features :gift:
 
 - [Asset](https://stelace.com/docs/assets) management and platform transaction process :chart_with_upwards_trend:
 - Powerful and typo-tolerant [Search](https://stelace.com/docs/search) :mag:, on a relevance _and_ dynamic availability basis
-- [User](https://stelace.com/docs/users) authentication
+- [User](https://stelace.com/docs/users) authentication including social login & SSO
 - User management and [Ratings](https://stelace.com/docs/ratings) :star:
 - Real-time [Events](https://stelace.com/docs/command/events) and [Messaging](https://stelace.com/docs/messages)
 - Automation with Stelace [Workflows](https://stelace.com/docs/command/workflows) :traffic_light:
