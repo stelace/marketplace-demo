@@ -13,7 +13,7 @@
     "build": "quasar build",
     "dev": "quasar dev",
     "translate": "node scripts/buildTranslationFiles.js",
-    "translate:prod": "cross-env NODE_ENV=production npm run translate",
+    "translate:prod": "cross-env NODE_ENV=production node scripts/buildTranslationFiles.js",
     "deploy": "npm run build && netlify deploy --dir=dist/spa",
     "deploy:prod": "npm run build && node scripts/deployManuallyToNetlifyProd.js",
     "deploy:translations": "node scripts/deployTranslations.js",

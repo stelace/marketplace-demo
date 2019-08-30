@@ -102,7 +102,7 @@ async function run () {
       apiEntries.filter(e => e.locale === locale).forEach(e => {
         if (verbose) {
           const changes = listUpdatedFields(e, localEntries[e.name])
-          if (changes.length) log(`New "${e.name}" entry contents:\n `, changes.join('\n  '), '\n')
+          if (changes.length) log(`\n📝 New "${e.name}" entry contents:\n `, changes.join('\n'), '\n')
         }
         localEntries[e.name] = Object.assign({}, localEntries[e.name], e.fields)
       })
@@ -170,7 +170,9 @@ function listUpdatedFields (apiEntry, localEntry) {
         ? currentField.transformed !== value.transformed
         : currentField !== value
     )
-    if (hasFieldChanged) changes.push(`${field} -> ${value}`)
+    if (hasFieldChanged) {
+      changes.push(`\n- ${field}\n  ${_.get(value, 'editable', value)}`)
+    }
     return changes
   }, [])
 }
