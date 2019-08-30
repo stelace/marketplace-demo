@@ -24,9 +24,8 @@ export default async ({ Vue }) => {
     EventBus.$emit('error')
 
     // Restore default behavior Vue.util: https://github.com/vuejs/vue/issues/8433
-    if (info) Vue.util.warn(`Error in ${info}: "${err.toString()}"`, vm)
-    // DEBUGGING for now
-    /* if (process.env.DEV) */ console.error(err) // eslint-disable-line
+    if (info) Vue.util.warn(`Error in ${info}`, vm)
+    if (process.env.DEV) console.error(err) // eslint-disable-line
 
     handleChunkError(err)
   }
@@ -86,8 +85,12 @@ function handleChunkError (err) {
     /expect.+</i.test(err.message)
   )
 
-  // DEBUGGING for now
-  console.error(err, isChunkError) // eslint-disable-line
+  // Much more likely to be handled by index.(template.)html
+  // since Webpack chunk errors happen before app boot
+  // We use the following message to track any exception in Sentry
+  if (remoteLogger.message && isChunkError) {
+    remoteLogger.message(`chunkError: ${err.message}`)
+  }
 
   if (isChunkError && window.location.hash !== '#reload') {
     window.location.hash = '#reload'
