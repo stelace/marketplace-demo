@@ -98,7 +98,7 @@ export default {
     >
       <AppContent
         tag="a"
-        href="https://stelace.com/?utm_campaign=powered-by&utm_medium=galaxy&utm_content=footer"
+        href="https://stelace.com/?utm_campaign=powered-by&utm_source=galaxy&utm_medium=web-template"
         class="anchor-text--reset"
         entry="stelace"
         field="service_powered_by_stelace"
