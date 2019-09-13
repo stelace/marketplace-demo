@@ -60,9 +60,8 @@ export default async ({ Vue }) => {
     remoteLogger.capture = err => {
       if (err.message && err.message.toLowerCase().includes('user session expired')) return
 
-      const { name, message } = err
       Sentry.captureException(err)
-      handleChunkError({ name, message })
+      handleChunkError(err)
     }
     remoteLogger.message = msg => Sentry.captureMessage(msg)
   }
@@ -75,9 +74,9 @@ export function getRemoteLogger () {
 }
 
 function handleChunkError (err) {
-  // Reload app and ignore cache to fix broken chunks after app update
-  // Stelace Signal helps to make it smoother for connected clients
-  // But some users can come back later and have missed "appUpdate" signal
+  // Reload app and ignore cache to fix broken chunks after app update.
+  // Stelace Signal helps to make it smoother for connected clients,
+  // but some users can come back later and have missed "appUpdate" signal.
   const isChunkError = err.message && (
     /Loading( CSS)? chunk .+ failed/i.test(err.message) ||
     // SPA index.html may be served instead of missing chunk

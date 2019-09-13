@@ -44,7 +44,7 @@
     <script>
       window.onerror = function (msg) {
         var isChunkError = /Loading( CSS)? chunk .+ failed/i.test(msg) ||
-          /expect.+(?=token|char|<)</i.test(msg);
+          /expect.+(?=token|char|<)/i.test(msg);
         if (isChunkError && window.location.hash !== '#reload') {
           window.location.hash = '#reload';
           window.location.reload(true);

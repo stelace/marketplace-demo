@@ -83,6 +83,8 @@ export default {
       if (!level || level === 'error') this.notifyFailure(message, notification)
       else this.notify(message)
     })
+
+    this.$router.afterEach(this.handleRouteQuery)
   },
   async mounted () {
     this.$store.dispatch('initApp')
@@ -131,6 +133,16 @@ export default {
     refreshSocket () {
       this.$socket.close()
       this.$socket.open()
+    },
+    handleRouteQuery () {
+      const hash = this.$route.hash
+      // Assuming 2-second delay is enough to prevent infinite reload loop
+      // with webpack chunk loading error
+      if (hash === '#reload') {
+        setTimeout(() => {
+          this.$router.replace(Object.assign({}, this.$route, { hash: '' }))
+        }, 2000)
+      }
     },
     handleUserSessionExpiration () {
       // use debounce function to prevent notification spamming
