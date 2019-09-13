@@ -51,16 +51,24 @@ async function run () {
   const emailEntries = await fetchAllResults(fetchEntriesPage, { collection: emailCollection })
   apiEntries.push(...emailEntries)
 
-  // Sync website URL to enable Stelace dashboard live content editor
+  // Sync config to enable Stelace dashboard live content editor and populate email templates
   const config = await stelace.config.read()
-  const platformUrl = _.get(config, 'stelace.instant.platformUrl')
-  const configUrl = process.env.STELACE_INSTANT_WEBSITE_URL
-  if (configUrl && platformUrl !== process.env.STELACE_INSTANT_WEBSITE_URL) {
+  const newInstantConfigAttrs = {}
+  const configPlatformUrl = _.get(config, 'stelace.instant.platformUrl')
+  const platformUrl = process.env.STELACE_INSTANT_WEBSITE_URL
+  if (platformUrl && configPlatformUrl !== platformUrl) {
+    newInstantConfigAttrs.platformUrl = platformUrl
+  }
+  const configServiceName = _.get(config, 'stelace.instant.serviceName')
+  const serviceName = process.env.VUE_APP_SERVICE_NAME
+  if (serviceName && configServiceName !== serviceName) {
+    newInstantConfigAttrs.serviceName = serviceName
+  }
+  if (!_.isEmpty(newInstantConfigAttrs)) {
     stelace.config.update({
-      stelace: {
-        instant: { platformUrl: configUrl }
-      }
+      stelace: { instant: newInstantConfigAttrs }
     })
+    log(`Updated ${Object.keys(newInstantConfigAttrs).join(', ')} in config`)
   }
 
   const filesToUpload = translationFiles
