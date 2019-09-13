@@ -14,6 +14,9 @@
 //   return new Date(new Date(isoDate).getTime() + ms(duration)).toISOString()
 // }
 
+// Please ensure you add your own translations if not using 'en' or 'fr'
+const locale = process.env.VUE_APP_DEFAULT_LANGUAGE || 'en'
+
 module.exports = {
   assetTypes: {
     renting: {
@@ -380,7 +383,7 @@ module.exports = {
           // And needed to enable dashboard live content editor
           // platformUrl: 'https://example.com,
           logoUrl: '',
-          locale: 'fr',
+          locale,
           currency: 'EUR',
           assetTypes: {
             'assetTypes::renting': {
@@ -572,11 +575,11 @@ module.exports = {
   workflows: {
     getEmailCheckTokenAtRegistration: {
       name: '[Check] Email check token at user registration',
-      description: 'When a user is created, create an email token that will be used to validate the new user email',
+      description: 'Create a token used to validate the email address of a new user',
       event: 'user__created',
       context: ['stelace'],
       computed: {
-        expirationDate: 'new Date(new Date().getTime() + 3600 * 1000).toISOString()'
+        expirationDate: 'new Date(new Date().getTime() + 24 * 3600 * 1000).toISOString()'
       },
       run: [
         {
@@ -597,7 +600,7 @@ module.exports = {
     },
     getEmailCheckTokenFromRequest: {
       name: '[Check] Email check token for email validation',
-      description: 'The check token will be used to validate an email that is filled by user',
+      description: 'Create a token to validate a new email address filled by user',
       event: 'email_check_request',
       context: ['stelace'],
       computed: {
@@ -623,11 +626,11 @@ module.exports = {
         }
       ]
     },
-    sendEmailCheckOrAtRegistration: {
+    sendEmailCheckToken: {
       name: '[Email] Email validation link',
       description: `
-        Send an email with an link that validates the user email.
-        It is used for user registration or when the user changes her email.
+      Send an email with a link to validate the user email address.
+      Used at user registration or when the user updates her email.
       `,
       event: 'token__check_requested',
       context: ['stelace'],
@@ -643,11 +646,14 @@ module.exports = {
           stop: '!user.email && !computed.tokenEmail',
           endpointUri: '/emails/send-template',
           endpointPayload: {
+            // 'name' property is a field of 'email' entry to use as email content
             name: 'computed.isRegistration ? "registration" : "emailCheck"',
             data: {
               emailCheckLink: 'computed.emailCheckLink'
             },
-            locale: '"fr"',
+            // You could also set locale dynamically with a computed property,
+            // for instance relying on some user metadata set by your app
+            locale: `"${locale}"`,
             toEmail: 'computed.isRegistration ? user.email : computed.tokenEmail',
             toName: 'computed.toName'
           }
@@ -684,7 +690,7 @@ module.exports = {
 
     sendEmailPasswordReset: {
       name: '[Email] Password reset',
-      description: 'Get the email and send the reset password to it',
+      description: 'Send an email with password reset link requested by user',
       event: 'password__reset_requested',
       context: ['stelace'],
       computed: {
@@ -702,7 +708,7 @@ module.exports = {
             data: {
               passwordResetLink: 'computed.passwordResetLink'
             },
-            locale: '"fr"',
+            locale: `"${locale}"`,
             toEmail: 'computed.toEmail',
             toName: 'computed.toName'
           }
@@ -716,7 +722,7 @@ module.exports = {
       event: 'transaction__status_changed',
       computed: {
         // fallback to empty strings for email content
-        organizationName: 'owner.displayName || ""',
+        ownerName: 'owner.displayName || ""',
         assetName: '_.get(transaction, "assetSnapshot.name", "")',
         toName: 'taker.displayName || ""',
         toEmail: 'taker.email'
@@ -732,9 +738,9 @@ module.exports = {
             name: '"transactionAcceptedByOwnerToTaker"',
             data: {
               assetName: 'computed.assetName',
-              organizationName: 'computed.organizationName'
+              ownerName: 'computed.ownerName'
             },
-            locale: '"fr"',
+            locale: `"${locale}"`,
             toEmail: 'computed.toEmail',
             toName: 'computed.toName'
           }
@@ -750,10 +756,10 @@ module.exports = {
           endpointPayload: {
             name: '"transactionRefusedByOwnerToTaker"',
             data: {
-              organizationName: 'computed.organizationName',
+              ownerName: 'computed.organizationName',
               assetName: 'computed.assetName'
             },
-            locale: '"fr"',
+            locale: `"${locale}"`,
             toEmail: 'computed.toEmail',
             toName: 'computed.toName'
           }
@@ -788,7 +794,7 @@ module.exports = {
               takerDisplayName: 'computed.takerDisplayName',
               assetName: 'computed.assetName'
             },
-            locale: '"fr"',
+            locale: `"${locale}"`,
             toEmail: 'computed.toEmail',
             toName: 'computed.toName'
           }
@@ -818,7 +824,7 @@ module.exports = {
               assetName: 'computed.assetName',
               conversationLink: 'computed.conversationLink'
             },
-            locale: '"fr"',
+            locale: `"${locale}"`,
             toEmail: 'computed.toEmail',
             toName: 'computed.toName'
           }
