@@ -8289,10 +8289,10 @@ static-extend@^0.1.1:
   resolved "https://registry.yarnpkg.com/statuses/-/statuses-1.5.0.tgz#161c7dac177659fd9811f43771fa99381478628c"
   integrity sha1-Fhx9rBd2Wf2YEfQ3cfqZOBR4Yow=
 
-stelace@0.7.0:
-  version "0.7.0"
-  resolved "https://registry.yarnpkg.com/stelace/-/stelace-0.7.0.tgz#73b9c70b6cf2f9ac066c2b98e68381789b139f2b"
-  integrity sha512-5rcUkNonNC9XTFnYjSzQnEMdc3ntxaiMf/hzkZBTVt8ejgaj3iVF/3kJlGDA9pjBTzdnhlcaaMqr+0QhSFUmVQ==
+stelace@0.9.0:
+  version "0.9.0"
+  resolved "https://registry.yarnpkg.com/stelace/-/stelace-0.9.0.tgz#79f4f5b34895bc1f7d0e4df001bccc1cc502ddc6"
+  integrity sha512-/lKcMt18mmOh8c/e8WpH7CexVLbdKjImsjvaDyn3ZXu1GpsEzr3G4c5a1HBbG91dZmEWf7E30bfhN45f8xpdvg==
   dependencies:
     axios "^0.19.0"
     core-js "3"
