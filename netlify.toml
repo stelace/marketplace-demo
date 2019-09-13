@@ -59,7 +59,7 @@
 
 [context.production]
   # Production-specific X-Robots-Tag and Content-Security-Policy headers
-  command = "sed -i 's/noindex, nofollow/all/g; s/localhost:[*]//g' netlify.toml && yarn build"
+  command = "sed -i 's|noindex, nofollow|all|g; s|localhost:[*]||g' netlify.toml && yarn build"
 
   [context.production.environment]
     VUE_APP_NOMINATIM_HOST = "https://open.mapquestapi.com"
