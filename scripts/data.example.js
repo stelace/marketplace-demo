@@ -756,7 +756,7 @@ module.exports = {
           endpointPayload: {
             name: '"transactionRefusedByOwnerToTaker"',
             data: {
-              ownerName: 'computed.organizationName',
+              ownerName: 'computed.ownerName',
               assetName: 'computed.assetName'
             },
             locale: `"${locale}"`,
