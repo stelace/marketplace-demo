@@ -61,7 +61,7 @@ export default {
         />
       </svg>
     </div>
-    <div class="row q-col-gutter-sm text-center q-px-lg">
+    <div class="row q-col-gutter-sm justify-center text-center q-px-lg">
       <!-- "Instant Pages" fetched from Stelace Content API -->
       <AppLink
         v-for="(target, i) in footerLinks"
@@ -75,7 +75,7 @@ export default {
           :field="target.field"
         />
       </AppLink>
-      <div class="col-12 col-md-4">
+      <div v-if="socialIconFooterLinks.length > 0" class="col-12 col-md-4">
         <AppLink
           v-for="net in socialIconFooterLinks"
           :key="net.url"
