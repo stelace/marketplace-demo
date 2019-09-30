@@ -44,11 +44,22 @@ export function isAvailable ({ asset, availabilityGraphByAssetId }) {
   const minQuantityToBeAvailable = 1
 
   const assetGraph = availabilityGraphByAssetId[asset.id]
-  if (!assetGraph || !assetGraph.graphDates.length) return asset.quantity >= minQuantityToBeAvailable
+  if (!assetGraph) return asset.quantity >= minQuantityToBeAvailable
 
-  const futureGraphDates = assetGraph.graphDates.filter(graphDate => graphDate.date >= now)
+  const { graphDates, defaultQuantity } = assetGraph
 
-  return !!futureGraphDates.find(graphDate => {
+  // convert graph dates into numeric values
+  // numeric values are needed to perform binary search
+  const timestamps = assetGraph.graphDates.map(graphDate => getTimestamp(graphDate.date))
+
+  // get graph dates whose date is the closest inferior or equals to now
+  const lowerBoundsIndex = bounds.le(timestamps, getTimestamp(now))
+  const filteredGraphDates = graphDates.slice(lowerBoundsIndex)
+  if (!filteredGraphDates.length) return defaultQuantity >= minQuantityToBeAvailable
+
+  // asset is considered to be available if there is remaining quantity
+  // for at least one graph date
+  return !!filteredGraphDates.find(graphDate => {
     return getRemainingQuantity(graphDate) >= minQuantityToBeAvailable
   })
 }
