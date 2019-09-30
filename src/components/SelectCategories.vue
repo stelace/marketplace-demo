@@ -16,7 +16,7 @@
     :option-label="cat => cat && cat.nameWithLvlSpaces"
     :use-input="!(hideInputOnSelect && selectedCategory)"
     :loading="!!(textQueryLength && common.fetchingCategories)"
-    :display-value="selectedCategory && selectedCategory.name"
+    :display-value="(selectedCategory && selectedCategory.name) || ''"
     @input="cat => selectCategory(cat)"
     @filter="filterCategories"
     @keyup.down.native="focusChanged"
