@@ -33,8 +33,9 @@
           @click="onCloseButtonClick"
         />
       </q-card-section>
+
       <q-card-section
-        v-if="type === 'lostPassword'"
+        v-if="type === 'lostPassword' && !SSOLoginOnly"
         class="text-center"
       >
         <AppContent
@@ -66,263 +67,266 @@
           required
         />
       </q-card-section>
+
       <q-card-section>
-        <form
-          v-if="showAuthenticationForm"
-          @submit.prevent="authenticate"
-        >
-          <q-input
-            v-model="user.email"
-            type="email"
-            :label="$t({ id: 'authentication.placeholder.email' })"
-            autocomplete="username"
-            autofocus
-            required
+        <template v-if="!SSOLoginOnly">
+          <form
+            v-if="showAuthenticationForm"
+            @submit.prevent="authenticate"
           >
-            <template v-slot:append>
-              <q-icon name="email" />
-            </template>
-          </q-input>
-          <q-input
-            v-model="user.password"
-            type="password"
-            :label="$t({ id: 'authentication.placeholder.password' })"
-            autocomplete="current-password"
-            required
-            minlength="passwordMinLength"
-          >
-            <template v-slot:append>
-              <q-icon name="lock" />
-            </template>
-          </q-input>
-
-          <div class="error-message q-mt-sm">
-            <AppContent
-              v-if="errorType === 'loginIncorrect'"
-              entry="authentication"
-              field="error.incorrect"
-            />
-            <AppContent
-              v-if="errorType === 'signupEmailAlreadyUsed'"
-              entry="authentication"
-              field="error.email_already_used"
-            />
-          </div>
-
-          <div
-            v-show="type === 'signup'"
-            class="row items-center q-mt-lg q-mb-md"
-          >
-            <div class="col-2">
-              <QCheckbox v-model="termsAccepted" />
-            </div>
-            <!-- Cannot use QCheckbox template because click is prevented -->
-            <div
-              class="col-10 anchor-text--reset anchor-text--underline-focus cursor-pointer"
-              @click="termsAccepted = !termsAccepted"
+            <q-input
+              v-model="user.email"
+              type="email"
+              :label="$t({ id: 'authentication.placeholder.email' })"
+              autocomplete="username"
+              autofocus
+              required
             >
+              <template v-slot:append>
+                <q-icon name="email" />
+              </template>
+            </q-input>
+            <q-input
+              v-model="user.password"
+              type="password"
+              :label="$t({ id: 'authentication.placeholder.password' })"
+              autocomplete="current-password"
+              required
+              minlength="passwordMinLength"
+            >
+              <template v-slot:append>
+                <q-icon name="lock" />
+              </template>
+            </q-input>
+
+            <div class="error-message q-mt-sm">
               <AppContent
+                v-if="errorType === 'loginIncorrect'"
                 entry="authentication"
-                field="terms_optin"
-                :options="{ terms_path: termsFullPath }"
+                field="error.incorrect"
+              />
+              <AppContent
+                v-if="errorType === 'signupEmailAlreadyUsed'"
+                entry="authentication"
+                field="error.email_already_used"
               />
             </div>
-          </div>
 
-          <q-btn
-            color="primary"
-            :loading="actionPending"
-            type="submit"
-            :rounded="style.roundedTheme"
-            class="full-width q-my-md"
-            :disabled="authButtonDisabled"
+            <div
+              v-show="type === 'signup'"
+              class="row items-center q-mt-lg q-mb-md"
+            >
+              <div class="col-2">
+                <QCheckbox v-model="termsAccepted" />
+              </div>
+              <!-- Cannot use QCheckbox template because URL click is prevented -->
+              <div
+                class="col-10 anchor-text--reset anchor-text--underline-focus cursor-pointer"
+                @click="termsAccepted = !termsAccepted"
+              >
+                <AppContent
+                  entry="authentication"
+                  field="terms_optin"
+                  :options="{ terms_path: termsFullPath }"
+                />
+              </div>
+            </div>
+
+            <q-btn
+              color="primary"
+              :loading="actionPending"
+              type="submit"
+              :rounded="style.roundedTheme"
+              class="full-width q-my-md"
+              :disabled="authButtonDisabled"
+            >
+              <span v-show="type === 'login'">
+                <AppContent
+                  entry="authentication"
+                  field="log_in_button"
+                />
+              </span>
+              <span v-show="type === 'signup'">
+                <AppContent
+                  entry="authentication"
+                  field="sign_up_button"
+                />
+              </span>
+            </q-btn>
+          </form>
+          <form
+            v-if="type === 'lostPassword'"
+            @submit.prevent="sendLostPassword"
           >
-            <span v-show="type === 'login'">
+            <q-input
+              v-model="user.email"
+              type="email"
+              :label="$t({ id: 'authentication.placeholder.email' })"
+              autocomplete="username"
+              required
+            >
+              <template v-slot:append>
+                <q-icon name="email" />
+              </template>
+            </q-input>
+
+            <div class="error-message q-mt-sm">
               <AppContent
+                v-if="errorType === 'unknown'"
+                entry="error"
+                field="unknown_happened_header"
+              />
+            </div>
+
+            <q-btn
+              color="primary"
+              :loading="actionPending"
+              type="submit"
+              :rounded="style.roundedTheme"
+              class="full-width q-my-md"
+              :disabled="lostPasswordButtonDisabled"
+            >
+              <span>
+                <AppContent
+                  entry="prompt"
+                  field="send_button"
+                />
+              </span>
+            </q-btn>
+          </form>
+          <form
+            v-if="type === 'resetPassword'"
+            @submit.prevent="resetPassword"
+          >
+            <q-input
+              v-model="user.password"
+              type="password"
+              :label="$t({ id: 'authentication.placeholder.password' })"
+              autocomplete="new-password"
+              required
+              minlength="passwordMinLength"
+            >
+              <template v-slot:append>
+                <q-icon name="lock" />
+              </template>
+            </q-input>
+
+            <div class="error-message q-mt-sm">
+              <AppContent
+                v-if="errorType === 'resetPasswordLinkExpired'"
                 entry="authentication"
-                field="log_in_button"
+                field="password_reset.link_expired"
               />
-            </span>
-            <span v-show="type === 'signup'">
               <AppContent
+                v-if="errorType === 'resetPasswordLinkInvalid'"
                 entry="authentication"
-                field="sign_up_button"
+                field="password_reset.link_invalid"
               />
-            </span>
-          </q-btn>
-        </form>
-        <form
-          v-if="type === 'lostPassword'"
-          @submit.prevent="sendLostPassword"
-        >
-          <q-input
-            v-model="user.email"
-            type="email"
-            :label="$t({ id: 'authentication.placeholder.email' })"
-            autocomplete="username"
-            required
-          >
-            <template v-slot:append>
-              <q-icon name="email" />
-            </template>
-          </q-input>
+              <AppContent
+                v-if="errorType === 'unknown'"
+                entry="error"
+                field="unknown_happened_header"
+              />
+            </div>
 
-          <div class="error-message q-mt-sm">
-            <AppContent
-              v-if="errorType === 'unknown'"
-              entry="error"
-              field="unknown_happened_header"
-            />
-          </div>
+            <q-btn
+              color="primary"
+              :loading="actionPending"
+              type="submit"
+              :rounded="style.roundedTheme"
+              class="full-width q-my-md"
+              :disabled="resetPasswordButtonDisabled"
+            >
+              <span>
+                <AppContent
+                  entry="prompt"
+                  field="send_button"
+                />
+              </span>
+            </q-btn>
+          </form>
+          <form
+            v-if="type === 'changePassword'"
+            @submit.prevent="changePassword"
+          >
+            <q-input
+              v-model="user.password"
+              type="password"
+              :label="$t({ id: 'user.account.current_password_label' })"
+              autocomplete="password"
+              required
+              minlength="passwordMinLength"
+              :bottom-slots="errorType === 'incorrectCurrentPassword'"
+              :error="errorType === 'incorrectCurrentPassword'"
+            >
+              <template v-slot:error>
+                <AppContent
+                  v-if="errorType === 'incorrectCurrentPassword'"
+                  entry="user"
+                  field="account.incorrect_current_password"
+                />
+              </template>
+              <template v-slot:append>
+                <q-icon name="lock" />
+              </template>
+            </q-input>
+            <q-input
+              v-model="newPassword"
+              type="password"
+              :label="$t({ id: 'user.account.new_password_label' })"
+              autocomplete="new-password"
+              required
+              minlength="passwordMinLength"
+              class="q-mt-sm"
+            >
+              <template v-slot:append>
+                <q-icon name="lock" />
+              </template>
+            </q-input>
+
+            <div class="error-message q-mt-sm">
+              <AppContent
+                v-if="errorType === 'unknown'"
+                entry="error"
+                field="unknown_happened_header"
+              />
+            </div>
+
+            <q-btn
+              color="primary"
+              :loading="actionPending"
+              type="submit"
+              :rounded="style.roundedTheme"
+              class="full-width q-my-md"
+              :disabled="changePasswordButtonDisabled"
+            >
+              <span>
+                <AppContent
+                  entry="prompt"
+                  field="save_button"
+                />
+              </span>
+            </q-btn>
+          </form>
 
           <q-btn
-            color="primary"
-            :loading="actionPending"
-            type="submit"
+            v-if="type === 'login'"
+            flat
+            no-caps
             :rounded="style.roundedTheme"
-            class="full-width q-my-md"
-            :disabled="lostPasswordButtonDisabled"
-          >
-            <span>
-              <AppContent
-                entry="prompt"
-                field="send_button"
-              />
-            </span>
-          </q-btn>
-        </form>
-        <form
-          v-if="type === 'resetPassword'"
-          @submit.prevent="resetPassword"
-        >
-          <q-input
-            v-model="user.password"
-            type="password"
-            :label="$t({ id: 'authentication.placeholder.password' })"
-            autocomplete="new-password"
-            required
-            minlength="passwordMinLength"
-          >
-            <template v-slot:append>
-              <q-icon name="lock" />
-            </template>
-          </q-input>
-
-          <div class="error-message q-mt-sm">
-            <AppContent
-              v-if="errorType === 'resetPasswordLinkExpired'"
-              entry="authentication"
-              field="password_reset.link_expired"
-            />
-            <AppContent
-              v-if="errorType === 'resetPasswordLinkInvalid'"
-              entry="authentication"
-              field="password_reset.link_invalid"
-            />
-            <AppContent
-              v-if="errorType === 'unknown'"
-              entry="error"
-              field="unknown_happened_header"
-            />
-          </div>
-
-          <q-btn
             color="primary"
-            :loading="actionPending"
-            type="submit"
-            :rounded="style.roundedTheme"
-            class="full-width q-my-md"
-            :disabled="resetPasswordButtonDisabled"
+            class="block q-mx-auto"
+            @click="changeFormType('lostPassword')"
           >
-            <span>
-              <AppContent
-                entry="prompt"
-                field="send_button"
-              />
-            </span>
+            {{ $t({ id: 'authentication.lost_password_button' }) }}
           </q-btn>
-        </form>
-        <form
-          v-if="type === 'changePassword'"
-          @submit.prevent="changePassword"
-        >
-          <q-input
-            v-model="user.password"
-            type="password"
-            :label="$t({ id: 'user.account.current_password_label' })"
-            autocomplete="password"
-            required
-            minlength="passwordMinLength"
-            :bottom-slots="errorType === 'incorrectCurrentPassword'"
-            :error="errorType === 'incorrectCurrentPassword'"
-          >
-            <template v-slot:error>
-              <AppContent
-                v-if="errorType === 'incorrectCurrentPassword'"
-                entry="user"
-                field="account.incorrect_current_password"
-              />
-            </template>
-            <template v-slot:append>
-              <q-icon name="lock" />
-            </template>
-          </q-input>
-          <q-input
-            v-model="newPassword"
-            type="password"
-            :label="$t({ id: 'user.account.new_password_label' })"
-            autocomplete="new-password"
-            required
-            minlength="passwordMinLength"
-            class="q-mt-sm"
-          >
-            <template v-slot:append>
-              <q-icon name="lock" />
-            </template>
-          </q-input>
-
-          <div class="error-message q-mt-sm">
-            <AppContent
-              v-if="errorType === 'unknown'"
-              entry="error"
-              field="unknown_happened_header"
-            />
-          </div>
-
-          <q-btn
-            color="primary"
-            :loading="actionPending"
-            type="submit"
-            :rounded="style.roundedTheme"
-            class="full-width q-my-md"
-            :disabled="changePasswordButtonDisabled"
-          >
-            <span>
-              <AppContent
-                entry="prompt"
-                field="save_button"
-              />
-            </span>
-          </q-btn>
-        </form>
-
-        <q-btn
-          v-if="type === 'login'"
-          flat
-          no-caps
-          :rounded="style.roundedTheme"
-          color="primary"
-          class="block q-mx-auto"
-          @click="changeFormType('lostPassword')"
-        >
-          {{ $t({ id: 'authentication.lost_password_button' }) }}
-        </q-btn>
+        </template>
 
         <div
           v-if="type === 'login' && SSOProviders.length"
           class="text-center"
         >
-          <div class="q-my-md">
+          <div v-if="!SSOLoginOnly" class="q-my-md">
             <AppContent entry="prompt" field="binary_or_separator" />
           </div>
 
@@ -358,53 +362,55 @@
           </QBtn>
         </div>
 
-        <q-separator
-          v-if="showAuthenticationForm"
-          class="q-my-md"
-        />
+        <template v-if="!SSOLoginOnly">
+          <q-separator
+            v-if="showAuthenticationForm"
+            class="q-my-md"
+          />
 
-        <q-btn
-          v-if="type === 'lostPassword'"
-          flat
-          no-caps
-          :rounded="style.roundedTheme"
-          color="secondary"
-          class="block q-mx-auto"
-          @click="changeFormType('login')"
-        >
-          <AppContent
-            entry="navigation"
-            field="back"
-          />
-        </q-btn>
-        <q-btn
-          v-if="type === 'login'"
-          flat
-          no-caps
-          :rounded="style.roundedTheme"
-          color="secondary"
-          class="block q-mx-auto"
-          @click="changeFormType('signup')"
-        >
-          <AppContent
-            entry="authentication"
-            field="no_account_button"
-          />
-        </q-btn>
-        <q-btn
-          v-if="type === 'signup'"
-          flat
-          no-caps
-          :rounded="style.roundedTheme"
-          color="secondary"
-          class="block q-mx-auto"
-          @click="changeFormType('login')"
-        >
-          <AppContent
-            entry="authentication"
-            field="existing_account_button"
-          />
-        </q-btn>
+          <q-btn
+            v-if="type === 'lostPassword'"
+            flat
+            no-caps
+            :rounded="style.roundedTheme"
+            color="secondary"
+            class="block q-mx-auto"
+            @click="changeFormType('login')"
+          >
+            <AppContent
+              entry="navigation"
+              field="back"
+            />
+          </q-btn>
+          <q-btn
+            v-if="type === 'login'"
+            flat
+            no-caps
+            :rounded="style.roundedTheme"
+            color="secondary"
+            class="block q-mx-auto"
+            @click="changeFormType('signup')"
+          >
+            <AppContent
+              entry="authentication"
+              field="no_account_button"
+            />
+          </q-btn>
+          <q-btn
+            v-if="type === 'signup'"
+            flat
+            no-caps
+            :rounded="style.roundedTheme"
+            color="secondary"
+            class="block q-mx-auto"
+            @click="changeFormType('login')"
+          >
+            <AppContent
+              entry="authentication"
+              field="existing_account_button"
+            />
+          </q-btn>
+        </template>
       </q-card-section>
     </q-card>
   </q-dialog>
@@ -489,6 +495,9 @@ export default {
     SSOProviders () {
       if (!process.env.VUE_APP_SSO_PROVIDERS) return []
       return process.env.VUE_APP_SSO_PROVIDERS.split(',').map(p => p.trim())
+    },
+    SSOLoginOnly () {
+      return process.env.VUE_APP_SSO_LOGIN_ONLY === 'true'
     },
     customSSOProviders () {
       const builtInProviders = ['github']
