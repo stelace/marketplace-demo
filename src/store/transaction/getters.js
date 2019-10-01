@@ -48,7 +48,10 @@ export function maxAvailableQuantity (state, getters, rootState, rootGetters) {
   const { availabilityGraphByAssetId } = rootState.asset
   const { activeAsset } = rootGetters
 
+  if (!activeAsset || !activeAsset.id) return 0
+
   const availabilityGraph = availabilityGraphByAssetId[activeAsset.id]
+  if (!availabilityGraph) return 0 // provide a fallback in case availability graph isn't available
 
   const { graphDates, defaultQuantity } = availabilityGraph
 
