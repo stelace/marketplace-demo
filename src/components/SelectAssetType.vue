@@ -15,7 +15,7 @@
     :option-value="type => type && type.id"
     :option-label="type => type && type.name"
     :use-input="!(hideInputOnSelect && selectedAssetType)"
-    :loading="!!(textQueryLength && common.fetchingAssetTypes)"
+    :loading="!!textQueryLength"
     @input="type => selectAssetType(type)"
     @filter="filterAssetTypes"
     @keyup.down.native="focusChanged"
