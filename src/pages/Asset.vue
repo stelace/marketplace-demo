@@ -188,7 +188,7 @@
           <div v-if="assetCustomAttributes.length" class="q-py-sm">
             <div
               v-for="attribute in assetCustomAttributes.filter(
-                ca => ca.type === 'text' && ca.value.length > shortTextMaxLength
+                ca => ca.type === 'text' && !isShortTextValue(ca.value)
               )"
               :key="attribute.name"
             >
@@ -216,7 +216,7 @@
 
             <div
               v-for="attribute in assetCustomAttributes.filter(
-                ca => ca.type === 'text' && ca.value.length <= shortTextMaxLength
+                ca => ca.type === 'text' && isShortTextValue(ca.value)
               )"
               :key="attribute.name"
             >
@@ -322,7 +322,7 @@
 
 <script>
 import { mapState, mapGetters } from 'vuex'
-import { get, map, sortBy, values, compact, flatten, groupBy } from 'lodash'
+import { get, map, sortBy, values, compact, flatten, groupBy, isUndefined } from 'lodash'
 
 import { extractLocationDataFromPlace } from 'src/utils/places'
 
@@ -378,8 +378,18 @@ export default {
   },
   computed: {
     assetCustomAttributes () {
-      const attrs = this.activeAsset.customAttributes
+      const attrs = Object.assign({}, this.activeAsset.customAttributes)
       const definitions = this.common.customAttributesById
+
+      const assetTypeId = this.activeAsset.assetTypeId
+      const config = this.common.config
+      const editableCustomAttributeNames = get(config, `stelace.instant.assetTypes.${assetTypeId}.customAttributes`) || []
+
+      // set to `null` undefined editable asset custom attributes
+      // so they can appear in the UI for the owner
+      editableCustomAttributeNames.forEach(name => {
+        if (isUndefined(attrs[name])) attrs[name] = null
+      })
 
       const populatedAssetAttrs = map(attrs, (v, k) => {
         const def = values(definitions).find(d => d.name === k)
@@ -505,6 +515,9 @@ export default {
         })
         this.notifySuccess('notification.saved')
       }
+    },
+    isShortTextValue (value) {
+      return typeof value !== 'string' || value.length <= this.shortTextMaxLength
     },
     changeCustomAttributes (customAttributes) {
       return this.updateAssetFn('customAttributes')(customAttributes)
