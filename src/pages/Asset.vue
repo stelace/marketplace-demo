@@ -140,6 +140,17 @@
             field="description_label"
           />
 
+          <AppSwitchableEditor
+            tag="p"
+            class="q-my-lg q-mx-sm text-justify"
+            :value="activeAsset.description"
+            :active="isCurrentUserTheOwner"
+            :custom-save="updateAssetFn('description')"
+            :input-label="$t({ id: 'asset.description_label' })"
+            allow-falsy-save
+            input-type="textarea"
+          />
+
           <div
             v-if="assetCustomAttributes.length"
             class="row text-weight-medium q-py-sm"
@@ -173,17 +184,6 @@
               </div>
             </div>
           </div>
-
-          <AppSwitchableEditor
-            tag="p"
-            class="q-my-lg q-mx-sm text-justify"
-            :value="activeAsset.description"
-            :active="isCurrentUserTheOwner"
-            :custom-save="updateAssetFn('description')"
-            :input-label="$t({ id: 'asset.description_label' })"
-            allow-falsy-save
-            input-type="textarea"
-          />
 
           <div v-if="assetCustomAttributes.length" class="q-py-sm">
             <div
