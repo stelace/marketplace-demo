@@ -1,5 +1,6 @@
 <script>
 import { mapState, mapGetters } from 'vuex'
+import { values } from 'lodash'
 
 export default {
   data () {
@@ -8,10 +9,20 @@ export default {
   computed: {
     ...mapState([
       'style',
+      'common',
     ]),
     ...mapGetters([
-      'isSelectedUserNatural', // Button text depends on selectedUser who is owner of current asset
+      'activeAsset',
     ]),
+    assetTypes () {
+      return values(this.common.assetTypesById)
+    },
+    timeBased () {
+      if (!this.activeAsset) return true
+      const assetType = this.common.assetTypesById[this.activeAsset.assetTypeId]
+      if (!assetType) return true
+      return assetType.timeBased
+    },
   },
 }
 </script>
@@ -19,7 +30,7 @@ export default {
 <template>
   <QBtn
     :rounded="style.roundedTheme"
-    :label="$t({ id: 'asset.checkout_action' }, { timeBased: !isSelectedUserNatural })"
+    :label="$t({ id: 'asset.checkout_action' }, { timeBased })"
     color="secondary"
     v-on="$listeners"
   />
