@@ -478,6 +478,15 @@ export default {
             <QItemSection>{{ $t({ id: 'navigation.search' }) }}</QItemSection>
           </QItem>
 
+          <QItem
+            v-close-popup
+            :to="{ name: 'newAsset' }"
+            exact-active-class="text-weight-medium"
+            clickable
+          >
+            <QItemSection>{{ $t({ id: 'navigation.new_listing' }) }}</QItemSection>
+          </QItem>
+
           <div v-if="!showAccountAvatar">
             <QSeparator />
 
