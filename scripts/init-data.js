@@ -1,5 +1,5 @@
 const stelace = require('./admin-sdk')
-const { every, get, isEmpty, keyBy, mapValues, pick } = require('lodash')
+const { every, get, isEmpty, keyBy, mapValues, pick, isEqual, omitBy, isNil, isUndefined } = require('lodash')
 const pMap = require('p-map')
 const pProps = require('p-props')
 const chalk = require('chalk')
@@ -23,6 +23,13 @@ const initDataScript = 'initDataScript'
 // Useful to avoid removing objects not created by this script (use false value with caution)
 let shouldOnlyRemoveScriptObjects = true
 
+const reusingObjectTypes = [
+  'categories',
+  'assetTypes',
+  'workflows'
+]
+
+let data
 let existingData
 let createdData
 
@@ -84,7 +91,7 @@ async function run () {
     log('Creating data.js file from data.example.js')
     execSync('cp scripts/data.example.js scripts/data.js')
   }
-  const data = require('./data')
+  data = require('./data')
 
   // Order matters
   await cancelTransactions() // cannot remove transactions, so we cancel them instead
@@ -112,10 +119,34 @@ async function run () {
       const key = keys[i]
       const payload = data.assetTypes[key]
 
-      const metadata = Object.assign({}, payload.metadata, { initDataScript })
+      const alias = key
+      const metadata = Object.assign({}, payload.metadata, { initDataScript, alias })
       payload.metadata = metadata
 
-      createdData.assetTypes[key] = await stelace.assetTypes.create(payload)
+      const existingAssetType = getExistingObject('assetTypes', alias)
+
+      const valuesToCompare = [
+        'name',
+        'timeBased',
+        'infiniteStock',
+        'pricing',
+        'timing',
+        'unavailableWhen',
+        'transactionProcess',
+        'namespaces',
+        'isDefault',
+        'active'
+      ]
+
+      if (existingAssetType) {
+        if (!hasObjectChanged(existingAssetType, payload, valuesToCompare)) {
+          createdData.assetTypes[key] = existingAssetType
+        } else {
+          createdData.assetTypes[key] = await stelace.assetTypes.update(existingAssetType.id, payload)
+        }
+      } else {
+        createdData.assetTypes[key] = await stelace.assetTypes.create(payload)
+      }
     }
   }
   if (data.config && data.config.default) {
@@ -209,16 +240,33 @@ async function run () {
       })
     }
   }
+
+  const valuesToCompareForCategories = [
+    'name',
+    'parentId'
+  ]
+
   if (data.categories) {
     const keys = Object.keys(data.categories)
     for (let i = 0; i < keys.length; i++) {
       const key = keys[i]
       const payload = data.categories[key]
 
-      const metadata = Object.assign({}, payload.metadata, { initDataScript })
+      const alias = key
+      const metadata = Object.assign({}, payload.metadata, { initDataScript, alias })
       payload.metadata = metadata
 
-      createdData.categories[key] = await stelace.categories.create(payload)
+      const existingCategory = getExistingObject('categories', alias)
+
+      if (existingCategory) {
+        if (!hasObjectChanged(existingCategory, payload, valuesToCompareForCategories)) {
+          createdData.categories[key] = existingCategory
+        } else {
+          createdData.categories[key] = await stelace.categories.update(existingCategory.id, payload)
+        }
+      } else {
+        createdData.categories[key] = await stelace.categories.create(payload)
+      }
     }
   }
   const categoriesToCreate = await importCategories(path.join(__dirname, 'categories.csv'))
@@ -279,10 +327,30 @@ async function run () {
         }
       })
 
-      const metadata = Object.assign({}, payload.metadata, { initDataScript })
+      const alias = key
+      const metadata = Object.assign({}, payload.metadata, { initDataScript, alias })
       payload.metadata = metadata
 
-      createdData.workflows[key] = await stelace.workflows.create(payload)
+      const existingWorkflow = getExistingObject('workflows', alias)
+
+      const valuesToCompare = [
+        'name',
+        'description',
+        'event',
+        'context',
+        'computed',
+        'run'
+      ]
+
+      if (existingWorkflow) {
+        if (!hasObjectChanged(existingWorkflow, payload, valuesToCompare)) {
+          createdData.workflows[key] = existingWorkflow
+        } else {
+          createdData.workflows[key] = await stelace.workflows.update(existingWorkflow.id, payload)
+        }
+      } else {
+        createdData.workflows[key] = await stelace.workflows.create(payload)
+      }
     }
   }
   if (data.tasks) {
@@ -470,6 +538,8 @@ async function removeObjects (type, data) {
         // Avoid deleting too many times
         objects = objects.filter(c => c.parentId !== object.id)
       }
+
+      if (!shouldRemoveObject(type, object)) continue
       await removeObject(object.id)
     }
   }
@@ -477,6 +547,51 @@ async function removeObjects (type, data) {
     await stelace[type].remove(id)
     log(`removed ${id}`)
   }
+}
+
+function getSeedAliases (dataObjects) {
+  return Object.keys(omitBy(dataObjects, isNil))
+}
+
+function getObjectAlias (object) {
+  return get(object, 'metadata.alias')
+}
+
+function isCreatedBySeedScript (object) {
+  return !!object.metadata[initDataScript]
+}
+
+function shouldRemoveObject (type, object) {
+  if (!shouldOnlyRemoveScriptObjects) return true
+  if (!isCreatedBySeedScript(object)) return true
+  if (!reusingObjectTypes.includes(type)) return true
+
+  const seedAlias = getObjectAlias(object)
+  if (!seedAlias) return true
+
+  const seedAliases = getSeedAliases(data[type])
+  return !seedAliases.includes(seedAlias)
+}
+
+function getExistingObject (type, alias) {
+  if (!shouldOnlyRemoveScriptObjects) return null
+  if (!reusingObjectTypes.includes(type)) return null
+
+  const existingObject = existingData[type].find(o => {
+    return isCreatedBySeedScript(o) && getObjectAlias(o) === alias
+  })
+  return existingObject
+}
+
+function hasObjectChanged (existingObject, payload, props) {
+  props = props || Object.keys(payload)
+
+  // compare key by key instead filtering whole object by specified props
+  // so if seed payload specified less props than the existing object
+  // the object won't be updated
+  return props.reduce((changed, k) => {
+    return changed || (!isEqual(existingObject[k], payload[k]) && !isUndefined(payload[k]))
+  }, false)
 }
 
 function getValueBetweenQuotes (str) {
