@@ -377,7 +377,7 @@ export default {
             v-model="draftMessage"
             class="mobile-stacked q-pb-md"
             type="textarea"
-            input-class="text-right"
+            input-class="q-ml-sm"
             autogrow
             :placeholder="$t({ id: 'pages.inbox.message_to' }, { interlocutorName: inbox.interlocutor.displayName })"
             @keyup.enter.stop
