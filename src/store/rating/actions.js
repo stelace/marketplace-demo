@@ -6,6 +6,7 @@ import * as api from './api'
 import {
   isRatingOptional,
 } from 'src/utils/rating'
+import { populateUser } from 'src/utils/user'
 
 export async function fetchRatingsStats ({ commit, rootGetters }, { assetId, targetId, groupBy }) {
   const ratingsOptions = rootGetters.ratingsOptions
@@ -50,6 +51,8 @@ export async function fetchRatingsByTransaction ({ rootGetters }, { targetId, as
   const fetchUsersRequest = (...args) => stelace.users.list(...args)
 
   const users = await fetchAllResults(fetchUsersRequest, { id: usersIds })
+  users.forEach(user => populateUser(user)) // populate users to get avatar url
+
   const usersById = keyBy(users, 'id')
 
   return ratings.map(rating => {
