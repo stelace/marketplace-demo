@@ -65,10 +65,15 @@ async function run () {
     }
   ])
 
-  const removeCategoriesAndAssetTypes = shouldOnlyRemoveScriptObjects ? isEmpty(hasExistingData.assets) : true
   if (answers.delete === 'all') {
     shouldOnlyRemoveScriptObjects = false
-  } else if (!removeCategoriesAndAssetTypes) {
+  }
+  // categories and assetTypes created by this script may have been used
+  // by objects created elsewhere that are not being removed
+  const removeCategoriesAndAssetTypes = isEmpty(existingData.assets)
+  const existingCategoriesOrAssetTypes = ['assetTypes', 'categories']
+    .some(o => !isEmpty(existingData[o]))
+  if (existingCategoriesOrAssetTypes && !removeCategoriesAndAssetTypes) {
     log('\nYou may want to remove old Categories and Asset Types manually.')
   }
 
@@ -93,8 +98,6 @@ async function run () {
     removeObjects('customAttributes')
   ], _ => _, { concurrency: 2 })
   if (removeCategoriesAndAssetTypes) {
-    // categories and assetTypes created by this script may have been used
-    // by objects created elsewhere that are not being removed
     await pMap([
       'categories',
       'assetTypes'
