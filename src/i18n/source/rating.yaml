@@ -31,6 +31,17 @@ rating:
           true {Vous n'avez}
           other {Cet utilisateur n'a}
       } pas encore d’évaluations sur {SERVICE_NAME}.
+  no_asset_rating_message:
+    en: |
+      {isOwnAsset, select,
+          true {Your listing}
+          other {This listing user}
+      } has no rating yet on {SERVICE_NAME}.
+    fr: |
+      {isOwnAsset, select,
+          true {Votre annonce}
+          other {Cette annonce}
+      } n’a pas encore d’évaluations sur {SERVICE_NAME}.
   rating_no_update_message:
     en: You cannot update your rating or your comment anymore.
     fr: Vous ne pouvez plus modifier vos avis et commentaires.

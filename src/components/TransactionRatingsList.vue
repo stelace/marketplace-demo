@@ -22,6 +22,10 @@ export default {
       type: Boolean,
       default: true
     },
+    filterOnAsset: {
+      type: Boolean,
+      default: false
+    },
   },
   computed: {
     transformedRatings () {
@@ -88,6 +92,13 @@ export default {
     </div>
     <div v-else class="text-center">
       <AppContent
+        v-if="filterOnAsset"
+        entry="rating"
+        field="no_asset_rating_message"
+        :options="{ isOwnAsset: isCurrentUser }"
+      />
+      <AppContent
+        v-else
         entry="rating"
         field="no_rating_message"
         :options="{ isCurrentUser }"

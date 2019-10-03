@@ -253,6 +253,7 @@
             :ratings="assetRatingsByTransaction"
             :target="activeAsset.owner"
             :show-asset-name="false"
+            filter-on-asset
           />
         </section>
 
