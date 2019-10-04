@@ -720,34 +720,53 @@ module.exports = {
       name: '[Email] Transaction update to taker',
       description: 'Send an email to taker when a transaction is accepted or refused by owner',
       event: 'transaction__status_changed',
+      context: ['stelace'],
       computed: {
         // fallback to empty strings for email content
+        transactionId: 'transaction.id',
         ownerName: 'owner.displayName || ""',
+        takerName: 'taker.displayName || ""',
         assetName: '_.get(transaction, "assetSnapshot.name", "")',
         toName: 'taker.displayName || ""',
         toEmail: 'taker.email'
       },
       run: [
         {
+          name: 'messages',
+          endpointMethod: 'GET',
+          endpointUri: '/messages?topicId=${computed.transactionId}',
+        },
+        {
           name: 'acceptedByOwnerEmail',
           endpointMethod: 'POST',
-          stop: '!computed.toEmail',
+          computed: {
+            conversationLink: '`${env.STELACE_INSTANT_WEBSITE_URL}/i/${responses.messages.results[0].conversationId}`'
+          },
+          stop: '!computed.toEmail || !responses.messages.results.length',
           skip: 'transaction.status !== "accepted"',
           endpointUri: '/emails/send-template',
           endpointPayload: {
             name: '"transactionAcceptedByOwnerToTaker"',
             data: {
               assetName: 'computed.assetName',
-              ownerName: 'computed.ownerName'
+              ownerName: 'computed.ownerName',
+              takerName: 'computed.takerName',
+              conversationLink: 'computed.conversationLink'
             },
             locale: `"${locale}"`,
-            toEmail: 'computed.toEmail',
-            toName: 'computed.toName'
+            to: {
+              address: 'computed.toEmail',
+              name: 'computed.toName'
+            }
           }
         },
         {
           name: 'refusedByOwnerEmail',
           endpointMethod: 'POST',
+          computed: {
+            conversationLink: '`${env.STELACE_INSTANT_WEBSITE_URL}/i/${responses.messages.results[0].conversationId}`'
+          },
+          stop: '!computed.toEmail || !responses.messages.results.length',
           skip: `
             transaction.status !== "cancelled" ||
             transaction.cancellationReason !== "refusedByOwner"
@@ -757,11 +776,15 @@ module.exports = {
             name: '"transactionRefusedByOwnerToTaker"',
             data: {
               ownerName: 'computed.ownerName',
-              assetName: 'computed.assetName'
+              assetName: 'computed.assetName',
+              takerName: 'computed.takerName',
+              conversationLink: 'computed.conversationLink'
             },
             locale: `"${locale}"`,
-            toEmail: 'computed.toEmail',
-            toName: 'computed.toName'
+            to: {
+              address: 'computed.toEmail',
+              name: 'computed.toName'
+            }
           }
         }
       ]
@@ -775,24 +798,35 @@ module.exports = {
       computed: {
         // fallback to empty strings for email content
         transactionId: 'transaction.id',
-        takerDisplayName: 'taker.displayName || ""',
+        takerName: 'taker.displayName || ""',
+        ownerName: 'owner.displayName || ""',
         assetName: '_.get(transaction, "assetSnapshot.name", "")',
         toName: 'owner.displayName || ""',
         toEmail: 'owner.email'
       },
       run: [
+        {
+          name: 'messages',
+          endpointMethod: 'GET',
+          endpointUri: '/messages?topicId=${computed.transactionId}',
+        },
         // accepted
         {
           name: 'acceptedByTakerEmail',
           endpointMethod: 'POST',
-          stop: '!computed.toEmail',
+          computed: {
+            conversationLink: '`${env.STELACE_INSTANT_WEBSITE_URL}/i/${responses.messages.results[0].conversationId}`'
+          },
+          stop: '!computed.toEmail || !responses.messages.results.length',
           skip: 'transaction.status !== "validated"',
           endpointUri: '/emails/send-template',
           endpointPayload: {
             name: '"transactionAcceptedByTakerToOwner"',
             data: {
-              takerDisplayName: 'computed.takerDisplayName',
-              assetName: 'computed.assetName'
+              takerName: 'computed.takerName',
+              assetName: 'computed.assetName',
+              ownerName: 'computed.ownerName',
+              conversationLink: 'computed.conversationLink'
             },
             locale: `"${locale}"`,
             toEmail: 'computed.toEmail',
@@ -811,7 +845,7 @@ module.exports = {
         },
         {
           name: 'refusedByTakerEmail',
-          stop: '!responses.messages.results.length',
+          stop: '!computed.toEmail || !responses.messages.results.length',
           endpointMethod: 'POST',
           computed: {
             conversationLink: '`${env.STELACE_INSTANT_WEBSITE_URL}/i/${responses.messages.results[0].conversationId}`'
@@ -820,9 +854,10 @@ module.exports = {
           endpointPayload: {
             name: '"transactionRefusedByTakerToOwner"',
             data: {
-              takerDisplayName: 'computed.takerDisplayName',
+              takerName: 'computed.takerName',
               assetName: 'computed.assetName',
-              conversationLink: 'computed.conversationLink'
+              conversationLink: 'computed.conversationLink',
+              ownerName: 'computed.ownerName'
             },
             locale: `"${locale}"`,
             toEmail: 'computed.toEmail',

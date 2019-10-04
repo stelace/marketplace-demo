@@ -108,57 +108,72 @@ passwordReset:
 
 transactionAcceptedByOwnerToTaker:
   subject:
-    en: Your request has been accepted
-    fr: Votre demande a été acceptée
+    en: Your request about the listing "{assetName}" has been accepted
+    fr: Votre demande au sujet de l’annonce "{assetName}" a été acceptée
   content:
     en: >-
-      {ownerName, select, undefined{The owner} other {{ownerName}}} accepted your request.
+      Hi {takerName},<br><br>
+
+      {ownerName} has accepted your proposition about the listing "{assetName}".<br><br>
+
+      Please go to <a href="{conversationLink}">your inbox</a> to discuss with {ownerName}!
     fr: >-
-      {ownerName, select, undefined{Le propriétaire} other {{ownerName}}} a accepté votre demande.
+      Bonjour {takerName},<br><br>
+
+      {ownerName} a accepté votre proposition au sujet de l’annonce "{assetName}".<br><br>
+
+      Rendez-vous dans <a href="{conversationLink}">votre messagerie</a> pour échanger avec {ownerName} !
 
 transactionRefusedByOwnerToTaker:
   subject:
-    en: Your request has been rejected
-    fr: Votre demande a été rejetée
+    en: Your request about the listing "{assetName}" has been rejected
+    fr: Votre demande au sujet de l’annonce "{assetName}" a été refusée
   content:
     en: >-
-      {ownerName, select, undefined{The owner} other {{ownerName}}} rejected your request.
-      We are sorry about this and we invite you to renew your request with other users.
+      Hi {takerName},<br><br>
+
+      {ownerName} has rejected your proposition about the listing "{assetName}".<br><br>
+
+      Please go to <a href="{conversationLink}">your inbox</a> to discuss with {ownerName}!
     fr: >-
-      {ownerName, select, undefined{Le propriétaire} other {{ownerName}}} a rejeté votre demande.
-      Nous en somme désolés et nous vous invitons à renouveler votre demande auprès d’autres utilisateurs.
+      Bonjour {takerName},<br><br>
+
+      {ownerName} a refusé votre proposition au sujet de l’annonce "{assetName}".<br><br>
+
+      Rendez-vous dans <a href="{conversationLink}">votre messagerie</a> pour échanger avec {ownerName} !
 
 transactionAcceptedByTakerToOwner:
   subject:
-    en: Your offer has been accepted
-    fr: Votre proposition a été acceptée
+    en: The request about the listing "{assetName}" has been confirmed
+    fr: La demande au sujet de l’annonce "{assetName}" a été confirmée
   content:
     en: >-
-      {takerDisplayName} has accepted your proposal about {assetName}.
+      Hi {ownerName},<br><br>
 
-      You can use your {serviceName} inbox to get in touch with {takerDisplayName}!<br><br>
+      {takerName} has confirmed her request about the listing "{assetName}".<br><br>
+
+      Please go to <a href="{conversationLink}">your inbox</a> to discuss with {takerName}!
     fr: >-
-      {takerDisplayName} a accepté votre proposition au sujet de {assetName}.
+      Bonjour {ownerName},<br><br>
 
-      Rendez-vous dans votre messagerie pour échanger avec {takerDisplayName} !<br><br>
+      {takerName} a confirmé sa demande au sujet de l’annonce "{assetName}".<br><br>
+
+      Rendez-vous dans <a href="{conversationLink}">votre messagerie</a> pour échanger avec {takerName} !
 
 transactionRefusedByTakerToOwner:
   subject:
-    en: Your offer has been rejected
-    fr: Votre proposition a été rejetée
+    en: The request about the listing "{assetName}" has been declined
+    fr: La demande au sujet de l’annonce "{assetName}" a été déclinée
   content:
     en: >-
-      {takerDisplayName} has rejected your proposal about {assetName}.
+      Hi {ownerName},<br><br>
 
-      You can use your {serviceName} inbox to get in touch with {takerDisplayName}.<br><br>
+      {takerName} has declined her request about the listing "{assetName}".<br><br>
+
+      Please go to <a href="{conversationLink}">your inbox</a> to discuss with {takerName}!
     fr: >-
-      {takerDisplayName} a rejeté votre proposition au sujet de {assetName}.
+      Bonjour {ownerName},<br><br>
 
-      Rendez-vous dans votre messagerie pour échanger avec {takerDisplayName}.<br><br>
-  cta__button_url:
-    en: "{conversationLink}"
-    fr: "{conversationLink}"
-  cta_button__text:
-    en: Go to inbox
-    fr: Lire le message
+      {takerName} a décliné sa demande au sujet de l’annonce "{assetName}".<br><br>
 
+      Rendez-vous dans <a href="{conversationLink}">votre messagerie</a> pour échanger avec {takerName} !
