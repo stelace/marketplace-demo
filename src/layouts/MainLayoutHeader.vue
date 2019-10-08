@@ -40,6 +40,9 @@ export default {
     isSearch () {
       return this.route.name === 'search'
     },
+    SSOLoginOnly () {
+      return process.env.VUE_APP_SSO_LOGIN_ONLY === 'true'
+    },
     selectedCategory () {
       const selectedCategoryId = this.search.searchFilters.filters.categoryId
       if (!selectedCategoryId) return null
@@ -416,6 +419,7 @@ export default {
                 color="primary"
               />
               <QBtn
+                v-if="!SSOLoginOnly"
                 class="q-mb-sm"
                 align="left"
                 flat
