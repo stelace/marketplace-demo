@@ -77,6 +77,9 @@ export default {
     nbRatings () {
       return get(this.rating.ratingsStatsByAssetId, `default.${this.activeAsset.id}.count`, 0)
     },
+    isOwnerCurrentUser () {
+      return this.currentUser.id === this.activeAsset.ownerId
+    },
     ...mapState([
       'asset',
       'transaction',
@@ -89,7 +92,7 @@ export default {
       'promptTransactionQuantity',
       'validTransactionOptions',
       'maxAvailableQuantity',
-    ])
+    ]),
   },
   watch: {
     maxAvailableQuantity () {
@@ -425,7 +428,7 @@ export default {
     <div class="row">
       <CheckoutButton
         class="full-width"
-        :disabled="!validTransactionOptions"
+        :disabled="!validTransactionOptions || isOwnerCurrentUser"
         @click="checkout"
       />
     </div>
