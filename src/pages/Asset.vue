@@ -303,6 +303,7 @@
               :key="asset.id"
               class="col-10 col-sm-6"
               :asset="asset"
+              @remove="removeAsset"
             />
           </div>
         </section>
@@ -611,6 +612,14 @@ export default {
         quantity: 1
       })
     },
+    removeAsset (assetId) {
+      const { id } = this.$route.params
+
+      // if the asset removal concerns the current page, redirect to new asset
+      if (assetId === id) {
+        this.$router.push({ name: 'newAsset' })
+      }
+    }
   },
 }
 </script>

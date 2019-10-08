@@ -149,9 +149,12 @@ export default {
 
         await this.cancelPendingTransactions()
 
+        const assetId = this.asset.id
+
         await this.$store.dispatch('removeAsset', {
-          assetId: this.asset.id
+          assetId
         })
+        this.$emit('remove', assetId)
         await this.$store.dispatch('fetchUserAssets')
 
         this.notifySuccess('notification.deleted')
