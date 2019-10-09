@@ -104,7 +104,12 @@ export default {
   },
   methods: {
     selectDate (date) {
-      this.$emit('change', date ? new Date(date).toISOString() : null)
+      // date has the format YYYY/MM/DD which is parsed as local time via new Date().ISOString()
+      // e.g. new Date('2019/01/01').toISOString() === '2018-12-31T23:00:00.000Z'
+
+      // replace it by the format YYYY-MM-DD which is always parsed as UTC new Date().ISOString()
+      // e.g. new Date('2019-01-01').toISOString() === '2019-01-01T00:00:00.000Z'
+      this.$emit('change', date ? new Date(date.replace(/\//g, '-')).toISOString() : null)
       this.$refs.datePopup.hide()
     },
   }
