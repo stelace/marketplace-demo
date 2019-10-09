@@ -13,7 +13,7 @@ import PageComponentMixin from 'src/mixins/pageComponent'
 import AppUpload from 'src/mixins/AppUpload'
 
 import {
-  convertEndDateFromAPIToUI
+  convertEndDate
 } from 'src/utils/time'
 
 export default {
@@ -59,7 +59,7 @@ export default {
     },
     endDate () {
       return this.inbox.transaction.endDate
-        ? new Date(convertEndDateFromAPIToUI(this.inbox.transaction.endDate, { startDate: this.startDate }))
+        ? new Date(convertEndDate(this.inbox.transaction.endDate, { target: 'ui' }))
         : undefined
     },
     groupedChatMessages () {

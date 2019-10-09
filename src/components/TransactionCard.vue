@@ -12,8 +12,7 @@ import SelectNumber from 'src/components/SelectNumber'
 import AuthDialogMixin from 'src/mixins/authDialog'
 
 import {
-  convertEndDateFromAPIToUI,
-  convertEndDateFromUIToAPI
+  convertEndDate
 } from 'src/utils/time'
 
 import {
@@ -38,7 +37,6 @@ export default {
       confirmDeleteDialogOpened: false,
       showRemoveAssetWillCancelTransactionWarning: false,
       pendingTransactions: [],
-      rawEndDate: null,
     }
   },
   computed: {
@@ -57,7 +55,7 @@ export default {
       return this.transaction.startDate
     },
     endDate () {
-      return convertEndDateFromAPIToUI(this.transaction.endDate, { startDate: this.startDate })
+      return convertEndDate(this.transaction.endDate, { target: 'ui' })
     },
     quantity () {
       return this.transaction.quantity
@@ -121,20 +119,12 @@ export default {
         startDate
       })
 
-      if (this.rawEndDate) {
-        // manually trigger end date selection to avoid non-integer days duration due to daylight saving additional hour
-        // by re-computing the end date value
-        this.selectEndDate(this.rawEndDate)
-      } else {
-        if (this.validTransactionOptions) this.fetchTransactionPreview()
-      }
+      if (this.validTransactionOptions) this.fetchTransactionPreview()
     },
     selectEndDate (endDate) {
-      this.rawEndDate = endDate
-
       this.$store.commit({
         type: mutationTypes.SET_TRANSACTION_OPTIONS,
-        endDate: convertEndDateFromUIToAPI(endDate, { startDate: this.startDate })
+        endDate: convertEndDate(endDate, { target: 'api' })
       })
 
       if (this.validTransactionOptions) this.fetchTransactionPreview()
@@ -167,7 +157,7 @@ export default {
       if (!this.availabilityGraph) return false
 
       const today = date.startOfDate(new Date(), 'day').toISOString()
-      const d = convertEndDateFromUIToAPI(new Date(rawDate).toISOString(), { startDate: this.startDate })
+      const d = convertEndDate(new Date(rawDate).toISOString(), { target: 'api' })
 
       let valid = today <= d
       if (this.startDate) {
@@ -196,7 +186,7 @@ export default {
       })
     },
     fetchTransactionPreview () {
-      const endDate = convertEndDateFromUIToAPI(this.endDate, { startDate: this.startDate })
+      const endDate = convertEndDate(this.endDate, { target: 'api' })
 
       const invalidDates = this.startDate && endDate && endDate < this.startDate
       if (invalidDates) return

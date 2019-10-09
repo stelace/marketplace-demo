@@ -22,42 +22,18 @@ function getQuasarTimeUnit (timeUnit) {
   return mapQuasarTimeUnitToStelace[timeUnit]
 }
 
-export function convertEndDateFromAPIToUI (endDate, { startDate, timeUnit = 'd', includeEndDate = true } = {}) {
+export function convertEndDate (endDate, { timeUnit = 'd', includeEndDate = true, target } = {}) {
+  const allowedTarget = ['api', 'ui']
+  if (!allowedTarget.includes(target)) throw new Error(`Invalid type: ${allowedTarget.join(', ')} expected`)
+
   if (!includeEndDate) return endDate
 
   const quasarTimeUnit = getQuasarTimeUnit(timeUnit)
 
   if (!endDate) return endDate
-  const newEndDate = addToDate(new Date(endDate).toISOString(), { [quasarTimeUnit]: -1 }).toISOString()
-
-  // align the offset to start date to avoid non-integer duration
-  const differenceOffset = getOffsetDifference(startDate, newEndDate)
-  if (differenceOffset) {
-    return addToDate(newEndDate, { minutes: differenceOffset }).toISOString()
-  } else {
-    return newEndDate
-  }
-}
-
-export function convertEndDateFromUIToAPI (endDate, { startDate, timeUnit = 'd', includeEndDate = true } = {}) {
-  if (!includeEndDate) return endDate
-
-  const quasarTimeUnit = getQuasarTimeUnit(timeUnit)
-
-  if (!endDate) return endDate
-  const newEndDate = addToDate(new Date(endDate).toISOString(), { [quasarTimeUnit]: 1 }).toISOString()
-
-  // align the offset to start date to avoid non-integer duration
-  const differenceOffset = getOffsetDifference(startDate, newEndDate)
-  if (differenceOffset) {
-    return addToDate(newEndDate, { minutes: -differenceOffset }).toISOString()
-  } else {
-    return newEndDate
-  }
-}
-
-export function getOffsetDifference (startDate, endDate) {
-  const endDateOffset = new Date(endDate).getTimezoneOffset()
-  const startDateOffset = startDate ? new Date(startDate).getTimezoneOffset() : endDateOffset
-  return endDateOffset - startDateOffset
+  const newEndDate = addToDate(
+    new Date(endDate).toISOString(),
+    { [quasarTimeUnit]: target === 'ui' ? -1 : 1 }
+  ).toISOString()
+  return newEndDate
 }
