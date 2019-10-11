@@ -72,8 +72,8 @@ function checkProviderInfo () {
 
 function formatPlacesResult (result) {
   const displayName = result.display_name
-  const displayNamePart1 = result.display_name.split(',')[0].trim()
-  const displayNamePart2 = result.display_name.split(',')[1].trim()
+  const displayNamePart1 = (result.display_name.split(',')[0] || '').trim()
+  const displayNamePart2 = (result.display_name.split(',')[1] || '').trim()
 
   const postcode = get(result, 'address.postcode', '')
   let shortDisplayName = (get(result, 'address.village') || // TODO: move this string to i18n if it works properly
