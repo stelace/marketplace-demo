@@ -75,7 +75,7 @@ export default {
           return false
         }
 
-        const duplicated = this.uploaderTransformedFiles.some(u => files.some(f => f.name === u.name))
+        const duplicated = this.uploaderTransformedFiles.some(u => u && files.some(f => f.name === u.name))
         if (duplicated) {
           this.notify('error.file_upload_duplicate_name', {
             i18nValues: { // in MB
