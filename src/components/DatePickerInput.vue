@@ -20,6 +20,7 @@
       >
         <QPopupProxy ref="datePopup">
           <QDate
+            :mask="dateMask"
             :value="datePickerDate"
             :options="getValidDates"
             @input="selectDate"
@@ -41,6 +42,7 @@
       >
         <QPopupProxy ref="datePopup">
           <QDate
+            :mask="dateMask"
             :value="datePickerDate"
             :options="getValidDates"
             @input="selectDate"
@@ -92,6 +94,11 @@ export default {
       default: false
     },
   },
+  data () {
+    return {
+      dateMask: 'YYYY-MM-DD',
+    }
+  },
   computed: {
     localizedDate () {
       if (!this.date) return ''
@@ -99,17 +106,12 @@ export default {
     },
     datePickerDate () {
       if (!this.date) return null
-      return date.formatDate(this.date, 'YYYY/MM/DD')
+      return date.formatDate(this.date, this.dateMask)
     }
   },
   methods: {
     selectDate (date) {
-      // date has the format YYYY/MM/DD which is parsed as local time via new Date().ISOString()
-      // e.g. new Date('2019/01/01').toISOString() === '2018-12-31T23:00:00.000Z'
-
-      // replace it by the format YYYY-MM-DD which is always parsed as UTC new Date().ISOString()
-      // e.g. new Date('2019-01-01').toISOString() === '2019-01-01T00:00:00.000Z'
-      this.$emit('change', date ? new Date(date.replace(/\//g, '-')).toISOString() : null)
+      this.$emit('change', date ? new Date(date).toISOString() : null)
       this.$refs.datePopup.hide()
     },
   }
