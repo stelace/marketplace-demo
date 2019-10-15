@@ -43,7 +43,12 @@ export default {
       this.$emit('uploader-files-changed', newFiles)
     }
   },
-  mounted () {
+  async mounted () {
+    // load a polyfill for browsers not supporting `Array.from` (like IE11)
+    // which is needed by `vue-slicksort`
+    // (Quasar doesn't polyfill this feature)
+    if (!Array.from) await import(/* webpackChunkName: 'polyfill' */ 'src/polyfills/array.js')
+
     const r = this.reusedImages.map(img => {
       return Object.assign({}, img, { reused: true })
     })
