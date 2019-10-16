@@ -12,6 +12,10 @@ import SelectNumber from 'src/components/SelectNumber'
 import AuthDialogMixin from 'src/mixins/authDialog'
 
 import {
+  convertEndDate
+} from 'src/utils/time'
+
+import {
   getAvailableQuantityByDate
 } from 'src/utils/asset'
 
@@ -51,7 +55,7 @@ export default {
       return this.transaction.startDate
     },
     endDate () {
-      return this.transaction.endDate
+      return convertEndDate(this.transaction.endDate, { target: 'ui' })
     },
     quantity () {
       return this.transaction.quantity
@@ -123,7 +127,7 @@ export default {
     selectEndDate (endDate) {
       this.$store.commit({
         type: mutationTypes.SET_TRANSACTION_OPTIONS,
-        endDate
+        endDate: convertEndDate(endDate, { target: 'api' })
       })
 
       if (this.validTransactionOptions) this.fetchTransactionPreview()
@@ -156,7 +160,7 @@ export default {
       if (!this.availabilityGraph) return false
 
       const today = date.startOfDate(new Date(), 'day').toISOString()
-      const d = new Date(rawDate).toISOString()
+      const d = convertEndDate(new Date(rawDate).toISOString(), { target: 'api' })
 
       let valid = today <= d
       if (this.startDate) {
@@ -185,13 +189,15 @@ export default {
       })
     },
     fetchTransactionPreview () {
-      const invalidDates = this.startDate && this.endDate && this.endDate < this.startDate
+      const endDate = convertEndDate(this.endDate, { target: 'api' })
+
+      const invalidDates = this.startDate && endDate && endDate < this.startDate
       if (invalidDates) return
 
       this.$store.dispatch('previewTransaction', {
         assetId: this.activeAsset.id,
         startDate: this.startDate,
-        endDate: this.endDate,
+        endDate,
         quantity: this.quantity
       })
     },

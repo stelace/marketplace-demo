@@ -22,7 +22,7 @@ export function validTransactionOptions (state, getters, rootState, rootGetters)
 
   if (transactionDatesRequired) {
     if (!startDate || !endDate) return false
-    if (endDate < startDate) return false
+    if (endDate <= startDate) return false
 
     const availableQuantity = getAvailableQuantityByDate({ availabilityGraph, startDate, endDate })
     return availableQuantity >= quantity

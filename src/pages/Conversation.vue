@@ -12,6 +12,10 @@ import ProfileCard from 'src/components/ProfileCard'
 import PageComponentMixin from 'src/mixins/pageComponent'
 import AppUpload from 'src/mixins/AppUpload'
 
+import {
+  convertEndDate
+} from 'src/utils/time'
+
 export default {
   components: {
     TransactionActions,
@@ -54,7 +58,9 @@ export default {
       return this.inbox.transaction.startDate ? new Date(this.inbox.transaction.startDate) : undefined
     },
     endDate () {
-      return this.inbox.transaction.endDate ? new Date(this.inbox.transaction.endDate) : undefined
+      return this.inbox.transaction.endDate
+        ? new Date(convertEndDate(this.inbox.transaction.endDate, { target: 'ui' }))
+        : undefined
     },
     groupedChatMessages () {
       const messageGroups = this.inbox.conversationMessages.reduce((groups, m, i) => {

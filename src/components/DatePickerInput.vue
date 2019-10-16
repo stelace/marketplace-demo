@@ -20,6 +20,7 @@
       >
         <QPopupProxy ref="datePopup">
           <QDate
+            :mask="dateMask"
             :value="datePickerDate"
             :options="getValidDates"
             @input="selectDate"
@@ -41,6 +42,7 @@
       >
         <QPopupProxy ref="datePopup">
           <QDate
+            :mask="dateMask"
             :value="datePickerDate"
             :options="getValidDates"
             @input="selectDate"
@@ -92,6 +94,11 @@ export default {
       default: false
     },
   },
+  data () {
+    return {
+      dateMask: 'YYYY-MM-DD',
+    }
+  },
   computed: {
     localizedDate () {
       if (!this.date) return ''
@@ -99,7 +106,7 @@ export default {
     },
     datePickerDate () {
       if (!this.date) return null
-      return date.formatDate(this.date, 'YYYY/MM/DD')
+      return date.formatDate(this.date, this.dateMask)
     }
   },
   methods: {
