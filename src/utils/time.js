@@ -23,7 +23,7 @@ function getQuasarTimeUnit (timeUnit) {
 }
 
 /**
- * This function operates date manipulation on `endDate`, especially useful for one time unit length transactions
+ * This function operates date manipulation on `endDate`, especially useful for one-timeUnit-long transactions
  * e.g. one-day transaction on '2019-01-01' with `startDate` and `endDate` at '2019-01-01T00:00:00.000Z' from calendar
  * it will transform `endDate` into '2019-01-02T00:00:00.000Z' if target equals to 'api'
  * @param {String}  endDate
