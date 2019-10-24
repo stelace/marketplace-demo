@@ -65,7 +65,8 @@ export function searchedAssets (state, getters, rootState, rootGetters) {
   } = rootState.rating
   const {
     currentUser,
-    ratingsOptions
+    ratingsOptions,
+    currentUserPosition,
   } = rootGetters
 
   return assets.map(ast => {
@@ -76,6 +77,7 @@ export function searchedAssets (state, getters, rootState, rootGetters) {
       assetTypesById,
       ratingsStatsByAssetId,
       ratingsOptions,
+      currentUserPosition,
     })
 
     if (asset.owner) {

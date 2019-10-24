@@ -15,7 +15,7 @@ export function activeAsset (state, getters, rootState, rootGetters) {
     ratingsStatsByAssetId
   } = rootState.rating
   const {
-    ratingsOptions
+    ratingsOptions,
   } = rootGetters
 
   return populateAsset({
@@ -40,7 +40,7 @@ export function usersAssets (state, getters, rootState, rootGetters) {
     ratingsStatsByAssetId
   } = rootState.rating
   const {
-    ratingsOptions
+    ratingsOptions,
   } = rootGetters
 
   const usersIds = Object.keys(usersAssets)
@@ -67,4 +67,8 @@ export function isActiveAssetAvailable (state) {
   const availabilityGraphByAssetId = state.availabilityGraphByAssetId
 
   return isAvailable({ asset, availabilityGraphByAssetId })
+}
+
+export function displayAssetDistance () {
+  return process.env.VUE_APP_DISPLAY_ASSET_DISTANCE === 'true'
 }

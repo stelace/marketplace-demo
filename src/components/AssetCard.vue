@@ -18,7 +18,11 @@ export default {
     showRatings: {
       type: Boolean,
       default: true,
-    }
+    },
+    showDistance: {
+      type: Boolean,
+      default: false,
+    },
   },
   data () {
     return {}
@@ -35,7 +39,12 @@ export default {
       'baseImageRatio',
       'getBaseImageUrl',
       'ratingsActive',
-    ])
+    ]),
+    distanceKm () {
+      if (!this.asset.distance) return null
+
+      return Math.round(this.asset.distance / 1000)
+    },
   }
 }
 </script>
@@ -62,6 +71,17 @@ export default {
         >
           <slot name="caption" />
         </QImg>
+
+        <div
+          v-show="showDistance && typeof distanceKm === 'number'"
+          class="distance-chip absolute-top-left q-mt-sm q-ml-sm q-px-sm q-py-xs text-white"
+        >
+          <AppContent
+            entry="places"
+            field="distance_value"
+            :options="{ distance: distanceKm }"
+          />
+        </div>
       </slot>
 
       <QCardSection class="asset-content q-py-xs q-px-sm">
@@ -131,4 +151,9 @@ export default {
 
 .asset-location
   flex: 1 0
+
+.distance-chip
+  background-color: rgba(0, 0, 0, 0.4)
+  border-radius: $generic-border-radius !important
+
 </style>

@@ -16,6 +16,10 @@ export default {
 
     state.validationDialog[formType] = Object.assign({}, state.validationDialog[formType], data)
   },
+
+  [types.SET_USER_LOCATION] (state, { location }) {
+    state.userLocation = location
+  }
 }
 
 function isAllowedFormTypes (formType) {

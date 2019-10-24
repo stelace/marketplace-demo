@@ -426,7 +426,7 @@ export default {
       if (formType === 'email' && !this.canValidateEmail) return
 
       return this.openValidationDialog({ formType })
-    }
+    },
   }
 }
 
@@ -503,4 +503,5 @@ $owner-avatar-container-height = 7rem
 
 .recommendation
   margin-left: -0.35rem // to apply overlapping effect
+
 </style>

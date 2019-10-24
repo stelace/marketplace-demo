@@ -11,6 +11,8 @@ import PlacesAutocomplete from 'src/components/PlacesAutocomplete'
 
 import AuthDialogMixin from 'src/mixins/authDialog'
 
+import GeolocationMixin from 'src/mixins/geolocation'
+
 export default {
   components: {
     AppLocaleSwitch,
@@ -22,6 +24,7 @@ export default {
   },
   mixins: [
     AuthDialogMixin,
+    GeolocationMixin,
   ],
   data () {
     return {
@@ -91,6 +94,8 @@ export default {
       'currentUser',
       'currentOrganizations',
       'defaultSearchMode',
+      'currentUserPosition',
+      'displayAssetDistance',
     ]),
   },
   watch: {
@@ -108,12 +113,37 @@ export default {
             latitude: loc.latitude,
             longitude: loc.longitude
           })
+        } else if (this.displayAssetDistance) {
+          await this.fetchUserGeolocation()
+
+          if (this.currentUserPosition) {
+            this.$store.commit({
+              type: mutationTypes.SET_SEARCH_LOCATION,
+              queryLocation: this.$t({ id: 'places.current_position' }),
+              latitude: this.currentUserPosition.latitude,
+              longitude: this.currentUserPosition.longitude
+            })
+          }
         }
 
         if (this.isSearch) this.searchAssets()
         if (current.id) await this.$store.dispatch('fetchMessages')
       }
     },
+  },
+  async mounted () {
+    if (this.displayAssetDistance) {
+      await this.fetchUserGeolocation()
+
+      if (this.currentUserPosition) {
+        this.$store.commit({
+          type: mutationTypes.SET_SEARCH_LOCATION,
+          queryLocation: this.$t({ id: 'places.current_position' }),
+          latitude: this.currentUserPosition.latitude,
+          longitude: this.currentUserPosition.longitude
+        })
+      }
+    }
   },
   methods: {
     toggleMenu (visible = !this.isMenuOpened) {
@@ -201,6 +231,17 @@ export default {
 
       this.searchAssets()
     },
+    async fetchUserGeolocation () {
+      if (!this.displayAssetDistance) return
+      if (this.currentUserPosition) return
+      if (!this.geolocationSupported) return // from geolocation mixin
+
+      // if geolocation was previously granted, automatically get the GPS position of current user
+      const permissionState = await this.getGeolocationPermissionState() // from geolocation mixin
+      if (permissionState === 'granted') {
+        await this.getUserGeolocation({ silentError: true }) // from geolocation mixin
+      }
+    },
   }
 }
 </script>
@@ -287,6 +328,7 @@ export default {
           icon-color="grey-4"
           search-icon-position="left"
           read-search-store
+          prompt-current-position
           dense
           @selectPlace="selectPlace"
         />
