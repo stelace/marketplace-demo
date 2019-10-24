@@ -33,6 +33,10 @@ let data
 let existingData
 let createdData
 
+const scriptArguments = process.argv.slice(2)
+
+const addCategoriesRequested = scriptArguments.includes('--categories')
+
 async function run () {
   existingData = await pProps({
     assets: stelace.assets.list({ nbResultsPerPage: 100 }),
@@ -76,13 +80,14 @@ async function run () {
   if (answers.delete === 'all') {
     shouldOnlyRemoveScriptObjects = false
   }
-  // categories and assetTypes created by this script may have been used
+  // assetTypes created by this script may have been used
   // by objects created elsewhere that are not being removed
-  const removeCategoriesAndAssetTypes = isEmpty(existingData.assets)
-  const existingCategoriesOrAssetTypes = ['assetTypes', 'categories']
+  const removeAssetTypes = isEmpty(existingData.assets)
+  const addCategories = addCategoriesRequested || isEmpty(existingData.assets)
+  const existingAssetTypes = ['assetTypes']
     .some(o => !isEmpty(existingData[o]))
-  if (existingCategoriesOrAssetTypes && !removeCategoriesAndAssetTypes) {
-    log('\nYou may want to remove old Categories and Asset Types manually.')
+  if (existingAssetTypes && !removeAssetTypes) {
+    log('\nYou may want to remove old Asset Types manually.')
   }
 
   log(chalk.cyan.bold('\nStarting script…'))
@@ -106,9 +111,8 @@ async function run () {
     removeUsers(),
     removeObjects('customAttributes')
   ], _ => _, { concurrency: 2 })
-  if (removeCategoriesAndAssetTypes) {
+  if (removeAssetTypes) {
     await pMap([
-      'categories',
       'assetTypes'
     ], removeObjects, { concurrency: 2 })
   }
@@ -241,11 +245,6 @@ async function run () {
     }
   }
 
-  const valuesToCompareForCategories = [
-    'name',
-    'parentId'
-  ]
-
   if (data.categories) {
     const keys = Object.keys(data.categories)
     for (let i = 0; i < keys.length; i++) {
@@ -257,38 +256,35 @@ async function run () {
       payload.metadata = metadata
 
       const existingCategory = getExistingObject('categories', alias)
+      createdData.categories[key] = existingCategory // to not break reference to categories
 
-      if (existingCategory) {
-        if (!hasObjectChanged(existingCategory, payload, valuesToCompareForCategories)) {
-          createdData.categories[key] = existingCategory
-        } else {
-          createdData.categories[key] = await stelace.categories.update(existingCategory.id, payload)
-        }
-      } else {
+      if (addCategories) {
         createdData.categories[key] = await stelace.categories.create(payload)
       }
     }
   }
-  const categoriesToCreate = await importCategories(path.join(__dirname, 'categories.csv'))
-  if (categoriesToCreate.length) {
-    const categoriesByReference = {}
+  if (addCategories) {
+    const categoriesToCreate = await importCategories(path.join(__dirname, 'categories.csv'))
+    if (categoriesToCreate.length) {
+      const categoriesByReference = {}
 
-    for (let cat of categoriesToCreate) {
-      const payload = {
-        name: cat.name,
+      for (let cat of categoriesToCreate) {
+        const payload = {
+          name: cat.name,
+        }
+
+        if (cat._parentId) {
+          const parentCategory = categoriesByReference[cat._parentId]
+          payload.parentId = parentCategory.id
+        }
+
+        const metadata = Object.assign({}, payload.metadata, { initDataScript })
+        payload.metadata = metadata
+
+        const newCategory = await stelace.categories.create(payload)
+        createdData.categories[cat._label] = newCategory
+        categoriesByReference[cat._reference] = newCategory
       }
-
-      if (cat._parentId) {
-        const parentCategory = categoriesByReference[cat._parentId]
-        payload.parentId = parentCategory.id
-      }
-
-      const metadata = Object.assign({}, payload.metadata, { initDataScript })
-      payload.metadata = metadata
-
-      const newCategory = await stelace.categories.create(payload)
-      createdData.categories[cat._label] = newCategory
-      categoriesByReference[cat._reference] = newCategory
     }
   }
   if (data.customAttributes) {
@@ -574,7 +570,8 @@ function shouldRemoveObject (type, object) {
 }
 
 function getExistingObject (type, alias) {
-  if (!shouldOnlyRemoveScriptObjects) return null
+  // categories are never removed
+  if (!shouldOnlyRemoveScriptObjects && type !== 'categories') return null
   if (!reusingObjectTypes.includes(type)) return null
 
   const existingObject = existingData[type].find(o => {
