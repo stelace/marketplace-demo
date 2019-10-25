@@ -153,9 +153,8 @@ export default {
           </QSelect>
         </template>
         <template v-else-if="customAttribute.type === 'number'">
-          <QInput
+          <AppInputNumber
             v-model="customAttributes[customAttribute.name]"
-            type="number"
             :label="$t({ id: contentKey(customAttribute) })"
             @input="(value) => onCustomAttributeChange(customAttribute.name, parseFloat(value))"
           />

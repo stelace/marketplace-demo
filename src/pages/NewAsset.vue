@@ -456,12 +456,11 @@ export default {
                 />
               </div>
               <div :style="showCategory ? 'flex: 1 2 auto;' : ''">
-                <QInput
+                <AppInputNumber
                   v-model="price"
-                  type="number"
                   :label="priceLabel"
                   :rules="[
-                    price => Number.isFinite(parseFloat(price)) ||
+                    price => Number.isFinite(price) ||
                       $t({ id: 'form.error.missing_price' })
                   ]"
                   required
@@ -501,14 +500,13 @@ export default {
                 v-show="!selectedAssetType || !selectedAssetType.infiniteStock"
                 class="col-12 col-sm-5"
               >
-                <QInput
+                <AppInputNumber
                   v-model="quantity"
                   :label="$t({ id: 'asset.quantity_label' })"
                   required
-                  type="number"
                   min="0"
                   :rules="[
-                    quantity => parseFloat(quantity) > 0 ||
+                    quantity => quantity > 0 ||
                       $t({ id: 'form.error.missing_field' })
                   ]"
                   bottom-slots

@@ -129,7 +129,8 @@ export default {
         :editor="{ content }"
         :save-draft="saveDraft"
       >
-        <QInput
+        <component
+          :is="inputType === 'number' ? 'AppInputNumber' : 'QInput'"
           v-model="content"
           :type="inputType"
           :label="inputLabel"
