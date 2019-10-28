@@ -35,6 +35,7 @@ async function run () {
     customAttributes: stelace.customAttributes.list(),
     messages: stelace.messages.list({ nbResultsPerPage: 100 }),
     ratings: stelace.ratings.list({ nbResultsPerPage: 100 }),
+    tasks: stelace.tasks.list({ nbResultsPerPage: 100 }),
     transactions: stelace.transactions.list({ nbResultsPerPage: 100 }),
     users: stelace.users.list({ nbResultsPerPage: 100 }),
     workflows: stelace.workflows.list(),
@@ -91,7 +92,8 @@ async function run () {
     'ratings',
     'messages',
     'assets',
-    'workflows'
+    'workflows',
+    'tasks',
   ], removeObjects, { concurrency: 2 })
   await pMap([
     removeUsers(),
@@ -281,6 +283,19 @@ async function run () {
       payload.metadata = metadata
 
       createdData.workflows[key] = await stelace.workflows.create(payload)
+    }
+  }
+  if (data.tasks) {
+    const keys = Object.keys(data.tasks)
+    for (let i = 0; i < keys.length; i++) {
+      const key = keys[i]
+      const payload = data.tasks[key]
+      if (!payload) return // skip falsy payload
+
+      const metadata = Object.assign({}, payload.metadata, { initDataScript })
+      payload.metadata = metadata
+
+      createdData.tasks[key] = await stelace.tasks.create(payload)
     }
   }
   if (data.users) {
