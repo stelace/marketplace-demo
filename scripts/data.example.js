@@ -873,8 +873,8 @@ module.exports = {
       event: 'message__created',
       context: ['stelace'],
       computed: {
-        messageId: 'S.get("message", "id")',
-        receiverId: 'S.get("message", "receiverId")',
+        messageId: '_.get("message", "id")',
+        receiverId: '_.get("message", "receiverId")',
       },
       run: [
         {
