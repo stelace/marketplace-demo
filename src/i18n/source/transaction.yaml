@@ -65,6 +65,9 @@ transaction:
     pending:
       en: Pending
       fr: En attente
+    pending-acceptance:
+      en: Pending
+      fr: En attente
     validated:
       en: Validated
       fr: Validé

@@ -2,7 +2,7 @@ import { values, uniqBy } from 'lodash'
 import stelace, { fetchAllResults } from 'src/utils/stelace'
 import * as types from 'src/store/mutation-types'
 
-export async function createTransaction ({ state }, { asset } = {}) {
+export async function createTransaction ({ state, dispatch }, { asset } = {}) {
   const {
     startDate,
     endDate,
@@ -16,7 +16,7 @@ export async function createTransaction ({ state }, { asset } = {}) {
   if (endDate) transactionAttrs.endDate = endDate
   if (quantity) transactionAttrs.quantity = quantity
 
-  const transaction = await stelace.transactions.create(transactionAttrs)
+  let transaction = await stelace.transactions.create(transactionAttrs)
 
   const message = await stelace.messages.create({
     content: ' ',
@@ -25,6 +25,11 @@ export async function createTransaction ({ state }, { asset } = {}) {
     metadata: {
       isHiddenMessage: true
     }
+  })
+
+  transaction = await dispatch('createTransactionTransition', {
+    transactionId: transaction.id,
+    transitionName: 'confirmAndPay'
   })
 
   return {
@@ -36,6 +41,7 @@ export async function createTransaction ({ state }, { asset } = {}) {
 export async function createTransactionTransition ({ commit, state }, { transactionId, transitionName, data }) {
   const transaction = await stelace.transactions.createTransition(transactionId, { name: transitionName, data })
   commitTransaction({ commit, state }, { transaction })
+  return transaction
 }
 
 function commitTransaction ({ commit, state }, { transaction }) {

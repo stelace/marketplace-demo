@@ -157,17 +157,14 @@ function getTransactionActions ({ currentUser, transaction, isEmptyConversation 
   const isOwner = transaction.ownerId === currentUser.id
   const isTaker = transaction.ownerId !== currentUser.id
 
-  if (transaction.status === 'draft') {
-    if (isEmptyConversation && isTaker) {
+  if (['draft', 'pending-acceptance'].includes(transaction.status)) {
+    if (isTaker) {
       transactionActions.cancel = true
       transactionActions.cancellationReason = 'withdrawn'
     } else if (isOwner) {
       transactionActions.accept = true
       transactionActions.cancel = true
       transactionActions.cancellationReason = 'refusedByOwner'
-    } else if (isTaker) {
-      transactionActions.cancel = true
-      transactionActions.cancellationReason = 'withdrawn'
     }
   } else if (transaction.status === 'accepted') {
     if (isTaker) {
