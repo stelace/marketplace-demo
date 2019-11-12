@@ -50,12 +50,6 @@ export function conversations (state, getters, rootState, rootGetters) {
     const transaction = transactionId ? transactionsById[transactionId] || {} : {}
     let asset = assetId ? assetsById[assetId] : {}
 
-    // empty conversations can only be viewed by the conversation creator
-    // unless the transaction is cancelled
-    if (isEmptyConversation && transaction.cancelledDate) {
-      return
-    }
-
     const interlocutorId = getInterlocutorId({ currentUser, messages: conversationMessages })
     const interlocutor = usersById[interlocutorId] || {}
 

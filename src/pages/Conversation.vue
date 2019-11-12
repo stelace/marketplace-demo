@@ -96,6 +96,10 @@ export default {
     canUploadAttachments () {
       return this.inbox.attachmentsEnabled && this.attachments.length <= 5
     },
+    messageDisabled () {
+      if (!this.conversation) return false
+      return this.conversation.isEmpty && this.conversation.transaction && this.conversation.transaction.status === 'cancelled'
+    },
     interlocutorAvatar () {
       return this.getAvatarImageUrl(this.inbox.interlocutor)
     },
@@ -317,9 +321,12 @@ export default {
           </div>
         </div>
 
-        <QSeparator class="q-my-lg" />
+        <QSeparator v-if="!messageDisabled" class="q-my-lg" />
 
-        <div class="row justify-end items-start q-mb-none">
+        <div
+          v-if="!messageDisabled"
+          class="row justify-end items-start q-mb-none"
+        >
           <div
             v-if="canUploadAttachments && fileUpload.bigger"
             class="mobile-stacked q-pa-sm"

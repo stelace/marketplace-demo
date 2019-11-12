@@ -740,9 +740,10 @@ module.exports = {
           name: 'acceptedByOwnerEmail',
           endpointMethod: 'POST',
           computed: {
+            isEmptyConversation: '!responses.messages.results.filter(message => !message.metadata.isHiddenMessage).length',
             conversationLink: '`${env.STELACE_INSTANT_WEBSITE_URL}/i/${responses.messages.results[0].conversationId}`'
           },
-          stop: '!computed.toEmail || !responses.messages.results.length',
+          stop: '!computed.toEmail || computed.isEmptyConversation',
           skip: 'transaction.status !== "accepted"',
           endpointUri: '/emails/send-template',
           endpointPayload: {
@@ -764,9 +765,10 @@ module.exports = {
           name: 'refusedByOwnerEmail',
           endpointMethod: 'POST',
           computed: {
+            isEmptyConversation: '!responses.messages.results.filter(message => !message.metadata.isHiddenMessage).length',
             conversationLink: '`${env.STELACE_INSTANT_WEBSITE_URL}/i/${responses.messages.results[0].conversationId}`'
           },
-          stop: '!computed.toEmail || !responses.messages.results.length',
+          stop: '!computed.toEmail || computed.isEmptyConversation',
           skip: `
             transaction.status !== "cancelled" ||
             transaction.cancellationReason !== "refusedByOwner"
@@ -815,9 +817,10 @@ module.exports = {
           name: 'acceptedByTakerEmail',
           endpointMethod: 'POST',
           computed: {
+            isEmptyConversation: '!responses.messages.results.filter(message => !message.metadata.isHiddenMessage).length',
             conversationLink: '`${env.STELACE_INSTANT_WEBSITE_URL}/i/${responses.messages.results[0].conversationId}`'
           },
-          stop: '!computed.toEmail || !responses.messages.results.length',
+          stop: '!computed.toEmail || computed.isEmptyConversation',
           skip: 'transaction.status !== "validated"',
           endpointUri: '/emails/send-template',
           endpointPayload: {
@@ -845,9 +848,10 @@ module.exports = {
         },
         {
           name: 'refusedByTakerEmail',
-          stop: '!computed.toEmail || !responses.messages.results.length',
+          stop: '!computed.toEmail || computed.isEmptyConversation',
           endpointMethod: 'POST',
           computed: {
+            isEmptyConversation: '!responses.messages.results.filter(message => !message.metadata.isHiddenMessage).length',
             conversationLink: '`${env.STELACE_INSTANT_WEBSITE_URL}/i/${responses.messages.results[0].conversationId}`'
           },
           endpointUri: '/emails/send-template',
