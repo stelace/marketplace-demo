@@ -167,7 +167,10 @@ export default {
 
         <div
           v-if="uploaderTransformedFiles.length < maxNbImages"
-          class="image-uploader full-width column flex-center q-pa-md q-my-lg relative-position"
+          :class="[
+            'image-uploader full-width column flex-center q-pa-md q-my-lg relative-position',
+            scope.isUploading ? 'disabled' : ''
+          ]"
         >
           <QIcon
             class="q-my-md"
@@ -193,7 +196,7 @@ export default {
             color="primary"
           />
           <!-- Relative positionning of parent is needed for QUploaderAddTriger -->
-          <QUploaderAddTrigger />
+          <QUploaderAddTrigger v-if="!scope.isUploading" />
         </div>
       </template>
     </QUploader>

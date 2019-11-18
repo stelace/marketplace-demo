@@ -212,9 +212,12 @@ export default {
         this.requestAuthentication = false
       }
     },
+    filterCompleteFiles (files) {
+      return files.filter(f => f.name && f.url)
+    },
     uploaderFilesChanged (files) {
       this.uploaderFiles = files
-      this.assetImages = files
+      this.assetImages = this.filterCompleteFiles(files) // url can be undefined because upload is processing
     },
     removeImage (removed) {
       this.newUserImages = this.newUserImages.filter(img => img.name !== removed.name)
