@@ -26,3 +26,14 @@ export function isSelectedUserNatural (state, getters) {
   const roles = get(getters.selectedUser, 'roles', [])
   return !roles.includes('organization')
 }
+
+export function currentUserPosition (state, getters, rootState, rootGetters) {
+  const currentUser = rootGetters.currentUser
+  const userLocation = state.userLocation
+
+  if (currentUser && currentUser.locations && currentUser.locations.length) {
+    return currentUser.locations[0]
+  }
+
+  return userLocation
+}

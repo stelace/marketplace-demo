@@ -34,8 +34,16 @@
       v-slot:prepend
     >
       <QIcon
+        v-show="!showPromptPositionButton"
         :color="iconColor"
         name="place"
+      />
+      <QBtn
+        v-show="showPromptPositionButton"
+        class="cursor-pointer"
+        icon="my_location"
+        dense
+        @click="triggerPromptCurrentPosition"
       />
     </template>
 
@@ -50,10 +58,17 @@
       />
 
       <QIcon
-        v-if="showSearchIcon && searchIconPosition === 'right'"
+        v-if="showSearchIcon && !showPromptPositionButton && searchIconPosition === 'right'"
         v-show="location === null"
         :color="iconColor"
         name="place"
+      />
+      <QBtn
+        v-show="showPromptPositionButton && searchIconPosition === 'right'"
+        class="cursor-pointer"
+        icon="my_location"
+        dense
+        @click="triggerPromptCurrentPosition"
       />
     </template>
 
@@ -72,7 +87,12 @@ import { mapState, mapGetters } from 'vuex'
 
 import { search } from 'src/utils/places'
 
+import GeolocationMixin from 'src/mixins/geolocation'
+
 export default {
+  mixins: [
+    GeolocationMixin,
+  ],
   props: {
     readSearchStore: {
       type: Boolean,
@@ -81,6 +101,10 @@ export default {
     showSearchIcon: {
       type: Boolean,
       default: true
+    },
+    promptCurrentPosition: {
+      type: Boolean,
+      default: false
     },
     searchIconPosition: {
       type: String,
@@ -129,11 +153,19 @@ export default {
 
       return this.$refs.select.optionIndex
     },
+    showPromptPositionButton () {
+      return this.displayAssetDistance &&
+        this.promptCurrentPosition &&
+        !this.currentUserPosition &&
+        this.geolocationSupported
+    },
     ...mapState([
       'search'
     ]),
     ...mapGetters([
-      'assetsInUniqueCountry'
+      'assetsInUniqueCountry',
+      'currentUserPosition',
+      'displayAssetDistance',
     ])
   },
   methods: {
@@ -178,6 +210,24 @@ export default {
     hideLoadingSpinner () {
       this.loading = false
       clearTimeout(this.loadingTimeout)
+    },
+    async triggerPromptCurrentPosition () {
+      try {
+        await this.getUserGeolocation()
+
+        const currentPosition = {
+          displayName: this.$t({ id: 'places.current_position' }),
+          shortDisplayName: this.$t({ id: 'places.current_position' }),
+          latitude: this.currentUserPosition.latitude,
+          longitude: this.currentUserPosition.longitude
+        }
+
+        this.selectPlace(currentPosition)
+      } catch (err) {
+        // handled by `this.getUserGeolocation()`
+        // `catch` statement still needed because the function `triggerPromptCurrentPosition` is
+        // directly used in template
+      }
     }
   }
 }

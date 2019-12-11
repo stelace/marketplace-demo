@@ -23,6 +23,27 @@ places:
   address_placeholder:
     en: Address
     fr: Adresse
+  distance_value:
+    en: |
+      {distance, select,
+        0 {< 1 km}
+        other {{distance} km}
+      }
+    fr: |
+      {distance, select,
+        0 {< 1 km}
+        other {{distance} km}
+      }
+  geolocation_errors:
+    permission_denied:
+      en: The geolocation has been denied. Please check your browser settings.
+      fr: La géolocalisation a été bloquée. Veuillez vérifier les réglages de votre navigateur.
+    position_unavailable:
+      en: Your position cannot be determined. Please try again later.
+      fr: Votre position n'a pu être trouvée. Veuillez réessayer plus tard.
+  current_position:
+    en: Current position
+    fr: Position actuelle
 social:
   join_us:
     en: Join us

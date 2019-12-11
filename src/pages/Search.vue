@@ -10,6 +10,7 @@
             isSearchMapVisible ? 'col-xl-3' : 'col-xl-2'
           ]"
           :asset="asset"
+          :show-distance="displayAssetDistance"
           @mouseenter.native="animateMarker(asset.id)"
           @mouseleave.native="animateMarker(asset.id, false)"
         />
@@ -137,6 +138,7 @@ export default {
       'isSearchMapVisible',
       'defaultSearchMode',
       'searchAfterMapMoveActive',
+      'displayAssetDistance',
     ]),
     showRetriggerSearchLabel () {
       if (this.shouldSearchAfterMapMove) return false
@@ -292,7 +294,7 @@ export default {
             router: this.$router,
             store: this.$store,
             render: h => h(AssetCard, {
-              props: { asset },
+              props: { asset, showDistance: true },
               attrs: { id: popupId },
             })
           })

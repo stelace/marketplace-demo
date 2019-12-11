@@ -42,6 +42,7 @@ export async function searchAssets ({ state, rootState, rootGetters, commit, dis
     currentUser,
     ratingsOptions,
     ratingsActive,
+    currentUserPosition,
   } = rootGetters
 
   if (resetPagination) {
@@ -131,6 +132,7 @@ export async function searchAssets ({ state, rootState, rootGetters, commit, dis
       assetTypesById,
       ratingsStatsByAssetId,
       ratingsOptions,
+      currentUserPosition,
     })
 
     if (asset.owner) {

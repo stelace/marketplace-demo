@@ -477,6 +477,7 @@ module.exports = function (ctx) {
         VUE_APP_INSTANT_PAGE_PREFIX: JSON.stringify('/l'),
         VUE_APP_POST_MESSAGE_ALLOWED_ORIGINS: JSON.stringify(postMessageAllowedOrigins),
         VUE_APP_GITHUB_FORK_BUTTON: JSON.stringify(process.env.VUE_APP_GITHUB_FORK_BUTTON),
+        VUE_APP_DISPLAY_ASSET_DISTANCE: JSON.stringify(process.env.VUE_APP_DISPLAY_ASSET_DISTANCE)
       }
     },
 

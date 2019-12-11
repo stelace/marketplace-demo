@@ -444,7 +444,7 @@ export default {
       'searchOptions',
       'isActiveAssetAvailable',
       'ratingsOptions',
-      'ratingsActive'
+      'ratingsActive',
     ]),
   },
   watch: {

@@ -1,6 +1,7 @@
 import { get } from 'lodash'
 import { convertApiToDisplayScore } from 'src/utils/rating'
 import bounds from 'binary-search-bounds'
+import getDistance from 'geolib/es/getDistance'
 
 export function populateAsset ({
   asset,
@@ -9,6 +10,7 @@ export function populateAsset ({
   assetTypesById,
   ratingsStatsByAssetId,
   ratingsOptions,
+  currentUserPosition,
 }) {
   const newAsset = Object.assign({}, asset)
   newAsset.owner = usersById[asset.ownerId]
@@ -24,6 +26,14 @@ export function populateAsset ({
   newAsset.timeUnit = get(newAsset, 'assetType.timing.timeUnit', '')
 
   newAsset.ownerLink = { name: 'publicProfile', params: { id: newAsset.ownerId } }
+
+  if (currentUserPosition && newAsset.locations.length) {
+    const assetLocation = newAsset.locations[0]
+    newAsset.distance = getDistance(
+      { latitude: currentUserPosition.latitude, longitude: currentUserPosition.longitude },
+      { latitude: assetLocation.latitude, longitude: assetLocation.longitude },
+    )
+  }
 
   if (ratingsStatsByAssetId && ratingsOptions) {
     const defaultAvgScore = get(ratingsStatsByAssetId, `default.${newAsset.id}.avg`, null)
