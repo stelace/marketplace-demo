@@ -76,7 +76,7 @@ export async function createOrganization ({ commit, dispatch, rootState, rootGet
 
   const createAttrs = Object.assign({}, transformedAttrs)
 
-  let organization = await stelace.users.create(createAttrs, {
+  const organization = await stelace.users.create(createAttrs, {
     stelaceOrganizationId: null
   })
 

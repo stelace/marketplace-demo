@@ -48,7 +48,8 @@
             :active="isCurrentUserTheOwner"
             :custom-save="updateAssetFn('locations')"
           >
-            <template v-slot:default="{ content }">
+            <template>
+              <!-- v-slot:default="{ content }" -->
               <div class="text-h6 ellipsis">
                 {{ activeAsset.locationName }}
               </div>
@@ -529,7 +530,7 @@ export default {
       return compact(flatten(types.map(t => this.customAttributesByType[t])))
     },
     prepareUpdatedLocations (place, handlerFn) {
-      extractLocationDataFromPlace(place, loc => { handlerFn(loc ? [ loc ] : null) })
+      extractLocationDataFromPlace(place, loc => { handlerFn(loc ? [loc] : null) })
       // Note: array of locations expected, app handles only one for now.
     },
     async fetchAssetRatingsByTransaction () {
@@ -541,7 +542,7 @@ export default {
     async fetchRelatedAssets () {
       await this.$store.dispatch('fetchAssetTypes')
 
-      const assetTypeId = get(this.searchOptions, `modes.default.assetTypesIds`, [])
+      const assetTypeId = get(this.searchOptions, 'modes.default.assetTypesIds', [])
 
       const ownerId = get(this.activeAsset, 'ownerId')
       if (!ownerId) return {}

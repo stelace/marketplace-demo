@@ -121,7 +121,7 @@ export default {
       }
     },
     prepareUpdatedLocations (place, handlerFn) {
-      extractLocationDataFromPlace(place, loc => { handlerFn(loc ? [ loc ] : null) })
+      extractLocationDataFromPlace(place, loc => { handlerFn(loc ? [loc] : null) })
     },
     async removeLocationByIndex (index) {
       const locations = this.selectedUser.locations

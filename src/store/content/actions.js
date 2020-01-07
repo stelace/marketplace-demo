@@ -149,11 +149,13 @@ export function registerNewPages ({ state, commit, getters }) {
 }
 
 function handleContentError (err) {
-  logger(err, { notification: { // User should know the app is broken…
-    message: errorMessage || 'Error',
-    i18n: false,
-    timeout: defaultDelay * 2
-  } })
+  logger(err, {
+    notification: { // User should know the app is broken…
+      message: errorMessage || 'Error',
+      i18n: false,
+      timeout: defaultDelay * 2
+    }
+  })
   return err // In prod we don’t throw to load other contents available
   // Returning error rather than throwing can be useful to keep Promise.all running other promises
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all#Promise.all_fail-fast_behaviour

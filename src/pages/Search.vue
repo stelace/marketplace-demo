@@ -274,7 +274,7 @@ export default {
 
         if (!imgSrc) return
 
-        let el = document.createElement('div')
+        const el = document.createElement('div')
         el.id = markerId
         el.className = 'stl-map-marker'
         el.style.backgroundImage = `url("${imgSrc}")`
@@ -398,8 +398,6 @@ export default {
 
       try {
         await this.searchAssets()
-      } catch (err) {
-        throw err
       } finally {
         this.mapCenterChanged = false
       }

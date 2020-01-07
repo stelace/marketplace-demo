@@ -32,6 +32,7 @@ if (!Array.from) {
       }
 
       // 4. If mapfn is undefined, then let mapping be false.
+      // eslint-disable-next-line
       var mapFn = arguments.length > 1 ? arguments[1] : void undefined
       var T
       if (typeof mapFn !== 'undefined') {

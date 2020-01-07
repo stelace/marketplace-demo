@@ -93,8 +93,9 @@ export default {
       @uploaded="filesUploaded"
       @failed="filesFailed"
     >
-      <template v-slot:header="scope">
+      <template>
         <!-- This is global progress -->
+        <!-- v-slot:header="scope" -->
         <!-- <div>
           {{ scope.uploadSizeLabel }} / {{ scope.uploadProgressLabel }}
         </div> -->

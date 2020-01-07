@@ -190,7 +190,8 @@ export default {
           :hide-header="$q.screen.xs"
           grid
         >
-          <template v-slot:top="props">
+          <template>
+            <!-- v-slot:top="props" -->
             <QSpace />
 
             <div

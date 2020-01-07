@@ -5,7 +5,7 @@ const instantPathPrefix = process.env.VUE_APP_INSTANT_PAGE_PREFIX
 // Exporting this to nest more routes depending on contents fetched from Stelace Content API
 // Inspired by @yovchev https://github.com/vuejs/vue-router/pull/2064#issuecomment-462985653
 // Waiting for https://github.com/vuejs/vue-router/issues/1156
-export let dynamicRoutes = {
+export const dynamicRoutes = {
   path: instantPathPrefix, // prefixing to prevent routes conflicts in the future
   redirect: '/',
   component: () => import(/* webpackChunkName: 'landing' */ 'layouts/MainLayout.vue'),
@@ -73,7 +73,7 @@ export const defaultRoutes = {
   ]
 }
 
-routes = [dynamicRoutes, defaultRoutes]
+routes = [dynamicRoutes, defaultRoutes] // eslint-disable-line prefer-const
 
 export const catchAllRoute = {
   path: '*',

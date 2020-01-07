@@ -93,7 +93,7 @@ export default {
       // even if multiple files are selected in file picker
       // there is only one element in the array
       const file = files[0]
-      let options = {}
+      const options = {}
       if (this.uploadFolder) options.folder = this.uploadFolder
 
       return getS3SignedUrl(file, options)
