@@ -42,7 +42,7 @@ export default async ({ Vue, store }) => {
     }
 
     let valueSearch
-    let fallbackValues = { SERVICE_NAME: process.env.VUE_APP_SERVICE_NAME }
+    const fallbackValues = { SERVICE_NAME: process.env.VUE_APP_SERVICE_NAME }
 
     while ((valueSearch = optionalValuesRegex.exec(translation)) !== null) {
       fallbackValues[valueSearch[1].trim()] = undefined

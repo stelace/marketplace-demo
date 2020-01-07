@@ -8,7 +8,7 @@ const stelaceEnv = getStelaceEnv()
 // https://www.netlify.com/docs/continuous-deployment/#environment-variables
 const branchDeploy = process.env.DEV && process.env.CONTEXT ? process.env.BRANCH : ''
 
-let remoteLogger = { capture: _ => _ }
+const remoteLogger = { capture: _ => _ }
 
 export default async ({ Vue }) => {
   // Note that Vue errorHandler is called by Sentry.

@@ -246,12 +246,12 @@ export default {
       const pswpElement = this.$el.querySelector('.pswp')
       const images = this.items
 
-      let options = {
+      const options = {
         getThumbBoundsFn: i => {
           // See PhotoSwipe Options -> getThumbBoundsFn section of documentation for more info
-          let thumbnail = this.$el.querySelector(`img[data-pswp-pid="${i}"]`) // find thumbnail
-          let pageYScroll = window.pageYOffset || document.documentElement.scrollTop
-          let rect = thumbnail.getBoundingClientRect()
+          const thumbnail = this.$el.querySelector(`img[data-pswp-pid="${i}"]`) // find thumbnail
+          const pageYScroll = window.pageYOffset || document.documentElement.scrollTop
+          const rect = thumbnail.getBoundingClientRect()
 
           return { x: rect.left, y: rect.top + pageYScroll, w: rect.width }
         }
@@ -293,9 +293,9 @@ export default {
     },
     initPhotoSwipeFromDOM (gallerySelector) {
       // parse picture index and gallery index from URL (#&pid=1&gid=2)
-      let photoswipeParseHash = () => {
+      const photoswipeParseHash = () => {
         const hash = window.location.hash.substring(1)
-        let params = {}
+        const params = {}
 
         if (hash.length < 5) return params
 
@@ -316,7 +316,7 @@ export default {
       // All galleries should only react to the right URLs with consistent uid
       // May be problematic if galleries are loaded in non-deterministic order
       // Explicit `galleryUID` option is safer
-      let galleryElements = document.querySelectorAll(gallerySelector)
+      const galleryElements = document.querySelectorAll(gallerySelector)
 
       for (let i = 0, l = galleryElements.length; i < l; i++) {
         galleryElements[i].setAttribute('data-pswp-uid', i + 1)
@@ -332,7 +332,7 @@ export default {
       }
 
       // Parse URL and open gallery if it contains #&pid=3&gid=1
-      let hashData = photoswipeParseHash()
+      const hashData = photoswipeParseHash()
 
       if (hashData.pid && hashData.gid && hashData.gid === currentGalleryId) {
         this.openPhotoSwipe(hashData.pid, true, true)

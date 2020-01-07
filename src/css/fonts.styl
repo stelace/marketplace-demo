@@ -3,7 +3,7 @@ json('../styles.json') // JSON import: https://github.com/stylus/stylus/pull/784
 // cf styles.json.md
 
 withLegacy(fontFamily, weight, url, legacyUrl, legacyFormat = 'woff')
-  if (legacyFont)
+  if (legacyUrl)
     "local('%s %s'), url('%s') format('woff2'), url('%s') format('%s')" \
       % (fontFamily weight url legacyUrl legacyFormat)
   // E.g.:

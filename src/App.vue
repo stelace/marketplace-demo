@@ -102,15 +102,15 @@ export default {
     this.$router.afterEach((to, from) => {
       if (this.hasLoadingScreen && from && from.name === 'home') {
         clearTimeout(this.hideLoadingScreenTimeout)
-        let loadingBackground = window.document.querySelector('#app-loading-background')
+        const loadingBackground = window.document.querySelector('#app-loading-background')
         loadingBackground.classList.add('-hide')
       }
     })
   },
   methods: {
     async hideLoadingScreen () {
-      let loadingContainer = window.document.querySelector('#app-loading-container')
-      let loadingBackground = window.document.querySelector('#app-loading-background')
+      const loadingContainer = window.document.querySelector('#app-loading-container')
+      const loadingBackground = window.document.querySelector('#app-loading-background')
 
       if (loadingContainer) loadingContainer.classList.add('loaded')
 

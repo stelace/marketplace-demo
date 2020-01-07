@@ -13,7 +13,7 @@ export async function fetchLastAssets ({ dispatch, rootState, rootGetters }, { n
   const searchOptions = rootGetters.searchOptions
   const assetTypeId = get(searchOptions, 'modes.default.assetTypesIds', [])
 
-  let filters = {
+  const filters = {
     active: true,
     validated: true,
 
@@ -103,7 +103,7 @@ export async function fetchUserAssets ({ commit, dispatch, rootState, rootGetter
     ratingsActive,
   } = rootGetters
 
-  const ownerId = userId || (rootGetters.currentUser || {})['id']
+  const ownerId = userId || (rootGetters.currentUser || {}).id
 
   if (!ownerId) return []
 

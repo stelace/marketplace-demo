@@ -92,8 +92,8 @@
               <QUploaderAddTrigger />
             </QAvatar>
           </template>
-          <template v-slot:list="uploader">
-            <!-- Nothing -->
+          <template>
+            <!-- Nothing: v-slot:list="uploader" -->
           </template>
         </QUploader>
       </div>
@@ -381,7 +381,7 @@ export default {
       const markerId = `marker-${this.contextResource.id}`
       const coordinates = this.mapFeature.geometry.coordinates
 
-      let el = document.createElement('div')
+      const el = document.createElement('div')
       el.id = markerId
       el.className = 'stl-map-marker'
       el.style.backgroundImage = `url('${this.contextResourceImageUrl}')`

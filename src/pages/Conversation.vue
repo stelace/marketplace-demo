@@ -65,16 +65,15 @@ export default {
     groupedChatMessages () {
       const messageGroups = this.inbox.conversationMessages.reduce((groups, m, i) => {
         // Messages still handled from most recent to oldest
-        const newGroup = { additionalMessages: [ m ], contents: [ m.content ] }
+        const newGroup = { additionalMessages: [m], contents: [m.content] }
 
         const maxDelayBetweenGroupMessages = 30
 
-        if (i === 0) return [ newGroup ]
+        if (i === 0) return [newGroup]
 
-        let dateDiff
         const nextMessage = this.inbox.conversationMessages[i - 1]
 
-        dateDiff = m.senderId === nextMessage.senderId
+        const dateDiff = m.senderId === nextMessage.senderId
           ? date.getDateDiff(nextMessage.createdDate, m.createdDate, 'minutes')
           : Infinity
 

@@ -16,7 +16,7 @@
 export default {
   computed: {
     valuePercent () {
-      let value = this.$attrs.value || 0
+      const value = this.$attrs.value || 0
       return value / 100
     }
   }
