@@ -40,7 +40,7 @@ export default {
 
       if (typeof authCallback === 'function' && publishableKey) authCallback({ publishableKey, authToken, channels })
 
-      this.$socket.signal_id = signal_id
+      this.$socket.client.signal_id = signal_id
     },
     signal (data) {
       // default Signal event name
@@ -90,7 +90,7 @@ export default {
     this.$store.dispatch('initApp')
     this.hideLoadingScreen()
 
-    this.$socket.open()
+    this.$socket.client.open()
 
     this.handleUserSessionExpiration()
 
@@ -131,8 +131,8 @@ export default {
       }
     },
     refreshSocket () {
-      this.$socket.close()
-      this.$socket.open()
+      this.$socket.client.close()
+      this.$socket.client.open()
     },
     handleRouteQuery () {
       const hash = this.$route.hash
