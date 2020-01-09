@@ -154,7 +154,7 @@ ${ignoredLocales.length ? `Skipped ${ignoredLocales} contents.` : ''}
 async function fetchAllResults (fetchFn, params = {}) {
   const nbResultsPerPage = 100
   let page = 1
-  let allResults = []
+  const allResults = []
   let results
 
   do {

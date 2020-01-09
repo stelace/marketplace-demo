@@ -51,7 +51,7 @@ async function run () {
       message: 'Existing objects detected',
       choices: [
         {
-          name: `Delete only objects previously created and marked by this script.`,
+          name: 'Delete only objects previously created and marked by this script.',
           value: 'marked',
           short: `Delete ${initDataScript} objects only`
         },
@@ -225,7 +225,7 @@ async function run () {
   if (categoriesToCreate.length) {
     const categoriesByReference = {}
 
-    for (let cat of categoriesToCreate) {
+    for (const cat of categoriesToCreate) {
       const payload = {
         name: cat.name,
       }

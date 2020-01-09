@@ -67,7 +67,7 @@ i18nCompile(
   { langPlace: '[lang]' }
 )
 i18nCompile(
-  [ path.join(__dirname, '../src/i18n/email/*.yaml') ],
+  [path.join(__dirname, '../src/i18n/email/*.yaml')],
   path.join(__dirname, `../src/i18n/build/${emailFilePrefix}[lang].json`),
   { langPlace: '[lang]' }
 )
@@ -87,7 +87,7 @@ i18nCompile(
 async function run () {
   const translationsPath = path.join(__dirname, '../src/i18n/build/')
   const translationFiles = await readDir(translationsPath)
-  let apiEntries = await stelace.entries.list({ collection })
+  const apiEntries = await stelace.entries.list({ collection })
     .catch(err => warn(err, '\nError when fetching apiEntries\n\n')) || []
 
   log('')
@@ -142,7 +142,7 @@ function transformAndFlatten (data) {
       for (let i = 0; i < current.length; i++) flattenObj(current[i], `${prop}.${i}`, level + 1)
     } else {
       let isEmpty = true
-      for (let p in current) {
+      for (const p in current) {
         isEmpty = false
         if (!prop) setResult(p, {})
         flattenObj(current[p], prop ? `${prop}.${p}` : p, level + 1)

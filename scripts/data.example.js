@@ -18,6 +18,7 @@
 const locale = process.env.VUE_APP_DEFAULT_LANGUAGE || 'en'
 
 module.exports = {
+  /* eslint-disable quotes */
   assetTypes: {
     renting: {
       name: 'Renting',
@@ -444,7 +445,7 @@ module.exports = {
               }
             },
             types: {
-              'main': {
+              main: {
                 label: 'main',
                 maxScore: 5,
                 form: 'star',
@@ -916,4 +917,5 @@ module.exports = {
     },
   }
   /* eslint-enable no-template-curly-in-string */
+  /* eslint-enable quotes */
 }
