@@ -208,7 +208,9 @@ export default {
   >
     <QBtnDropdown
       v-if="searchModes.length > 1"
+      ref="searchToolbarModes"
       class="q-ml-xs"
+      content-class="search-modes"
       :label="selectedSearchModeLabel"
       :rounded="style.roundedTheme"
       color="transparent"
@@ -224,6 +226,7 @@ export default {
           :key="mode"
           v-close-popup
           clickable
+          :data-mode="mode"
           @click="selectSearchMode(mode)"
         >
           <QItemSection>
@@ -318,6 +321,7 @@ export default {
     </QChip>
 
     <QChip
+      ref="searchFiltersToggle"
       clickable
       outline
       :removable="nbActiveFilters > 0"
@@ -387,6 +391,7 @@ export default {
           <div class="row q-my-lg q-py-md justify-center">
             <SelectCategories
               class="col-12 col-sm-5"
+              popup-content-class="search-filters__categories"
               :label="$t({ id: 'asset.category_label' })"
               :show-search-icon="false"
               :initial-category="currentCategory"
@@ -424,6 +429,7 @@ export default {
 
             <component
               :is="style.hasSVGActionButton ? 'AppSVGActionButton' : 'QBtn'"
+              ref="filtersSearchButton"
               v-close-popup
               class="text-weight-medium'"
               :label="$t({ id: 'navigation.search' })"
