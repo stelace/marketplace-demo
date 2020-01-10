@@ -38,5 +38,7 @@ jobs:
       - run:
           name: Running end to end tests
           command: yarn test:ci:e2e
+      - store_artifacts:
+          path: /tmp/test-results
       - store_test_results:
           path: /tmp/test-results
