@@ -279,7 +279,7 @@ module.exports = function (ctx) {
         : (uploadSourceMapsToSentry ? '#hidden-source-map' : '#source-map'),
       // vueCompiler: true,
       // gzip: true,
-      analyze: true,
+      // analyze: true,
       // extractCSS: false,
 
       async afterBuild () {
