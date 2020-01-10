@@ -283,6 +283,7 @@ export default {
       >
         <QInput
           v-if="!searchByCategory"
+          ref="headerSearchInput"
           :value="search.query"
           :input-class="search.query ? 'text-right' : ''"
           :label="$t({ id: 'form.search.query_placeholder' })"

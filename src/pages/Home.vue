@@ -219,6 +219,7 @@ export default {
           <div class="hero__search-form">
             <q-input
               v-if="!searchByCategory"
+              ref="heroSearchInput"
               v-model="query"
               dense
               bottom-slots
@@ -262,6 +263,7 @@ export default {
           <div class="row justify-end">
             <component
               :is="style.hasSVGActionButton ? 'AppSVGActionButton' : 'QBtn'"
+              ref="heroSearchButton"
               class="text-weight-medium"
               :rounded="style.roundedTheme"
               :label="$t({ id: 'pages.home.form_button' })"
