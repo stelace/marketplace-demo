@@ -11,7 +11,7 @@ Feel free to [fork](
 
 ---
 
-This starter kit offers **a full AirBnB-like marketplace front-end (Vue.js) with pre-configured serverless deployment**.
+This starter kit offers **a full AirBnB-like marketplace front-end (Vue.js) with pre-configured serverless deployment** based on [open-source](https://github.com/stelace/stelace) [Stelace API](https://stelace.com) server.
 
 __[Live Demo](https://marketplace.demo.stelace.com)__
 
@@ -46,18 +46,22 @@ Stelace offers powerful backend and APIs including advanced search, automation, 
 - i18n :earth_africa: and full [translations](./docs/i18n.md)
 - [Performance](./docs/performance.md) (90+ Lighthouse score) :checkered_flag:
 - [Accessibility](./docs/accessibility.md)
-- Built-in debugging for production
 - …
 - and [much more](https://stelace.com) with Stelace API
 
-## Integrations
+### Integrations
 
 Leverage these integrations to start running your platform even faster:
 
 - Automated and continuous deployment with [Netlify](https://www.netlify.com/)
+- [Sentry](https://sentry.io/) for debugging in production environment
 - Maps and place search with [OpenStreetMap](https://www.openstreetmap.org/) providers
-- [Sentry](https://sentry.io/) for logging in production environment
 - Google Analytics
+
+## Testing
+
+- End-to-end cross-browser testing with [TestCafé](https://devexpress.github.io/testcafe)
+- Continuous integration with [CircleCI](https://circleci.com/)
 
 ## Stack
 
@@ -132,7 +136,7 @@ yarn seed
 ```
 
 <details>
-<summary>For Stelace Team or partners developing with local API server.</summary>
+<summary>Developing with self-hosted Stelace API server.</summary>
 
 Stelace Core API server has to be launched locally before starting this project's server.
 
