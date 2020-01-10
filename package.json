@@ -1,6 +1,6 @@
 {
   "name": "marketplace-demo",
-  "version": "0.1.0",
+  "version": "0.3.0",
   "description": "Marketplace powered by Stelace API and Vue.js",
   "productName": "Stelace Instant Marketplace Demo",
   "homepage": "https://stelace.com",
