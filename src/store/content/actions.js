@@ -80,7 +80,8 @@ export async function fetchAppContent ({ state, commit, getters, dispatch }, { l
     ])
 
     // We do not wait for Quasar language pack since it’s not critical
-    import(/* webpackChunkName: 'i18n-q-[request]' */
+    import(/* webpackInclude: /(en-us|fr)\.js$/ */
+      // https://quasar.dev/options/quasar-language-packs#Dynamically-Picking-Default-Language
       `quasar/lang/${locale === 'en' ? 'en-us' : locale}`
     )
       .then(quasarTranslations => Quasar.lang.set(quasarTranslations.default))
