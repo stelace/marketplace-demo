@@ -38,7 +38,9 @@
 # SPA history mode routing. Keep this last:
 [[redirects]]
   from = "/*"
-  to = "/index.html"
+  # app.html is not prerendered, unlike index.html (Home page component)
+  # so we can avoid white flash on routes other than home that were not prerendered
+  to = "/app.html"
   status = 200
 
 

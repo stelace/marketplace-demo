@@ -1,7 +1,7 @@
 import { get, snakeCase } from 'lodash'
 
 export default {
-  meta () {
+  metaInfo () {
     const route = this.$route
     const routeTranslationField = snakeCase(route.name || 'home')
 
@@ -19,13 +19,12 @@ export default {
       title: metaTitle ||
         this.$t({ id: `pages.${routeTranslationField}.page_title` }) ||
         this.$t({ id: `pages.${routeTranslationField}.header` }),
-      meta: {
-        description: {
-          name: 'description',
-          content: metaDescription ||
-            this.$t({ id: `pages.${routeTranslationField}.meta_description` })
-        }
-      },
+      meta: [{
+        name: 'description',
+        vmid: 'description',
+        content: metaDescription ||
+          this.$t({ id: `pages.${routeTranslationField}.meta_description` })
+      }],
     }
   }
 }
