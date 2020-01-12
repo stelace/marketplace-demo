@@ -3,6 +3,7 @@ const PreloadPlugin = require('@vue/preload-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const SentryWebpackPlugin = require('@sentry/webpack-plugin')
 const PrerenderSPAPlugin = require('prerender-spa-plugin')
+const HtmlCriticalWebpackPlugin = require('html-critical-webpack-plugin')
 const path = require('path')
 const fs = require('fs')
 const util = require('util')
@@ -355,6 +356,35 @@ module.exports = function (ctx) {
               }
             })
           )
+
+          const criticalCSSConfig = {
+            inline: true,
+            minify: true,
+            extract: true,
+            dimensions: [{
+              height: 565,
+              width: 360
+            },
+            {
+              height: 720,
+              width: 1360
+            }],
+            penthouse: {
+              blockJSRequests: false,
+            }
+          }
+          cfg.plugins.push(new HtmlCriticalWebpackPlugin({
+            base: path.resolve(__dirname, 'dist/spa'),
+            src: 'home.html',
+            dest: 'home.html',
+            ...criticalCSSConfig
+          }))
+          cfg.plugins.push(new HtmlCriticalWebpackPlugin({
+            base: path.resolve(__dirname, 'dist/spa/s'),
+            src: 'index.html',
+            dest: 'index.html',
+            ...criticalCSSConfig
+          }))
         }
       },
 
