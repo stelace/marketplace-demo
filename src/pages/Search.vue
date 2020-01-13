@@ -163,21 +163,20 @@ export default {
     // We need full mapbox objects, stored outside of vue (reactivity not needed, and even full of bugs)
     window.stlMapMarkers = {}
   },
-  async preFetch ({ store }) {
+  async mounted () {
     await Promise.all([
-      store.dispatch('fetchConfig'),
-      store.dispatch('fetchAssetsRelatedResources'),
+      this.$store.dispatch('fetchConfig'),
+      this.$store.dispatch('fetchAssetsRelatedResources'),
     ])
 
-    // search results in server-side for SEO
-    if (!store.state.search.searchMode) {
-      await store.dispatch('selectSearchMode', { searchMode: store.getters.defaultSearchMode })
+    if (!this.$store.state.search.searchMode) {
+      await this.$store.dispatch('selectSearchMode', { searchMode: this.$store.getters.defaultSearchMode })
     }
 
-    await store.dispatch('searchAssets')
-  },
-  mounted () {
+    await this.$store.dispatch('searchAssets')
     this.$store.dispatch('getHighestPrice')
+
+    document.dispatchEvent(new Event('prerender-ready'))
   },
   updated () { // e.g. when switching locale
     this.refreshMap()

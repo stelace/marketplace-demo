@@ -2,12 +2,12 @@ const dotenv = require('dotenv')
 const PreloadPlugin = require('@vue/preload-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const SentryWebpackPlugin = require('@sentry/webpack-plugin')
+const PrerenderSPAPlugin = require('prerender-spa-plugin')
 const path = require('path')
 const fs = require('fs')
 const util = require('util')
-const readFile = util.promisify(fs.readFile)
-const writeFile = util.promisify(fs.writeFile)
 const deleteFile = util.promisify(fs.unlink)
+const renameFile = util.promisify(fs.rename)
 const { execSync } = require('child_process')
 const _ = require('lodash')
 const glob = require('glob')
@@ -64,6 +64,8 @@ module.exports = function (ctx) {
   // //////////// //
   // HTML content //
   // //////////// //
+
+  const prerender = ctx.prod && ctx.mode.spa
 
   const defaultStyles = JSON.parse(fs.readFileSync('src/styles.json', 'utf-8'))
   const localTranslations = JSON.parse(fs.readFileSync(`src/i18n/build/${
@@ -124,11 +126,12 @@ module.exports = function (ctx) {
       'exchangePlugin',
       'vuex-router-sync',
       'vuelidate',
+      'vue-meta',
       ctx.dev ? 'devDebug' : null,
       { path: 'fonts', server: false },
       { path: 'signal', server: false },
       { path: 'analytics', server: false },
-    ],
+    ].concat(prerender ? ['prerendered'] : []),
 
     css: [
       'app.styl'
@@ -238,7 +241,7 @@ module.exports = function (ctx) {
       plugins: [
         'AppVisibility',
         'Dialog',
-        'Meta',
+        // 'Meta', // using vue-meta for compatibility with prerender-spa-plugin
         'Notify'
       ]
 
@@ -261,17 +264,13 @@ module.exports = function (ctx) {
       websiteUrl: seo.websiteUrl,
       primaryColor,
 
-      loadingTitle: loadingScreen.title || 'Welcome on our website',
-      loadingNotice: loadingScreen.notice || 'Loading',
       javascriptRequired: loadingScreen.javascriptRequired || 'Please activate JavaScript',
-      loadingOverlayColor: loadingScreen.backgroundImg ? 'rgba(0,0,0,0.4)' : 'transparent',
-      loadingBackground: loadingScreen.backgroundImg
-        ? `url('${loadingScreen.backgroundImg}') center / cover` : primaryColor
     },
 
     build: {
       scopeHoisting: true,
       vueRouterMode: 'history',
+      // htmlFilename: 'index.html',
       sourceMap: ctx.dev || uploadSourceMapsToSentry,
       devtool: ctx.dev ? '#cheap-module-eval-source-map'
         // remove source map references from bundle when uploading .map files to sentry
@@ -283,22 +282,6 @@ module.exports = function (ctx) {
       // extractCSS: false,
 
       async afterBuild () {
-        const indexPath = `${path.resolve('dist')}/spa/index.html`
-        const stylesheetRegex = /<link href=\/css\/app[^=]+=stylesheet>/
-        const index = await readFile(indexPath, 'utf8')
-
-        // PERF: Remove render blocking CSS and re-inject it after loading screen
-        const stylesheet = stylesheetRegex.exec(index)
-          .toString()
-          .replace('rel=', 'property=stylesheet rel=') // HTML5 <link> validation in <body>
-
-        if (stylesheet) {
-          const newIndex = index
-            .replace(stylesheetRegex, '')
-            .replace(/(<div id=q-app>)/, `${stylesheet}$1`)
-          await writeFile(indexPath, newIndex, 'utf8')
-        }
-
         // Delete source map files once uploaded to sentry
         // Remove these lines if you need to serve source map in production.
         // Then you may need to adjust webpack devtool build option
@@ -310,6 +293,14 @@ module.exports = function (ctx) {
           // It seems we need to manually remove source map references in CSS files
           // eslint-disable-next-line
           execSync(`find . -name "*.css" -type f | xargs sed -i -e '/\\/\\*.*sourceMappingURL.*\\*\\//d'`)
+        }
+
+        if (prerender) {
+          const spa = path.join(__dirname, 'dist/spa')
+          // preserve non-prerendered version of index.html before prerendering
+          // cf. app.html served in netlify.toml for more info
+          await renameFile(path.join(spa, 'index.html'), path.join(spa, 'app.html'))
+          await renameFile(path.join(spa, 'home.html'), path.join(spa, 'index.html'))
         }
       },
 
@@ -337,6 +328,34 @@ module.exports = function (ctx) {
           { context: `${path.resolve('src')}/statics`, from: '*.ico' },
           { context: `${path.resolve('src')}/statics`, from: '*.xml' },
         ]))
+
+        if (prerender) {
+          cfg.plugins.push(
+            new PrerenderSPAPlugin({
+              staticDir: path.join(__dirname, 'dist/spa'),
+              routes: [
+                '/',
+                '/s'
+              ],
+              // renderAfterElementExists: '#q-app',
+              renderAfterDocumentEvent: 'prerender-ready',
+              postProcess: context => {
+                // Defer scripts and tell Vue it's been server rendered to trigger hydration
+                context.html = context.html
+                  .replace(/<script (.*?)>/g, '<script $1 defer>')
+                  .replace('id="q-app"', 'id="q-app" data-server-rendered="true"')
+
+                if (context.route === '/') {
+                  context.outputPath = path.join(__dirname, 'dist/spa', 'home.html')
+                }
+                return context
+              },
+              minify: {
+                minifyJS: true
+              }
+            })
+          )
+        }
       },
 
       // Performance: customizing resource hints to preload/prefetch Stelace Instant translations

@@ -371,12 +371,14 @@ export default {
       isEditingImages: false,
     }
   },
-  meta () { // SEO, overriding any hard-coded content in translations
+  metaInfo () { // SEO, overriding any hard-coded content in translations
     return {
       title: this.activeAsset.name,
-      meta: {
-        description: { name: 'description', content: this.activeAsset.description }
-      }
+      meta: [{
+        name: 'description',
+        vmid: 'description',
+        content: this.activeAsset.description
+      }]
     }
   },
   computed: {

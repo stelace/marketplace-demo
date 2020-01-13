@@ -191,11 +191,13 @@ export default {
 
 <template>
   <q-page>
-    <section class="hero row items-center">
+    <section
+      class="hero row items-center"
+      :style="`background-image: url('${style.homeHeroBase64}')`"
+    >
       <QImg
         class="hero__background absolute-full"
         :src="homeHeroUrlTransformed"
-        :placeholder-src="style.homeHeroBase64"
         spinner-color="white"
         spinner-size="0"
       />
@@ -377,6 +379,8 @@ export default {
 <style lang="stylus" scoped>
 .hero
   position relative
+  background-size: cover
+  background-position: 50% 50%
 
 @media (min-width $breakpoint-sm-min)
   .hero
