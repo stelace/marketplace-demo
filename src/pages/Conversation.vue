@@ -2,6 +2,7 @@
 import { mapState, mapGetters } from 'vuex'
 import { date } from 'quasar'
 import { get, values } from 'lodash'
+import { matAttachment, matClear, matInsertDriveFile, matSend } from '@quasar/extras/material-icons'
 
 import EventBus from 'src/utils/event-bus'
 
@@ -125,6 +126,14 @@ export default {
   },
   mounted () {
     EventBus.$on('newMessage', () => this.fetchMessagesAndMarkAsRead())
+  },
+  created () {
+    this.icons = {
+      matAttachment,
+      matInsertDriveFile,
+      matClear,
+      matSend
+    }
   },
   beforeDestroy () {
     EventBus.$off('newMessage', () => this.fetchMessagesAndMarkAsRead())
@@ -293,7 +302,7 @@ export default {
                   <QChip
                     class="text-weight-medium text-grey-8"
                     :color="lightBackgroundColor"
-                    icon="insert_drive_file"
+                    :icon="icons.matInsertDriveFile"
                   >
                     {{ a.name }}
                   </QChip>
@@ -368,7 +377,7 @@ export default {
                   </div>
                   <QBtn
                     v-if="scope.editable && scope.isUploading"
-                    icon="clear"
+                    :icon="icons.matClear"
                     round
                     dense
                     flat
@@ -402,13 +411,13 @@ export default {
                 round
                 dense
                 flat
-                icon="attachment"
+                :icon="icons.matAttachment"
               />
             </template>
             <template v-slot:append>
               <QBtn
                 :disabled="!draftMessage"
-                icon="send"
+                :icon="icons.matSend"
                 color="primary"
                 round
                 dense

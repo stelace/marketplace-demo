@@ -1,6 +1,7 @@
 <script>
 import { isNil, isUndefined } from 'lodash'
 import { mapGetters } from 'vuex'
+import { matCheck, matClose } from '@quasar/extras/material-icons'
 
 import { convertApiToDisplayScore, convertDisplayToApiScore } from 'src/utils/rating'
 
@@ -130,6 +131,12 @@ export default {
 
     this.$emit('init', score)
   },
+  created () {
+    this.icons = {
+      matCheck,
+      matClose
+    }
+  },
   methods: {
     changeScore (displayScore) {
       if (this.isReadonly) return
@@ -249,13 +256,13 @@ export default {
         <div v-else class="q-ml-sm">
           <QIcon
             v-if="score === trueValueScore"
-            name="check"
+            :name="icons.matCheck"
             color="positive"
             class="text-weight-bold"
           />
           <QIcon
             v-if="score === falseValueScore"
-            name="close"
+            :name="icons.matClose"
             color="negative"
             class="text-weight-bold"
           />

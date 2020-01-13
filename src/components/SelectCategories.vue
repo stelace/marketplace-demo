@@ -31,7 +31,7 @@
       <QBtn
         v-if="iconButtonAction"
         :color="iconColor"
-        icon="search"
+        :icon="icons.matSearch"
         flat
         dense
         rounded
@@ -40,7 +40,7 @@
       <QIcon
         v-else
         :color="iconColor"
-        name="search"
+        :name="icons.matSearch"
       />
     </template>
 
@@ -49,7 +49,7 @@
         <QBtn
           v-if="iconButtonAction"
           :color="iconColor"
-          icon="search"
+          :icon="icons.matSearch"
           flat
           dense
           rounded
@@ -58,12 +58,12 @@
         <QIcon
           v-else
           :color="iconColor"
-          name="search"
+          :name="icons.matSearch"
         />
       </template>
       <QBtn
         v-show="selectedCategory"
-        icon="close"
+        :icon="icons.matClose"
         flat
         dense
         rounded
@@ -76,6 +76,7 @@
 <script>
 import { values, cloneDeep, sortBy, groupBy, times, constant } from 'lodash'
 import { mapState } from 'vuex'
+import { matClose, matSearch } from '@quasar/extras/material-icons'
 
 export default {
   props: {
@@ -134,6 +135,12 @@ export default {
   },
   mounted () {
     this.$store.dispatch('fetchCategories')
+  },
+  created () {
+    this.icons = {
+      matSearch,
+      matClose
+    }
   },
   methods: {
     sortCategoriesByLvl (categories) {

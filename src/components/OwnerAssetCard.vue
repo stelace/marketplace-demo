@@ -1,6 +1,7 @@
 <script>
 import { keyBy } from 'lodash'
 import { mapState, mapGetters } from 'vuex'
+import { matDelete, matDoneAll, matPause, matUpdate } from '@quasar/extras/material-icons'
 
 import logger from 'src/utils/logger'
 
@@ -70,6 +71,14 @@ export default {
     ...mapGetters([
       'conversations',
     ])
+  },
+  created () {
+    this.icons = {
+      matDelete,
+      matDoneAll,
+      matPause,
+      matUpdate
+    }
   },
   methods: {
     async toggleActive (active) {
@@ -180,7 +189,7 @@ export default {
       <div class="absolute-full text-weight-medium text-h5 column flex-center">
         <template v-if="unavailable">
           <QIcon
-            name="done_all"
+            :name="icons.matDoneAll"
             size="3rem"
           />
           <AppContent
@@ -191,7 +200,7 @@ export default {
         </template>
         <template v-else-if="paused">
           <QIcon
-            name="pause"
+            :name="icons.matPause"
             size="3rem"
           />
           <AppContent
@@ -202,7 +211,7 @@ export default {
         </template>
         <template v-else-if="pendingValidation">
           <QIcon
-            name="update"
+            :name="icons.matUpdate"
             size="3rem"
           />
           <AppContent
@@ -246,7 +255,7 @@ export default {
           unelevated
           @click.stop.prevent="openConfirmDeleteDialog"
         >
-          <QIcon name="delete" />
+          <QIcon :name="icons.matDelete" />
         </QBtn>
 
         <ConfirmDeleteDialog

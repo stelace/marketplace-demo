@@ -143,7 +143,8 @@ module.exports = function (ctx) {
     ],
 
     extras: [
-      'material-icons' // optional, you are not bound to it
+      // Only include used ones with tree-shaking: https://quasar.dev/vue-components/icon#Svg-icons
+      // 'material-icons',
       // 'ionicons-v4',
       // 'mdi-v3',
       // 'fontawesome-v5',
@@ -248,9 +249,11 @@ module.exports = function (ctx) {
         'Dialog',
         // 'Meta', // using vue-meta for compatibility with prerender-spa-plugin
         'Notify'
-      ]
+      ],
 
-      // iconSet: 'ionicons-v4'
+      // Only include used SVG icons with tree-shaking
+      // https://quasar.dev/options/quasar-icon-sets#Installing-a-Quasar-Icon-Set
+      iconSet: 'svg-material-icons', // default: 'material-icons'
       // lang: 'de' // Quasar language
     },
 

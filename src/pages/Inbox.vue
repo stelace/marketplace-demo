@@ -1,6 +1,7 @@
 <script>
 import { mapState, mapGetters } from 'vuex'
 import { get } from 'lodash'
+import { matArchive, matDrafts, matMoreVert, matSearch, matUnarchive } from '@quasar/extras/material-icons'
 
 import TransactionActions from 'src/components/TransactionActions'
 import TransactionStatus from 'src/components/TransactionStatus'
@@ -126,6 +127,15 @@ export default {
       ]
     },
   },
+  created () {
+    this.icons = {
+      matArchive,
+      matDrafts,
+      matMoreVert,
+      matUnarchive,
+      matSearch
+    }
+  },
   methods: {
     afterAuth () {
       this.$store.dispatch('fetchMessages')
@@ -239,7 +249,7 @@ export default {
               :placeholder="$t({ id: 'form.search.placeholder' })"
             >
               <template v-slot:append>
-                <QIcon name="search" />
+                <QIcon :name="icons.matSearch" />
               </template>
             </QInput>
           </template>
@@ -351,7 +361,7 @@ export default {
                       round
                       class="gt-sm"
                       size="12px"
-                      icon="archive"
+                      :icon="icons.matArchive"
                       @click="archive(props.row.id)"
                     />
                     <QBtn
@@ -361,7 +371,7 @@ export default {
                       round
                       class="gt-sm"
                       size="12px"
-                      icon="drafts"
+                      :icon="icons.matDrafts"
                       @click="markAsRead(props.row.id)"
                     />
                     <QBtn
@@ -369,7 +379,7 @@ export default {
                       flat
                       dense
                       round
-                      icon="more_vert"
+                      :icon="icons.matMoreVert"
                     >
                       <q-menu auto-close>
                         <QList>
@@ -379,7 +389,7 @@ export default {
                             @click="unarchive(props.row.id)"
                           >
                             <QItemSection avatar>
-                              <QIcon name="unarchive" />
+                              <QIcon :name="icons.matUnarchive" />
                             </QItemSection>
                             <QItemSection>{{ $t({ id: 'prompt.archive_to_inbox_button'}) }}</QItemSection>
                           </QItem>
@@ -390,7 +400,7 @@ export default {
                             @click="archive(props.row.id)"
                           >
                             <QItemSection avatar>
-                              <QIcon name="archive" />
+                              <QIcon :name="icons.matArchive" />
                             </QItemSection>
                             <QItemSection>{{ $t({ id: 'prompt.archive_button'}) }}</QItemSection>
                           </QItem>
@@ -400,7 +410,7 @@ export default {
                             @click="markAsRead(props.row.id)"
                           >
                             <QItemSection avatar>
-                              <QIcon name="drafts" />
+                              <QIcon :name="icons.matDrafts" />
                             </QItemSection>
                             <QItemSection>{{ $t({ id: 'prompt.mark_as_read_button'}) }}</QItemSection>
                           </QItem>

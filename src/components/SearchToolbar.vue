@@ -3,6 +3,7 @@ import { mapState, mapGetters } from 'vuex'
 import * as mutationTypes from 'src/store/mutation-types'
 import { debounce, pickBy, values, get, compact, uniqBy } from 'lodash'
 import { date } from 'quasar'
+import { matArrowForward, matSearch } from '@quasar/extras/material-icons'
 
 import AppSVGActionButton from 'src/components/AppSVGActionButton'
 import CustomAttributesEditor from 'src/components/CustomAttributesEditor'
@@ -96,6 +97,12 @@ export default {
       'searchModeConfig',
       'searchAfterMapMoveActive',
     ])
+  },
+  created () {
+    this.icons = {
+      matArrowForward,
+      matSearch
+    }
   },
   methods: {
     toggleSearchMap (visible) {
@@ -215,7 +222,7 @@ export default {
       :rounded="style.roundedTheme"
       color="transparent"
       text-color="primary"
-      icon="search"
+      :icon="icons.matSearch"
       unelevated
       no-caps
       dense
@@ -266,7 +273,7 @@ export default {
 
     <QIcon
       v-show="displayStartDate && displayEndDate"
-      name="arrow_forward"
+      :name="icons.matArrowForward"
       color="default-color"
     />
 

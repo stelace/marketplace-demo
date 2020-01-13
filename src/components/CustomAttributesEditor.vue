@@ -1,5 +1,6 @@
 <script>
 import { sortBy, upperFirst, isEqual } from 'lodash'
+import { matClose } from '@quasar/extras/material-icons'
 
 export default {
   props: {
@@ -49,6 +50,9 @@ export default {
         this.customAttributes = v
       }
     }
+  },
+  created () {
+    this.icons = { matClose }
   },
   methods: {
     onCustomAttributeChange (name, value) {
@@ -143,7 +147,7 @@ export default {
             <template v-slot:append>
               <QBtn
                 v-show="customAttributes[customAttribute.name]"
-                icon="close"
+                :icon="icons.matClose"
                 flat
                 dense
                 rounded
