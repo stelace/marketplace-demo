@@ -116,6 +116,8 @@ module.exports = function (ctx) {
   // Quasar config //
   // ///////////// //
 
+  const splittedVendorChunks = ['mapbox', 'photoswipe']
+
   return {
     // app boot file (/src/boot)
     // --> boot files are part of "main.js"
@@ -148,7 +150,7 @@ module.exports = function (ctx) {
 
     vendor: { // Exclude or add these to vendor chunk
       add: [],
-      remove: ['mapbox', 'photoswipe']
+      remove: splittedVendorChunks
     },
 
     // framework: 'all', // --- includes everything; for dev only!
