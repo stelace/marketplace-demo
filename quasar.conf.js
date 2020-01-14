@@ -372,7 +372,7 @@ module.exports = function (ctx) {
             // https://github.com/addyosmani/critical#options
             inline: true,
             minify: true,
-            extract: true,
+            extract: false,
             dimensions: [{
               height: 565,
               width: 360
