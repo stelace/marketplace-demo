@@ -175,8 +175,6 @@ export default {
 
     await this.$store.dispatch('searchAssets')
     this.$store.dispatch('getHighestPrice')
-
-    document.dispatchEvent(new Event('prerender-ready'))
   },
   updated () { // e.g. when switching locale
     this.refreshMap()
