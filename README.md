@@ -2,7 +2,7 @@
 
 [![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/stelace/marketplace-demo)
 
-# Vue marketplace starter kit
+# Marketplace starter kit
 
 > This Stelace starter kit is free to use, under the terms of the [MIT license](./LICENSE).
 Feel free to [fork](
@@ -11,31 +11,42 @@ Feel free to [fork](
 
 ---
 
-This starter kit offers **a full AirBnB-like marketplace front-end (Vue.js) with pre-configured serverless deployment** based on [open-source](https://github.com/stelace/stelace) [Stelace API](https://stelace.com) server.
+[![CircleCI](https://circleci.com/gh/stelace/marketplace-demo.svg?style=svg)](https://circleci.com/gh/stelace/marketplace-demo)[ ![Netlify Status](https://api.netlify.com/api/v1/badges/b3500c61-82b1-4cdd-a002-890a718ad5ea/deploy-status)](
+  https://app.netlify.com/sites/stelace-marketplace-test/deploys
+)[ ![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg)](
+  https://conventionalcommits.org
+)
 
-__[Live Demo](https://marketplace.demo.stelace.com)__
+This starter kit offers **a [high-performance](#fast-by-default) AirBnB-like marketplace front-end (Vue.js) with pre-configured serverless deployment** based on [open-source](https://github.com/stelace/stelace) [Stelace API](https://stelace.com) server.
+
+## Contents
+
+- [Features :gift:](#features-gift)
+  - [Fast by default :checkered_flag:](#fast-by-default-checkered_flag)
+  - [Integrations](#integrations)
+- [Testing](#testing)
+- [Stack](#stack)
+- [Getting started](#getting-started)
+- [Deployment](#deployment)
 
 [![marketplace-demo-screenshot](https://stelace-instant-files.s3.amazonaws.com/p/238393/test/images/22d115c4e340b125120ce0f29ab36db8-stelace-marketplace-demo-laptop.png)](https://marketplace.demo.stelace.com)
+
+__[Live Demo](https://marketplace.demo.stelace.com)__
 
 A platform template focused on search, automation and real-time is [also available](https://github.com/stelace/heroes-platform-demo).
 
 **What is Stelace?**
 
-[Stelace API](https://stelace.com/) provides search, inventory and user management infrastructure and APIs for Web platforms, ranging from search-intensive marketplaces to online community apps.
-Stelace offers powerful backend and APIs including advanced search, automation, and content delivery, to let you focus on what makes your platform unique.
+[Stelace API](https://stelace.com/) provides advanced search, asset and user management, automation and content delivery APIs for Web platforms ranging from search-intensive marketplaces to online community apps.
+Stelace [open-source marketplace backend](https://github.com/stelace/stelace) lets you focus on what makes your platform unique.
 
 [API Docs](https://stelace.com/docs)
 
-[![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg)](
-  https://conventionalcommits.org
-)[ ![Netlify Status](https://api.netlify.com/api/v1/badges/b3500c61-82b1-4cdd-a002-890a718ad5ea/deploy-status)](
-  https://app.netlify.com/sites/stelace-marketplace-test/deploys
-)
 ---
 
 ## Features :gift:
 
-- [Asset](https://stelace.com/docs/assets) management and platform transaction process :chart_with_upwards_trend:
+- [Asset](https://stelace.com/docs/assets) management. _Assets_ can be anything from flats and homes to cars or concerts
 - Powerful and typo-tolerant [Search](https://stelace.com/docs/search) :mag:, on a relevance _and_ dynamic availability basis
 - [User](https://stelace.com/docs/users) authentication including social login & SSO
 - User management and [Ratings](https://stelace.com/docs/ratings) :star:
@@ -44,10 +55,21 @@ Stelace offers powerful backend and APIs including advanced search, automation, 
 - Headless CMS :page_with_curl: with Stelace [Content API](https://stelace.com/docs/content)
 - Global CDN for images and user files
 - i18n :earth_africa: and full [translations](./docs/i18n.md)
-- [Performance](./docs/performance.md) (90+ Lighthouse score) :checkered_flag:
 - [Accessibility](./docs/accessibility.md)
 - …
 - and [much more](https://stelace.com) with Stelace API
+
+### Fast by default :checkered_flag:
+
+Get 95+ PageSpeed score out of the box:
+
+- Pre-rendered static pages for fastest page load, with Vue.js hydrating into full SPA.
+- Code-splitting with optimized Webpack config in `quasar.conf.js`.
+- Image compression using WebP and serverless resizing using AWS Lambda
+- Ressource prefetching and preloading
+- PWA-ready thanks to Quasar
+
+This kit follows the [PRPL pattern](https://web.dev/apply-instant-loading-with-prpl/): more info in [docs](./docs/performance.md).
 
 ### Integrations
 
@@ -75,17 +97,17 @@ Serverless [JAMStack architecture](https://jamstack.org/):
 
 Node.js >= 8.9 is used for tooling.
 
-## Stelace Dashboard
+## Hosted Stelace Server and Dashboard
 
-You will be able to use [official Stelace dashboard](
+Create a [Stelace account](
   https://stelace.com
-), enabling your team to access real-time stats, settings, live design and content editing with translation tools, asset and user management, and much more.
+) to get team access to real-time stats, settings, live design and content editing with translation tools, asset and user management, and much more.
 
 [![Stelace Dashboard](https://user-images.githubusercontent.com/12909094/38527674-415ac06c-3c5c-11e8-89d3-c92c3be1d377.png)](https://stelace.com)
 
 ## Getting started
 
-You need your Stelace API Keys to get started. Good news: [it’s free](https://stelace.com/pricing).
+You need your Stelace API Keys to go the _serverless_ route. Good news: [you can it try for free](https://stelace.com/pricing).
 
 1. Clone this repository
 

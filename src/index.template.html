@@ -71,6 +71,23 @@
         }
       } catch (e) {}
     </script>
+    <% if (htmlWebpackPlugin.options.ctx.prod) { %>
+    <style data-removed-during-build>
+      /* Ensure SVG icons are not taking up whole viewport to properly extract critical CSS to be inlined */
+      svg {
+        max-height: 1em;
+      }
+      /* Applying some Quasar styles to properly extract critical CSS (above the fold)*/
+      .absolute,
+      .absolute-full,
+      .absolute-center,
+      .absolute-bottom,
+      .absolute-left,
+      .absolute-right {
+        position: absolute;
+      }
+    </style>
+    <% } %>
 
   </head>
   <body>

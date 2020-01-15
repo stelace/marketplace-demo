@@ -198,8 +198,8 @@ export default {
       <QImg
         class="hero__background absolute-full"
         :src="homeHeroUrlTransformed"
-        spinner-color="white"
-        spinner-size="0"
+        no-default-spinner
+        basic
       />
       <div class="hero__content col-12 col-sm-6 col-md-4 offset-sm-2">
         <div
