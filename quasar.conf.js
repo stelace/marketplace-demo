@@ -152,6 +152,7 @@ module.exports = function (ctx) {
     ],
 
     vendor: { // Exclude or add these to vendor chunk
+      // disable: false,
       add: [],
       remove: splittedVendorChunks
     },

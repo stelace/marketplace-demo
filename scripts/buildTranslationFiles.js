@@ -1,4 +1,4 @@
-const { initStelaceSdk } = require('../src/utils/init-sdk')
+const { initStelaceSdk } = require('./sdk')
 
 const dotenv = require('dotenv')
 const i18nCompile = require('i18n-compile')

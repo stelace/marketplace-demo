@@ -4,7 +4,7 @@ require('dotenv').config({
   path: `.env.${env}`
 })
 
-const { initStelaceSdk } = require('../src/utils/init-sdk')
+const { initStelaceSdk } = require('./sdk')
 
 const apiBaseURL = process.env.STELACE_API_URL
 

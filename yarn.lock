@@ -885,6 +885,13 @@
   dependencies:
     regenerator-runtime "^0.13.2"
 
+"@babel/runtime@^7.8.3":
+  version "7.8.3"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.8.3.tgz#0811944f73a6c926bb2ad35e918dcc1bfab279f1"
+  integrity sha512-fVHx1rzEmwB130VTkLnxR+HmxcTjGzH12LYQcFFoBwakMd3aOMD4OsRN7tGG/UOYE2ektgFrS8uACAoRk1CY0w==
+  dependencies:
+    regenerator-runtime "^0.13.2"
+
 "@babel/template@^7.7.4", "@babel/template@^7.8.0":
   version "7.8.0"
   resolved "https://registry.yarnpkg.com/@babel/template/-/template-7.8.0.tgz#a32f57ad3be89c0fa69ae87b53b4826844dc6330"
@@ -1065,12 +1072,12 @@
     promise-limit "^2.5.0"
     puppeteer "^1.7.0"
 
-"@quasar/app@^1.4.5":
-  version "1.4.5"
-  resolved "https://registry.yarnpkg.com/@quasar/app/-/app-1.4.5.tgz#e15cbd016125c1592b0cc391513b1c5220d80266"
-  integrity sha512-5AYgasw8HCOpT+89gWdJIyim0zsWw9y7wEYjHeg89I5aNGTJwskrXWV18dX2zLDWXXjd41UI2HbPMXqm/SNPJg==
+"@quasar/app@^1.5.2":
+  version "1.5.2"
+  resolved "https://registry.yarnpkg.com/@quasar/app/-/app-1.5.2.tgz#fbdf90ca691e2c41585a7a82dd6b225db47d8600"
+  integrity sha512-J3zCrN0PPHioGvMVwy2eggtb8ZvrN0XGa1PiyqIbU+mogW11OyupUyrJ1qHMIYvIW2nmM8bT2WZNySvKY8bi9A==
   dependencies:
-    "@quasar/babel-preset-app" "1.1.7"
+    "@quasar/babel-preset-app" "1.1.8"
     "@quasar/fastclick" "1.1.4"
     "@vue/preload-webpack-plugin" "1.1.1"
     autoprefixer "9.7.3"
@@ -1089,7 +1096,6 @@
     file-loader "^5.0.2"
     friendly-errors-webpack-plugin "1.7.0"
     fs-extra "8.1.0"
-    hash-sum "2.0.0"
     html-minifier "4.0.0"
     html-webpack-plugin "3.2.0"
     inquirer "7.0.1"
@@ -1135,10 +1141,10 @@
     webpack-node-externals "1.7.2"
     workbox-webpack-plugin "4.3.1"
 
-"@quasar/babel-preset-app@1.1.7":
-  version "1.1.7"
-  resolved "https://registry.yarnpkg.com/@quasar/babel-preset-app/-/babel-preset-app-1.1.7.tgz#760fbe238b94d6f13f3e4105efd99753ab8f3b61"
-  integrity sha512-xQELeIYLjez2/p5B6UkMN6JKV6T98f6wWiKbKNhhjnC3+YQ1sM1qnSjets/TJNqdQcZnGH4D67HuR0BFuw0mcg==
+"@quasar/babel-preset-app@1.1.8":
+  version "1.1.8"
+  resolved "https://registry.yarnpkg.com/@quasar/babel-preset-app/-/babel-preset-app-1.1.8.tgz#4c11cb2ac03c6544b0b5e8d5067145cc038d9e3f"
+  integrity sha512-vMtxqgJ3eR2aCHkSTL8zPItly2uu+e0nIG/hJCtZGRvaVuivzLjxttrd1scPPhs9HkjiKTErfMGV/XTZ/gzCew==
   dependencies:
     "@babel/core" "^7.5.5"
     "@babel/plugin-proposal-class-properties" "^7.5.5"
@@ -3756,11 +3762,6 @@ core-js-pure@^3.0.0:
   resolved "https://registry.yarnpkg.com/core-js-pure/-/core-js-pure-3.6.2.tgz#81f08059134d1c7318838024e1b8e866bcb1ddb3"
   integrity sha512-PRasaCPjjCB65au2dMBPtxuIR6LM8MVNdbIbN57KxcDV1FAYQWlF0pqje/HC2sM6nm/s9KqSTkMTU75pozaghA==
 
-core-js@3:
-  version "3.6.2"
-  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.6.2.tgz#2799ea1a59050f0acf50dfe89b916d6503b16caa"
-  integrity sha512-hIE5dXkRzRvnZ5vhkRfQxUvDxQZmD9oueA08jDYRBKJHx+VIl/Pne/e0A4x9LObEEthC/TqiZybUoNM4tRgnKg==
-
 core-js@^1.0.0:
   version "1.2.7"
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-1.2.7.tgz#652294c14651db28fa93bd2d5ff2983a4f08c636"
@@ -3770,6 +3771,11 @@ core-js@^2.4.0, core-js@^2.5.0, core-js@^2.6.5:
   version "2.6.11"
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.6.11.tgz#38831469f9922bded8ee21c9dc46985e0399308c"
   integrity sha512-5wjnpaT/3dV+XB4borEsnAYQchn00XSgTAWKDkEqv+K8KevjbzmofK6hfJ9TZIlpj2N0xQpazy7PiRQiWHqzWg==
+
+core-js@^3.0.0:
+  version "3.6.4"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.6.4.tgz#440a83536b458114b9cb2ac1580ba377dc470647"
+  integrity sha512-4paDGScNgZP2IXXilaffL9X7968RuvwlkK3xWtZRVqgd8SYNiVKRJvkFd1aqqEuPfN7E68ZHEp9hDj6lHj4Hyw==
 
 core-util-is@1.0.2, core-util-is@~1.0.0:
   version "1.0.2"
@@ -6025,11 +6031,6 @@ hash-base@^3.0.0:
   dependencies:
     inherits "^2.0.1"
     safe-buffer "^5.0.1"
-
-hash-sum@2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/hash-sum/-/hash-sum-2.0.0.tgz#81d01bb5de8ea4a214ad5d6ead1b523460b0b45a"
-  integrity sha512-WdZTbAByD+pHfl/g9QSsBIIwy8IT+EsPiKDs0KNX+zSHhdDLFKdZu0BQHljvO+0QI/BasbMSUa8wYNCZTvhslg==
 
 hash-sum@^1.0.2:
   version "1.0.2"
@@ -11027,13 +11028,14 @@ stdout-stream@^1.4.0:
   dependencies:
     readable-stream "^2.0.1"
 
-stelace@0.11.0:
-  version "0.11.0"
-  resolved "https://registry.yarnpkg.com/stelace/-/stelace-0.11.0.tgz#d5e9d272a3e605b04995a9a4ec609d470bd86531"
-  integrity sha512-zZspbCjHd8ovtTrYKJJiip/iZqU7Kx66bZY86M6NCbmw2NeJiEyMNZ3P8doBEC/Dj4dk6GvkZgjB4QzgJhvoIA==
+stelace@0.12.0:
+  version "0.12.0"
+  resolved "https://registry.yarnpkg.com/stelace/-/stelace-0.12.0.tgz#eb469a8b3d9cd492f63301d81e646ee493c4d73f"
+  integrity sha512-tkJSP7MC8SXQVkuTl02vq0Fi+MTd/ZaDvei58yJ36A6JIkP8E2TTxGjmr0pijRCPOfxrQtoO+93mILlYtetoJg==
   dependencies:
+    "@babel/runtime" "^7.8.3"
     axios "^0.19.0"
-    core-js "3"
+    core-js "^3.0.0"
     jwt-decode "^2.2.0"
     localstorage-memory "^1.0.2"
 
