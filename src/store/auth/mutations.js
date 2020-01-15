@@ -37,11 +37,16 @@ export default {
   },
 
   [types.SET_CURRENT_USER] (state, { user }) {
+    const previousUser = state.user
+    const newUser = user
+    const sameUser = (previousUser && newUser && previousUser.id === newUser.id) ||
+      (!previousUser && !newUser)
+
     state.user = user
 
     // emit an event to recreate the socket
     // for the new current user
-    refreshSocket()
+    if (!sameUser) refreshSocket()
   },
 
   [types.SET_NATURAL_USER] (state, { user }) {
