@@ -36,12 +36,12 @@
       <QIcon
         v-show="!showPromptPositionButton"
         :color="iconColor"
-        name="place"
+        :name="icons.matPlace"
       />
       <QBtn
         v-show="showPromptPositionButton"
         class="cursor-pointer"
-        icon="my_location"
+        :icon="icons.matMyLocation"
         dense
         @click="triggerPromptCurrentPosition"
       />
@@ -50,7 +50,7 @@
     <template v-slot:append>
       <QBtn
         v-if="location !== null"
-        icon="clear"
+        :icon="icons.matClear"
         rounded
         dense
         flat
@@ -61,12 +61,12 @@
         v-if="showSearchIcon && !showPromptPositionButton && searchIconPosition === 'right'"
         v-show="location === null"
         :color="iconColor"
-        name="place"
+        :name="icons.matPlace"
       />
       <QBtn
         v-show="showPromptPositionButton && searchIconPosition === 'right'"
         class="cursor-pointer"
-        icon="my_location"
+        :icon="icons.matMyLocation"
         dense
         @click="triggerPromptCurrentPosition"
       />
@@ -84,6 +84,7 @@
 
 <script>
 import { mapState, mapGetters } from 'vuex'
+import { matClear, matMyLocation, matPlace } from '@quasar/extras/material-icons'
 
 import { search } from 'src/utils/places'
 
@@ -167,6 +168,13 @@ export default {
       'currentUserPosition',
       'displayAssetDistance',
     ])
+  },
+  created () {
+    this.icons = {
+      matClear,
+      matMyLocation,
+      matPlace
+    }
   },
   methods: {
     fetchPlaces (query, update, abort) {

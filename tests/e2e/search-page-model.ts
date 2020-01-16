@@ -17,7 +17,7 @@ export default class SearchModel {
 
   constructor() {
     this.headerInput = VueSelector('ref:headerSearchInput')
-    this.headerInputClearIcon = VueSelector('ref:headerSearchInput QIcon').withText('close')
+    this.headerInputClearIcon = VueSelector('ref:clearHeaderSearchInput')
     this.results = VueSelector('AssetCard')
     this.modesDropdown = VueSelector('SearchToolbar ref:searchToolbarModes')
     this.modes = Selector('.search-modes .q-item')

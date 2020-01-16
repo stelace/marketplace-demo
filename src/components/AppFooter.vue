@@ -1,5 +1,6 @@
 <script>
 import { mapState, mapGetters } from 'vuex'
+import { mdiFacebookBox, mdiTwitter } from '@quasar/extras/mdi-v4'
 
 export default {
   data () {
@@ -17,14 +18,14 @@ export default {
       if (this.socialInfo.twitterUsername) {
         links.unshift({
           url: `https://twitter.com/${this.socialInfo.twitterUsername}`,
-          icon: 'statics/images/custom-icons.svg#tw',
+          icon: this.icons.mdiTwitter,
           label: this.$t({ id: 'social.twitter' })
         })
       }
       if (this.socialInfo.facebookUrl) {
         links.unshift({
           url: this.socialInfo.facebookUrl,
-          icon: 'statics/images/custom-icons.svg#fb',
+          icon: this.icons.mdiFacebookBox,
           label: this.$t({ id: 'social.facebook_page' })
         })
       }
@@ -37,6 +38,12 @@ export default {
     ...mapGetters([
       'socialInfo',
     ])
+  },
+  created () {
+    this.icons = {
+      mdiFacebookBox,
+      mdiTwitter
+    }
   },
   methods: {
     switchLang () { // Move this to some SelectLanguage component when needed
@@ -83,6 +90,7 @@ export default {
           :aria-label="net.label"
           class="anchor-text--reset s-icon-link"
         >
+          <QIcon :name="net.icon" size="3.5rem" />
           <svg class="s-icon q-pa-sm">
             <use
               :xlink:href="net.icon"

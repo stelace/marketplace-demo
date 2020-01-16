@@ -8,7 +8,7 @@ fixture `Search`
 const delay = Search.delay
 
 test ('can use text query, search modes and filters', async t => {
-  await t.wait(15000)
+  await t.wait(10000)
 
   const nbAssets = await Search.results.count
 

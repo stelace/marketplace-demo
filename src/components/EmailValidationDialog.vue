@@ -25,7 +25,7 @@
             required
           >
             <template v-slot:append>
-              <q-icon name="email" />
+              <q-icon :name="icons.matEmail" />
             </template>
           </q-input>
 
@@ -89,6 +89,7 @@
 import { mapState, mapGetters } from 'vuex'
 import * as mutationTypes from 'src/store/mutation-types'
 import { required, email } from 'vuelidate/lib/validators'
+import { matEmail } from '@quasar/extras/material-icons'
 
 import ValidationDialog from 'src/components/ValidationDialog'
 
@@ -124,6 +125,9 @@ export default {
     alreadyValidatedEmail () {
       return this.selectedUser.emailVerified && this.selectedUser.email && this.selectedUser.email === this.email
     }
+  },
+  created () {
+    this.icons = { matEmail }
   },
   methods: {
     closeDialog () {

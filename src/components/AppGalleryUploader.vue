@@ -1,6 +1,7 @@
 <script>
 import { mapState } from 'vuex'
 import { SlickList, SlickItem } from 'vue-slicksort'
+import { matDelete, matPhotoSizeSelectActual } from '@quasar/extras/material-icons'
 
 import AppUploadMixin from 'src/mixins/AppUpload'
 
@@ -54,6 +55,12 @@ export default {
     })
 
     this.uploaderTransformedFiles.push(...r)
+  },
+  created () {
+    this.icons = {
+      matDelete,
+      matPhotoSizeSelectActual
+    }
   },
   methods: {
     afterUploadCompleted (filesObject) { // AppUpload mixin
@@ -138,7 +145,7 @@ export default {
                 <div class="absolute-full row justify-end asset-image__control-background">
                   <div class="column justify-end asset-image__control">
                     <QBtn
-                      icon="delete"
+                      :icon="icons.matDelete"
                       color="white"
                       size="md"
                       flat
@@ -175,7 +182,7 @@ export default {
         >
           <QIcon
             class="q-my-md"
-            name="photo_size_select_actual"
+            :name="icons.matPhotoSizeSelectActual"
             size="6rem"
           />
           <AppContent

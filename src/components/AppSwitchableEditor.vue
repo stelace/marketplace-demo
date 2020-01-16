@@ -1,5 +1,6 @@
 <script>
 import { mapState } from 'vuex'
+import { matEdit } from '@quasar/extras/material-icons'
 
 export default {
   props: {
@@ -57,6 +58,9 @@ export default {
       this.content = this.value
     }
   },
+  created () {
+    this.icons = { matEdit }
+  },
   methods: {
     save (...args) {
       this.customSave(...args)
@@ -92,7 +96,7 @@ export default {
         'absolute switchable-editor-icon',
         forceIconInDev && !active ? '-DEV-ENV-DEBUG-STYLES' : ''
       ]"
-      name="edit"
+      :name="icons.matEdit"
       aria-hidden
     />
 

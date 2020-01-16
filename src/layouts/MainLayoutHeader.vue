@@ -2,6 +2,9 @@
 import { mapState, mapGetters } from 'vuex'
 import * as mutationTypes from 'src/store/mutation-types'
 
+import { matAddBox, matClose, matLock, matMail, matPowerSettingsNew, matSearch } from '@quasar/extras/material-icons'
+import { mdiGithubCircle } from '@quasar/extras/mdi-v4'
+
 import AppLocaleSwitch from 'src/components/AppLocaleSwitch'
 import AppLogo from 'src/components/AppLogo'
 import AppMiniLogo from 'src/components/AppMiniLogo'
@@ -10,7 +13,6 @@ import SelectCategories from 'src/components/SelectCategories'
 import PlacesAutocomplete from 'src/components/PlacesAutocomplete'
 
 import AuthDialogMixin from 'src/mixins/authDialog'
-
 import GeolocationMixin from 'src/mixins/geolocation'
 
 export default {
@@ -143,6 +145,17 @@ export default {
           longitude: this.currentUserPosition.longitude
         })
       }
+    }
+  },
+  created () {
+    this.icons = {
+      matAddBox,
+      matClose,
+      matLock,
+      matMail,
+      matSearch,
+      matPowerSettingsNew,
+      mdiGithubCircle
     }
   },
   methods: {
@@ -295,7 +308,7 @@ export default {
             <QBtn
               :aria-label="$t({ id: 'form.search.query_placeholder' })"
               color="primary"
-              icon="search"
+              :icon="icons.matSearch"
               flat
               dense
               rounded
@@ -305,8 +318,9 @@ export default {
           <template v-slot:append>
             <QIcon
               v-show="search.query.length"
+              ref="clearHeaderSearchInput"
               class="cursor-pointer"
-              name="close"
+              :name="icons.matClose"
               @click="updateQuery('')"
             />
           </template>
@@ -352,7 +366,7 @@ export default {
           <template v-slot:append>
             <QIcon
               :class="['cursor-pointer', maximumPrice ? '' : 'hidden']"
-              name="close"
+              :name="icons.matClose"
               @click="resetMaxPrice"
             />
           </template>
@@ -370,7 +384,7 @@ export default {
         :color="isHome ? 'white' : ( style.colorfulTheme ? 'primary' : 'default-color')"
         flat
         round
-        icon="mail"
+        :icon="icons.matMail"
       >
         <QBadge
           v-show="nbUnreadConversations"
@@ -400,7 +414,7 @@ export default {
       <AppLink
         v-if="showGithubForkButton"
         to="https://github.com/stelace/marketplace-demo"
-        class="q-mr-md gt-md flex-item--auto"
+        class="q-mr-md gt-md flex-item--auto anchor-text--reset"
       >
         <QBtn
           class="bg-github text-white q-px-sm text-weight-bold"
@@ -409,9 +423,7 @@ export default {
           align="between"
           dense
         >
-          <svg class="q-icon on-left">
-            <use xlink:href="statics/images/custom-icons.svg#github" />
-          </svg>
+          <QIcon :name="icons.mdiGithubCircle" left />
           <AppContent entry="navigation" field="github_button" />
         </QBtn>
       </AppLink>
@@ -422,7 +434,7 @@ export default {
         :loading="content.fetchingContentStatus"
         :rounded="style.roundedTheme"
         :label="$t({ id: 'navigation.new_listing' })"
-        icon="add_box"
+        :icon="icons.matAddBox"
         color="secondary"
         align="between"
         dense
@@ -468,7 +480,7 @@ export default {
                 @click="openAuthDialog({ formType: 'changePassword' })"
               >
                 <QIcon
-                  name="lock"
+                  :name="icons.matLock"
                   :left="true"
                 />
                 <AppContent
@@ -483,7 +495,7 @@ export default {
                 @click="logout"
               >
                 <QIcon
-                  name="power_settings_new"
+                  :name="icons.matPowerSettingsNew"
                   :left="true"
                 />
                 <AppContent

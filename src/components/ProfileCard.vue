@@ -74,7 +74,7 @@
                 <!-- Wrapping in div to prevent background issues with absolute positionning -->
                 <div>
                   <QIcon
-                    name="account_circle"
+                    :name="icons.matAccountCircle"
                     color="white"
                   />
                 </div>
@@ -231,6 +231,7 @@
 /* global mapboxgl */
 import { mapState, mapGetters } from 'vuex'
 import { get } from 'lodash'
+import { matAccountCircle } from '@quasar/extras/material-icons'
 
 import { isAssetId } from 'src/utils/id'
 
@@ -355,6 +356,11 @@ export default {
   mounted () {
     // fetch categories in background so we can display the category name as user information
     this.$store.dispatch('fetchCategories')
+  },
+  created () {
+    this.icons = {
+      matAccountCircle
+    }
   },
   methods: {
     updateUserFn (fieldName, { displayNotification = true } = {}) {

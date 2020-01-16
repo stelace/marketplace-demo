@@ -1,5 +1,6 @@
 <script>
 import { get } from 'lodash'
+import { matStar } from '@quasar/extras/material-icons'
 
 export default {
   props: {
@@ -32,7 +33,10 @@ export default {
       if (this.ownerRating && Number.isFinite(get(t, 'owner.averageRating'))) return get(t, 'owner.averageRating')
       return null
     }
-  }
+  },
+  created () {
+    this.icons = { matStar }
+  },
 }
 </script>
 
@@ -42,7 +46,7 @@ export default {
     :value="rating || 0"
     :size="size"
     color="secondary"
-    icon="star"
+    :icon="icons.matStar"
     v-bind="$attrs"
     v-on="$listeners"
   />

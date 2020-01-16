@@ -83,7 +83,7 @@
               required
             >
               <template v-slot:append>
-                <q-icon name="email" />
+                <q-icon :name="icons.matEmail" />
               </template>
             </q-input>
             <q-input
@@ -95,7 +95,7 @@
               minlength="passwordMinLength"
             >
               <template v-slot:append>
-                <q-icon name="lock" />
+                <q-icon :name="icons.matLock" />
               </template>
             </q-input>
 
@@ -166,7 +166,7 @@
               required
             >
               <template v-slot:append>
-                <q-icon name="email" />
+                <q-icon :name="icons.matEmail" />
               </template>
             </q-input>
 
@@ -207,7 +207,7 @@
               minlength="passwordMinLength"
             >
               <template v-slot:append>
-                <q-icon name="lock" />
+                <q-icon :name="icons.matLock" />
               </template>
             </q-input>
 
@@ -267,7 +267,7 @@
                 />
               </template>
               <template v-slot:append>
-                <q-icon name="lock" />
+                <q-icon :name="icons.matLock" />
               </template>
             </q-input>
             <q-input
@@ -280,7 +280,7 @@
               class="q-mt-sm"
             >
               <template v-slot:append>
-                <q-icon name="lock" />
+                <q-icon :name="icons.matLock" />
               </template>
             </q-input>
 
@@ -337,9 +337,7 @@
             class="bg-github"
             @click="ssoLogin('github')"
           >
-            <svg class="q-icon on-left">
-              <use xlink:href="statics/images/custom-icons.svg#github" />
-            </svg>
+            <QIcon :name="icons.mdiGithubCircle" left />
             <AppContent
               entry="authentication"
               field="log_in_with_provider"
@@ -421,6 +419,8 @@ import { mapState, mapGetters } from 'vuex'
 import { upperFirst } from 'lodash'
 import * as mutationTypes from 'src/store/mutation-types'
 import { required, email, minLength } from 'vuelidate/lib/validators'
+import { matEmail, matLock } from '@quasar/extras/material-icons'
+import { mdiGithubCircle } from '@quasar/extras/mdi-v4'
 
 import EventBus from 'src/utils/event-bus'
 import { getInstantRoutePath } from 'src/router/routes'
@@ -526,6 +526,13 @@ export default {
     },
     termsFullPath () {
       return getInstantRoutePath(this.termsPath)
+    }
+  },
+  created () {
+    this.icons = {
+      matEmail,
+      matLock,
+      mdiGithubCircle
     }
   },
   methods: {

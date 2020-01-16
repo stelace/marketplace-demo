@@ -30,7 +30,7 @@
       <QBtn
         v-if="iconButtonAction"
         :color="iconColor"
-        icon="search"
+        :icon="icons.matSearch"
         flat
         dense
         rounded
@@ -39,7 +39,7 @@
       <QIcon
         v-else
         :color="iconColor"
-        name="search"
+        :name="icons.matSearch"
       />
     </template>
 
@@ -48,7 +48,7 @@
         <QBtn
           v-if="iconButtonAction"
           :color="iconColor"
-          icon="search"
+          :icon="icons.matSearch"
           flat
           dense
           rounded
@@ -57,12 +57,12 @@
         <QIcon
           v-else
           :color="iconColor"
-          name="search"
+          :name="icons.matSearch"
         />
       </template>
       <QBtn
         v-show="selectedAssetType"
-        icon="close"
+        :icon="icons.matClose"
         flat
         dense
         rounded
@@ -74,6 +74,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import { matSearch, matClose } from '@quasar/extras/material-icons'
 
 export default {
   props: {
@@ -140,6 +141,12 @@ export default {
   },
   mounted () {
     this.$store.dispatch('fetchAssetTypes')
+  },
+  created () {
+    this.icons = {
+      matClose,
+      matSearch
+    }
   },
   methods: {
     filterAssetTypes (value, update, abort) {
