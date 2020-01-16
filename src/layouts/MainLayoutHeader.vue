@@ -3,6 +3,7 @@ import { mapState, mapGetters } from 'vuex'
 import * as mutationTypes from 'src/store/mutation-types'
 
 import { matAddBox, matClose, matLock, matMail, matPowerSettingsNew, matSearch } from '@quasar/extras/material-icons'
+import { mdiGithubCircle } from '@quasar/extras/mdi-v4'
 
 import AppLocaleSwitch from 'src/components/AppLocaleSwitch'
 import AppLogo from 'src/components/AppLogo'
@@ -153,7 +154,8 @@ export default {
       matLock,
       matMail,
       matSearch,
-      matPowerSettingsNew
+      matPowerSettingsNew,
+      mdiGithubCircle
     }
   },
   methods: {
@@ -412,7 +414,7 @@ export default {
       <AppLink
         v-if="showGithubForkButton"
         to="https://github.com/stelace/marketplace-demo"
-        class="q-mr-md gt-md flex-item--auto"
+        class="q-mr-md gt-md flex-item--auto anchor-text--reset"
       >
         <QBtn
           class="bg-github text-white q-px-sm text-weight-bold"
@@ -421,9 +423,7 @@ export default {
           align="between"
           dense
         >
-          <svg class="q-icon on-left">
-            <use xlink:href="statics/images/custom-icons.svg#github" />
-          </svg>
+          <QIcon :name="icons.mdiGithubCircle" left />
           <AppContent entry="navigation" field="github_button" />
         </QBtn>
       </AppLink>
