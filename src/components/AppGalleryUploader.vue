@@ -1,14 +1,15 @@
 <script>
 import { mapState } from 'vuex'
-import { SlickList, SlickItem } from 'vue-slicksort'
 import { matDelete, matPhotoSizeSelectActual } from '@quasar/extras/material-icons'
 
 import AppUploadMixin from 'src/mixins/AppUpload'
 
 export default {
   components: {
-    SlickList,
-    SlickItem,
+    SlickList: () => import(/* webpackChunkName: 'slicksort' */ 'vue-slicksort')
+      .then(m => m.SlickList),
+    SlickItem: () => import(/* webpackChunkName: 'slicksort' */ 'vue-slicksort')
+      .then(m => m.SlickItem),
   },
   mixins: [
     AppUploadMixin,
