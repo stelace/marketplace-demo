@@ -118,7 +118,11 @@ module.exports = function (ctx) {
   // Quasar config //
   // ///////////// //
 
-  const splittedVendorChunks = ['mapbox', 'photoswipe']
+  const splittedVendorDeps = [
+    'mapbox',
+    'photoswipe',
+    'vue-slicksort',
+  ]
 
   return {
     // app boot file (/src/boot)
@@ -154,7 +158,7 @@ module.exports = function (ctx) {
     vendor: { // Exclude or add these to vendor chunk
       // disable: false,
       add: [],
-      remove: splittedVendorChunks
+      remove: splittedVendorDeps
     },
 
     // framework: 'all', // --- includes everything; for dev only!
