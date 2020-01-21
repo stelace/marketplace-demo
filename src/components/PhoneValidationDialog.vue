@@ -135,14 +135,12 @@
 </template>
 
 <script>
-import 'vue-tel-input/dist/vue-tel-input.css'
-
 import { mapState, mapGetters } from 'vuex'
 import * as mutationTypes from 'src/store/mutation-types'
 import { required } from 'vuelidate/lib/validators'
 
 import ValidationDialog from 'src/components/ValidationDialog'
-import VueTelInput from 'vue-tel-input'
+import { VueTelInput } from 'vue-tel-input'
 
 export default {
   components: {
@@ -222,7 +220,7 @@ export default {
       this.reset()
     },
     changePhone ({ number, isValid, country }) {
-      this.phone = number
+      this.phone = number.international || ''
       this.validPhone = isValid
 
       if (this.selectedUser.phoneVerified && this.phone === this.selectedUser.phone) {
