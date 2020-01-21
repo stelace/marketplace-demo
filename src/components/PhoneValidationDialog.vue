@@ -22,7 +22,6 @@
             required
             disabled-fetching-country
             :default-country="defaultCountry"
-            :preferred-countries="preferredCountries"
             @onInput="changePhone"
           />
 
@@ -177,7 +176,6 @@ export default {
     ]),
     ...mapGetters([
       'selectedUser',
-      'countriesCovered',
       'assetsInUniqueCountry',
     ]),
     savePhoneButtonDisabled () {
@@ -186,11 +184,8 @@ export default {
     sendCodeButtonDisabled () {
       return this.$v.code.$invalid
     },
-    preferredCountries () {
-      return this.countriesCovered
-    },
     defaultCountry () {
-      return this.assetsInUniqueCountry || this.preferredCountries[0]
+      return this.assetsInUniqueCountry
     }
   },
   watch: {
