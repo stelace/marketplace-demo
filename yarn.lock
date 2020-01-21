@@ -1765,6 +1765,11 @@ autoprefixer@9.6.1:
     postcss "^7.0.17"
     postcss-value-parser "^4.0.0"
 
+awesome-phonenumber@^2.15.0:
+  version "2.25.0"
+  resolved "https://registry.yarnpkg.com/awesome-phonenumber/-/awesome-phonenumber-2.25.0.tgz#a782f46d128fbb9f0a886343fc359a8a957f9ab6"
+  integrity sha512-/2aALw5iBwL+9i2QFy6Ua3oCna3GdOli+hfIOzkui/UwRv0YYi55WHfcUPejQAETsVFpKhTt9MP8Z7KSgwTvEA==
+
 axios@^0.19.0, axios@~0.19.0:
   version "0.19.0"
   resolved "https://registry.yarnpkg.com/axios/-/axios-0.19.0.tgz#8e09bff3d9122e133f7b8101c8fbdd00ed3d2ab8"
@@ -4195,15 +4200,6 @@ get-caller-file@^1.0.1:
   resolved "https://registry.yarnpkg.com/get-caller-file/-/get-caller-file-1.0.3.tgz#f978fa4c90d1dfe7ff2d6beda2a515e713bdcf4a"
   integrity sha512-3t6rVToeoZfYSGd8YoLFR2DJkiQrIiUrGcjvFX2mDw3bn6k2OtwHN0TNCLbBO+w8qTvimhDkv+LSscbJY1vE6w==
 
-get-json@^1.0.0:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/get-json/-/get-json-1.0.1.tgz#61b983f0b1b61e9c74d4413290af6b2a4e671ac8"
-  integrity sha512-buUOE2bLaxIsF6zGIrwvsTVlvgU85qwAWf0Hgq/EJBBoSssUqOauXWKpsh4wgPdTlZHEVllLtphiuIzFM4UEHQ==
-  dependencies:
-    is-node "0.0.0"
-    jsonp "0.0.4"
-    phin "^2.2.6"
-
 get-own-enumerable-property-symbols@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/get-own-enumerable-property-symbols/-/get-own-enumerable-property-symbols-3.0.0.tgz#b877b49a5c16aefac3655f2ed2ea5b684df8d203"
@@ -5048,11 +5044,6 @@ is-invalid-path@^0.1.0:
   dependencies:
     is-glob "^2.0.0"
 
-is-node@0.0.0:
-  version "0.0.0"
-  resolved "https://registry.yarnpkg.com/is-node/-/is-node-0.0.0.tgz#87dd650b87fb6a39c50caafee0e9f6835ec15e41"
-  integrity sha1-h91lC4f7ajnFDKr+4On2g17BXkE=
-
 is-number@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/is-number/-/is-number-3.0.0.tgz#24fd6201a4782cf50561c810276afc7d12d71195"
@@ -5325,13 +5316,6 @@ jsonify@~0.0.0:
   resolved "https://registry.yarnpkg.com/jsonify/-/jsonify-0.0.0.tgz#2c74b6ee41d93ca51b7b5aaee8f503631d252a73"
   integrity sha1-LHS27kHZPKUbe1qu6PUDYx0lKnM=
 
-jsonp@0.0.4:
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/jsonp/-/jsonp-0.0.4.tgz#94665a4b771aabecb8aac84135b99594756918bd"
-  integrity sha1-lGZaS3caq+y4qshBNbmVlHVpGL0=
-  dependencies:
-    debug "*"
-
 jwt-decode@^2.2.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/jwt-decode/-/jwt-decode-2.2.0.tgz#7d86bd56679f58ce6a84704a657dd392bba81a79"
@@ -5400,14 +5384,6 @@ levn@^0.3.0, levn@~0.3.0:
   dependencies:
     prelude-ls "~1.1.2"
     type-check "~0.3.2"
-
-libphonenumber-js@^1.4.6:
-  version "1.7.18"
-  resolved "https://registry.yarnpkg.com/libphonenumber-js/-/libphonenumber-js-1.7.18.tgz#1f1ef1d9ed97c03b119e05728b6a301901e5e633"
-  integrity sha512-9qFKBTa2oVBY4fxvEu0f2ywwmldvZqOnWj1OTcCz4a7dTMMDC9tF1KVRIb01Bhl+39hfeGlzwQGTmd1NsRbRhQ==
-  dependencies:
-    minimist "^1.2.0"
-    xml2js "^0.4.17"
 
 linkify-it@^2.0.0:
   version "2.1.0"
@@ -5749,10 +5725,10 @@ mapbox-gl-vue@^1.9.0:
   resolved "https://registry.yarnpkg.com/mapbox-gl-vue/-/mapbox-gl-vue-1.9.0.tgz#49865e5ff20c2cbfee322e6339fbb13cb162bb20"
   integrity sha512-f2IJGkp9aPwzCi1mDZFJJt1txKdLIvhjJ6nanDF22C8MplU0davxTtqk6q1zmMhhJPSCgNrS6nZt7VzHPwFdCw==
 
-mapbox-gl@~1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/mapbox-gl/-/mapbox-gl-1.1.0.tgz#01b907fa025e49e2000c91878de3b68245ce9770"
-  integrity sha512-ODwesguQJM7FobmSlv/qGJkmrzUTlIRe92dEBy587RV2k2QGsQDQUCk6/KE+lzVJuyk7WQappNkzhgagaxY5Eg==
+mapbox-gl@~1.2.0:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/mapbox-gl/-/mapbox-gl-1.2.1.tgz#a91acb48e5ee57d40a09fa6b4c297e92690c5909"
+  integrity sha512-CO7uhTYtcreDokGr3W2LifIdCtHz0TO/BqnRtO5rQ4Rvm8P7ndUM5ZWwZvJJmNnlkMpVwNKSESsKYX32GXHXoQ==
   dependencies:
     "@mapbox/geojson-rewind" "^0.4.0"
     "@mapbox/geojson-types" "^1.0.2"
@@ -6756,11 +6732,6 @@ pbkdf2@^3.0.3:
     ripemd160 "^2.0.1"
     safe-buffer "^5.0.1"
     sha.js "^2.4.8"
-
-phin@^2.2.6:
-  version "2.9.3"
-  resolved "https://registry.yarnpkg.com/phin/-/phin-2.9.3.tgz#f9b6ac10a035636fb65dfc576aaaa17b8743125c"
-  integrity sha512-CzFr90qM24ju5f88quFC/6qohjC144rehe5n6DH900lgXmUe86+xCKc10ev56gRKC4/BkHUoG4uSiQgBiIXwDA==
 
 photoswipe@^4.1.3:
   version "4.1.3"
@@ -7830,7 +7801,7 @@ sax@1.1.4:
   resolved "https://registry.yarnpkg.com/sax/-/sax-1.1.4.tgz#74b6d33c9ae1e001510f179a91168588f1aedaa9"
   integrity sha1-dLbTPJrh4AFRDxeakRaFiPGu2qk=
 
-sax@>=0.6.0, sax@^1.2.4, sax@~1.2.4:
+sax@^1.2.4, sax@~1.2.4:
   version "1.2.4"
   resolved "https://registry.yarnpkg.com/sax/-/sax-1.2.4.tgz#2816234e2378bddc4e5354fab5caa895df7100d9"
   integrity sha512-NqVDv9TpANUjFm0N8uM5GxL36UgKi9/atZw+x7YFnQ8ckwFGKrl4xX4yWtrey3UJm5nP1kUbnYgLopqWNSRhWw==
@@ -9061,13 +9032,12 @@ vue-style-loader@4.1.2, vue-style-loader@^4.1.0:
     hash-sum "^1.0.2"
     loader-utils "^1.0.2"
 
-vue-tel-input@2.0.21:
-  version "2.0.21"
-  resolved "https://registry.yarnpkg.com/vue-tel-input/-/vue-tel-input-2.0.21.tgz#f20eeefc5088889427d9bb934166e067e406e765"
-  integrity sha512-twrQ1udZj/kBHHMb2LBKfv3cnxl6luX3Zk3O0eikUtV0xqj/8N39r2lCmCDJ+2DM8ZnT/l+bZihTyT9hGn7nlQ==
+vue-tel-input@4.2.0:
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/vue-tel-input/-/vue-tel-input-4.2.0.tgz#c492d20f2e4ecf031c3bccce340959ce2bf84093"
+  integrity sha512-LPlj8hVURagS9PlXzrx1VrQZ0SnEKbwq107uQNQr6ExqGNNuzPVKzYBXTUQO1MjIYmbjkacGdZ42MdurW+bdrA==
   dependencies:
-    get-json "^1.0.0"
-    libphonenumber-js "^1.4.6"
+    awesome-phonenumber "^2.15.0"
 
 vue-template-compiler@2.6.10:
   version "2.6.10"
@@ -9493,19 +9463,6 @@ ws@~6.1.0:
   integrity sha512-eqZfL+NE/YQc1/ZynhojeV8q+H050oR8AZ2uIev7RU10svA9ZnJUddHcOUZTJLinZ9yEfdA2kSATS2qZK5fhJA==
   dependencies:
     async-limiter "~1.0.0"
-
-xml2js@^0.4.17:
-  version "0.4.19"
-  resolved "https://registry.yarnpkg.com/xml2js/-/xml2js-0.4.19.tgz#686c20f213209e94abf0d1bcf1efaa291c7827a7"
-  integrity sha512-esZnJZJOiJR9wWKMyuvSE1y6Dq5LCuJanqhxslH2bxM6duahNZ+HMpCLhBQGZkbX6xRf8x1Y2eJlgt2q3qo49Q==
-  dependencies:
-    sax ">=0.6.0"
-    xmlbuilder "~9.0.1"
-
-xmlbuilder@~9.0.1:
-  version "9.0.7"
-  resolved "https://registry.yarnpkg.com/xmlbuilder/-/xmlbuilder-9.0.7.tgz#132ee63d2ec5565c557e20f4c22df9aca686b10d"
-  integrity sha1-Ey7mPS7FVlxVfiD0wi35rKaGsQ0=
 
 xmlhttprequest-ssl@~1.5.4:
   version "1.5.5"
