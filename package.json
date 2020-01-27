@@ -82,7 +82,7 @@
     "lint-staged": ">=9.5.0",
     "markdown-it": "^10.0.0",
     "prerender-spa-plugin": "^3.4.0",
-    "testcafe": "^1.7.1",
+    "testcafe": "^1.8.1",
     "testcafe-reporter-xunit": "^2.1.0",
     "testcafe-vue-selectors": "^3.1.0",
     "webfontloader": "^1.6.28"
