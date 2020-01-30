@@ -463,8 +463,6 @@ export default {
       :value="isSearchMapVisible"
       :label="$t({ id: 'pages.search.show_map' })"
       color="positive"
-      checked-icon="check"
-      unchecked-icon="close"
       left-label
       @input="toggleSearchMap"
     />
