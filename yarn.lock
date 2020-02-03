@@ -9032,10 +9032,10 @@ vue-style-loader@4.1.2, vue-style-loader@^4.1.0:
     hash-sum "^1.0.2"
     loader-utils "^1.0.2"
 
-vue-tel-input@4.2.0:
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/vue-tel-input/-/vue-tel-input-4.2.0.tgz#c492d20f2e4ecf031c3bccce340959ce2bf84093"
-  integrity sha512-LPlj8hVURagS9PlXzrx1VrQZ0SnEKbwq107uQNQr6ExqGNNuzPVKzYBXTUQO1MjIYmbjkacGdZ42MdurW+bdrA==
+vue-tel-input@4.3.0:
+  version "4.3.0"
+  resolved "https://registry.yarnpkg.com/vue-tel-input/-/vue-tel-input-4.3.0.tgz#d4fd9324a3191b6b7ce08ad79fcfbe71be8eda5a"
+  integrity sha512-l2FHH6AU+ns5OG6nAZ0zbbs5IXAc0y0/pfB4qmLFgBs8DL4A7Gvm9UCZQ3gQ2Hb8LkQEB+tFRNWhvONSs2FO4Q==
   dependencies:
     awesome-phonenumber "^2.15.0"
 
