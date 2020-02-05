@@ -97,17 +97,9 @@ Serverless [JAMStack architecture](https://jamstack.org/):
 
 Node.js >= 8.9 is used for tooling.
 
-## Hosted Stelace Server and Dashboard
-
-Create a [Stelace account](
-  https://stelace.com
-) to get team access to real-time stats, settings, live design and content editing with translation tools, asset and user management, and much more.
-
-[![Stelace Dashboard](https://user-images.githubusercontent.com/12909094/38527674-415ac06c-3c5c-11e8-89d3-c92c3be1d377.png)](https://stelace.com)
-
 ## Getting started
 
-You need your Stelace API Keys to go the _serverless_ route. Good news: [you can it try for free](https://stelace.com/pricing).
+You need your Stelace API keys to get started. Good news: Stelace is [open-source](https://github.com/stelace/stelace) so you can deploy your own server.
 
 1. Clone this repository
 
