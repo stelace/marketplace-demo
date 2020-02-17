@@ -95,7 +95,7 @@ Serverless [JAMStack architecture](https://jamstack.org/):
 - [Stelace headless CMS](https://stelace.com/docs/content)
 - [Stelace.js](https://github.com/stelace/stelace.js) SDK
 
-Node.js >= 8.9 is used for tooling.
+Node.js >= 10.18 is used for tooling.
 
 ## Getting started
 
