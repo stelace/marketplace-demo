@@ -739,6 +739,12 @@ export default {
     },
     ssoLogin (provider) {
       const loginUrl = getSSOLoginUrl(provider)
+
+      // store the current URL path so users will be redirected to it
+      // after authentication
+      const urlPath = this.$route.fullPath
+      window.localStorage.setItem('ssoRedirectUrlPath', urlPath)
+
       window.location.href = loginUrl
     },
     upperFirst (str) {
