@@ -10,6 +10,7 @@ import DateRangePicker from 'src/components/DateRangePicker'
 import SelectNumber from 'src/components/SelectNumber'
 
 import AuthDialogMixin from 'src/mixins/authDialog'
+import StripeMixin from 'src/mixins/stripe'
 
 import {
   convertEndDate
@@ -29,6 +30,7 @@ export default {
   },
   mixins: [
     AuthDialogMixin,
+    StripeMixin,
   ],
   data () {
     return {
@@ -96,6 +98,7 @@ export default {
       'promptTransactionQuantity',
       'validTransactionOptions',
       'maxAvailableQuantity',
+      'paymentActive',
     ]),
   },
   watch: {
@@ -228,15 +231,25 @@ export default {
 
       const asset = this.activeAsset
 
-      const { message } = await this.$store.dispatch('createTransaction', { asset })
+      const { message, transaction } = await this.$store.dispatch('createTransaction', { asset })
 
-      this.$router.push({
-        name: 'conversation',
-        params: { id: message.conversationId }
-      })
+      if (this.stripeActive) {
+        await this.$store.dispatch('getStripeCustomer')
+        const sessionId = await this.$store.dispatch('createStripeCheckoutSession', { transactionId: transaction.id })
 
-      this.resetTransactionParameters()
-      this.$store.dispatch('resetTransactionPreview')
+        const stripe = await this.loadStripe()
+        await stripe.redirectToCheckout({
+          sessionId
+        })
+      } else {
+        this.$router.push({
+          name: 'conversation',
+          params: { id: message.conversationId }
+        })
+
+        this.resetTransactionParameters()
+        this.$store.dispatch('resetTransactionPreview')
+      }
     },
   }
 }

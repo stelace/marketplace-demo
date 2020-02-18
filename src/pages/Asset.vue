@@ -362,6 +362,7 @@ export default {
   ],
   data () {
     return {
+      afterAuthFirstTime: true,
       ownerSimilarAssets: [],
       similarAssets: [],
       shortTextMaxLength: 128,
@@ -448,6 +449,8 @@ export default {
       'isActiveAssetAvailable',
       'ratingsOptions',
       'ratingsActive',
+      'stripeActive',
+      'conversations',
     ]),
   },
   watch: {
@@ -481,10 +484,51 @@ export default {
   },
   methods: {
     async afterAuth () {
+      let afterAuthFirstTime
+      if (this.afterAuthFirstTime) {
+        afterAuthFirstTime = this.afterAuthFirstTime
+        this.afterAuthFirstTime = false
+      }
+
       // Not blocking. Move to (blocking) preFetch and remove $route watcher if optimizing for SEO
       // with server-side rendering (SSR)
       this.fetchRelatedAssets()
       this.fetchAssetRatingsByTransaction()
+
+      const routeQuery = this.$route.query
+
+      if (afterAuthFirstTime && this.stripeActive) {
+        if (routeQuery['payment-success'] === 'true' && this.currentUser.id) {
+          const transactionId = routeQuery.transactionId
+          if (!transactionId) return
+
+          this.$q.loading.show()
+
+          try {
+            await this.$store.dispatch('fetchMessages')
+          } finally {
+            this.$q.loading.hide()
+          }
+
+          const conversation = this.conversations.find(conv => {
+            const transaction = conv.transaction
+
+            return transaction &&
+              transaction.id === transactionId &&
+              transaction.takerId === this.currentUser.id
+          })
+          if (conversation) {
+            this.notifySuccess('payment.checkout_success_message')
+            this.$router.replace({ name: 'conversation', params: { id: conversation.id } })
+          }
+        } else if (routeQuery['payment-cancel'] === 'true') {
+          this.notifyWarning('payment.checkout_failure_message')
+
+          const newQuery = Object.assign({}, routeQuery)
+          delete newQuery['payment-cancel']
+          this.$router.replace({ query: newQuery })
+        }
+      }
     },
     toggleImageEdition (editing) {
       this.isEditingImages = typeof editing === 'boolean'

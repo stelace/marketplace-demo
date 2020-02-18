@@ -915,6 +915,45 @@ module.exports = {
         }
       ]
     },
+
+    onStripePaymentSuccess: {
+      name: 'On Stripe payment success',
+      description: 'Handles series of actions after a successful payment',
+      event: 'stripe_payment_intent.succeeded',
+      context: ['stripe', 'stelace'],
+      computed: {
+        // paymentIntent: '_.get(metadata, "data.object")',
+        transactionId: '_.get(metadata, "data.object.metadata.transactionId")'
+      },
+      run: [
+        {
+          stop: '!computed.transactionId',
+          name: 'transaction',
+          endpointMethod: 'GET',
+          endpointUri: '/transactions/${computed.transactionId}'
+        },
+        {
+          computed: {
+            transaction: 'responses.transaction'
+          },
+          endpointMethod: 'POST',
+          endpointUri: '/messages',
+          endpointPayload: {
+            content: '" "',
+            topicId: 'computed.transactionId',
+            senderId: 'computed.transaction.takerId',
+            receiverId: 'computed.transaction.ownerId'
+          }
+        },
+        {
+          endpointMethod: 'POST',
+          endpointUri: '/transactions/${computed.transactionId}/transitions',
+          endpointPayload: {
+            name: '"confirmAndPay"'
+          }
+        }
+      ],
+    }
   }
   /* eslint-enable no-template-curly-in-string */
   /* eslint-enable quotes */

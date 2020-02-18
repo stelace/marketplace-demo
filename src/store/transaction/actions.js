@@ -2,12 +2,15 @@ import { values, uniqBy } from 'lodash'
 import stelace, { fetchAllResults } from 'src/utils/stelace'
 import * as types from 'src/store/mutation-types'
 
-export async function createTransaction ({ state, dispatch }, { asset } = {}) {
+export async function createTransaction ({ state, dispatch, rootGetters }, { asset } = {}) {
   const {
     startDate,
     endDate,
     quantity
   } = state
+  const {
+    stripeActive
+  } = rootGetters
 
   const transactionAttrs = {
     assetId: asset.id
@@ -17,6 +20,8 @@ export async function createTransaction ({ state, dispatch }, { asset } = {}) {
   if (quantity) transactionAttrs.quantity = quantity
 
   let transaction = await stelace.transactions.create(transactionAttrs)
+
+  if (stripeActive) return { transaction }
 
   const message = await stelace.messages.create({
     content: ' ',
@@ -100,4 +105,28 @@ export function resetTransactionPreview ({ commit }) {
     type: types.SET_TRANSACTION_PREVIEW,
     preview: null
   })
+}
+
+export async function getStripeCustomer ({ dispatch, rootGetters }) {
+  const currentUserId = rootGetters.currentUser.id
+  const origin = process.env.DEPLOY_PRIME_URL || process.env.STELACE_INSTANT_WEBSITE_URL
+
+  const url = `${origin}/.netlify/functions/getStripeCustomer`
+
+  await stelace.forward.post(url, {
+    userId: currentUserId
+  })
+
+  await dispatch('fetchCurrentUser', { forceRefresh: true })
+}
+
+export async function createStripeCheckoutSession ({ rootGetters }, { transactionId }) {
+  const origin = process.env.DEPLOY_PRIME_URL || process.env.STELACE_INSTANT_WEBSITE_URL
+  const url = `${origin}/.netlify/functions/createStripeCheckoutSession`
+
+  const { id: sessionId } = await stelace.forward.post(url, {
+    transactionId
+  })
+
+  return sessionId
 }
