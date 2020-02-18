@@ -80,3 +80,7 @@ typings/
 
 # Marketplace data
 data.js
+
+# Netlify functions
+/netlify-functions
+/netlify/stored-env.js

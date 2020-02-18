@@ -1,0 +1,1 @@
+export const stelaceHeaders = 'x-api-key, x-stelace-version, authorization, user-agent, x-stelace-organization-id, accept, accept-version, content-type, request-id, origin, x-api-version, x-request-id, x-requested-with'
