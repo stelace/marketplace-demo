@@ -1,4 +1,4 @@
-import { initStelaceSdk } from '../utils/stelace'
+import { initStelaceSdk } from '../../src/utils/stelace'
 
 if (!process.env.STELACE_SECRET_API_KEY) {
   throw new Error('Missing Stelace secret API key')

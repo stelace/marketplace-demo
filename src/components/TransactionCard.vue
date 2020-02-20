@@ -238,9 +238,7 @@ export default {
         const sessionId = await this.$store.dispatch('createStripeCheckoutSession', { transactionId: transaction.id })
 
         const stripe = await this.loadStripe()
-        await stripe.redirectToCheckout({
-          sessionId
-        })
+        await stripe.redirectToCheckout({ sessionId })
       } else {
         this.$router.push({
           name: 'conversation',

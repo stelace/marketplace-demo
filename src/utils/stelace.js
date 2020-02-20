@@ -41,7 +41,7 @@ function getStelaceEnv () {
   return apiKey.includes('_live_') ? 'live' : 'test'
 }
 
-function initStelaceSdk ({ apiBaseURL, apiKey }) {
+export function initStelaceSdk ({ apiBaseURL, apiKey }) {
   const stelace = createInstance({ apiKey })
 
   if (apiBaseURL) {

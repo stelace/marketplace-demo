@@ -4,7 +4,7 @@ import Stripe from 'stripe'
 import { get } from 'lodash'
 import { jsonBodyParser, httpErrorHandler, cors } from 'middy/middlewares'
 import { allowHttpMethods, identifyUser, validator } from '../middlewares'
-import { initStelaceSdk } from '../utils/stelace'
+import { initStelaceSdk } from '../../src/utils/stelace'
 import { stelaceHeaders } from '../utils/cors'
 import Joi from '@hapi/joi'
 

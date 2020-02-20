@@ -4,7 +4,7 @@ import Stripe from 'stripe'
 import { get } from 'lodash'
 import { jsonBodyParser, httpErrorHandler, cors } from 'middy/middlewares'
 import { allowHttpMethods, identifyUser, validator } from '../middlewares'
-import { initStelaceSdk } from '../utils/stelace'
+import { initStelaceSdk } from '../../src/utils/stelace'
 import { stelaceHeaders } from '../utils/cors'
 import { loadNetlifyEnv } from '../utils/env'
 import { getCurrencyDecimal } from '../utils/currency'
@@ -51,8 +51,8 @@ const createStripeCheckoutSession = async (event, context, callback) => {
 
     const { assetId, takerId } = transaction
 
-    if (!assetId || !takerId) throw createError(422, 'Cannot create a Stripe checkout for this transaction')
-
+    if (!assetId) throw createError(422, 'Missing asset for this transaction')
+    if (!takerId) throw createError(422, 'Missing taker for this transaction')
     if (get(context, 'auth.user.userId') !== takerId) throw createError(403)
 
     const [

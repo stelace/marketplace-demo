@@ -1,1 +1,10 @@
-export const stelaceHeaders = 'x-api-key, x-stelace-version, authorization, user-agent, x-stelace-organization-id, accept, accept-version, content-type, request-id, origin, x-api-version, x-request-id, x-requested-with'
+export const stelaceHeaders = [
+  // headers specified in Stelace server
+  // https://github.com/stelace/stelace/blob/dev/server/index.js
+  'x-api-key',
+  'x-stelace-version',
+  'authorization',
+  'user-agent',
+  'x-stelace-organization-id',
+  'x-api-version',
+].join(', ')

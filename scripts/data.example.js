@@ -918,9 +918,13 @@ module.exports = {
 
     onStripePaymentSuccess: {
       name: 'On Stripe payment success',
-      description: 'Handles series of actions after a successful payment',
+      description: `
+        This event is created after a successful payment intent (notification via Stripe webhook).
+        The objective of this workflow is to retrieve the linked transaction to this payment intent via metadata
+        and trigger the transition 'confirmAndPay' as taker has paid.
+      `,
       event: 'stripe_payment_intent.succeeded',
-      context: ['stripe', 'stelace'],
+      context: ['stelace'],
       computed: {
         // paymentIntent: '_.get(metadata, "data.object")',
         transactionId: '_.get(metadata, "data.object.metadata.transactionId")'

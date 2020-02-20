@@ -9,7 +9,7 @@ export async function createTransaction ({ state, dispatch, rootGetters }, { ass
     quantity
   } = state
   const {
-    stripeActive
+    paymentActive
   } = rootGetters
 
   const transactionAttrs = {
@@ -21,7 +21,7 @@ export async function createTransaction ({ state, dispatch, rootGetters }, { ass
 
   let transaction = await stelace.transactions.create(transactionAttrs)
 
-  if (stripeActive) return { transaction }
+  if (paymentActive) return { transaction }
 
   const message = await stelace.messages.create({
     content: ' ',

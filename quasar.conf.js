@@ -537,7 +537,6 @@ module.exports = function (ctx) {
         VUE_APP_POST_MESSAGE_ALLOWED_ORIGINS: JSON.stringify(postMessageAllowedOrigins),
         VUE_APP_GITHUB_FORK_BUTTON: JSON.stringify(process.env.VUE_APP_GITHUB_FORK_BUTTON),
         VUE_APP_DISPLAY_ASSET_DISTANCE: JSON.stringify(process.env.VUE_APP_DISPLAY_ASSET_DISTANCE),
-        VUE_APP_STRIPE_ACTIVE: JSON.stringify(process.env.VUE_APP_STRIPE_ACTIVE),
         VUE_APP_STRIPE_PUBLISHABLE_KEY: JSON.stringify(process.env.VUE_APP_STRIPE_PUBLISHABLE_KEY),
       }
     },
@@ -548,6 +547,9 @@ module.exports = function (ctx) {
       open: false, // opens browser window automatically
 
       proxy: ctx.dev ? {
+        // Netlify endpoints are available on port 9000
+        // so we proxy URLs beginning with '/.netlify' to this port
+        // https://github.com/netlify/netlify-lambda#netlify-lambda-serve-legacy-command-proxying-for-local-development
         '/.netlify': {
           target: 'http://localhost:9000',
           pathRewrite: { '^/.netlify/functions': '' }
