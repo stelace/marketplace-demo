@@ -459,6 +459,8 @@ export default {
       if (current.id === previous.id) return
 
       this.afterAuth()
+
+      if (this.paymentActive && current.id) this.viewConversationAfterSuccessfulPayment()
     },
     $route () {
       this.fetchRelatedAssets()
@@ -489,8 +491,6 @@ export default {
       // with server-side rendering (SSR)
       this.fetchRelatedAssets()
       this.fetchAssetRatingsByTransaction()
-
-      if (this.paymentActive) this.viewConversationAfterSuccessfulPayment()
     },
     toggleImageEdition (editing) {
       this.isEditingImages = typeof editing === 'boolean'

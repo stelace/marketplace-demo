@@ -1,7 +1,7 @@
 {
   "name": "marketplace-demo-netlify-functions",
   "version": "0.4.0",
-  "description": "Netlify functions for Marketplace powered by Stelace API and Vue.js",
+  "description": "Netlify functions implementing Stripe payment in Stelace marketplace starter kit",
   "productName": "Stelace Instant Marketplace Demo - Netlify functions",
   "homepage": "https://stelace.com",
   "author": "Stelace (https://stelace.com)",
