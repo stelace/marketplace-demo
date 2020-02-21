@@ -52,6 +52,7 @@ Stelace [open-source marketplace backend](https://github.com/stelace/stelace) le
 - User management and [Ratings](https://stelace.com/docs/ratings) :star:
 - Real-time [Events](https://stelace.com/docs/command/events) and [Messaging](https://stelace.com/docs/messages)
 - Automation with Stelace [Workflows](https://stelace.com/docs/command/workflows) :traffic_light:
+- Customizable payment process using serverless functions
 - Headless CMS :page_with_curl: with Stelace [Content API](https://stelace.com/docs/content)
 - Global CDN for images and user files
 - i18n :earth_africa: and full [translations](./docs/i18n.md)
@@ -76,6 +77,7 @@ This kit follows the [PRPL pattern](https://web.dev/apply-instant-loading-with-p
 Leverage these integrations to start running your platform even faster:
 
 - Automated and continuous deployment with [Netlify](https://www.netlify.com/)
+- [Stripe](https://stripe.com/) payments using [Netlify functions](https://docs.netlify.com/functions/overview/) and Stelace workflows
 - [Sentry](https://sentry.io/) for debugging in production environment
 - Maps and place search with [OpenStreetMap](https://www.openstreetmap.org/) providers
 - Google Analytics
@@ -94,6 +96,7 @@ Serverless [JAMStack architecture](https://jamstack.org/):
 - [Stelace API](https://stelace.com) as backend
 - [Stelace headless CMS](https://stelace.com/docs/content)
 - [Stelace.js](https://github.com/stelace/stelace.js) SDK
+- [Netlify](https://www.netlify.com/) for static site and lambda functions deployment
 
 Node.js >= 10.18 is used for tooling.
 

@@ -344,6 +344,7 @@ import ProfileCard from 'src/components/ProfileCard'
 import TransactionRatingsList from 'src/components/TransactionRatingsList'
 
 import PageComponentMixin from 'src/mixins/pageComponent'
+import PaymentMixin from 'src/mixins/payment'
 
 export default {
   components: {
@@ -359,6 +360,7 @@ export default {
   },
   mixins: [
     PageComponentMixin,
+    PaymentMixin,
   ],
   data () {
     return {
@@ -448,6 +450,8 @@ export default {
       'isActiveAssetAvailable',
       'ratingsOptions',
       'ratingsActive',
+      'paymentActive',
+      'conversations',
     ]),
   },
   watch: {
@@ -455,6 +459,8 @@ export default {
       if (current.id === previous.id) return
 
       this.afterAuth()
+
+      if (this.paymentActive && current.id) this.viewConversationAfterSuccessfulPayment()
     },
     $route () {
       this.fetchRelatedAssets()
@@ -480,7 +486,7 @@ export default {
     }
   },
   methods: {
-    async afterAuth () {
+    afterAuth () {
       // Not blocking. Move to (blocking) preFetch and remove $route watcher if optimizing for SEO
       // with server-side rendering (SSR)
       this.fetchRelatedAssets()

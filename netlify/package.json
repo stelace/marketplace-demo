@@ -1,0 +1,29 @@
+{
+  "name": "marketplace-demo-netlify-functions",
+  "version": "0.4.0",
+  "description": "Netlify functions implementing Stripe payment in Stelace marketplace starter kit",
+  "productName": "Stelace Instant Marketplace Demo - Netlify functions",
+  "homepage": "https://stelace.com",
+  "author": "Stelace (https://stelace.com)",
+  "license": "MIT",
+  "private": true,
+  "scripts": {},
+  "dependencies": {
+    "@hapi/joi": "^17.1.0",
+    "aws-sdk": "^2.613.0",
+    "http-errors": "^1.7.3",
+    "lodash": "^4.17.15",
+    "middy": "^0.33.2",
+    "mobitel-iso-4217-currencies": "^1.1.1",
+    "stelace": "0.13.0",
+    "stripe": "^8.14.0"
+  },
+  "devDependencies": {
+    "dotenv-webpack": "^1.7.0"
+  },
+  "engines": {
+    "node": ">= 10.18.0",
+    "npm": ">= 5.6.0",
+    "yarn": ">= 1.6.0"
+  }
+}

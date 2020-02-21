@@ -253,7 +253,8 @@ module.exports = function (ctx) {
         'AppVisibility',
         'Dialog',
         // 'Meta', // using vue-meta for compatibility with prerender-spa-plugin
-        'Notify'
+        'Notify',
+        'Loading'
       ],
 
       // Only include used SVG icons with tree-shaking
@@ -505,6 +506,7 @@ module.exports = function (ctx) {
         STELACE_API_URL: JSON.stringify(apiBaseUrl),
         STELACE_PUBLISHABLE_API_KEY: JSON.stringify(process.env.STELACE_PUBLISHABLE_API_KEY),
         STELACE_INSTANT_WEBSITE_URL: JSON.stringify(websiteUrl),
+        DEPLOY_PRIME_URL: JSON.stringify(process.env.DEPLOY_PRIME_URL),
         STELACE_PUBLIC_PLATFORM_ID: JSON.stringify(process.env.STELACE_PUBLIC_PLATFORM_ID),
         VUE_APP_SSO_PROVIDERS: JSON.stringify(process.env.VUE_APP_SSO_PROVIDERS),
         VUE_APP_SSO_LOGIN_ONLY: JSON.stringify(process.env.VUE_APP_SSO_LOGIN_ONLY),
@@ -534,7 +536,8 @@ module.exports = function (ctx) {
         VUE_APP_INSTANT_PAGE_PREFIX: JSON.stringify('/l'),
         VUE_APP_POST_MESSAGE_ALLOWED_ORIGINS: JSON.stringify(postMessageAllowedOrigins),
         VUE_APP_GITHUB_FORK_BUTTON: JSON.stringify(process.env.VUE_APP_GITHUB_FORK_BUTTON),
-        VUE_APP_DISPLAY_ASSET_DISTANCE: JSON.stringify(process.env.VUE_APP_DISPLAY_ASSET_DISTANCE)
+        VUE_APP_DISPLAY_ASSET_DISTANCE: JSON.stringify(process.env.VUE_APP_DISPLAY_ASSET_DISTANCE),
+        VUE_APP_STRIPE_PUBLISHABLE_KEY: JSON.stringify(process.env.VUE_APP_STRIPE_PUBLISHABLE_KEY),
       }
     },
 
@@ -542,6 +545,16 @@ module.exports = function (ctx) {
       // https: true,
       // port: 8080,
       open: false, // opens browser window automatically
+
+      proxy: ctx.dev ? {
+        // Netlify endpoints are available on port 9000
+        // so we proxy URLs beginning with '/.netlify' to this port
+        // https://github.com/netlify/netlify-lambda#netlify-lambda-serve-legacy-command-proxying-for-local-development
+        '/.netlify': {
+          target: 'http://localhost:9000',
+          pathRewrite: { '^/.netlify/functions': '' }
+        }
+      } : undefined
     },
 
     // animations: 'all' --- includes all animations

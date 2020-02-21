@@ -21,6 +21,12 @@ payment:
   banking_details:
     en: Banking details
     fr: Informations bancaires
+  checkout_success_message:
+    en: Your payment has been processed, thank you.
+    fr: Le paiement a bien été pris en compte.
+  checkout_failure_message:
+    en: The payment has been canceled or has failed. Please try again later.
+    fr: Le paiement a été annulé ou a échoué. Veuillez réessayer plus tard.
   subscription:
     subscription_label:
       en: Subscription

@@ -68,3 +68,12 @@ export function defaultActiveAssetType (state, getters, rootState, rootGetters) 
 
   return activeAssetTypes.find(assetType => assetType.isDefault)
 }
+
+export function paymentActive (state, getters) {
+  const { stripeActive } = getters
+  return stripeActive
+}
+
+export function stripeActive () {
+  return !!process.env.VUE_APP_STRIPE_PUBLISHABLE_KEY
+}

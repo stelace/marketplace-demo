@@ -915,6 +915,49 @@ module.exports = {
         }
       ]
     },
+
+    onStripePaymentSuccess: {
+      name: 'On Stripe payment success',
+      description: `
+        This event is created after a successful payment intent (notification via Stripe webhook).
+        The objective of this workflow is to retrieve the linked transaction to this payment intent via metadata
+        and trigger the transition 'confirmAndPay' as taker has paid.
+      `,
+      event: 'stripe_payment_intent.succeeded',
+      context: ['stelace'],
+      computed: {
+        // paymentIntent: '_.get(metadata, "data.object")',
+        transactionId: '_.get(metadata, "data.object.metadata.transactionId")'
+      },
+      run: [
+        {
+          stop: '!computed.transactionId',
+          name: 'transaction',
+          endpointMethod: 'GET',
+          endpointUri: '/transactions/${computed.transactionId}'
+        },
+        {
+          computed: {
+            transaction: 'responses.transaction'
+          },
+          endpointMethod: 'POST',
+          endpointUri: '/messages',
+          endpointPayload: {
+            content: '" "',
+            topicId: 'computed.transactionId',
+            senderId: 'computed.transaction.takerId',
+            receiverId: 'computed.transaction.ownerId'
+          }
+        },
+        {
+          endpointMethod: 'POST',
+          endpointUri: '/transactions/${computed.transactionId}/transitions',
+          endpointPayload: {
+            name: '"confirmAndPay"'
+          }
+        }
+      ],
+    }
   }
   /* eslint-enable no-template-curly-in-string */
   /* eslint-enable quotes */
