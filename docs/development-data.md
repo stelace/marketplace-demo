@@ -30,8 +30,8 @@ To reference the ID of another object, provide a string with the format: '[objec
 
 Note: Transactions cannot be removed via API. Instead transactions are cancelled.
 
-## Local Stelace server (Stelace Team / partners)
+## Local Stelace server
 
-If you need to initialize the platform database with the exact state specified in data.js rather than updating existing resources, please first run `yarn setup:instant` locally before `node run scripts/init-data.js`.
+If you need to initialize the platform database with the exact state specified in data.js rather than updating existing resources, please first run `yarn setup:instant` locally to reset database before `node run scripts/init-data.js`.
 
-You may also need to run `yarn setup:instant` in stelace-core when some object structure has changed after data migration or Stelace version upgrade.
+You may also need to run `yarn setup:instant` in stelace-server when some object structure has changed after data migration or Stelace version upgrade.
