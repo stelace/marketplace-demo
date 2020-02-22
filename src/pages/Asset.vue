@@ -173,7 +173,7 @@
               >
                 <QIcon
                   class="q-mr-sm"
-                  :name="attribute.materialIcon"
+                  :name="attribute.icon"
                   color="secondary"
                   size="1.5rem"
                 />
@@ -326,6 +326,7 @@
 <script>
 import { mapState, mapGetters } from 'vuex'
 import { get, map, sortBy, values, compact, flatten, groupBy, isUndefined } from 'lodash'
+import { mdiWhiteBalanceSunny, mdiImage } from '@quasar/extras/mdi-v4'
 
 import { extractLocationDataFromPlace } from 'src/utils/places'
 
@@ -400,6 +401,10 @@ export default {
 
       const populatedAssetAttrs = map(attrs, (v, k) => {
         const def = values(definitions).find(d => d.name === k)
+        // custom attribute icon
+        if (def.materialIcon === 'insert_photo') def.icon = this.icons.mdiImage
+        if (def.materialIcon === 'wb_sunny') def.icon = this.icons.mdiWhiteBalanceSunny
+
         return Object.assign({ value: v }, def)
       })
 
@@ -483,6 +488,12 @@ export default {
       const code = err.statusCode
       if (code >= 400 && code < 500) redirect(`/${code}`) // needs a string for SSR
       else throw err
+    }
+  },
+  created () {
+    this.icons = {
+      mdiImage,
+      mdiWhiteBalanceSunny,
     }
   },
   methods: {
