@@ -27,6 +27,6 @@ export default class SearchModel {
     this.categories = Selector('.search-filters__categories .q-item')
     this.filtersSearchButton = VueSelector('SearchToolbar ref:filtersSearchButton')
 
-    this.delay = 1500 // debounce delay + API request
+    this.delay = 3000 // debounce delay + API request
   }
 }
