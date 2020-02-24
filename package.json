@@ -29,7 +29,7 @@
   "dependencies": {
     "@quasar/extras": "^1.4.2",
     "@sentry/browser": "^5.11.2",
-    "@sentry/integrations": "^5.11.1",
+    "@sentry/integrations": "^5.12.4",
     "axios": "^0.19.0",
     "binary-search-bounds": "^2.0.4",
     "csvtojson": "^2.0.10",
