@@ -49,21 +49,27 @@ const createStripeCheckoutSession = async (event, context, callback) => {
 
     const transaction = await stelace.transactions.read(transactionId)
 
-    const { assetId, takerId } = transaction
+    const { assetId, takerId, ownerId } = transaction
 
     if (!assetId) throw createError(422, 'Missing asset for this transaction')
     if (!takerId) throw createError(422, 'Missing taker for this transaction')
+    if (!ownerId) throw createError(422, 'Missing owner for this transaction')
     if (get(context, 'auth.user.userId') !== takerId) throw createError(403)
 
     const [
       asset,
-      taker
+      taker,
+      owner
     ] = await Promise.all([
       stelace.assets.read(assetId),
-      stelace.users.read(takerId)
+      stelace.users.read(takerId),
+      stelace.users.read(ownerId)
     ])
 
     const stripeCustomer = get(taker, 'platformData._private.stripeCustomer')
+    const ownerStripeAccount = get(owner, 'platformData._private.stripeAccount')
+
+    if (!ownerStripeAccount) throw createError(422, 'Owner has not linked their Stripe account')
 
     const websiteUrl = process.env.DEPLOY_PRIME_URL || process.env.STELACE_INSTANT_WEBSITE_URL
 
@@ -74,6 +80,8 @@ const createStripeCheckoutSession = async (event, context, callback) => {
     } catch (err) {
       // do nothing
     }
+
+    const applicationFeeAmount = transaction.platformAmount * Math.pow(10, currencyDecimal)
 
     const checkoutSession = await stripe.checkout.sessions.create({
       client_reference_id: taker.id,
@@ -94,7 +102,19 @@ const createStripeCheckoutSession = async (event, context, callback) => {
         setup_future_usage: 'off_session',
         metadata: {
           transactionId: transactionId
+        },
+        application_fee_amount: applicationFeeAmount || undefined, // application fee cannot be 0
+        capture_method: 'manual',
+        transfer_data: {
+          destination: owner.platformData._private.stripeAccount.id
         }
+      }
+    })
+
+    await stelace.transactions.update(transactionId, {
+      platformData: {
+        stripePaymentIntentId: checkoutSession.payment_intent,
+        currencyDecimal // will be used in workflows
       }
     })
 

@@ -13,3 +13,6 @@ transaction:
       refusedByTaker:
         en: Withdrawn
         fr: Retiré
+      forceCancel:
+        en: Cancelled
+        fr: Annulé

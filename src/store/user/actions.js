@@ -112,3 +112,17 @@ function prepareUpdateAttrsMetadata (attrs) {
 
   return newAttrs
 }
+
+export async function linkStripeAccount ({ dispatch, rootGetters }, { code }) {
+  const currentUserId = rootGetters.currentUser.id
+  const origin = process.env.DEPLOY_PRIME_URL || process.env.STELACE_INSTANT_WEBSITE_URL
+
+  const url = `${origin}/.netlify/functions/linkStripeAccount`
+
+  await stelace.forward.post(url, {
+    userId: currentUserId,
+    code
+  })
+
+  await dispatch('fetchCurrentUser', { forceRefresh: true })
+}
