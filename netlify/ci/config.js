@@ -1,34 +1,39 @@
-var toml = require('toml');
-var fs = require('fs');
-var path = require('path');
+// Original file:
+// https://github.com/netlify/netlify-lambda/blob/master/lib/config.js
 
-exports.load = function() {
-  var configPath = path.join(process.cwd(), 'netlify.toml');
+// Only ESLint warning fixes are made in this file.
+
+var toml = require('toml')
+var fs = require('fs')
+var path = require('path')
+
+exports.load = function () {
+  var configPath = path.join(process.cwd(), 'netlify.toml')
   if (!fs.existsSync(configPath)) {
     console.error(
       'No netlify.toml found. This is needed to configure the function settings. For more info: https://github.com/netlify/netlify-lambda#installation'
-    );
-    process.exit(1);
+    )
+    process.exit(1)
   }
 
-  return toml.parse(fs.readFileSync(configPath));
-};
+  return toml.parse(fs.readFileSync(configPath))
+}
 
-exports.loadContext = function(config) {
-  var buildConfig = config.build;
+exports.loadContext = function (config) {
+  var buildConfig = config.build
   var contextConfig =
     (process.env.CONTEXT &&
       config.context &&
       config.context[process.env.CONTEXT]) ||
-    {};
+    {}
   var branchConfig =
     (process.env.BRANCH &&
       config.context &&
       config.context[process.env.BRANCH]) ||
-    {};
-  var buildEnv = buildConfig.environment || buildConfig.Environment || {};
-  var contextEnv = contextConfig.environment || contextConfig.Environment || {};
-  var branchEnv = branchConfig.environment || branchConfig.Environment || {};
+    {}
+  var buildEnv = buildConfig.environment || buildConfig.Environment || {}
+  var contextEnv = contextConfig.environment || contextConfig.Environment || {}
+  var branchEnv = branchConfig.environment || branchConfig.Environment || {}
   return {
     ...buildConfig,
     ...contextConfig,
@@ -38,5 +43,5 @@ exports.loadContext = function(config) {
       ...contextEnv,
       ...branchEnv
     }
-  };
-};
+  }
+}

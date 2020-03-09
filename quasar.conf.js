@@ -16,6 +16,9 @@ const _ = require('lodash')
 const glob = require('glob')
 const pMap = require('p-map')
 
+const netlifyServe = require('./netlify/ci/serve')
+const serveNetlifyLambda = process.env.NETLIFY_LAMBDA === 'true'
+
 // const chalk = require('chalk')
 const log = console.log
 
@@ -546,7 +549,8 @@ module.exports = function (ctx) {
       // port: 8080,
       open: false, // opens browser window automatically
 
-      proxy: ctx.dev ? {
+      // For development, proxy routes to Netlify functions to the server started by `netlify-lambda`
+      proxy: ctx.dev && !serveNetlifyLambda ? {
         // Netlify endpoints are available on port 9000
         // so we proxy URLs beginning with '/.netlify' to this port
         // https://github.com/netlify/netlify-lambda#netlify-lambda-serve-legacy-command-proxying-for-local-development
@@ -554,7 +558,13 @@ module.exports = function (ctx) {
           target: 'http://localhost:9000',
           pathRewrite: { '^/.netlify/functions': '' }
         }
-      } : undefined
+      } : undefined,
+
+      // For CI, we don't proxy the routes to `netlify-lambda` because CircleCI machine may not
+      // have enough memory to handle both
+      // so serve Netlify built functions with Quasar process
+      // https://webpack.js.org/configuration/dev-server/#devserverbefore
+      before: serveNetlifyLambda ? (app) => { netlifyServe.run(app) } : undefined,
     },
 
     // animations: 'all' --- includes all animations

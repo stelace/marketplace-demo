@@ -26,8 +26,11 @@ jobs:
           name: Check Coding Style (standard)
           command: yarn lint
       - run:
-          name: Start a development server
-          command: yarn dev
+          name: Build Netlify functions
+          command: yarn functions:build
+      - run:
+          name: Start a development server for CI
+          command: yarn dev:ci
           background: true
       - run: # loop, sleep 0.1 second and check ip 8080 every loop
           name: Waiting for server to be responsive (for e2e)

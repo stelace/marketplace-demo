@@ -19,7 +19,10 @@
     "stripe": "^8.14.0"
   },
   "devDependencies": {
-    "dotenv-webpack": "^1.7.0"
+    "body-parser": "^1.19.0",
+    "dotenv-webpack": "^1.7.0",
+    "jwt-decode": "^2.2.0",
+    "toml": "^3.0.0"
   },
   "engines": {
     "node": ">= 10.18.0",

@@ -13,6 +13,7 @@
     "test": "echo \"No test specified\" && exit 0",
     "build": "quasar build && npm run functions:build",
     "dev": "quasar dev & npm run functions:dev",
+    "dev:ci": "NETLIFY_LAMBDA=true quasar dev",
     "functions:save-env": "node netlify/scripts/save-env.js",
     "functions:dev": "npm run functions:save-env && node netlify/scripts/dev.js",
     "functions:build": "cross-env NODE_ENV=production npm run functions:save-env && cross-env NODE_ENV=production netlify-lambda build --config ./netlify/webpack.functions.js netlify/functions",
