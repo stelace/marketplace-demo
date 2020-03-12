@@ -81,7 +81,7 @@
     "eslint-plugin-vue": "^6.2.2",
     "glob": "^7.1.6",
     "html-critical-webpack-plugin": "^2.1.0",
-    "husky": ">=4.0.1",
+    "husky": ">=4.2.3",
     "i18n-compile": "^1.1.1",
     "inquirer": "^7.1.0",
     "lint-staged": ">=10.0.8",
