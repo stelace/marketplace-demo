@@ -1,5 +1,5 @@
 const stelace = require('./admin-sdk')
-const { get, keyBy, mapValues, pick, isBoolean, unset } = require('lodash')
+const { get, keyBy, mapValues, pick, isBoolean, unset, isEqual, isUndefined, omitBy, isNil } = require('lodash')
 const pMap = require('p-map')
 const pProps = require('p-props')
 const path = require('path')
@@ -31,6 +31,7 @@ const actions = [
   'create',
   'remove',
   'remove-and-create',
+  'sync',
   'none',
 ]
 
@@ -67,6 +68,9 @@ class DataManager {
    *     - 'create': create objects for this object type according to seed file
    *     - 'remove': remove all objects for this object type if `shouldOnlyRemoveScriptObjects` is false, only script objects if true
    *     - 'remove-and-create': perform creation and removal for this object type
+   *     - 'sync': this action is like 'remove-and-create',
+   *               the difference is that is will update existing objects instead of removing and re-creating them
+   *               each object has a seed file key as alias that will be used to determine map back to seed objects
    *     - 'none': nothing will happen for this object type
    * @param {String}  [options.objectsAction.default = 'remove-and-create'] - default action for all object types,
    *   unless there is a specific type action
@@ -76,6 +80,7 @@ class DataManager {
     if (isBoolean(shouldUpdateConfig)) this.shouldUpdateConfig = shouldUpdateConfig
 
     const allowedTypes = objectTypes.concat(['default'])
+    const allowedSyncObjectTypes = ['workflows']
 
     if (objectsAction) {
       for (const type of Object.keys(objectsAction)) {
@@ -83,6 +88,10 @@ class DataManager {
 
         const action = objectsAction[type]
         if (!actions.includes(action)) throw new Error(`Invalid objects action: ${action}`)
+
+        if (action === 'sync' && !allowedSyncObjectTypes.includes(type)) {
+          throw new Error(`Sync action is allowed only for: ${allowedSyncObjectTypes.join(', ')}`)
+        }
       }
 
       this.objectsAction = Object.assign({ default: 'remove-and-create' }, objectsAction)
@@ -187,6 +196,12 @@ class DataManager {
     else return false
   }
 
+  _shouldSyncObjects (type) {
+    if (this.objectsAction[type]) return this.objectsAction[type] === 'sync'
+    else if (this.objectsAction.default) return this.objectsAction.default === 'sync'
+    else return false
+  }
+
   /**
    * If the ID value is a seed reference, try to replace it by the real object ID
    * If this ID cannot be found, then the id is returned as is
@@ -226,6 +241,12 @@ class DataManager {
 
     if (typeof handler === 'function' && realId) handler(realId)
     return returnedId
+  }
+
+  _getExistingObject (type, alias) {
+    return this.existingData[type].find(o => {
+      return isCreatedBySeedScript(o) && getObjectAlias(o) === alias
+    })
   }
 
   // ///////////////////// //
@@ -397,7 +418,7 @@ class DataManager {
   }
 
   async deployWorkflows () {
-    if (!this._shouldCreateObjects('workflows')) return
+    if (!this._shouldCreateObjects('workflows') && !this._shouldSyncObjects('workflows')) return
     if (!this.data.workflows) return
 
     for (const key in this.data.workflows) {
@@ -420,7 +441,26 @@ class DataManager {
       const metadata = Object.assign({}, payload.metadata, { initDataScript, alias })
       payload.metadata = metadata
 
-      this.syncedData.workflows[key] = await stelace.workflows.create(payload)
+      if (this._shouldSyncObjects('workflows')) {
+        const existingWorkflow = this._getExistingObject('workflows', alias)
+
+        const valuesToCompare = [
+          'name',
+          'description',
+          'event',
+          'context',
+          'computed',
+          'run'
+        ]
+
+        if (!existingWorkflow) {
+          this.syncedData.workflows[key] = await stelace.workflows.create(payload)
+        } else if (hasObjectChanged(existingWorkflow, payload, valuesToCompare)) {
+          this.syncedData.workflows[key] = await stelace.workflows.update(existingWorkflow.id, payload)
+        }
+      } else {
+        this.syncedData.workflows[key] = await stelace.workflows.create(payload)
+      }
     }
   }
 
@@ -558,7 +598,7 @@ class DataManager {
   // ///////////////////// //
 
   async removeObjects (type, data) {
-    if (!this._shouldRemoveObjects(type)) return
+    if (!this._shouldRemoveObjects(type) && !this._shouldSyncObjects(type)) return
 
     let objects = Array.isArray(data) ? data : this.existingData[type]
 
@@ -570,12 +610,23 @@ class DataManager {
           // Avoid deleting too many times
           objects = objects.filter(c => c.parentId !== object.id)
         }
-        await removeObject(object.id)
 
         const alias = getObjectAlias(object)
-        unset(this.referencedData, `${type}.${alias}`)
+        let shouldRemove = true
+
+        // if sync, remove any object whose alias isn't present in the seed file
+        if (this._shouldSyncObjects(type)) {
+          const seedAliases = getSeedAliases(this.data[type])
+          shouldRemove = !alias || !seedAliases.includes(alias)
+        }
+
+        if (shouldRemove) {
+          await removeObject(object.id)
+          unset(this.referencedData, `${type}.${alias}`)
+        }
       }
     }
+
     async function removeObject (id) {
       await stelace[type].remove(id)
       log(`removed ${id}`)
@@ -640,6 +691,21 @@ function getObjectAlias (object) {
 
 function isCreatedBySeedScript (object) {
   return !!object.metadata[initDataScript]
+}
+
+function hasObjectChanged (existingObject, payload, props) {
+  props = props || Object.keys(payload)
+
+  // compare key by key instead filtering whole object by specified props
+  // so if seed payload specified less props than the existing object
+  // the object won't be updated
+  return props.reduce((changed, k) => {
+    return changed || (!isEqual(existingObject[k], payload[k]) && !isUndefined(payload[k]))
+  }, false)
+}
+
+function getSeedAliases (dataObjects) {
+  return Object.keys(omitBy(dataObjects, isNil))
 }
 
 module.exports = {
