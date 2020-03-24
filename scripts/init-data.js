@@ -56,7 +56,7 @@ async function run () {
   const existingCategoriesOrAssetTypes = ['assetTypes', 'categories']
     .some(o => !isEmpty(existingData[o]))
   if (existingCategoriesOrAssetTypes && existingAssets) {
-    log('\nYou may want to remove old Categories and Asset Types manually.')
+    log('\nYou may want to create/remove Categories and Asset Types manually.')
   }
 
   log(chalk.cyan.bold('\nStarting script…'))
@@ -64,8 +64,8 @@ async function run () {
   dataManager.setDeployStrategy({
     shouldOnlyRemoveScriptObjects,
     objectsAction: {
-      categories: existingAssets ? 'create' : 'remove-and-create',
-      assetTypes: existingAssets ? 'create' : 'remove-and-create',
+      categories: existingAssets ? 'none' : 'remove-and-create',
+      assetTypes: existingAssets ? 'none' : 'remove-and-create',
     }
   })
 
