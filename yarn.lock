@@ -1232,10 +1232,10 @@
     babel-plugin-module-resolver "^4.0.0"
     babel-plugin-transform-imports "^1.0.0"
 
-"@quasar/extras@^1.4.2":
-  version "1.4.2"
-  resolved "https://registry.yarnpkg.com/@quasar/extras/-/extras-1.4.2.tgz#177f3cdbd7b604c8bf903946dbee7ebd3a0ecad4"
-  integrity sha512-lq2h18+IUs8M6weWRVoqzsPluENsBRdb4t2ePbsX0mjYz50Xpk1/K9isUotl7bDQDkJSwbshQKLOD7P1co0fTg==
+"@quasar/extras@^1.6.2":
+  version "1.6.2"
+  resolved "https://registry.yarnpkg.com/@quasar/extras/-/extras-1.6.2.tgz#92e8d1d40392d9372098b8acfb2701f9c859b534"
+  integrity sha512-+NkZ57kde4xXFkim8fyvMB20Q0OyhPLBguPTvjoHGSgR8uSZcGWHCBB0AawLQAB+WkNO/ZfyeXLCj+SjjTk3wg==
 
 "@quasar/fastclick@1.1.4":
   version "1.1.4"
