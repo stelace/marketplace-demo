@@ -43,7 +43,7 @@
     "p-map": "^4.0.0",
     "p-props": "^3.1.0",
     "photoswipe": "^4.1.3",
-    "quasar": "^1.8.3",
+    "quasar": "^1.9.16",
     "sharp-aws-image-handler-client": "https://github.com/stelace/sharp-aws-image-handler-client.git#0.2.0",
     "socket.io-client": "~2.3.0",
     "stelace": "0.13.0",
