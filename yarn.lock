@@ -9498,12 +9498,12 @@ p-map@^4.0.0:
   dependencies:
     aggregate-error "^3.0.0"
 
-p-props@^3.1.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/p-props/-/p-props-3.1.0.tgz#9c4559386df4584bfa7af8209ae7286e55aa0d2f"
-  integrity sha512-N9mPfJfnApIlyCmF6H2KKccOsW9a1um2aIZWh/dU6flpJ5uU3fYDPVYfjOPLTbLVnUn+lcTqtlxxCVylM3mYsw==
+p-props@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/p-props/-/p-props-4.0.0.tgz#f37c877a9a722057833e1dc38d43edf3906b3437"
+  integrity sha512-3iKFbPdoPG7Ne3cMA53JnjPsTMaIzE9gxKZnvKJJivTAeqLEZPBu6zfi6DYq9AsH1nYycWmo3sWCNI8Kz6T2Zg==
   dependencies:
-    p-map "^3.0.0"
+    p-map "^4.0.0"
 
 p-retry@^3.0.1:
   version "3.0.1"
