@@ -1140,10 +1140,10 @@
     promise-limit "^2.5.0"
     puppeteer "^1.7.0"
 
-"@quasar/app@^1.7.4":
-  version "1.7.4"
-  resolved "https://registry.yarnpkg.com/@quasar/app/-/app-1.7.4.tgz#a639005862ead2a825cf8c5977a1145fd4ef6934"
-  integrity sha512-lPY4fCWb3xou+U0AYyL5EGcLVBH1RXTjFbGxrX++Xiq/ZH3f3nJd6i5PExHxQ2cP0agVhdBf/VKD5blwwyISzw==
+"@quasar/app@^1.8.4":
+  version "1.8.4"
+  resolved "https://registry.yarnpkg.com/@quasar/app/-/app-1.8.4.tgz#aa58499256827fa61c4000a65e0c41847b6cc7fd"
+  integrity sha512-rdrgE94+bykmy5d5rtgaA8ad0BFL/RzCGm5IlPizcyJyO+UOIXoY1jmi4RQrjpE8gzAj/JByvtocc5Rp0uMmtw==
   dependencies:
     "@quasar/babel-preset-app" "1.1.9"
     "@quasar/fastclick" "1.1.4"
