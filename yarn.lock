@@ -931,14 +931,7 @@
     core-js-pure "^3.0.0"
     regenerator-runtime "^0.13.2"
 
-"@babel/runtime@^7.0.0", "@babel/runtime@^7.3.4", "@babel/runtime@^7.5.5", "@babel/runtime@^7.6.3", "@babel/runtime@^7.8.3":
-  version "7.8.3"
-  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.8.3.tgz#0811944f73a6c926bb2ad35e918dcc1bfab279f1"
-  integrity sha512-fVHx1rzEmwB130VTkLnxR+HmxcTjGzH12LYQcFFoBwakMd3aOMD4OsRN7tGG/UOYE2ektgFrS8uACAoRk1CY0w==
-  dependencies:
-    regenerator-runtime "^0.13.2"
-
-"@babel/runtime@^7.8.4":
+"@babel/runtime@^7.0.0", "@babel/runtime@^7.3.4", "@babel/runtime@^7.5.5", "@babel/runtime@^7.6.3", "@babel/runtime@^7.8.3", "@babel/runtime@^7.8.4":
   version "7.8.7"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.8.7.tgz#8fefce9802db54881ba59f90bb28719b4996324d"
   integrity sha512-+AATMUFppJDw6aiR5NVPHqIQBlV/Pj8wY/EZH+lmvRdUo9xBaz/rF3alAwFJQavvKfeOlPE7oaaDHVbcySbCsg==
@@ -13035,12 +13028,14 @@ vue-style-loader@4.1.2, vue-style-loader@^4.1.0:
     hash-sum "^1.0.2"
     loader-utils "^1.0.2"
 
-vue-tel-input@4.3.0:
-  version "4.3.0"
-  resolved "https://registry.yarnpkg.com/vue-tel-input/-/vue-tel-input-4.3.0.tgz#d4fd9324a3191b6b7ce08ad79fcfbe71be8eda5a"
-  integrity sha512-l2FHH6AU+ns5OG6nAZ0zbbs5IXAc0y0/pfB4qmLFgBs8DL4A7Gvm9UCZQ3gQ2Hb8LkQEB+tFRNWhvONSs2FO4Q==
+vue-tel-input@4.4.0:
+  version "4.4.0"
+  resolved "https://registry.yarnpkg.com/vue-tel-input/-/vue-tel-input-4.4.0.tgz#d51fbf915a9ac7024e851bd7de7b5c527fed81d0"
+  integrity sha512-P2enml2Ei32LGCbUXKo2BZdWDm6n+P7lHb3NfOWAGYvSfCY/mn6HpRnaVGd100hQlr8bBYIJTnQtTidBhvXuMQ==
   dependencies:
+    "@babel/runtime" "^7.8.4"
     awesome-phonenumber "^2.15.0"
+    core-js "^3.6.4"
 
 vue-template-compiler@2.6.11:
   version "2.6.11"
