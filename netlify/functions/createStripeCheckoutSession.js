@@ -1,18 +1,12 @@
 import createError from 'http-errors'
-import middy from 'middy'
-import Stripe from 'stripe'
 import { get } from 'lodash'
-import { jsonBodyParser, httpErrorHandler, cors } from 'middy/middlewares'
-import { allowHttpMethods, identifyUser, validator } from '../middlewares'
-import { initStelaceSdk } from '../../src/utils/stelace'
-import { stelaceHeaders } from '../utils/cors'
+import { getHandler } from '../utils/handler'
+import { loadSdks } from '../utils/sdk'
+import { isAuthenticated, isUser } from '../utils/auth'
+import { sendJSON, sendError } from '../utils/http'
 import { loadNetlifyEnv } from '../utils/env'
 import { getCurrencyDecimal } from '../utils/currency'
 import Joi from '@hapi/joi'
-
-const jsonHeaders = {
-  'content-type': 'application/json'
-}
 
 const schema = {
   body: Joi.object().keys({
@@ -22,30 +16,17 @@ const schema = {
 
 loadNetlifyEnv()
 
-if (!process.env.STELACE_SECRET_API_KEY) {
-  throw new Error('Missing Stelace secret API key')
-}
-if (!process.env.STRIPE_SECRET_KEY) {
-  throw new Error('Missing Stripe secret API key')
-}
 if (!process.env.STELACE_INSTANT_WEBSITE_URL) {
   throw new Error('Missing Stelace instant website URL')
 }
 
-const stelace = initStelaceSdk({
-  apiKey: process.env.STELACE_SECRET_API_KEY,
-  apiBaseURL: process.env.STELACE_API_URL
-})
-const stripe = Stripe(process.env.STRIPE_SECRET_KEY)
+const { stelace, stripe } = loadSdks({ stripe: true })
 
 const createStripeCheckoutSession = async (event, context, callback) => {
-  const { httpMethod } = event
   const { transactionId } = event.body
 
-  if (httpMethod === 'OPTIONS') return callback(null, { statusCode: 204 })
-
   try {
-    if (!context.auth || !context.auth.valid) throw createError(403)
+    if (!isAuthenticated(context)) throw createError(403)
 
     const transaction = await stelace.transactions.read(transactionId)
 
@@ -54,7 +35,7 @@ const createStripeCheckoutSession = async (event, context, callback) => {
     if (!assetId) throw createError(422, 'Missing asset for this transaction')
     if (!takerId) throw createError(422, 'Missing taker for this transaction')
     if (!ownerId) throw createError(422, 'Missing owner for this transaction')
-    if (get(context, 'auth.user.userId') !== takerId) throw createError(403)
+    if (!isUser(context, takerId)) throw createError(403)
 
     const [
       asset,
@@ -118,24 +99,10 @@ const createStripeCheckoutSession = async (event, context, callback) => {
       }
     })
 
-    callback(null, {
-      statusCode: 200,
-      body: JSON.stringify({ id: checkoutSession.id }),
-      headers: jsonHeaders
-    })
+    sendJSON(callback, { id: checkoutSession.id })
   } catch (err) {
-    callback(null, {
-      statusCode: err.statusCode,
-      body: JSON.stringify(err),
-      headers: jsonHeaders
-    })
+    sendError(callback, err)
   }
 }
 
-export const handler = middy(createStripeCheckoutSession)
-  .use(jsonBodyParser())
-  .use(allowHttpMethods(['POST', 'OPTIONS']))
-  .use(validator(schema))
-  .use(identifyUser())
-  .use(httpErrorHandler())
-  .use(cors({ headers: stelaceHeaders }))
+export const handler = getHandler(createStripeCheckoutSession, { schema, allow: 'POST' })
