@@ -96,6 +96,9 @@ export default {
       }
 
       if (state === 'stripe_oauth') {
+        // Stripe redirection is handled in Home component while the user is redirected to her profile
+        // because OAuth redirection full-formed URIs must be specified in Stripe Dashboard
+        // and there are no way to specify wildcard URIs
         await this.linkStripeAccountAfterOAuth()
       } else {
         if (check === 'email') {

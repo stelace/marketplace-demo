@@ -45,6 +45,7 @@ export default {
       if (!this.stripeActive) return
 
       const newQuery = Object.assign({}, routeQuery)
+      let redirectToProfile = false
 
       // For response parameters, please consult:
       // https://stripe.com/docs/connect/oauth-reference#get-authorize-response
@@ -55,7 +56,10 @@ export default {
           delete newQuery.scope
           delete newQuery.code
 
-          this.notifySuccess('user.account.stripe.account_linked_success_message')
+          // increase notification duration
+          // because redirection can distract user’s attention
+          this.notifyInfo('user.account.stripe.account_linked_success_message', { timeout: 10000 })
+          redirectToProfile = true
         } else if (routeQuery.error) {
           delete newQuery.error
           delete newQuery.error_description
@@ -65,6 +69,10 @@ export default {
 
         delete newQuery.state
         this.$router.replace({ query: newQuery })
+
+        if (redirectToProfile) {
+          this.$router.push({ name: 'publicProfile', params: { id: this.currentUser.id } })
+        }
       }
     },
     displayLinkStripeAccountMessage () {
