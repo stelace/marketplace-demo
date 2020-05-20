@@ -13,7 +13,6 @@ export function validTransactionOptions (state, getters, rootState, rootGetters)
   const { activeAsset, transactionDatesRequired } = rootGetters
 
   if (!activeAsset || !activeAsset.assetType) return false
-  if (!transactionDatesRequired) return true
 
   const availabilityGraph = availabilityGraphByAssetId[activeAsset.id]
   if (!availabilityGraph) return false
