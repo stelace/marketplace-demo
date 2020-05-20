@@ -6,6 +6,7 @@ import { set, isEmpty, isUndefined, values } from 'lodash'
 import * as types from 'src/store/mutation-types'
 
 import { userMetadataMapping, getDisplayName } from 'src/utils/user'
+import { paymentsApi } from 'src/utils/url'
 
 const metadataAttrs = Object.keys(userMetadataMapping)
 
@@ -115,9 +116,7 @@ function prepareUpdateAttrsMetadata (attrs) {
 
 export async function linkStripeAccount ({ dispatch, rootGetters }, { code }) {
   const currentUserId = rootGetters.currentUser.id
-  const origin = process.env.DEPLOY_PRIME_URL || process.env.STELACE_INSTANT_WEBSITE_URL
-
-  const url = `${origin}/.netlify/functions/linkStripeAccount`
+  const url = paymentsApi.linkStripeAccount
 
   await stelace.forward.post(url, {
     userId: currentUserId,
