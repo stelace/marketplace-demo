@@ -56,9 +56,6 @@ export default {
           delete newQuery.scope
           delete newQuery.code
 
-          // increase notification duration
-          // because redirection can distract user’s attention
-          this.notifyInfo('user.account.stripe.account_linked_success_message', { timeout: 10000 })
           redirectToProfile = true
         } else if (routeQuery.error) {
           delete newQuery.error
@@ -71,7 +68,10 @@ export default {
         this.$router.replace({ query: newQuery })
 
         if (redirectToProfile) {
-          this.$router.push({ name: 'publicProfile', params: { id: this.currentUser.id } })
+          await this.$router.push({ name: 'publicProfile', params: { id: this.currentUser.id } })
+
+          // `timeout === 0` to remove the notification on click
+          this.notifySuccess('user.account.stripe.account_linked_success_message', { timeout: 0 })
         }
       }
     },
