@@ -22,7 +22,7 @@
 
 import { omit } from 'lodash'
 
-const numberStringRegex = /^\d+([,.])?\d+$/
+const numberStringRegex = /^\d+([,.]\d+)?$/
 
 export default {
   props: {
