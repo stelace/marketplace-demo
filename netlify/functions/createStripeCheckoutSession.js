@@ -4,7 +4,6 @@ import { getHandler } from '../utils/handler'
 import { loadSdks } from '../utils/sdk'
 import { isAuthenticated, isUser } from '../utils/auth'
 import { sendJSON, sendError } from '../utils/http'
-import { loadNetlifyEnv } from '../utils/env'
 import { getCurrencyDecimal } from '../utils/currency'
 import Joi from '@hapi/joi'
 
@@ -13,8 +12,6 @@ const schema = {
     transactionId: Joi.string().required()
   }).required()
 }
-
-loadNetlifyEnv()
 
 if (!process.env.STELACE_INSTANT_WEBSITE_URL) {
   throw new Error('Missing Stelace instant website URL')
@@ -52,7 +49,7 @@ const createStripeCheckoutSession = async (event, context, callback) => {
 
     if (!ownerStripeAccount) throw createError(422, 'Owner has not linked their Stripe account')
 
-    const websiteUrl = process.env.DEPLOY_PRIME_URL || process.env.STELACE_INSTANT_WEBSITE_URL
+    const websiteUrl = context.urls.websiteUrl
 
     // most of currencies work with 2 decimals
     let currencyDecimal = 2
