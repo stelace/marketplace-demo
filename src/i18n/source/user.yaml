@@ -180,3 +180,26 @@ user:
       en: Validate my number
       fr: Vérifier mon numéro
       context: Give the user a hint about upcoming validation process once phone number has been filled in.
+    stripe:
+      link_account_title:
+        en: Stripe
+        fr: Stripe
+      link_account_notification_message:
+        en: Please link a Stripe account in your profile to receive payments.
+        fr: Merci de lier un compte Stripe dans votre page profil pour recevoir les paiements.
+      link_account_helper:
+        en: |
+          To receive the payments, please link your existing or new Stripe account to {SERVICE_NAME}.
+          Then please check that your bank account information has been filled in Stripe.
+        fr: |
+          Afin de recevoir les paiements, veuillez associer votre nouveau ou existant compte Stripe à {SERVICE_NAME}.
+          Ensuite, merci de vérifier que vos informations bancaires ont été renseignées sur Stripe.
+      link_account_helper_button:
+        en: Link Stripe account
+        fr: Associer le compte Stripe
+      account_linked_success_message:
+        en: Your Stripe account has been successfully linked to {SERVICE_NAME}.
+        fr: Votre compte Stripe a bien été lié à {SERVICE_NAME}.
+      account_linked_failure_message:
+        en: Your Stripe account hasn’t been linked to {SERVICE_NAME}. Please try again later.
+        fr: Votre compte Stripe n’a pas été lié à {SERVICE_NAME}. Veuillez réessayer plus tard.

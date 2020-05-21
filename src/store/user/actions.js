@@ -6,6 +6,7 @@ import { set, isEmpty, isUndefined, values } from 'lodash'
 import * as types from 'src/store/mutation-types'
 
 import { userMetadataMapping, getDisplayName } from 'src/utils/user'
+import { paymentsApi } from 'src/utils/url'
 
 const metadataAttrs = Object.keys(userMetadataMapping)
 
@@ -111,4 +112,16 @@ function prepareUpdateAttrsMetadata (attrs) {
   })
 
   return newAttrs
+}
+
+export async function linkStripeAccount ({ dispatch, rootGetters }, { code }) {
+  const currentUserId = rootGetters.currentUser.id
+  const url = paymentsApi.linkStripeAccount
+
+  await stelace.forward.post(url, {
+    userId: currentUserId,
+    code
+  })
+
+  await dispatch('fetchCurrentUser', { forceRefresh: true })
 }

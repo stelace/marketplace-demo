@@ -916,22 +916,87 @@ module.exports = {
       ]
     },
 
-    onStripePaymentSuccess: {
-      name: 'On Stripe payment success',
+    captureStripePaymentIntent: {
+      name: 'Capture Stripe payment intent',
       description: `
-        This event is created after a successful payment intent (notification via Stripe webhook).
-        The objective of this workflow is to retrieve the linked transaction to this payment intent via metadata
-        and trigger the transition 'confirmAndPay' as taker has paid.
+        When the owner accepts the transaction, capture the payment intent so the money is effectively taken from the taker
       `,
-      event: 'stripe_payment_intent.succeeded',
-      context: ['stelace'],
+      event: 'transaction__status_changed',
       computed: {
-        // paymentIntent: '_.get(metadata, "data.object")',
+        stripePaymentIntentId: '_.get(transaction, "platformData.stripePaymentIntentId")',
+        currencyDecimal: '_.get(transaction, "platformData.currencyDecimal", 2)'
+      },
+      run: [
+        {
+          endpointMethod: 'POST',
+          stop: `!computed.stripePaymentIntentId || transaction.status !== "validated"`,
+          endpointUri: '/integrations/stripe/request',
+          endpointPayload: {
+            method: '"paymentIntents.capture"',
+            args: ['computed.stripePaymentIntentId', {
+              amount_to_capture: 'transaction.takerAmount * Math.pow(10, computed.currencyDecimal)',
+              application_fee_amount: 'transaction.platformAmount * Math.pow(10, computed.currencyDecimal) || undefined'
+            }]
+          }
+        }
+      ]
+    },
+
+    onStripePaymentIntentCancellation: {
+      name: 'On Stripe payment intent cancellation',
+      description: `
+        When a payment intent is cancelled because the uncapture duration max limit is exceeded,
+        the associated transaction must be cancelled too.
+        Otherwise the transaction owner can still accept it.
+      `,
+      event: 'stripe_payment_intent.canceled',
+      computed: {
+        paymentIntentId: '_.get(metadata, "data.object.id")',
         transactionId: '_.get(metadata, "data.object.metadata.transactionId")'
       },
       run: [
         {
+          stop: `!computed.paymentIntentId || !computed.transactionId`,
+          endpointMethod: 'POST',
+          endpointUri: '/transactions/${computed.transactionId}/transitions',
+          endpointPayload: {
+            name: '"cancel"',
+            data: {
+              cancellationReason: '"forceCancel"'
+            }
+          }
+        }
+      ]
+    },
+
+    onStripeCheckoutCompletion: {
+      name: 'On Stripe completed checkout session',
+      description: `
+        This event is created after a completed checkout session (notification via Stripe webhook).
+        The objective of this workflow is to retrieve the linked transaction to the session payment intent via metadata
+        and trigger the transition 'confirmAndPay' as taker has paid.
+      `,
+      event: 'stripe_checkout.session.completed',
+      context: ['stelace'],
+      computed: {
+        paymentIntentId: '_.get(metadata, "data.object.payment_intent")',
+      },
+      run: [
+        {
+          stop: '!computed.paymentIntentId',
+          name: 'paymentIntent',
+          endpointMethod: 'POST',
+          endpointUri: '/integrations/stripe/request',
+          endpointPayload: {
+            method: '"paymentIntents.retrieve"',
+            args: 'computed.paymentIntentId'
+          }
+        },
+        {
           stop: '!computed.transactionId',
+          computed: {
+            transactionId: '_.get(responses.paymentIntent, "metadata.transactionId")'
+          },
           name: 'transaction',
           endpointMethod: 'GET',
           endpointUri: '/transactions/${computed.transactionId}'

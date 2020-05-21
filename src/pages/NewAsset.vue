@@ -18,6 +18,7 @@ import SelectAssetType from 'src/components/SelectAssetType'
 import SelectCategories from 'src/components/SelectCategories'
 
 import PageComponentMixin from 'src/mixins/pageComponent'
+import StripeMixin from 'src/mixins/stripe'
 
 export default {
   components: {
@@ -32,6 +33,7 @@ export default {
   },
   mixins: [
     PageComponentMixin,
+    StripeMixin,
   ],
   data () {
     return {
@@ -173,6 +175,7 @@ export default {
       'currentUser',
       'activeAssetTypes',
       'defaultActiveAssetType',
+      'stripeActive',
     ]),
   },
   async preFetch ({ store }) {
@@ -339,6 +342,8 @@ export default {
 
           // Show that the asset is ready…
           this.$router.push({ name: 'asset', params: { id: asset.id } })
+
+          if (this.stripeActive) this.displayLinkStripeAccountMessage()
         } catch (err) {
           this.creatingAsset = false
 

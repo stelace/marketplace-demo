@@ -11,6 +11,7 @@ import SelectCategories from 'src/components/SelectCategories'
 import * as types from 'src/store/mutation-types'
 
 import PageComponentMixin from 'src/mixins/pageComponent'
+import StripeMixin from 'src/mixins/stripe'
 
 export default {
   name: 'Home',
@@ -23,6 +24,7 @@ export default {
   },
   mixins: [
     PageComponentMixin,
+    StripeMixin,
   ],
   data () {
     return {
@@ -80,6 +82,7 @@ export default {
         check,
         status,
         code,
+        state,
       } = this.$route.query
 
       if (resetPasswordToken) {
@@ -92,28 +95,35 @@ export default {
         this.handleUrlRedirection(this.$route)
       }
 
-      if (check === 'email') {
-        if (status === 'valid') {
-          this.notifySuccess('authentication.email_check.success')
-        } else if (status === 'alreadyChecked') {
-          this.notifySuccess('authentication.email_check.already_checked')
-        } else if (status === 'expired') {
-          this.notifyWarning('authentication.email_check.link_expired')
-        } else if (status === 'invalid') {
-          this.notifyWarning('authentication.email_check.link_invalid')
-        }
+      if (state === 'stripe_oauth') {
+        // Stripe redirection is handled in Home component while the user is redirected to her profile
+        // because OAuth redirection full-formed URIs must be specified in Stripe Dashboard
+        // and there are no way to specify wildcard URIs
+        await this.linkStripeAccountAfterOAuth()
+      } else {
+        if (check === 'email') {
+          if (status === 'valid') {
+            this.notifySuccess('authentication.email_check.success')
+          } else if (status === 'alreadyChecked') {
+            this.notifySuccess('authentication.email_check.already_checked')
+          } else if (status === 'expired') {
+            this.notifyWarning('authentication.email_check.link_expired')
+          } else if (status === 'invalid') {
+            this.notifyWarning('authentication.email_check.link_invalid')
+          }
 
-        // replace the URL so the message won't display at each page refresh
-        this.removeQueryParams(['check', 'status', 'token'])
-      } else if (code) {
-        if (status === 'success') {
-          this.$store.dispatch('getAuthTokensAndUser', { code })
+          // replace the URL so the message won't display at each page refresh
+          this.removeQueryParams(['check', 'status', 'token'])
+        } else if (code) {
+          if (status === 'success') {
+            this.$store.dispatch('getAuthTokensAndUser', { code })
 
-          // replace the URL so getting auth tokens won't happen at each page refresh
-          this.removeQueryParams(['status', 'code'])
-          this.notifySuccess('authentication.log_in_success')
-        } else {
-          this.notifyWarning('error.unknown_happened_header')
+            // replace the URL so getting auth tokens won't happen at each page refresh
+            this.removeQueryParams(['status', 'code'])
+            this.notifySuccess('authentication.log_in_success')
+          } else {
+            this.notifyWarning('error.unknown_happened_header')
+          }
         }
       }
     },

@@ -8,6 +8,8 @@ export default function allowHttpMethods (httpMethods = []) {
       const { httpMethod } = event
       if (!httpMethods.includes(httpMethod)) {
         callback(null, { statusCode: 404 })
+      } else if (httpMethod === 'OPTIONS') {
+        callback(null, { statusCode: 204 })
       } else {
         next()
       }

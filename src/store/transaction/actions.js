@@ -1,6 +1,7 @@
 import { values, uniqBy } from 'lodash'
 import stelace, { fetchAllResults } from 'src/utils/stelace'
 import * as types from 'src/store/mutation-types'
+import { paymentsApi } from 'src/utils/url'
 
 export async function createTransaction ({ state, dispatch, rootGetters }, { asset } = {}) {
   const {
@@ -109,9 +110,7 @@ export function resetTransactionPreview ({ commit }) {
 
 export async function getStripeCustomer ({ dispatch, rootGetters }) {
   const currentUserId = rootGetters.currentUser.id
-  const origin = process.env.DEPLOY_PRIME_URL || process.env.STELACE_INSTANT_WEBSITE_URL
-
-  const url = `${origin}/.netlify/functions/getStripeCustomer`
+  const url = paymentsApi.getStripeCustomer
 
   await stelace.forward.post(url, {
     userId: currentUserId
@@ -121,8 +120,7 @@ export async function getStripeCustomer ({ dispatch, rootGetters }) {
 }
 
 export async function createStripeCheckoutSession ({ rootGetters }, { transactionId }) {
-  const origin = process.env.DEPLOY_PRIME_URL || process.env.STELACE_INSTANT_WEBSITE_URL
-  const url = `${origin}/.netlify/functions/createStripeCheckoutSession`
+  const url = paymentsApi.createStripeCheckoutSession
 
   const { id: sessionId } = await stelace.forward.post(url, {
     transactionId

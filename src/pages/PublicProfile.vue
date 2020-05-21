@@ -9,8 +9,10 @@ import OwnerAssetCard from 'src/components/OwnerAssetCard'
 import PlacesAutocomplete from 'src/components/PlacesAutocomplete'
 import TransactionRatingsList from 'src/components/TransactionRatingsList'
 import ProfileCard from 'src/components/ProfileCard'
+import StripeLinkAccount from 'src/components/StripeLinkAccount'
 
 import PageComponentMixin from 'src/mixins/pageComponent'
+import StripeMixin from 'src/mixins/stripe'
 
 import { extractLocationDataFromPlace } from 'src/utils/places'
 
@@ -21,10 +23,12 @@ export default {
     PlacesAutocomplete,
     TransactionRatingsList,
     ProfileCard,
+    StripeLinkAccount,
     VuePhotoSwipe: () => import(/* webpackChunkName: 'photoswipe' */ 'src/components/VuePhotoSwipe'),
   },
   mixins: [
     PageComponentMixin,
+    StripeMixin,
   ],
   data () {
     return {
@@ -55,6 +59,7 @@ export default {
       'usersAssets',
       'searchOptions',
       'ratingsActive',
+      'stripeActive',
     ]),
     ...mapState([
       'asset',
@@ -232,6 +237,15 @@ export default {
             allow-falsy-save
             input-type="textarea"
           />
+        </section>
+
+        <section
+          v-if="isCurrentUser && stripeActive && selectedUserAssets.length && !hasLinkedStripeAccount"
+          class="q-px-sm"
+        >
+          <QSeparator class="q-mt-xl" />
+
+          <StripeLinkAccount />
         </section>
 
         <section
