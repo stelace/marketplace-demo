@@ -54,6 +54,9 @@ social:
   facebook_page:
     en: "{SERVICE_NAME} Facebook page"
     fr: "Page Facebook {SERVICE_NAME}"
+  twitter:
+    en: Twitter
+    fr: Twitter
   prompt_share_header:
     en: |
       {is_owner, select,
