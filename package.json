@@ -24,7 +24,8 @@
     "deploy:translations": "node scripts/deployTranslations.js",
     "deploy:translations:prod": "cross-env NODE_ENV=production node scripts/deployTranslations.js",
     "seed": "node scripts/init-data.js",
-    "test:e2e": "testcafe 'firefox:headless,chromium:headless' tests/e2e/**/*.e2e.{j,t}s",
+    "test:e2e": "testcafe 'firefox' tests/e2e/**/*.e2e.{j,t}s",
+    "test:e2e:headless": "testcafe 'firefox:headless' tests/e2e/**/*.e2e.{j,t}s",
     "test:ci:e2e": "testcafe 'firefox:headless,chrome:headless' tests/e2e/**/*.e2e.{j,t}s -c 2 -r xunit:/tmp/test-results/e2e.xml"
   },
   "dependencies": {

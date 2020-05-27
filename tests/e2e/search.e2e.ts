@@ -8,12 +8,12 @@ fixture `Search`
 const delay = Search.delay
 
 test ('can use text query, search modes and filters', async t => {
-  await t.wait(20000)
+  await t
+    .expect(Search.results.count).gt(1, { timeout: 20000 })
 
   const nbAssets = await Search.results.count
 
   await t
-    .expect(nbAssets).gt(1)
     .typeText(Search.headerInput.find('input'), 'flat')
     .wait(delay)
 
