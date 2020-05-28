@@ -349,11 +349,13 @@ module.exports = function (ctx) {
           }))
         }
 
-        cfg.plugins.push(new CopyWebpackPlugin([
-          { context: `${path.resolve('src')}/statics`, from: '*.txt' },
-          { context: `${path.resolve('src')}/statics`, from: '*.ico' },
-          { context: `${path.resolve('src')}/statics`, from: '*.xml' },
-        ]))
+        cfg.plugins.push(new CopyWebpackPlugin({
+          patterns: [
+            { context: `${path.resolve('src')}/statics`, from: '*.txt' },
+            { context: `${path.resolve('src')}/statics`, from: '*.ico' },
+            { context: `${path.resolve('src')}/statics`, from: '*.xml' },
+          ]
+        }))
 
         if (prerender) {
           cfg.plugins.push(
