@@ -53,7 +53,7 @@ async function run () {
         {
           name: 'Delete only objects previously created and marked by this script.',
           value: 'marked',
-          short: `Delete ${initDataScript} objects only`
+          short: 'Delete objects having metadata.initDataScript only'
         },
         {
           name: 'Delete all existing objects including those not created by this script.',
