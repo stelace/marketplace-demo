@@ -1,6 +1,6 @@
 <script>
 import { mapState, mapGetters } from 'vuex'
-import { get } from 'lodash'
+import { get, isString } from 'lodash'
 
 import AppCarousel from 'src/components/AppCarousel'
 import AppSVGActionButton from 'src/components/AppSVGActionButton'
@@ -124,6 +124,16 @@ export default {
           } else {
             this.notifyWarning('error.unknown_happened_header')
           }
+
+          // if existing, redirect to URL path stored before SSO authentication
+          const ssoRedirectUrlPath = window.localStorage.getItem('ssoRedirectUrlPath')
+          window.localStorage.removeItem('ssoRedirectUrlPath')
+
+          const validSsoRedirectUrlPath = ssoRedirectUrlPath &&
+            isString(ssoRedirectUrlPath) &&
+            ssoRedirectUrlPath.startsWith('/')
+
+          if (validSsoRedirectUrlPath) this.$router.push(ssoRedirectUrlPath)
         }
       }
     },
