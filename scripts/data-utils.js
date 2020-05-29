@@ -60,7 +60,7 @@ class DataManager {
 
   /**
    * @param {Object}  [options]
-   * @param {Boolean} [options.shouldOnlyRemoveScriptObjects] - only remove objects created by this script
+   * @param {Boolean} [options.shouldOnlyRemoveScriptObjects = true] - only remove objects created by this script
    * @param {Boolean} [options.shouldUpdateConfig = true] - update Stelace config
    * @param {Object}  [options.objectsAction] - for each objects collection, specify an action to apply
    * @param {String}  [options.objectsAction[type]]
@@ -75,7 +75,7 @@ class DataManager {
    * @param {String}  [options.objectsAction.default = 'remove-and-create'] - default action for all object types,
    *   unless there is a specific type action
    */
-  setDeployStrategy ({ shouldOnlyRemoveScriptObjects, shouldUpdateConfig = true, objectsAction } = {}) {
+  setDeployStrategy ({ shouldOnlyRemoveScriptObjects, shouldUpdateConfig, objectsAction } = {}) {
     if (isBoolean(shouldOnlyRemoveScriptObjects)) this.shouldOnlyRemoveScriptObjects = shouldOnlyRemoveScriptObjects
     if (isBoolean(shouldUpdateConfig)) this.shouldUpdateConfig = shouldUpdateConfig
 
