@@ -24,6 +24,8 @@
     "deploy:prod": "npm run build && node scripts/deployManuallyToNetlifyProd.js",
     "deploy:translations": "node scripts/deployTranslations.js",
     "deploy:translations:prod": "cross-env NODE_ENV=production node scripts/deployTranslations.js",
+    "deploy:workflows": "node scripts/deploy-workflows.js",
+    "deploy:workflows:prod": "cross-env NODE_ENV=production node scripts/deploy-workflows.js",
     "seed": "node scripts/init-data.js",
     "test:e2e": "testcafe 'firefox' tests/e2e/**/*.e2e.{j,t}s",
     "test:e2e:headless": "testcafe 'firefox:headless' tests/e2e/**/*.e2e.{j,t}s",

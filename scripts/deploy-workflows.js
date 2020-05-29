@@ -14,35 +14,35 @@ let answers
 
 const env = process.env.NODE_ENV === 'production' ? 'production' : 'development'
 
-// Useful to avoid removing objects not created by this script (use false value with caution)
+// Useful to avoid removing workflows not created by this script (use false value with caution)
 let shouldOnlyRemoveScriptObjects = true
 
 async function run () {
   const dataManager = new DataManager()
   await dataManager.fetchExistingData()
 
-  const existingData = dataManager.existingData
-  const hasExistingData = !every(existingData, isEmpty)
+  const existingWorkflows = dataManager.existingData.workflows
+  const hasExistingWorkflows = !every(existingWorkflows, isEmpty)
 
   log('')
   answers = await prompt([
     {
       type: 'list',
       name: 'delete',
-      message: 'Existing objects detected',
+      message: 'Existing workflows detected',
       choices: [
         {
-          name: 'Delete only objects previously created and marked by this script.',
+          name: 'Delete only workflows previously created and marked by this script.',
           value: 'marked',
-          short: 'Delete objects having metadata.initDataScript only'
+          short: `Delete ${initDataScript} workflows only`
         },
         {
-          name: 'Delete all existing objects including those not created by this script.',
+          name: 'Delete all existing workflows including those not created by this script.',
           value: 'all',
-          short: 'Delete all objects (reset)'
+          short: 'Delete all workflows (reset)'
         }
       ],
-      when: hasExistingData,
+      when: hasExistingWorkflows,
       default: 0
     }
   ])
@@ -50,22 +50,15 @@ async function run () {
   if (answers.delete === 'all') {
     shouldOnlyRemoveScriptObjects = false
   }
-  // categories and assetTypes created by this script may have been used
-  // by objects created elsewhere that are not being removed
-  const existingAssets = !isEmpty(existingData.assets)
-  const existingCategoriesOrAssetTypes = ['assetTypes', 'categories']
-    .some(o => !isEmpty(existingData[o]))
-  if (existingCategoriesOrAssetTypes && existingAssets) {
-    log('\nYou may want to create/remove Categories and Asset Types manually.')
-  }
 
   log(chalk.cyan.bold('\nStarting script…'))
 
   dataManager.setDeployStrategy({
     shouldOnlyRemoveScriptObjects,
+    shouldUpdateConfig: false,
     objectsAction: {
-      categories: existingAssets ? 'none' : 'remove-and-create',
-      assetTypes: existingAssets ? 'none' : 'remove-and-create',
+      default: 'none',
+      workflows: 'sync',
     }
   })
 
