@@ -326,6 +326,7 @@
 <script>
 import { mapState, mapGetters } from 'vuex'
 import { get, map, sortBy, values, compact, flatten, groupBy, isUndefined } from 'lodash'
+// WARNING: icons referenced in customAttributes should be included below
 import { mdiWhiteBalanceSunny, mdiImage } from '@quasar/extras/mdi-v4'
 
 import { extractLocationDataFromPlace } from 'src/utils/places'

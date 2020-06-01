@@ -2,7 +2,16 @@
 import { mapState, mapGetters } from 'vuex'
 import * as mutationTypes from 'src/store/mutation-types'
 
-import { matAddBox, matClose, matLock, matMail, matPowerSettingsNew, matSearch } from '@quasar/extras/material-icons'
+import {
+  matAddBox,
+  matAttachMoney,
+  matClose,
+  matEuroSymbol,
+  matLock,
+  matMail,
+  matPowerSettingsNew,
+  matSearch
+} from '@quasar/extras/material-icons'
 import { mdiGithubCircle } from '@quasar/extras/mdi-v4'
 
 import AppLocaleSwitch from 'src/components/AppLocaleSwitch'
@@ -150,7 +159,9 @@ export default {
   created () {
     this.icons = {
       matAddBox,
+      matAttachMoney,
       matClose,
+      matEuroSymbol,
       matLock,
       matMail,
       matSearch,
@@ -359,7 +370,7 @@ export default {
         >
           <template v-slot:prepend>
             <QIcon
-              :name="content.currency === 'EUR' ? 'euro_symbol' : 'attach_money'"
+              :name="content.currency === 'EUR' ? icons.matEuroSymbol : icons.matAttachMoney"
               color="grey-4"
             />
           </template>

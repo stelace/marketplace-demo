@@ -1,7 +1,7 @@
 <script>
 import { keyBy } from 'lodash'
 import { mapState, mapGetters } from 'vuex'
-import { matDelete, matDoneAll, matPause, matUpdate } from '@quasar/extras/material-icons'
+import { matDelete, matDoneAll, matPause, matPlayArrow, matUpdate } from '@quasar/extras/material-icons'
 
 import logger from 'src/utils/logger'
 
@@ -77,6 +77,7 @@ export default {
       matDelete,
       matDoneAll,
       matPause,
+      matPlayArrow,
       matUpdate
     }
   },
@@ -238,7 +239,7 @@ export default {
           @click.stop.prevent="toggleActive"
         >
           <QIcon
-            :name="paused ? 'play_arrow' : 'pause'"
+            :name="paused ? icons.matPlayArrow : icons.matPause"
             :left="true"
           />
           <AppContent
