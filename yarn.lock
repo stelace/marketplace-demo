@@ -11867,10 +11867,10 @@ stdout-stream@^1.4.0:
   dependencies:
     readable-stream "^2.0.1"
 
-stelace@0.13.0:
-  version "0.13.0"
-  resolved "https://registry.yarnpkg.com/stelace/-/stelace-0.13.0.tgz#543d464d484a358d276ffd44aad82fffef3b730a"
-  integrity sha512-pHidPXN2WL0CRf/L3oOoZ47R8A1hUaUTpNONYDyDL8cHNDkeeMaFz0439rsjPGpjhJYEmfYU7yelusUIS6wHiw==
+stelace@0.14.0:
+  version "0.14.0"
+  resolved "https://registry.yarnpkg.com/stelace/-/stelace-0.14.0.tgz#7db79eac425894843b0ca1f1bd5adfdc485f2263"
+  integrity sha512-C9LGCvMgOjjZB7P5wQz/nOWNdjgxQJnpYJ9LYEVWdtDmmZsMCAnh+caIyJ2KWJNgvcjoVGOyOp9+Uo+GquREfA==
   dependencies:
     "@babel/runtime" "^7.8.3"
     axios "^0.19.0"
