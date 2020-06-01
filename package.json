@@ -51,7 +51,7 @@
     "quasar": "^1.12.2",
     "sharp-aws-image-handler-client": "https://github.com/stelace/sharp-aws-image-handler-client.git#0.2.0",
     "socket.io-client": "~2.3.0",
-    "stelace": "0.13.0",
+    "stelace": "0.14.0",
     "url-parse": "^1.4.4",
     "vue-analytics": "5.22.1",
     "vue-intl": "3.1.0",
