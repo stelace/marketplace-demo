@@ -24,14 +24,14 @@
 # Serving HTML file
 [[redirects]]
   from = "/stelace"
-  to = "https://dashboard.stelace.com/"
+  to = "https://stelace.com/dashboard"
   force = true
   status = 200
 
 # All dashboard routes
 [[redirects]]
   from = "/stelace/*"
-  to = "https://dashboard.stelace.com/stelace/:splat"
+  to = "https://stelace.com/dashboard"
   force = true
   status = 200
 
