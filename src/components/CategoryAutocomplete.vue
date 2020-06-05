@@ -66,7 +66,7 @@
 </template>
 
 <script>
-import { get, values, cloneDeep, sortBy, groupBy, times, constant } from 'lodash'
+import { debounce, get, values, cloneDeep, sortBy, groupBy, times, constant } from 'lodash'
 import { mapState } from 'vuex'
 import { matClose, matSearch } from '@quasar/extras/material-icons'
 
@@ -97,6 +97,12 @@ export default {
       type: String,
       default: ''
     },
+    textDebounce: {
+      // Quasar 'input-debounce' only affects QSelect @filter event, not @input event
+      // https://github.com/quasarframework/quasar/blob/ddf3d49d133869d635ee9dd0185449ebd21ed334/ui/src/components/select/QSelect.js#L989
+      type: Number,
+      default: 0
+    },
     autocompleteMinChars: {
       type: Number,
       default: 0 // Set to 0 to always show autocomplete
@@ -106,7 +112,8 @@ export default {
     return {
       selectedCategory: this.setCategory,
       filteredCategories: [],
-      textQuery: get(this.setCategory, 'name', this.setText || '')
+      textQuery: get(this.setCategory, 'name', this.setText || ''),
+      emitQueryDebounced: debounce(this.emitQuery, this.textDebounce),
     }
   },
   computed: {
@@ -242,7 +249,7 @@ export default {
       await this.$nextTick() // let category be updated to test the following condition
       // we don’t want to let the consumer think that text has changed if it’s just
       // because of category change
-      if (!this.selectedCategory) this.emitQuery()
+      if (!this.selectedCategory) this.emitQueryDebounced()
     },
     emitQuery () {
       this.$emit('text-changed', this.textQuery)

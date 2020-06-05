@@ -338,6 +338,7 @@ export default {
         </QInput>
         <CategoryAutocomplete
           v-if="searchByCategory"
+          :text-debounce="500"
           :set-category="selectedCategory"
           :set-text="search.query"
           :label="$t({ id: 'form.search.query_placeholder' })"
