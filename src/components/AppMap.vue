@@ -13,6 +13,26 @@
 import 'mapbox-gl/dist/mapbox-gl.css'
 import { uniqueId } from 'lodash'
 
+import logger from 'src/utils/logger'
+
+let mapCenterCoordinates = (process.env.VUE_APP_MAP_CENTER_COORDINATES || '')
+  .split(',')
+  .map(parseFloat)
+
+const isValidCoordinate = (c, type) => isFinite(c) && (Math.abs(c) <= (type === 'lng' ? 180 : 90))
+const isValidCenter = mapCenterCoordinates.length === 2 &&
+  isValidCoordinate(mapCenterCoordinates[0], 'lng') &&
+  isValidCoordinate(mapCenterCoordinates[1], 'lat')
+
+if (!isValidCenter) {
+  mapCenterCoordinates = [3, 46.27] // Default: France
+  if (process.env.VUE_APP_MAP_CENTER_COORDINATES) {
+    logger(new Error(`VUE_APP_MAP_CENTER_COORDINATES expected to have "Lng,Lat" string format, got ${
+      process.env.VUE_APP_MAP_CENTER_COORDINATES
+    }`))
+  }
+}
+
 export default {
   components: {
     Mapbox: () => import(/* webpackChunkName: 'mapbox' */ 'mapbox-gl-vue')
@@ -32,7 +52,7 @@ export default {
       container: uniqueId('stl-app-map-'), // ensuring that coexisting maps have unique Ids
       // Note: Update component map style rule if changing this pattern
       style: process.env.VUE_APP_MAPBOX_STYLE,
-      center: [3, 46.27], // France hard coded for now. TODO: get from config before mount
+      center: mapCenterCoordinates,
       zoom: 5,
       minZoom: 3, // same for zoom levels
       maxZoom: 16,
