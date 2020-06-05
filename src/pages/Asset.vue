@@ -340,7 +340,6 @@ import AppGalleryUploader from 'src/components/AppGalleryUploader'
 import CustomAttributesEditor from 'src/components/CustomAttributesEditor'
 import OwnerAssetCard from 'src/components/OwnerAssetCard'
 import PlacesAutocomplete from 'src/components/PlacesAutocomplete'
-import SelectCategories from 'src/components/SelectCategories'
 import TransactionCard from 'src/components/TransactionCard'
 import ProfileCard from 'src/components/ProfileCard'
 import TransactionRatingsList from 'src/components/TransactionRatingsList'
@@ -354,7 +353,6 @@ export default {
     CustomAttributesEditor,
     OwnerAssetCard,
     PlacesAutocomplete,
-    SelectCategories,
     TransactionCard,
     TransactionRatingsList,
     ProfileCard,

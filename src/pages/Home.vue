@@ -6,7 +6,7 @@ import AppCarousel from 'src/components/AppCarousel'
 import AppSVGActionButton from 'src/components/AppSVGActionButton'
 import DatePickerInput from 'src/components/DatePickerInput'
 import PlacesAutocomplete from 'src/components/PlacesAutocomplete'
-import SelectCategories from 'src/components/SelectCategories'
+import CategoryAutocomplete from 'src/components/CategoryAutocomplete'
 
 import * as types from 'src/store/mutation-types'
 
@@ -20,7 +20,7 @@ export default {
     AppSVGActionButton,
     DatePickerInput,
     PlacesAutocomplete,
-    SelectCategories,
+    CategoryAutocomplete,
   },
   mixins: [
     PageComponentMixin,
@@ -176,7 +176,7 @@ export default {
       this.startDate = startDate
     },
     async searchAssets () {
-      if (this.searchByCategory) {
+      if (this.searchByCategory && !this.query) {
         this.$store.commit({
           type: types.SEARCH__SET_SEARCH_FILTERS,
           filters: {
@@ -250,9 +250,9 @@ export default {
               :filled="!style.homeHasLightBackground"
               :label="$t({ id: 'form.search.query_placeholder' })"
             />
-            <SelectCategories
+            <CategoryAutocomplete
               v-if="searchByCategory"
-              :initial-category="selectedCategory"
+              :set-category="selectedCategory"
               dense
               bottom-slots
               :dark="style.homeHasLightBackground"
@@ -260,7 +260,8 @@ export default {
               :filled="!style.homeHasLightBackground"
               :label="$t({ id: 'form.search.query_placeholder' })"
               :show-search-icon="false"
-              @change="selectCategory"
+              @category-changed="selectCategory"
+              @text-changed="t => { query = t }"
             />
             <PlacesAutocomplete
               dense

@@ -18,7 +18,7 @@ import AppLocaleSwitch from 'src/components/AppLocaleSwitch'
 import AppLogo from 'src/components/AppLogo'
 import AppMiniLogo from 'src/components/AppMiniLogo'
 import SearchToolbar from 'src/components/SearchToolbar'
-import SelectCategories from 'src/components/SelectCategories'
+import CategoryAutocomplete from 'src/components/CategoryAutocomplete'
 import PlacesAutocomplete from 'src/components/PlacesAutocomplete'
 
 import AuthDialogMixin from 'src/mixins/authDialog'
@@ -31,7 +31,7 @@ export default {
     AppMiniLogo,
     PlacesAutocomplete,
     SearchToolbar,
-    SelectCategories,
+    CategoryAutocomplete,
   },
   mixins: [
     AuthDialogMixin,
@@ -336,16 +336,17 @@ export default {
             />
           </template>
         </QInput>
-        <SelectCategories
+        <CategoryAutocomplete
           v-if="searchByCategory"
-          :initial-category="selectedCategory"
-          :hide-input-on-select="true"
+          :set-category="selectedCategory"
+          :set-text="search.query"
           :label="$t({ id: 'form.search.query_placeholder' })"
           :icon-button-action="searchAssets"
           dense
           icon-color="primary"
           search-icon-position="left"
-          @change="selectCategory"
+          @category-changed="selectCategory"
+          @text-changed="updateQuery"
         />
         <PlacesAutocomplete
           class="gt-sm"

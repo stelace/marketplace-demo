@@ -1,22 +1,20 @@
+// Unlike SelectCategories, this component allows free text as well
+
 <template>
   <QSelect
     ref="select"
+    v-model="textQuery"
     class="stl-select-categories"
     v-bind="$attrs"
-    :value="selectedCategory"
-    :options="filteredCategories"
-    :option-value="cat => cat && cat.id"
-    :option-label="cat => cat && cat.nameWithLvlSpaces"
-    :use-input="!(hideInputOnSelect && selectedCategory)"
+    :options="filteredCategoriesNames"
     :loading="!!(textQueryLength && common.fetchingCategories)"
-    :display-value="(selectedCategory && selectedCategory.name) || ''"
     :hide-dropdown-icon="isDropdownIconHidden"
+    use-input
+    fill-input
+    hide-selected
     @input="cat => selectCategory(cat)"
+    @input-value="textChanged"
     @filter="filterCategories"
-    @keyup.down.native="focusChanged"
-    @keyup.up.native="focusChanged"
-    @keyup.enter.native="onEnter"
-    @blur.native.capture="filterCategories(0)"
   >
     <template
       v-if="showSearchIcon && searchIconPosition === 'left'"
@@ -56,7 +54,7 @@
         />
       </template>
       <QBtn
-        v-show="selectedCategory"
+        v-show="selectedCategory || textQuery"
         :icon="icons.matClose"
         flat
         dense
@@ -68,7 +66,7 @@
 </template>
 
 <script>
-import { values, cloneDeep, sortBy, groupBy, times, constant } from 'lodash'
+import { get, values, cloneDeep, sortBy, groupBy, times, constant } from 'lodash'
 import { mapState } from 'vuex'
 import { matClose, matSearch } from '@quasar/extras/material-icons'
 
@@ -95,25 +93,27 @@ export default {
       type: Object,
       default: null
     },
+    setText: {
+      type: String,
+      default: ''
+    },
     autocompleteMinChars: {
       type: Number,
       default: 0 // Set to 0 to always show autocomplete
-    },
-    hideInputOnSelect: { // useful when line wrap should not happen
-      type: Boolean,
-      default: false
     }
   },
   data () {
     return {
       selectedCategory: this.setCategory,
       filteredCategories: [],
-      optionFocused: -1,
-      textQueryLength: 0
+      textQuery: get(this.setCategory, 'name', this.setText || '')
     }
   },
   computed: {
     optionIndex () {
+      // TODO: submit a PR to quasar to expose focus or a method to get it
+      // like setOptionIndex in current code
+      // https://github.com/quasarframework/quasar/blob/v1.0.0-beta.6/quasar/src/components/select/QSelect.js#L297
       if (!this.$refs.select) return -1 // before rendering
 
       return this.$refs.select.optionIndex
@@ -123,18 +123,35 @@ export default {
 
       return this.sortCategoriesByLvl(values(categoriesById))
     },
+    filteredCategoriesNames () {
+      return this.filteredCategories.map(c => c.nameWithLvlSpaces)
+    },
     isDropdownIconHidden () {
       return (this.textQueryLength < this.autocompleteMinChars) ||
         (this.autocompleteMinChars && !this.filteredCategories.length) ||
-        !!this.selectedCategory
+        (this.textQuery && !this.filteredCategories.length)
+    },
+    textQueryLength () {
+      return (this.textQuery || '').length
     },
     ...mapState([
       'common'
     ])
   },
   watch: {
+    // component is not expected to emit events for edits coming from the outside,
+    // so we only update internal values without emitting
     setCategory (cat) {
-      this.selectedCategory = this.setCategory
+      const isSame = cat && this.selectedCategory && cat.id === this.selectedCategory.id
+      const isNullOrHasAName = cat === null || (cat && cat.name)
+      if (!isNullOrHasAName || isSame) return
+
+      this.selectedCategory = cat
+      this.textQuery = get(this.selectedCategory, 'name', '')
+    },
+    setText (t) {
+      if (this.selectedCategory) return
+      this.textQuery = t || ''
     }
   },
   mounted () {
@@ -185,14 +202,7 @@ export default {
       return categoriesSortedByLvl
     },
     filterCategories (value, update, abort) {
-      if (typeof update !== 'function') {
-        this.textQueryLength = value // @blur event
-        return
-      }
-
-      this.textQueryLength = value.length
-
-      if (value.length < this.autocompleteMinChars) {
+      if (this.textQueryLength < this.autocompleteMinChars) {
         abort()
         return
       }
@@ -204,27 +214,49 @@ export default {
         })
       })
     },
-    selectCategory (category) {
-      this.selectedCategory = category
-      this.$emit('change', category)
+    selectCategory (name) {
+      const hadACategory = !!this.selectedCategory
+      if (!name) this.reset()
+      else {
+        // We’re using a string model in QSelect to handle free text value as well,
+        // but for category objects we’d like to keep track of the precise object selected,
+        // but it seems very trick to use object options with text model. text model example:
+        // https://quasar.dev/vue-components/select#Example--Text-autocomplete
+        this.selectedCategory = this.filteredCategories.find(c => c.nameWithLvlSpaces === name)
+        // It would be safer to store selected option index since 2 (sub)categories
+        // can have the same name but Quasar does not expose this currently,
+        // and we would have to hack with optionIndex (updated before input event is emitted).
+        // -> Quasar PR needed
+      }
+      const hasACategory = !!this.selectedCategory
+      if (hadACategory || hasACategory) {
+        this.$emit('category-changed', this.selectedCategory)
+        // full-text search is expected to be reset by consumer
+        // when there is a match on category, for instance to avoid
+        // searching assets having "Hardware items" category _and_ Hardwa text…
+        this.$emit('text-changed', '')
+      }
     },
-    onEnter () {
-      this.selectCategory(this.optionFocused > 0 ? this.filteredCategories[this.optionFocused] : this.filteredCategories[0])
-      // Keep optionFocused value in case Enter key is pressed again
+    async textChanged (t) {
+      this.textQuery = t
+      await this.$nextTick() // let category be updated to test the following condition
+      // we don’t want to let the consumer think that text has changed if it’s just
+      // because of category change
+      if (!this.selectedCategory) this.emitQuery()
     },
-    focusChanged () { // TODO: submit a PR to quasar to expose focus or a method to get it
-      // like setOptionIndex in current code
-      // https://github.com/quasarframework/quasar/blob/v1.0.0-beta.6/quasar/src/components/select/QSelect.js#L297
-      this.optionFocused = this.optionIndex
+    emitQuery () {
+      this.$emit('text-changed', this.textQuery)
     },
+    reset () {
+      this.selectedCategory = null
+      this.textQuery = ''
+      this.$refs.select.updateInputValue('')
+      this.$refs.select.focus()
+    }
   }
 }
 
 </script>
 
 <style lang="stylus">
-// Fix quasar initial positionning probably due to this wrapper
-// https://github.com/quasarframework/quasar/blob/v1.0.0-beta.6/quasar/src/components/select/select-menu-position.js#L51
-.stl-select-categories .q-local-menu
-  top: 100%
 </style>

@@ -401,7 +401,7 @@ export default {
               popup-content-class="search-filters__categories"
               :label="$t({ id: 'asset.category_label' })"
               :show-search-icon="false"
-              :initial-category="currentCategory"
+              :set-category="currentCategory"
               @change="selectCategory"
             />
           </div>

@@ -451,7 +451,7 @@ export default {
             <div class="row justify-around">
               <div v-if="showCategory" class="flex-item--grow-shrink-auto q-pr-lg">
                 <SelectCategories
-                  :initial-category="selectedCategory"
+                  :set-category="selectedCategory"
                   :label="$t({ id: 'asset.category_label' })"
                   :show-search-icon="false"
                   :rules="[

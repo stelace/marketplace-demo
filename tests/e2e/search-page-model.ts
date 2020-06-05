@@ -23,7 +23,7 @@ export default class SearchModel {
     this.modes = Selector('.search-modes .q-item')
     this.filtersButton = VueSelector('ref:searchFiltersToggle')
     this.filtersResetButton = VueSelector('ref:searchFiltersToggle QIcon')
-    this.categoriesSelect = VueSelector('SearchToolbar SelectCategories')
+    this.categoriesSelect = VueSelector('SearchToolbar CategoryAutocomplete')
     this.categories = Selector('.search-filters__categories .q-item')
     this.filtersSearchButton = VueSelector('SearchToolbar ref:filtersSearchButton')
 
