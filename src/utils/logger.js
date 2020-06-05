@@ -3,7 +3,8 @@ import { getRemoteLogger } from 'src/boot/errors'
 
 /**
  * Send error to remote logging service or to console during development,
- * and show a notification to user if options.notification is either true or a translation key string.
+ * and show a notification to user if options.notification is either true
+ * or a translation key string is provided.
  * @param {Error|String} err
  * @param {Object} [options] You can use the options exposed by Notify mixin.
  * @param {Boolean|String|Object} [options.notification] - Set to

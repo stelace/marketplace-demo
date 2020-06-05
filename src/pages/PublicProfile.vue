@@ -211,7 +211,7 @@ export default {
           <ProfileCard />
         </div>
 
-        <!-- Wait for API before hiding this so wa can show some skeleton screen in the future -->
+        <!-- Wait for API before hiding this so we can show some skeleton screen in the future -->
         <section
           v-show="!(selectedUser.id && !isCurrentUser && !selectedUser.description)"
           class="q-px-sm"
