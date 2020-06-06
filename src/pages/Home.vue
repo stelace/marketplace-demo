@@ -252,6 +252,7 @@ export default {
             />
             <CategoryAutocomplete
               v-if="searchByCategory"
+              ref="heroSearchCategoryAutocomplete"
               :set-category="selectedCategory"
               dense
               bottom-slots

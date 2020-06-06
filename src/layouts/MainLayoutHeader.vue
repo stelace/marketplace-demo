@@ -338,6 +338,7 @@ export default {
         </QInput>
         <CategoryAutocomplete
           v-if="searchByCategory"
+          ref="headerCategoryAutocompleteInput"
           :text-debounce="500"
           :set-category="selectedCategory"
           :set-text="search.query"

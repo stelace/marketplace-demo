@@ -55,6 +55,7 @@
       </template>
       <QBtn
         v-show="selectedCategory || textQuery"
+        ref="categoryAutocompleteClearButton"
         :icon="icons.matClose"
         flat
         dense
