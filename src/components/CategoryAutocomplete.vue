@@ -9,6 +9,8 @@
     :options="filteredCategoriesNames"
     :loading="!!(textQueryLength && common.fetchingCategories)"
     :hide-dropdown-icon="isDropdownIconHidden"
+    autocomplete="off"
+    spellcheck="false"
     use-input
     fill-input
     hide-selected
