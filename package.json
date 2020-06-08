@@ -67,7 +67,7 @@
     "@babel/compat-data": "7.8.0",
     "@babel/core": "^7.9.6",
     "@babel/preset-env": "^7.10.2",
-    "@quasar/app": "^1.9.3",
+    "@quasar/app": "^1.9.6",
     "@sentry/webpack-plugin": "^1.11.1",
     "babel-eslint": "^10.1.0",
     "babel-plugin-lodash": "^3.3.4",
