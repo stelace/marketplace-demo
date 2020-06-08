@@ -94,7 +94,7 @@
     "markdown-it": "^11.0.0",
     "netlify-lambda": "^1.6.3",
     "prerender-spa-plugin": "^3.4.0",
-    "testcafe": "^1.8.5",
+    "testcafe": "^1.8.6",
     "testcafe-reporter-xunit": "^2.1.0",
     "testcafe-vue-selectors": "^3.1.0",
     "webfontloader": "^1.6.28"
