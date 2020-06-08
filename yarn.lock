@@ -1276,10 +1276,10 @@
     promise-limit "^2.5.0"
     puppeteer "^1.7.0"
 
-"@quasar/app@^1.9.3":
-  version "1.9.3"
-  resolved "https://registry.yarnpkg.com/@quasar/app/-/app-1.9.3.tgz#8d6acecbfd9b7a4ac182c945bfca6fb9a52dbb7e"
-  integrity sha512-w+ONFqnXevki3ksvBCmguHE6+EkFs4bfPntdXaCzT4ePHfVfXWESiCvKyEEkGXugzS/oKQ+Wv/ll/DN6MU0Npg==
+"@quasar/app@^1.9.6":
+  version "1.9.6"
+  resolved "https://registry.yarnpkg.com/@quasar/app/-/app-1.9.6.tgz#dbfabe843fd3e351d1cad52a2d7cb6ba3922645b"
+  integrity sha512-7vQlnsJFghFG+yjub+5hhejqWV5oqOMHYI+uiSyTbEX+4z5kZAerh3RnaUYZcfWVLy2I6ZzeuS/qOa4YEyqvCg==
   dependencies:
     "@quasar/babel-preset-app" "1.2.0"
     "@quasar/fastclick" "1.1.4"
@@ -1299,7 +1299,7 @@
     ci-info "2.0.0"
     compression-webpack-plugin "4.0.0"
     copy-webpack-plugin "5.1.1"
-    cross-spawn "7.0.2"
+    cross-spawn "7.0.3"
     css-loader "3.5.3"
     cssnano "4.1.10"
     dot-prop "5.2.0"
@@ -1307,7 +1307,7 @@
     express "4.17.1"
     fast-glob "3.2.2"
     file-loader "^6.0.0"
-    fork-ts-checker-webpack-plugin "4.1.4"
+    fork-ts-checker-webpack-plugin "4.1.6"
     friendly-errors-webpack-plugin "1.7.0"
     fs-extra "9.0.0"
     html-minifier "4.0.0"
@@ -1338,8 +1338,8 @@
     stylus "0.54.7"
     stylus-loader "3.0.2"
     table "5.4.6"
-    terser-webpack-plugin "3.0.1"
-    ts-loader "7.0.4"
+    terser-webpack-plugin "3.0.2"
+    ts-loader "7.0.5"
     typescript "3.8.3"
     url-loader "4.1.0"
     vue "2.6.11"
@@ -4462,10 +4462,10 @@ cross-env@^7.0.2:
   dependencies:
     cross-spawn "^7.0.1"
 
-cross-spawn@7.0.2, cross-spawn@^7.0.0, cross-spawn@^7.0.1:
-  version "7.0.2"
-  resolved "https://registry.yarnpkg.com/cross-spawn/-/cross-spawn-7.0.2.tgz#d0d7dcfa74e89115c7619f4f721a94e1fdb716d6"
-  integrity sha512-PD6G8QG3S4FK/XCGFbEQrDqO2AnMMsy0meR7lerlIOHAAbkuavGU/pOqprrlvfTNjvowivTeBsjebAL0NSoMxw==
+cross-spawn@7.0.3, cross-spawn@^7.0.0, cross-spawn@^7.0.1:
+  version "7.0.3"
+  resolved "https://registry.yarnpkg.com/cross-spawn/-/cross-spawn-7.0.3.tgz#f73a85b9d5d41d045551c177e2882d4ac85728a6"
+  integrity sha512-iRDPJKUPVEND7dHPO8rkbOnPpyDygcDFtWjpeWNCgy8WP2rXcxXL8TskReQl6OrB2G7+UJrags1q15Fudc7G6w==
   dependencies:
     path-key "^3.1.0"
     shebang-command "^2.0.0"
@@ -6145,10 +6145,10 @@ forever-agent@~0.6.1:
   resolved "https://registry.yarnpkg.com/forever-agent/-/forever-agent-0.6.1.tgz#fbc71f0c41adeb37f96c577ad1ed42d8fdacca91"
   integrity sha1-+8cfDEGt6zf5bFd60e1C2P2sypE=
 
-fork-ts-checker-webpack-plugin@4.1.4:
-  version "4.1.4"
-  resolved "https://registry.yarnpkg.com/fork-ts-checker-webpack-plugin/-/fork-ts-checker-webpack-plugin-4.1.4.tgz#f0dc3ece19ec5b792d7b8ecd2a7f43509a5285ce"
-  integrity sha512-R0nTlZSyV0uCCzYe1kgR7Ve8mXyDvMm1pJwUFb6zzRVF5rTNb24G6gn2DFQy+W5aJYp2eq8aexpCOO+1SCyCSA==
+fork-ts-checker-webpack-plugin@4.1.6:
+  version "4.1.6"
+  resolved "https://registry.yarnpkg.com/fork-ts-checker-webpack-plugin/-/fork-ts-checker-webpack-plugin-4.1.6.tgz#5055c703febcf37fa06405d400c122b905167fc5"
+  integrity sha512-DUxuQaKoqfNne8iikd14SAkh5uw4+8vNifp6gmA73yYNS6ywLIWSLD/n/mBzHQRpW3J7rbATEakmiA8JvkTyZw==
   dependencies:
     "@babel/code-frame" "^7.5.5"
     chalk "^2.4.1"
@@ -12233,10 +12233,10 @@ tempy@^0.2.1:
     temp-dir "^1.0.0"
     unique-string "^1.0.0"
 
-terser-webpack-plugin@3.0.1:
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/terser-webpack-plugin/-/terser-webpack-plugin-3.0.1.tgz#31928c9330a582fb5ec6f90805337289b85cb8fe"
-  integrity sha512-eFDtq8qPUEa9hXcUzTwKXTnugIVtlqc1Z/ZVhG8LmRT3lgRY13+pQTnFLY2N7ATB6TKCHuW/IGjoAnZz9wOIqw==
+terser-webpack-plugin@3.0.2:
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/terser-webpack-plugin/-/terser-webpack-plugin-3.0.2.tgz#fdc501c73847d8904f6a80c5009b11ee2d11b8eb"
+  integrity sha512-QeBHLJzKJHCnrPNlZj5EmOF6wwvzpVGDHvTrySIH8+jZEXfcKKCiriRmF6945rKzuZDnkOEU/LDv7qtPiiyP/Q==
   dependencies:
     cacache "^15.0.3"
     find-cache-dir "^3.3.1"
@@ -12680,10 +12680,10 @@ tryer@^1.0.1:
   resolved "https://registry.yarnpkg.com/tryer/-/tryer-1.0.1.tgz#f2c85406800b9b0f74c9f7465b81eaad241252f8"
   integrity sha512-c3zayb8/kWWpycWYg87P71E1S1ZL6b6IJxfb5fvsUgsf0S2MVGaDhDXXjDMpdCpfWXqptc+4mXwmiy1ypXqRAA==
 
-ts-loader@7.0.4:
-  version "7.0.4"
-  resolved "https://registry.yarnpkg.com/ts-loader/-/ts-loader-7.0.4.tgz#5d9b95227de5afb91fdd9668f8920eb193cfe0cc"
-  integrity sha512-5du6OQHl+4ZjO4crEyoYUyWSrmmo7bAO+inkaILZ68mvahqrfoa4nn0DRmpQ4ruT4l+cuJCgF0xD7SBIyLeeow==
+ts-loader@7.0.5:
+  version "7.0.5"
+  resolved "https://registry.yarnpkg.com/ts-loader/-/ts-loader-7.0.5.tgz#789338fb01cb5dc0a33c54e50558b34a73c9c4c5"
+  integrity sha512-zXypEIT6k3oTc+OZNx/cqElrsbBtYqDknf48OZos0NQ3RTt045fBIU8RRSu+suObBzYB355aIPGOe/3kj9h7Ig==
   dependencies:
     chalk "^2.3.0"
     enhanced-resolve "^4.0.0"
