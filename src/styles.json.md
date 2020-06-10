@@ -4,7 +4,7 @@ Injected into App’s style store, enabling configurable theme.
 
 ```js
 {
-  "name": "Stelace Instant - Work",
+  "name": "Stelace Marketplace Demo",
 
   // Easily test additional fonts in dev environment with Webfontloader
   // This is also used as CSS 'font-family' name in production
@@ -46,9 +46,27 @@ Injected into App’s style store, enabling configurable theme.
   "baseImageWidth": 640,
   "avatarImageWidth": 96 // 6 * 16
 
-  // Your hero image hosted on CDN (like Stelace Instant CDN)
+  // Your hero image URL, should be hosted on some CDN
+  // like Stelace Instant CDN used to upload asset images in the demo.
   "homeHeroUrl": "",
-  // Improves home page loading speed and UX with SVG image placeholder
-  "homeHeroBase64": "data:image/svg+xml;base64…"
+  // SVG image placeholder improves home page loading speed and UX.
+  // Here is how you can manually generate a SVG placeholder (“SQIP” technique):
+  // - Use this nice website to generate your SVG https://ondras.github.io/primitive.js/
+  //   Default parameters are good to go. You can add triangles and ellipses to geometric shapes.
+  // - Then apply gaussian blur to the SVG (you may want to change stdDeviation value):
+  /*
+    <svg xmlns="…" viewBox="…">
+      <defs>
+        <filter id="b">
+          <feGaussianBlur stdDeviation="8"/>
+        </filter>
+      </defs>
+      <g filter="url(#b)">
+        [SVG shapes]
+      </g>
+    </svg>
+  */
+  // - Minify the SVG using any online tool of your choice and encode it in base64
+  "homeHeroBase64": "data:image/svg+xml;base64,[BASE64_SVG]"
 }
 ```
