@@ -19,12 +19,13 @@ module.exports = {
       event: 'user__created',
       context: ['stelace'],
       computed: {
+        missingEnvVariables: '!env.STELACE_INSTANT_WEBSITE_URL',
         expirationDate: 'new Date(new Date().getTime() + 24 * 3600 * 1000).toISOString()'
       },
       run: [
         {
           endpointMethod: 'POST',
-          stop: '!user.email',
+          stop: 'computed.missingEnvVariables || !user.email',
           endpointUri: '/token/check/request',
           endpointPayload: {
             userId: 'user.id',
@@ -44,6 +45,7 @@ module.exports = {
       event: 'email_check_request',
       context: ['stelace'],
       computed: {
+        missingEnvVariables: '!env.STELACE_INSTANT_WEBSITE_URL',
         userId: 'objectId',
         expirationDate: 'new Date(new Date().getTime() + 3600 * 1000).toISOString()',
         toEmail: 'metadata.email'
@@ -51,7 +53,7 @@ module.exports = {
       run: [
         {
           endpointMethod: 'POST',
-          stop: '!computed.userId || !computed.toEmail',
+          stop: 'computed.missingEnvVariables || !computed.userId || !computed.toEmail',
           endpointUri: '/token/check/request',
           endpointPayload: {
             userId: 'computed.userId',
@@ -134,6 +136,7 @@ module.exports = {
       event: 'password__reset_requested',
       context: ['stelace'],
       computed: {
+        missingEnvVariables: '!env.STELACE_INSTANT_WEBSITE_URL',
         toName: 'user.displayName',
         toEmail: 'user.email',
         passwordResetLink: '`${env.STELACE_INSTANT_WEBSITE_URL}/?reset-password=${metadata.resetToken}`'
@@ -141,7 +144,7 @@ module.exports = {
       run: [
         {
           endpointMethod: 'POST',
-          stop: '!computed.toEmail',
+          stop: 'computed.missingEnvVariables || !computed.toEmail',
           endpointUri: '/emails/send-template',
           endpointPayload: {
             name: '"passwordReset"',
@@ -162,6 +165,7 @@ module.exports = {
       event: 'transaction__status_changed',
       context: ['stelace'],
       computed: {
+        missingEnvVariables: '!env.STELACE_INSTANT_WEBSITE_URL',
         // fallback to empty strings for email content
         transactionId: 'transaction.id',
         ownerName: 'owner.displayName || ""',
@@ -173,6 +177,7 @@ module.exports = {
       run: [
         {
           name: 'messages',
+          stop: 'computed.missingEnvVariables',
           endpointMethod: 'GET',
           endpointUri: '/messages?topicId=${computed.transactionId}',
         },
@@ -238,6 +243,7 @@ module.exports = {
       event: 'transaction__status_changed',
       context: ['stelace'],
       computed: {
+        missingEnvVariables: '!env.STELACE_INSTANT_WEBSITE_URL',
         // fallback to empty strings for email content
         transactionId: 'transaction.id',
         takerName: 'taker.displayName || ""',
@@ -249,6 +255,7 @@ module.exports = {
       run: [
         {
           name: 'messages',
+          stop: 'computed.missingEnvVariables',
           endpointMethod: 'GET',
           endpointUri: '/messages?topicId=${computed.transactionId}',
         },
