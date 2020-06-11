@@ -14,7 +14,7 @@ const schema = {
 
 const { stelace, stripe } = loadSdks({ stripe: true })
 
-if (!process.env.STRIPE_OAUTH_CLIENT_ID) {
+if (!process.env.VUE_APP_STRIPE_OAUTH_CLIENT_ID) {
   throw new Error('Missing Stripe OAuth client ID')
 }
 

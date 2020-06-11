@@ -26,7 +26,7 @@ export default {
     getOAuthStandardAccountUrl (user, register = true) {
       let url = 'https://connect.stripe.com/oauth/authorize' +
         '?response_type=code' +
-        `&client_id=${process.env.STRIPE_OAUTH_CLIENT_ID}` +
+        `&client_id=${process.env.VUE_APP_STRIPE_OAUTH_CLIENT_ID}` +
         `&redirect_uri=${process.env.STELACE_INSTANT_WEBSITE_URL}` +
         '&scope=read_write' +
         `&state=${state}` +
