@@ -429,28 +429,21 @@ module.exports = function (ctx) {
           chain.plugins.delete('preload')
           chain.plugins.delete('prefetch')
 
-          const stelaceI18nRegex = new RegExp(`i18n-stl-${process.env.VUE_APP_DEFAULT_LANGUAGE}`)
-          const landingChunksRegex = /[~\\/]landing[.~]/
-          const appChunksRegex = /[~\\/]app[.~]/
+          const stelaceI18nRegex = new RegExp(`i18n-stl-${
+            process.env.VUE_APP_DEFAULT_LANGUAGE || 'en'
+          }`)
+          const prefetchChunksRegex = /search/
+          const preloadChunksRegex = /(landing|common)/
 
           chain.plugin('prefetch')
             .use(PreloadPlugin, [{
               rel: 'prefetch',
               include: 'asyncChunks',
+              fileWhitelist: [
+                prefetchChunksRegex
+              ],
               fileBlacklist: [
-                // Ensures we don’t prefetch all translations for nothing
-                /i18n-stl-/,
-                /i18n-q-/,
-                /i18n-q-lang/,
-                // Ensures we don’t prefetch AND preload
-                stelaceI18nRegex,
-                landingChunksRegex,
-                appChunksRegex,
-                // Heaviest libraries to load only if needed
-                // Mapbox code takes much time to be evaluated, on mobile in particular
-                /mapbox/,
-                // Don’t forget to add .map files included in default blacklist
-                /\.map$/,
+                /\.map$/, // Don’t forget to add .map files included in default blacklist
                 /\.css$/, // using critical+loadCSS
               ]
             }])
@@ -469,10 +462,10 @@ module.exports = function (ctx) {
               rel: 'preload',
               fileWhitelist: [
                 // Ensures landing pages are loaded as fast as possible
-                landingChunksRegex,
-                appChunksRegex
+                preloadChunksRegex
               ],
               fileBlacklist: [
+                /\.map$/, // Don’t forget to add .map files included in default blacklist
                 /\.css$/, // using critical+loadCSS
               ]
             }])
@@ -487,25 +480,6 @@ module.exports = function (ctx) {
                 /\.css$/, // using critical+loadCSS
               ]
             }])
-
-          // chain.optimization is a "ChainedMap"
-          // https://github.com/neutrinojs/webpack-chain/issues/166
-          const split = chain.optimization.get('splitChunks')
-          Object.assign(split.cacheGroups, {
-            app: {
-              // cf. https://webpack.js.org/plugins/split-chunks-plugin
-              name: false, // don’t merge chunks
-              chunks: 'all', // split both dynamic and statically imported modules
-              test: /[\\/]src[\\/]/,
-              minSize: 20000, // default: 30000
-              minChunks: 2,
-              priority: -15, // "default" cacheGroup: -20
-              reuseExistingChunk: true,
-              automaticNameDelimiter: '~' // just making default explicit
-            }
-          })
-
-          chain.optimization.splitChunks(split)
         }
       },
 
