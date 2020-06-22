@@ -86,7 +86,7 @@ function handleChunkError (err) {
 
   // Much more likely to be handled by index.(template.)html
   // since Webpack chunk errors happen before app boot
-  // We use the following message to track any exception in Sentry
+  // but we still use the following message to track any exception in Sentry.
   if (remoteLogger.message && isChunkError) {
     remoteLogger.message(`chunkError: ${err.message}`)
   }
