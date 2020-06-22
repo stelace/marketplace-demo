@@ -125,6 +125,8 @@ module.exports = function (ctx) {
     'mapbox',
     'photoswipe',
     'vue-slicksort',
+    // logging chunk
+    'sentry',
   ]
 
   return {
