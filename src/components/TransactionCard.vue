@@ -5,8 +5,6 @@ import { date } from 'quasar'
 
 import EventBus from 'src/utils/event-bus'
 
-import CheckoutButton from 'src/components/CheckoutButton'
-import DateRangePicker from 'src/components/DateRangePicker'
 import SelectNumber from 'src/components/SelectNumber'
 
 import AuthDialogMixin from 'src/mixins/authDialog'
@@ -24,8 +22,6 @@ import * as mutationTypes from 'src/store/mutation-types'
 
 export default {
   components: {
-    CheckoutButton,
-    DateRangePicker,
     SelectNumber,
   },
   mixins: [
@@ -315,7 +311,7 @@ export default {
           @click="clearDates"
         />
 
-        <DateRangePicker
+        <AppDateRangePicker
           class="q-mb-md"
           container-class="transaction-dates"
           :start-date="startDate"

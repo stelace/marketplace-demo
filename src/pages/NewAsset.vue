@@ -10,9 +10,7 @@ import logger from 'src/utils/logger'
 
 import BasicHeroLayout from 'src/layouts/BasicHeroLayout'
 
-import AppGalleryUploader from 'src/components/AppGalleryUploader'
 import CustomAttributesEditor from 'src/components/CustomAttributesEditor'
-import DateRangePicker from 'src/components/DateRangePicker'
 import PlacesAutocomplete from 'src/components/PlacesAutocomplete'
 import SelectAssetType from 'src/components/SelectAssetType'
 import SelectCategories from 'src/components/SelectCategories'
@@ -24,9 +22,7 @@ export default {
   components: {
     BasicHeroLayout,
 
-    AppGalleryUploader,
     CustomAttributesEditor,
-    DateRangePicker,
     PlacesAutocomplete,
     SelectAssetType,
     SelectCategories,
@@ -484,7 +480,7 @@ export default {
             v-if="step > 2"
             class="step-3 q-py-lg"
           >
-            <DateRangePicker
+            <AppDateRangePicker
               v-show="showAvailabilityDates"
               class="q-mb-xl"
               :start-date="startDate"

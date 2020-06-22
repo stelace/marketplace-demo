@@ -7,14 +7,12 @@ import { matArrowForward, matSearch } from '@quasar/extras/material-icons'
 
 import AppSVGActionButton from 'src/components/AppSVGActionButton'
 import CustomAttributesEditor from 'src/components/CustomAttributesEditor'
-import DateRangePicker from 'src/components/DateRangePicker'
 import SelectCategories from 'src/components/SelectCategories'
 
 export default {
   components: {
     AppSVGActionButton,
     CustomAttributesEditor,
-    DateRangePicker,
     SelectCategories
   },
   data () {
@@ -384,7 +382,7 @@ export default {
             @input="setDisplayPriceRange"
           />
 
-          <DateRangePicker
+          <AppDateRangePicker
             v-show="showDates"
             class="q-my-lg"
             :start-date="search.startDate"
