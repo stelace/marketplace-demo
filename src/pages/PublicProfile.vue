@@ -4,7 +4,6 @@
 import { mapGetters, mapState } from 'vuex'
 import * as mutationTypes from 'src/store/mutation-types'
 
-import AppGalleryUploader from 'src/components/AppGalleryUploader'
 import OwnerAssetCard from 'src/components/OwnerAssetCard'
 import PlacesAutocomplete from 'src/components/PlacesAutocomplete'
 import TransactionRatingsList from 'src/components/TransactionRatingsList'
@@ -18,7 +17,6 @@ import { extractLocationDataFromPlace } from 'src/utils/places'
 
 export default {
   components: {
-    AppGalleryUploader,
     OwnerAssetCard,
     PlacesAutocomplete,
     TransactionRatingsList,

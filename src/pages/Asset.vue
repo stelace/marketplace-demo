@@ -336,7 +336,6 @@ import {
 } from 'src/utils/asset'
 
 import * as mutationTypes from 'src/store/mutation-types'
-import AppGalleryUploader from 'src/components/AppGalleryUploader'
 import CustomAttributesEditor from 'src/components/CustomAttributesEditor'
 import OwnerAssetCard from 'src/components/OwnerAssetCard'
 import PlacesAutocomplete from 'src/components/PlacesAutocomplete'
@@ -349,7 +348,6 @@ import PaymentMixin from 'src/mixins/payment'
 
 export default {
   components: {
-    AppGalleryUploader,
     CustomAttributesEditor,
     OwnerAssetCard,
     PlacesAutocomplete,

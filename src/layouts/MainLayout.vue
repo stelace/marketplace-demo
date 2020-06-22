@@ -6,7 +6,6 @@ import MainLayoutHeader from 'src/layouts/MainLayoutHeader'
 
 import AppUpdateDialog from 'src/components/AppUpdateDialog'
 import AuthDialog from 'src/components/AuthDialog'
-import CheckoutButton from 'src/components/CheckoutButton'
 import EmailValidationDialog from 'src/components/EmailValidationDialog'
 import TransactionCard from 'src/components/TransactionCard'
 
@@ -18,7 +17,6 @@ export default {
 
     AppUpdateDialog,
     AuthDialog,
-    CheckoutButton,
     EmailValidationDialog,
     TransactionCard,
   },
