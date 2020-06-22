@@ -127,6 +127,9 @@ module.exports = function (ctx) {
     'vue-slicksort',
     // logging chunk
     'sentry',
+    // socket.io chunk
+    'socket.io',
+    'engine.io',
   ]
 
   return {
@@ -142,7 +145,6 @@ module.exports = function (ctx) {
       'vue-meta',
       ctx.dev ? 'devDebug' : null,
       { path: 'fonts', server: false },
-      { path: 'signal', server: false },
       { path: 'analytics', server: false },
     ].concat(prerender ? ['prerendered'] : []),
 
@@ -517,7 +519,6 @@ module.exports = function (ctx) {
         STELACE_PUBLIC_PLATFORM_ID: JSON.stringify(process.env.STELACE_PUBLIC_PLATFORM_ID),
         VUE_APP_SSO_PROVIDERS: JSON.stringify(process.env.VUE_APP_SSO_PROVIDERS),
         VUE_APP_SSO_LOGIN_ONLY: JSON.stringify(process.env.VUE_APP_SSO_LOGIN_ONLY),
-        VUE_APP_STELACE_SIGNAL_URL: JSON.stringify(process.env.VUE_APP_STELACE_SIGNAL_URL),
         VUE_APP_SERVICE_NAME: JSON.stringify(process.env.VUE_APP_SERVICE_NAME),
         VUE_APP_MAPBOX_STYLE: JSON.stringify(process.env.VUE_APP_MAPBOX_STYLE),
         VUE_APP_MAPBOX_TOKEN: JSON.stringify(process.env.VUE_APP_MAPBOX_TOKEN),

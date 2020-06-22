@@ -24,35 +24,10 @@ export default {
   mixins: [
     contentEditingMixin,
   ],
-  sockets: {
-    // Move these to mixin if needed in other components
-    /* eslint-disable camelcase */
-    connect () {
-      // console.log('Stelace Signal connected')
-    },
-    authentication (signal_id, authCallback) {
-      const publishableKey = process.env.STELACE_PUBLISHABLE_API_KEY
-      const authToken = getAuthToken()
-      let channels = []
-      const organizationId = !this.isNaturalUser ? this.currentUser.id : undefined
-
-      if (organizationId) channels = [...channels, organizationId]
-
-      if (typeof authCallback === 'function' && publishableKey) authCallback({ publishableKey, authToken, channels })
-
-      this.$socket.client.signal_id = signal_id
-    },
-    signal (data) {
-      // default Signal event name
-    },
-    appUpdate ({ noCache = true } = {}) {
-      // refresh page dialog when app is updated to prevent missing features or broken webpack chunks
-      this.$store.commit(mutationTypes.SET_APP_UPDATE_AVAILABLE, { noCache })
-    }
-    /* eslint-enable camelcase */
-  },
   data () {
-    return {}
+    return {
+      // socket: null // don’t declare since we don’t want vue reactivity
+    }
   },
   computed: {
     ...mapGetters([
@@ -64,9 +39,8 @@ export default {
     // if the socket connection has been ended due to too long inactivity
     // recreate the socket
     '$q.appVisible' (visible) {
-      if (visible && !this.$socket.connected) {
-        this.refreshSocket()
-      }
+      if (!this.socket) return
+      if (visible && !this.socket.connected) this.refreshSocket()
     }
   },
   created () {
@@ -83,22 +57,66 @@ export default {
 
     this.$router.afterEach(this.handleRouteQuery)
   },
-  async mounted () {
+  mounted () {
     this.$store.dispatch('initApp')
-
-    this.$socket.client.open()
 
     this.handleUserSessionExpiration()
 
-    // only subscribe in client-side (mounted function)
-    EventBus.$on('refreshSocket', () => {
-      this.refreshSocket()
-    })
+    // give some time to slower devices before loading socket.io
+    // which is non-essential JS, and even useless during short sessions
+    const socketIoTimeout = 10000 // delay up to twice this value
+    setTimeout(() => {
+      if ('requestIdleCallback' in window) requestIdleCallback(this.loadSocketIo)
+      else setTimeout(this.loadSocketIo, socketIoTimeout)
+    }, socketIoTimeout)
   },
   methods: {
+    async loadSocketIo () {
+      this.socket = (await import(/* webpackChunkName: 'socket.io' */ 'src/signal')).default
+      // split microtask
+      if ('requestIdleCallback' in window) requestIdleCallback(this.initSocketIo)
+      else setTimeout(this.initSocketIo, 0)
+    },
+    initSocketIo () {
+      this.socket.open()
+      this.setSocketSignals()
+      EventBus.$on('refreshSocket', this.refreshSocket)
+    },
+    setSocketSignals () {
+      // https://stelace.com/docs/signal.html
+      // https://socket.io/docs/client-api/#socket-on-eventName-callback
+      this.socket.on('authentication', (signalId, authCallback) => {
+        const publishableKey = process.env.STELACE_PUBLISHABLE_API_KEY
+        const authToken = getAuthToken()
+        let channels = []
+        const organizationId = !this.isNaturalUser ? this.currentUser.id : undefined
+
+        if (organizationId) channels = [...channels, organizationId]
+
+        if (typeof authCallback === 'function' && publishableKey) authCallback({ publishableKey, authToken, channels })
+
+        this.socket.signalId = signalId
+      })
+
+      this.socket.on('appUpdate', ({ message = {} }) => {
+        const { noCache = true } = message
+        // refresh page dialog when app is updated to prevent missing features or broken webpack chunks
+        this.$store.commit(mutationTypes.SET_APP_UPDATE_AVAILABLE, { noCache })
+      })
+
+      this.socket.on('newMessage', async ({ message }) => {
+        await this.$store.dispatch('fetchMessages')
+        EventBus.$emit('newMessage')
+      })
+
+      /* this.socket.on('signal', data => {
+        // default Signal event name
+      }) */
+    },
     refreshSocket () {
-      this.$socket.client.close()
-      this.$socket.client.open()
+      if (!this.socket) return
+      this.socket.close()
+      this.socket.open()
     },
     handleRouteQuery () {
       const hash = this.$route.hash
