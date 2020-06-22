@@ -64,7 +64,7 @@
   },
   "devDependencies": {
     "@babel/cli": "^7.10.3",
-    "@babel/compat-data": "7.8.0",
+    "@babel/compat-data": "7.10.3",
     "@babel/core": "^7.9.6",
     "@babel/preset-env": "^7.10.3",
     "@quasar/app": "^1.9.6",
