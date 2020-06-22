@@ -16,7 +16,7 @@
           :rounded="style.roundedTheme"
           color="primary"
           class="absolute-top-right"
-          label="X"
+          :icon="icons.matClose"
           @click="onClose"
         />
       </q-card-section>
@@ -61,6 +61,7 @@
 
 <script>
 import { mapState } from 'vuex'
+import { matClose } from '@quasar/extras/material-icons'
 
 export default {
   props: {
@@ -86,6 +87,9 @@ export default {
     finished () {
       return this.nbSteps <= this.stepNum
     }
+  },
+  created () {
+    this.icons = { matClose }
   },
   methods: {
     reset () {
@@ -132,7 +136,7 @@ export default {
 
 .validation-card .q-card__section
   @media (min-width $breakpoint-sm-min)
-    max-width: 20rem
+    max-width: 25rem
 
 .validation-card .error-message
   color: $negative

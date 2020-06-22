@@ -1,5 +1,6 @@
 <template>
   <ValidationDialog
+    ref="emailValidationDialog"
     :opened="user.validationDialog.email.opened"
     :nb-steps="2"
     @close="closeDialog"
@@ -18,11 +19,17 @@
       <q-card-section>
         <form @submit.prevent="saveEmail({ goNext })">
           <q-input
+            ref="emailToValidate"
             v-model.trim="email"
             type="email"
             :label="$t({ id: 'authentication.placeholder.email' })"
             autofocus
             required
+            :rules="[
+              email => !!email || $t({ id: 'form.error.missing_field' }),
+              email => isEmail(email) || $t({ id: 'authentication.error.invalid_email' })
+            ]"
+            lazy-rules
           >
             <template v-slot:append>
               <q-icon :name="icons.matEmail" />
@@ -49,7 +56,6 @@
               type="submit"
               :rounded="style.roundedTheme"
               class="full-width q-my-sm"
-              :disabled="saveEmailButtonDisabled"
             >
               <AppContent
                 entry="prompt"
@@ -88,8 +94,9 @@
 <script>
 import { mapState, mapGetters } from 'vuex'
 import * as mutationTypes from 'src/store/mutation-types'
-import { required, email } from 'vuelidate/lib/validators'
 import { matEmail } from '@quasar/extras/material-icons'
+
+import { isEmail } from 'src/utils/string'
 
 import ValidationDialog from 'src/components/ValidationDialog'
 
@@ -105,12 +112,6 @@ export default {
       email: '',
     }
   },
-  validations: {
-    email: {
-      required,
-      email
-    }
-  },
   computed: {
     ...mapState([
       'style',
@@ -119,11 +120,10 @@ export default {
     ...mapGetters([
       'selectedUser',
     ]),
-    saveEmailButtonDisabled () {
-      return this.$v.email.$invalid || this.alreadyValidatedEmail
-    },
     alreadyValidatedEmail () {
-      return this.selectedUser.emailVerified && this.selectedUser.email && this.selectedUser.email === this.email
+      return this.selectedUser.emailVerified &&
+        this.selectedUser.email &&
+        this.selectedUser.email === this.email
     }
   },
   created () {
@@ -143,6 +143,10 @@ export default {
       this.actionPending = true
 
       try {
+        const input = this.$refs.emailToValidate
+        input.validate()
+        if (input.hasError) return this.$refs.emailValidationDialog.shake()
+
         await this.$store.dispatch('sendCustomEvent', {
           type: 'email_check_request',
           objectId: this.selectedUser.id, // automatically populated in event for workflows
@@ -160,9 +164,12 @@ export default {
         this.actionPending = false
       }
     },
+    isEmail
   }
 }
 </script>
 
 <style lang="stylus" scoped>
+.q-card__section
+  min-width: 25rem
 </style>

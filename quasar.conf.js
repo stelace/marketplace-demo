@@ -137,7 +137,6 @@ module.exports = function (ctx) {
       'vue-intl',
       'exchangePlugin',
       'vuex-router-sync',
-      'vuelidate',
       'vue-meta',
       ctx.dev ? 'devDebug' : null,
       { path: 'fonts', server: false },
