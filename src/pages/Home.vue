@@ -2,6 +2,8 @@
 import { mapState, mapGetters } from 'vuex'
 import { get, isString } from 'lodash'
 
+import { isPlaceSearchEnabled } from 'src/utils/places'
+
 import AppCarousel from 'src/components/AppCarousel'
 import AppSVGActionButton from 'src/components/AppSVGActionButton'
 import DatePickerInput from 'src/components/DatePickerInput'
@@ -33,6 +35,7 @@ export default {
       query: '',
       startDate: '',
       searchByCategory: process.env.VUE_APP_SEARCH_BY_CATEGORY === 'true',
+      isPlaceSearchEnabled,
       assets: [],
       nbAssetsPerSlideDefault: 3,
       nbCarouselSlides: 4, // Can be less when there are few assets, set to 1 to disable
@@ -265,6 +268,7 @@ export default {
               @text-changed="t => { query = t }"
             />
             <PlacesAutocomplete
+              v-if="isPlaceSearchEnabled"
               dense
               bottom-slots
               :dark="style.homeHasLightBackground"

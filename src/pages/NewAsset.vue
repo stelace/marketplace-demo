@@ -5,7 +5,7 @@ import { date } from 'quasar'
 
 import EventBus from 'src/utils/event-bus'
 import { isValidDateString } from 'src/utils/time'
-import { extractLocationDataFromPlace } from 'src/utils/places'
+import { extractLocationDataFromPlace, isPlaceSearchEnabled } from 'src/utils/places'
 import logger from 'src/utils/logger'
 
 import BasicHeroLayout from 'src/layouts/BasicHeroLayout'
@@ -42,6 +42,7 @@ export default {
       endDate: '',
       quantity: 1,
       locations: [],
+      isPlaceSearchEnabled,
       options: ['option1'],
       selectedCategory: null,
       editingAssetType: null,
@@ -492,7 +493,7 @@ export default {
             />
 
             <div class="row justify-around">
-              <div class="col-12 col-sm-5">
+              <div v-if="isPlaceSearchEnabled" class="col-12 col-sm-5">
                 <PlacesAutocomplete
                   :label="$t({ id: 'places.address_placeholder' })"
                   :initial-query="locationName"

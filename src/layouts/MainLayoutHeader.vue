@@ -12,6 +12,8 @@ import {
 } from '@quasar/extras/material-icons'
 import { mdiGithubCircle } from '@quasar/extras/mdi-v4'
 
+import { isPlaceSearchEnabled } from 'src/utils/places'
+
 import AppLocaleSwitch from 'src/components/AppLocaleSwitch'
 import AppLogo from 'src/components/AppLogo'
 import AppMiniLogo from 'src/components/AppMiniLogo'
@@ -40,6 +42,7 @@ export default {
       priceInputTouched: false,
       searchByCategory: process.env.VUE_APP_SEARCH_BY_CATEGORY === 'true',
       creatingOrganization: false,
+      isPlaceSearchEnabled,
     }
   },
   computed: {
@@ -312,6 +315,7 @@ export default {
           @text-changed="updateQuery"
         />
         <PlacesAutocomplete
+          v-show="isPlaceSearchEnabled"
           class="gt-sm"
           :label="$t({ id: 'form.search.near_location_placeholder' })"
           :hide-input-on-select="true"

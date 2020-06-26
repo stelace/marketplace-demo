@@ -6,6 +6,16 @@ const key = process.env.VUE_APP_NOMINATIM_KEY
 
 // API: https://developer.mapquest.com/documentation/open/nominatim-search/search/
 
+export const isPlaceSearchEnabled = (() => {
+  let enabled = true
+  try {
+    checkProviderInfo()
+  } catch (err) {
+    enabled = false
+  }
+  return enabled
+})()
+
 export async function search (query, { country } = {}) {
   checkProviderInfo()
 
@@ -62,12 +72,8 @@ export function extractLocationDataFromPlace (place, handlerFn) {
 }
 
 function checkProviderInfo () {
-  if (!host) {
-    throw new Error('Missing search places provider host')
-  }
-  if (!key) {
-    throw new Error('Missing search places provider key')
-  }
+  if (!host) throw new Error('Missing place search provider host')
+  if (!key) throw new Error('Missing place search provider key')
 }
 
 function formatPlacesResult (result) {
