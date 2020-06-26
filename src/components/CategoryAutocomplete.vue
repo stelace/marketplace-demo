@@ -19,23 +19,28 @@
     @filter="filterCategories"
   >
     <template
-      v-if="showSearchIcon && searchIconPosition === 'left'"
+      v-if="
+        (showSearchIcon && searchIconPosition === 'left')
+          || padLeft
+      "
       v-slot:prepend
     >
-      <QBtn
-        v-if="iconButtonAction"
-        :color="iconColor"
-        :icon="icons.matSearch"
-        flat
-        dense
-        rounded
-        @click="iconButtonAction"
-      />
-      <QIcon
-        v-else
-        :color="iconColor"
-        :name="icons.matSearch"
-      />
+      <template v-if="showSearchIcon && searchIconPosition === 'left'">
+        <QBtn
+          v-if="iconButtonAction"
+          :color="iconColor"
+          :icon="icons.matSearch"
+          flat
+          dense
+          rounded
+          @click="iconButtonAction"
+        />
+        <QIcon
+          v-else
+          :color="iconColor"
+          :name="icons.matSearch"
+        />
+      </template>
     </template>
 
     <template v-slot:append>
@@ -78,6 +83,10 @@ export default {
     showSearchIcon: {
       type: Boolean,
       default: true
+    },
+    padLeft: { // keep some spacing when showSearchIcon is false
+      type: Boolean,
+      default: false
     },
     iconButtonAction: {
       type: Function,
