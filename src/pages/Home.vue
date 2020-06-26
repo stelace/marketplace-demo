@@ -1,12 +1,15 @@
 <script>
 import { mapState, mapGetters } from 'vuex'
-import { get, isString } from 'lodash'
+import { get, isString, isUndefined } from 'lodash'
+
+import {
+  matSearch
+} from '@quasar/extras/material-icons'
 
 import { isPlaceSearchEnabled } from 'src/utils/places'
 
 import AppCarousel from 'src/components/AppCarousel'
-import AppSVGActionButton from 'src/components/AppSVGActionButton'
-import DatePickerInput from 'src/components/DatePickerInput'
+import AppDateRangePicker from 'src/components/AppDateRangePicker'
 import PlacesAutocomplete from 'src/components/PlacesAutocomplete'
 import CategoryAutocomplete from 'src/components/CategoryAutocomplete'
 
@@ -19,8 +22,7 @@ export default {
   name: 'Home',
   components: {
     AppCarousel,
-    AppSVGActionButton,
-    DatePickerInput,
+    AppDateRangePicker,
     PlacesAutocomplete,
     CategoryAutocomplete,
   },
@@ -30,18 +32,26 @@ export default {
   ],
   data () {
     return {
+      searchMode: 'default',
       location: null,
       selectedCategory: null,
       query: '',
       startDate: '',
+      endDate: '',
       searchByCategory: process.env.VUE_APP_SEARCH_BY_CATEGORY === 'true',
       isPlaceSearchEnabled,
       assets: [],
       nbAssetsPerSlideDefault: 3,
       nbCarouselSlides: 4, // Can be less when there are few assets, set to 1 to disable
+
+      isBackgroundLoaded: false
     }
   },
   computed: {
+    showDates () {
+      const hasDates = this.getSearchModeUI(this.searchMode).hasDates
+      return (!this.searchModes.length || hasDates === null) ? true : hasDates
+    },
     nbAssetsVisiblePerSlide () {
       const nbAssetsWithoutCarousel = this.$q.screen.gt.xs ? (this.$q.screen.lt.md ? 4 : 3) : 2
       return this.showCarousel ? this.nbAssetsPerSlideDefault : nbAssetsWithoutCarousel
@@ -56,6 +66,9 @@ export default {
       // YouTube: 'https://www.youtube-nocookie.com/embed/eY1XtWyKlJA'
       return get(config, 'instant.videoUrl', '')
     },
+    nonDefaultSearchModes () {
+      return this.searchModes.filter(m => m !== 'default')
+    },
     ...mapState({
       style: state => state.style,
       config: state => state.common.config,
@@ -65,6 +78,8 @@ export default {
     ...mapGetters([
       'currentUser',
       'defaultSearchMode',
+      'getSearchModeUI',
+      'searchModes',
       'homeHeroUrlTransformed',
     ]),
   },
@@ -77,6 +92,10 @@ export default {
     this.$store.dispatch('fetchLastAssets', {
       nbResults: this.nbAssetsPerSlideDefault * this.nbCarouselSlides
     }).then(assets => { this.assets = assets })
+
+    this.icons = {
+      matSearch,
+    }
   },
   methods: {
     async afterAuth () {
@@ -164,6 +183,10 @@ export default {
     selectCategory (category) {
       this.selectedCategory = category
     },
+    setDates ({ startDate, endDate }) {
+      if (!isUndefined(startDate)) this.startDate = startDate
+      if (!isUndefined(endDate)) this.endDate = endDate
+    },
     handleUrlRedirection (route) {
       const routeQuery = route.query
 
@@ -174,9 +197,6 @@ export default {
           this.openAuthDialog()
         }
       }
-    },
-    selectStartDate (startDate) {
-      this.startDate = startDate
     },
     async searchAssets () {
       if (this.searchByCategory && !this.query) {
@@ -203,8 +223,13 @@ export default {
       this.$store.commit({
         type: types.SET_SEARCH_DATES,
         startDate: this.startDate ? new Date(this.startDate).toISOString() : null,
+        endDate: this.endDate ? new Date(this.endDate).toISOString() : null,
         reset: true
       })
+
+      if (this.searchMode && this.searchMode !== 'default') {
+        this.$store.dispatch('selectSearchMode', { searchMode: this.searchMode })
+      }
 
       this.$router.push({ name: 'search' })
     },
@@ -215,93 +240,107 @@ export default {
 <template>
   <q-page>
     <section
-      class="hero row items-center"
+      :class="[
+        'hero text-center',
+        style.homeHeroBase64 || isBackgroundLoaded ? 'text-white' : ''
+      ]"
       :style="`background-image: url('${style.homeHeroBase64}')`"
     >
       <QImg
+        v-if="$q.screen.height > 720 && $q.screen.gt.xs"
         class="hero__background absolute-full"
         :src="homeHeroUrlTransformed"
         no-default-spinner
         basic
+        @load="isBackgroundLoaded = true"
       />
-      <div class="hero__content col-12 col-sm-6 col-md-4 offset-sm-2">
-        <div
+      <div class="hero__search stl-content-container stl-content-container--xlarge">
+        <AppContent
+          tag="h1"
           :class="[
-            'q-pa-md hero__search',
-            style.homeHasLightBackground ? 'hero__search--dark' : 'hero__search--light',
-            style.roundedTheme ? 'hero__search--round' : ''
+            'text-h4 text-weight-medium q-my-none',
           ]"
+          entry="pages"
+          field="home.header"
+        />
+        <QTabs
+          v-model="searchMode"
+          class="q-my-sm hero__search-modes"
+          align="left"
+          breakpoint="0"
+          dense
+          no-caps
         >
-          <AppContent
-            tag="h1"
-            :class="[
-              'text-h4 text-weight-medium q-mt-none',
-              style.homeHasLightBackground ? 'text-white' : ''
-            ]"
-            entry="pages"
-            field="home.header"
+          <QTab
+            v-for="mode in nonDefaultSearchModes"
+            :key="mode"
+            :name="mode"
+            :label="$t({ id: `form.search.modes.${mode}` })"
           />
-          <div class="hero__search-form">
-            <q-input
+        </QTabs>
+        <form class="hero__search-bar row justify-center shadow-2" @submit.prevent="searchAssets">
+          <div class="row no-wrap flex-item--grow">
+            <QInput
               v-if="!searchByCategory"
               ref="heroSearchInput"
               v-model="query"
-              dense
-              bottom-slots
-              :dark="style.homeHasLightBackground"
-              :standout="style.homeHasLightBackground"
-              :filled="!style.homeHasLightBackground"
+              class="flex-item--grow-shrink-auto"
               :label="$t({ id: 'form.search.query_placeholder' })"
+              :debounce="300"
             />
             <CategoryAutocomplete
               v-if="searchByCategory"
               ref="heroSearchCategoryAutocomplete"
+              class="hero__search-field flex-item--grow-shrink-auto"
+              :text-debounce="300"
               :set-category="selectedCategory"
-              dense
-              bottom-slots
-              :dark="style.homeHasLightBackground"
-              :standout="style.homeHasLightBackground"
-              :filled="!style.homeHasLightBackground"
               :label="$t({ id: 'form.search.query_placeholder' })"
               :show-search-icon="false"
+              pad-left
               @category-changed="selectCategory"
               @text-changed="t => { query = t }"
             />
             <PlacesAutocomplete
-              v-if="isPlaceSearchEnabled"
-              dense
-              bottom-slots
-              :dark="style.homeHasLightBackground"
-              :standout="style.homeHasLightBackground"
-              :filled="!style.homeHasLightBackground"
+              v-show="isPlaceSearchEnabled"
+              class="hero__search-field hero__search-place flex-item--grow-shrink-auto"
+              pad-left
               :label="$t({ id: 'form.search.near_location_placeholder' })"
+              :show-search-icon="false"
+              prompt-current-position
               @selectPlace="selectPlace"
             />
-            <DatePickerInput
-              dense
-              bottom-slots
-              :date="startDate"
-              :dark="style.homeHasLightBackground"
-              :standout="style.homeHasLightBackground"
-              :filled="!style.homeHasLightBackground"
+            <AppDateRangePicker
+              v-show="showDates"
+              :start-date="startDate"
+              :end-date="endDate"
+              class="hero__search-field hero__search-dates"
+              column-class="col-6"
               :label="$t({ id: 'form.date_placeholder' })"
-              @change="selectStartDate"
+              hide-hint
+              @changeStartDate="startDate => setDates({ startDate })"
+              @changeEndDate="endDate => setDates({ endDate })"
             />
           </div>
-          <div class="row justify-end">
-            <component
-              :is="style.hasSVGActionButton ? 'AppSVGActionButton' : 'QBtn'"
-              ref="heroSearchButton"
-              class="text-weight-medium"
-              :rounded="style.roundedTheme"
-              :label="$t({ id: 'pages.home.form_button' })"
-              color="info"
-              size="lg"
-              no-caps
-              @click="searchAssets"
+          <QBtn
+            ref="heroSearchButton"
+            class="hero__search-button text-weight-medium q-ma-sm q-px-sm"
+            type="submit"
+            :rounded="style.roundedTheme"
+            color="info"
+            dense
+            no-caps
+          >
+            <QIcon
+              :name="icons.matSearch"
+              :left="true"
             />
-          </div>
-        </div>
+            <AppContent
+              class="gt-xs"
+              entry="pages"
+              field="home.form_button"
+            />
+          </QBtn>
+        </form>
       </div>
     </section>
     <section :class="['home__features row justify-center' ,style.colorfulTheme ? 'bg-primary-gradient text-white' : '']">
@@ -404,35 +443,42 @@ export default {
 
 <style lang="stylus" scoped>
 .hero
-  position relative
+  position: relative
+  padding 5rem 1rem 2.5rem
   background-size: cover
   background-position: 50% 50%
 
-@media (min-width $breakpoint-sm-min)
-  .hero
-    min-height 100vh // can be higher on mobile screen with landscape orientation
-    padding 5rem 0
-
 .hero__search
+  position: relative
+  margin: 1rem auto
+.hero__search-modes
+  min-height: 2.5rem
+  @media (max-width $breakpoint-xs-max)
+    visibility: hidden
+.hero__search-bar
+  background-color: #FFF
   border-radius $generic-border-radius
-.hero__search--round
-  border-radius 10px
-.hero__search--dark
-  background-color $dimmed-background
-  background-color var(--stl-home-search-card-background, $dimmed-background)
-.hero__search--light
-  background-color $light-dimmed-background
-  background-color var(--stl-home-search-card-background, $light-dimmed-background)
+.hero__search-field
+  position:relative
+  &:not(:first-child)::after
+    content: ''
+    position:absolute
+    top: 25%
+    bottom: 25%
+    left: 0
+    border-right: 1px solid $grey-4
 
-@media (max-width $breakpoint-xs-max)
-  .hero__search
-    border-radius 0
-  .hero__search--dark, .hero__search--light
-    padding-top 1.5 * $toolbar-min-height
-
-@media (min-width $breakpoint-sm-min)
-  .hero__search
-    max-width 26rem
+.hero__search-place
+  @media (max-width $breakpoint-xs-max)
+    display: none
+.hero__search-dates
+  flex: 1 1 14rem
+  @media (max-width $breakpoint-sm-max)
+    display: none
+.hero__search-button
+  flex: 0 1 auto
+  @media (max-width $breakpoint-xs-max)
+    padding-left: $spaces.md.x
 
 .hero__content
   z-index: 1
