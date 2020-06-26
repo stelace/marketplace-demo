@@ -267,7 +267,7 @@ export default {
 
       <div
         v-show="!isHome && !isMenuOpened"
-        class="header__search-bar row no-wrap shadow-2 q-px-sm"
+        class="header__search-bar row no-wrap shadow-2"
       >
         <QInput
           v-if="!searchByCategory"
@@ -309,6 +309,7 @@ export default {
           :label="$t({ id: 'form.search.query_placeholder' })"
           :icon-button-action="searchAssets"
           dense
+          pad-left
           icon-color="primary"
           search-icon-position="left"
           @category-changed="selectCategory"
@@ -324,6 +325,7 @@ export default {
           read-search-store
           prompt-current-position
           dense
+          pad-left
           @selectPlace="selectPlace"
         />
       </div>

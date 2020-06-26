@@ -30,21 +30,26 @@
     </template>
 
     <template
-      v-if="showSearchIcon && searchIconPosition === 'left'"
+      v-if="
+        (showSearchIcon && searchIconPosition === 'left')
+          || padLeft
+      "
       v-slot:prepend
     >
-      <QIcon
-        v-show="!showPromptPositionButton"
-        :color="iconColor"
-        :name="icons.matPlace"
-      />
-      <QBtn
-        v-show="showPromptPositionButton"
-        class="cursor-pointer"
-        :icon="icons.matMyLocation"
-        dense
-        @click="triggerPromptCurrentPosition"
-      />
+      <template v-if="showSearchIcon && searchIconPosition === 'left'">
+        <QIcon
+          v-show="!showPromptPositionButton"
+          :color="iconColor"
+          :name="icons.matPlace"
+        />
+        <QBtn
+          v-show="showPromptPositionButton"
+          class="cursor-pointer"
+          :icon="icons.matMyLocation"
+          dense
+          @click="triggerPromptCurrentPosition"
+        />
+      </template>
     </template>
 
     <template v-slot:append>
@@ -102,6 +107,10 @@ export default {
     showSearchIcon: {
       type: Boolean,
       default: true
+    },
+    padLeft: { // keep some spacing when showSearchIcon is false
+      type: Boolean,
+      default: false
     },
     promptCurrentPosition: {
       type: Boolean,
