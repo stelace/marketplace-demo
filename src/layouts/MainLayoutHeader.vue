@@ -4,9 +4,7 @@ import * as mutationTypes from 'src/store/mutation-types'
 
 import {
   matAddBox,
-  matAttachMoney,
   matClose,
-  matEuroSymbol,
   matLock,
   matMail,
   matPowerSettingsNew,
@@ -63,11 +61,6 @@ export default {
 
       const category = this.common.categoriesById[selectedCategoryId]
       return category
-    },
-    maximumPrice () {
-      if (!this.priceInputTouched) return ''
-
-      return this.search.priceRange.max
     },
     userConversations () {
       return this.conversations.filter(c => !c.isEmpty)
@@ -159,9 +152,7 @@ export default {
   created () {
     this.icons = {
       matAddBox,
-      matAttachMoney,
       matClose,
-      matEuroSymbol,
       matLock,
       matMail,
       matSearch,
@@ -221,36 +212,6 @@ export default {
         useMapCenter: false,
         latitude: null,
         longitude: null
-      })
-
-      this.searchAssets()
-    },
-    updateMaxPrice (maximumPrice) {
-      if (isNaN(maximumPrice)) return
-
-      this.priceInputTouched = true
-
-      let maxPrice
-      if (maximumPrice === '') {
-        maxPrice = this.search.priceDefault.max
-        this.priceInputTouched = false
-      } else {
-        maxPrice = maximumPrice
-      }
-
-      this.$store.commit(mutationTypes.SET_PRICE_RANGE, {
-        min: this.search.priceRange.min,
-        max: maxPrice
-      })
-
-      this.searchAssets()
-    },
-    resetMaxPrice () {
-      this.priceInputTouched = false
-
-      this.$store.commit(mutationTypes.SET_PRICE_RANGE, {
-        min: this.search.priceRange.min,
-        max: null
       })
 
       this.searchAssets()
@@ -361,30 +322,6 @@ export default {
           dense
           @selectPlace="selectPlace"
         />
-
-        <AppInputNumber
-          :value="maximumPrice"
-          :label="$t({ id: 'form.search.maximum_price' })"
-          class="gt-md"
-          input-class="text-right"
-          min="0"
-          dense
-          @input="updateMaxPrice"
-        >
-          <template v-slot:prepend>
-            <QIcon
-              :name="content.currency === 'EUR' ? icons.matEuroSymbol : icons.matAttachMoney"
-              color="grey-4"
-            />
-          </template>
-          <template v-slot:append>
-            <QIcon
-              :class="['cursor-pointer', maximumPrice ? '' : 'hidden']"
-              :name="icons.matClose"
-              @click="resetMaxPrice"
-            />
-          </template>
-        </AppInputNumber>
       </div>
 
       <QSpace />
