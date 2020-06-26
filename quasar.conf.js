@@ -232,6 +232,11 @@ module.exports = function (ctx) {
         // 'QTr',
         // 'QTd',
 
+        // Tabs
+        'QTabs',
+        'QTab',
+        // 'QRouteTab',
+
         // Timeline
         // 'QTimeline',
         // 'QTimelineEntry',

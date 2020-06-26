@@ -6,10 +6,10 @@ form:
         fr: Tous
         context: Default search mode, generally “offers” as opposed to “requests” or submissions
       renting:
-        en: Renting
+        en: For rent
         fr: Location
         context: Renting search mode
       selling:
-        en: Selling
+        en: For sale
         fr: Vente
         context: Selling search mode

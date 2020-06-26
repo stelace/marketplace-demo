@@ -52,6 +52,9 @@ export default {
     isHome () {
       return this.route.name === 'home'
     },
+    hasHomeBackground () {
+      return this.homeHeroUrlTransformed || this.style.homeHeroBase64
+    },
     isSearch () {
       return this.route.name === 'search'
     },
@@ -103,6 +106,7 @@ export default {
       'defaultSearchMode',
       'currentUserPosition',
       'displayAssetDistance',
+      'homeHeroUrlTransformed',
     ]),
   },
   watch: {
@@ -240,14 +244,14 @@ export default {
     :bordered="!isHome && !isMenuOpened"
     :reveal-offset="100"
     :class="[
-      isHome ? 'q-pa-md transparent-header' : 'bg-white',
+      isHome && hasHomeBackground ? 'q-pa-md transparent-header' : 'bg-white',
       isMenuOpened ? 'header--raise-above-menu-dialog' : ''
     ]"
   >
     <QToolbar>
       <AppLink
         v-if="showAccountAvatar"
-        :class="[isHome ? '' : 'text-primary', 'logo-container anchor-text--reset cursor-pointer q-mr-sm']"
+        :class="[isHome && hasHomeBackground ? '' : 'text-primary', 'logo-container anchor-text--reset cursor-pointer q-mr-sm']"
         :to="{ name: 'home' }"
         :aria-label="$t({ id: 'navigation.home' })"
         flat
@@ -257,7 +261,7 @@ export default {
 
       <QBtn
         v-else
-        :class="[isHome ? '' : 'text-primary', 'logo-container q-mr-sm']"
+        :class="[isHome && hasHomeBackground ? '' : 'text-primary', 'logo-container q-mr-sm']"
         :aria-label="$t({ id: 'navigation.menu' })"
         flat
         @click="toggleMenu"
