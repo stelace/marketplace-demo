@@ -42,6 +42,7 @@
 
         <div class="row justify-between q-px-lg q-my-md">
           <AppSwitchableEditor
+            v-if="isPlaceSearchEnabled"
             tag="div"
             class="col-6 text-body1"
             :value="activeAsset.locationName"
@@ -320,11 +321,8 @@ import { get, map, sortBy, values, compact, flatten, groupBy, isUndefined } from
 // WARNING: icons referenced in customAttributes should be included below
 import { mdiWhiteBalanceSunny, mdiImage } from '@quasar/extras/mdi-v4'
 
-import { extractLocationDataFromPlace } from 'src/utils/places'
-
-import {
-  populateAsset,
-} from 'src/utils/asset'
+import { extractLocationDataFromPlace, isPlaceSearchEnabled } from 'src/utils/places'
+import { populateAsset } from 'src/utils/asset'
 
 import * as mutationTypes from 'src/store/mutation-types'
 import CustomAttributesEditor from 'src/components/CustomAttributesEditor'
@@ -360,6 +358,7 @@ export default {
       assetRatingsByTransaction: [],
       assetRatingsLoaded: false,
       isEditingImages: false,
+      isPlaceSearchEnabled,
     }
   },
   metaInfo () { // SEO, overriding any hard-coded content in translations
