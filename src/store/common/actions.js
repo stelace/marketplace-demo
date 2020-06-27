@@ -9,10 +9,7 @@ const expirationDuration = {
 }
 
 export async function initApp ({ dispatch, rootGetters }) {
-  await Promise.all([
-    dispatch('fetchConfig'),
-  ])
-
+  await dispatch('fetchConfig')
   await dispatch('selectSearchMode', { searchMode: rootGetters.defaultSearchMode })
 }
 

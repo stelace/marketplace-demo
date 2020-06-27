@@ -41,6 +41,11 @@ module.exports = function (ctx) {
     execSync(`npm run deploy:translations${ctx.dev ? '' : ':prod'}`, { stdio: 'inherit' })
   }
 
+  // Include API resources in build to save hundreds of milliseconds when loading app.
+  // This means that app may have to be rebuilt and deployed again when updating Config,
+  // Asset Types or Custom Attributes
+  execSync(`npm run conf${ctx.dev ? '' : ':prod'}`, { stdio: 'inherit' })
+
   // ///////// //
   // Dev tools //
   // ///////// //
