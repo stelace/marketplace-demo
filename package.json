@@ -12,6 +12,8 @@
     "lint": "eslint --ext .js,.vue src",
     "test": "echo \"No test specified\" && exit 0",
     "build": "quasar build && npm run functions:build",
+    "conf": "node scripts/include-config.js",
+    "conf:prod": "cross-env NODE_ENV=production node scripts/include-config.js",
     "dev": "npm-run-all --parallel quasar:dev functions:dev",
     "dev:ci": "NETLIFY_LAMBDA=true quasar dev",
     "quasar:dev": "quasar dev",

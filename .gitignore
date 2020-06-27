@@ -7,6 +7,9 @@
 # Theme translation files are not ignored on purpose to ease theme development in forks
 # But these must be committed on a branch _not_ used for pull requests
 
+# Copy of API resources to improve app loading time
+/src/store/common/*-copy.json
+
 # Cordova
 /src-cordova/node_modules
 /src-cordova/platforms
