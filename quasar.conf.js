@@ -3,6 +3,7 @@ const PreloadPlugin = require('@vue/preload-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const SentryWebpackPlugin = require('@sentry/webpack-plugin')
 const PrerenderSPAPlugin = require('prerender-spa-plugin')
+const Renderer = PrerenderSPAPlugin.PuppeteerRenderer
 const HtmlCriticalWebpackPlugin = require('html-critical-webpack-plugin')
 const path = require('path')
 const fs = require('fs')
@@ -376,8 +377,8 @@ module.exports = function (ctx) {
             new PrerenderSPAPlugin({
               staticDir: path.join(__dirname, 'dist/spa'),
               routes: [
-                '/',
-                '/s'
+                '/', // Home
+                '/s', // Search
               ],
               postProcess: context => {
                 // Defer scripts and tell Vue it's been server rendered to trigger hydration
@@ -392,7 +393,12 @@ module.exports = function (ctx) {
               },
               minify: {
                 minifyJS: true
-              }
+              },
+              renderer: new Renderer({
+                inject: { isPrerendering: true },
+                injectProperty: '__PRERENDER_INJECTED', // default
+                renderAfterDocumentEvent: 'prerender-ready'
+              })
             })
           )
 

@@ -40,6 +40,7 @@ export default {
       endDate: '',
       searchByCategory: process.env.VUE_APP_SEARCH_BY_CATEGORY === 'true',
       isPlaceSearchEnabled,
+      lastAssetsPromise: null,
       assets: null,
       nbAssetsPerSlideDefault: 4,
       nbCarouselSlides: 4, // Can be less when there are few assets, set to 1 to disable
@@ -89,13 +90,17 @@ export default {
     }
   },
   created () {
-    this.$store.dispatch('fetchLastAssets', {
+    this.lastAssetsPromise = this.$store.dispatch('fetchLastAssets', {
       nbResults: this.nbAssetsPerSlideDefault * this.nbCarouselSlides
-    }).then(assets => { this.assets = assets })
+    })
 
     this.icons = {
       matSearch,
     }
+  },
+  async mounted () {
+    if (window.__PRERENDER_INJECTED) document.dispatchEvent(new Event('prerender-ready'))
+    this.assets = await this.lastAssetsPromise
   },
   methods: {
     async afterAuth () {
