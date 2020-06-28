@@ -182,6 +182,7 @@ export default {
     if (!this.$store.state.search.searchMode) {
       await this.$store.dispatch('selectSearchMode', { searchMode: this.$store.getters.defaultSearchMode })
     }
+    if (window.__PRERENDER_INJECTED) document.dispatchEvent(new Event('prerender-ready'))
 
     await this.searchAssets()
     this.$store.dispatch('getHighestPrice')
