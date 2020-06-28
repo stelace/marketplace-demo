@@ -40,8 +40,8 @@ export default {
       endDate: '',
       searchByCategory: process.env.VUE_APP_SEARCH_BY_CATEGORY === 'true',
       isPlaceSearchEnabled,
-      assets: [],
-      nbAssetsPerSlideDefault: 3,
+      assets: null,
+      nbAssetsPerSlideDefault: 4,
       nbCarouselSlides: 4, // Can be less when there are few assets, set to 1 to disable
 
       isBackgroundLoaded: false
@@ -347,7 +347,7 @@ export default {
       <div class="col-12 col-md-9 flex flex-center">
         <AppContent
           tag="h2"
-          class="text-h4 text-center text-weight-medium q-my-xl q-mx-md"
+          class="text-h5 text-center text-weight-medium q-my-xl q-mx-md"
           entry="pages"
           field="home.subheader"
         />
@@ -414,7 +414,7 @@ export default {
     <section class="home__asset-gallery">
       <AppContent
         tag="h2"
-        class="text-h5 text-weight-medium text-center"
+        class="text-h5 text-weight-medium text-center q-my-lg"
         entry="pages"
         field="home.asset_gallery_header"
       />
@@ -527,7 +527,7 @@ export default {
 // Assets
 
 .home__asset-gallery
-  padding: 2rem 0 4rem
+  padding: 0 0 4rem
   // Note that colon is required to avoid parsing errors
   margin: $spaces.md.y $spaces.md.x $spaces.xl.y
   @media (min-width $breakpoint-sm-min)

@@ -227,6 +227,7 @@ module.exports = function (ctx) {
         'QScrollArea',
         'QSelect',
         'QSeparator',
+        'QSkeleton',
         'QSlider',
         'QSpace',
         'QSpinner',
@@ -405,12 +406,17 @@ module.exports = function (ctx) {
               width: 360
             },
             {
-              height: 720,
+              height: 1080,
               width: 1360
             }],
             penthouse: {
               blockJSRequests: false,
               keepLargerMediaQueries: true,
+              forceInclude: [
+                // skeleton styles
+                /q-skeleton/,
+                '.fit',
+              ],
               /* screenshots: {
                 basePath: 'criticalcss',
               } */

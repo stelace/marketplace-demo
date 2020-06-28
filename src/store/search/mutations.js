@@ -13,6 +13,9 @@ export default {
     state.showFilterDialog = false
   },
 
+  [types.SET_SEARCHING_ASSETS] (state, { isSearching = true }) {
+    state.searchingAssets = isSearching
+  },
   [types.SET_SEARCH_MODE] (state, { searchMode, customAttributes }) {
     state.searchMode = searchMode || 'default'
     state.displayCustomAttributes = customAttributes || []
