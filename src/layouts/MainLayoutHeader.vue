@@ -250,8 +250,10 @@ export default {
   >
     <QToolbar>
       <AppLink
-        v-if="showAccountAvatar"
-        :class="[isHome && hasHomeBackground ? '' : 'text-primary', 'logo-container anchor-text--reset cursor-pointer q-mr-sm']"
+        :class="[
+          isHome && hasHomeBackground ? '' : 'text-primary',
+          'logo-container anchor-text--reset cursor-pointer q-mr-sm'
+        ]"
         :to="{ name: 'home' }"
         :aria-label="$t({ id: 'navigation.home' })"
         flat
@@ -260,8 +262,10 @@ export default {
       </AppLink>
 
       <QBtn
-        v-else
-        :class="[isHome && hasHomeBackground ? '' : 'text-primary', 'logo-container q-mr-sm']"
+        :class="[
+          isHome && hasHomeBackground ? '' : 'text-primary',
+          'logo-container mini-logo-container q-mr-sm'
+        ]"
         :aria-label="$t({ id: 'navigation.menu' })"
         flat
         @click="toggleMenu"
@@ -556,6 +560,12 @@ $header-min-breakpoint = 359px
 
 .logo-container svg
   max-height: $toolbar-min-height
+.logo-container:not(.mini-logo-container)
+  @media (max-width $breakpoint-xs-max)
+    display: none
+.mini-logo-container
+  @media (min-width $breakpoint-sm-min)
+    display: none
 .company-logo
   width: 9rem
 .company-mini-logo
