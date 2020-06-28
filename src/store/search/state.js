@@ -59,4 +59,6 @@ export default {
 
   assets: [],
   usersById: {},
+
+  searchingAssets: false,
 }

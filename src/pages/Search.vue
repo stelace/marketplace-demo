@@ -3,16 +3,17 @@
     <div :class="['col-12 q-pa-md', isSearchMapVisible ? 'col-md-8' : '']">
       <div class="row q-col-gutter-md items-start">
         <AssetCard
-          v-for="asset of searchedAssets"
-          :key="asset.id"
+          v-for="(asset, index) of searchResults"
+          :key="index"
           :class="[
             'col-12 col-sm-6 col-md-4 col-lg-3',
             isSearchMapVisible ? 'col-xl-3' : 'col-xl-2'
           ]"
           :asset="asset"
-          :show-distance="displayAssetDistance"
-          @mouseenter.native="animateMarker(asset.id)"
-          @mouseleave.native="animateMarker(asset.id, false)"
+          :reloading="search.searchingAssets"
+          :show-distance="!search.searchingAssets && displayAssetDistance"
+          @mouseenter.native="animateMarker(asset)"
+          @mouseleave.native="animateMarker(asset, false)"
         />
       </div>
       <div class="row justify-center q-mt-md">
@@ -89,7 +90,7 @@ import Vue from 'vue'
 import { mapState, mapGetters } from 'vuex'
 import * as mutationTypes from 'src/store/mutation-types'
 
-import { get, set } from 'lodash'
+import { fill, get, set } from 'lodash'
 import getDistance from 'geolib/es/getDistance'
 import p from 'src/utils/promise'
 
@@ -144,6 +145,15 @@ export default {
       if (this.shouldSearchAfterMapMove) return false
       return this.mapCenterChanged
     },
+    searchResults () {
+      if (this.search.searchingAssets && !this.searchedAssets.length) {
+        // Array.fill not polyfilled (IE11)
+        // TODO: Reconsider using it with @quasar/app v2
+        return fill(Array(this.search.searchFilters.nbResultsPerPage / 2), null)
+      } else {
+        return this.searchedAssets
+      }
+    },
   },
   watch: {
     'search.assets' () {
@@ -173,7 +183,7 @@ export default {
       await this.$store.dispatch('selectSearchMode', { searchMode: this.$store.getters.defaultSearchMode })
     }
 
-    await this.$store.dispatch('searchAssets')
+    await this.searchAssets()
     this.$store.dispatch('getHighestPrice')
   },
   updated () { // e.g. when switching locale
@@ -194,7 +204,7 @@ export default {
         await this.$store.dispatch('selectSearchMode', { searchMode: this.defaultSearchMode })
       }
 
-      await this.$store.dispatch('searchAssets')
+      await this.searchAssets()
     },
     mapResized () {
       this.mapSized = true
@@ -337,8 +347,9 @@ export default {
         }
       })
     },
-    animateMarker (assetId, animate = true) {
-      const marker = get(window.stlMapMarkers, assetId)
+    animateMarker (asset, animate = true) {
+      if (!asset || !asset.id) return
+      const marker = get(window.stlMapMarkers, asset.id)
       const el = marker && marker.getElement()
 
       if (!el) return

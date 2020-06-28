@@ -52,6 +52,8 @@ export async function searchAssets ({ state, rootState, rootGetters, commit, dis
     })
   }
 
+  commit({ type: types.SET_SEARCHING_ASSETS })
+
   const searchFilters = state.searchFilters
 
   const assets = await api.searchAssets({
@@ -89,6 +91,10 @@ export async function searchAssets ({ state, rootState, rootGetters, commit, dis
     customAttributesFilters: pick(searchFilters.customAttributesFilters, state.displayCustomAttributes)
   })
 
+  commit({
+    type: types.SET_SEARCHING_ASSETS,
+    isSearching: false
+  })
   commit({
     type: types.SEARCH__SET_ASSETS,
     assets
