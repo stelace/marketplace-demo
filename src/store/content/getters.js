@@ -103,15 +103,26 @@ export function termsPath (state, getters) {
   return getters.entries['instant_pages.terms.INSTANT_PAGE_PATH'] || 'terms'
 }
 
-export function homeHeroUrlTransformed (state, getters, rootState) {
+export function getHomeHeroUrlTransformed (state, getters, rootState) {
   const url = rootState.style.homeHeroUrl || ''
 
-  if (url && cdn.servedFromCdnBucket(url)) {
-    return cdn.getUrl(url, {
-      webp: state.acceptWebP
-    })
+  return ({ noWebP, width } = {}) => {
+    const edits = {
+      webp: state.acceptWebP && !noWebP
+    }
+
+    if (width) {
+      edits.resize = {
+        width,
+        withoutEnlargement: true
+      }
+    }
+
+    if (url && cdn.servedFromCdnBucket(url)) {
+      return cdn.getUrl(url, edits)
+    }
+    return url
   }
-  return url
 }
 
 export function placeholderImage (state, getters) {

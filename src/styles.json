@@ -16,7 +16,7 @@
   "colorfulTheme": false,
   "pageTransitions": true,
 
-  "homeHasLightBackground": true,
+  "homeHasLightBackground": false,
   "homeSearchCardBackground": "rgba(0, 0, 0, 0.6)",
   "hasSVGActionButton": true,
 
