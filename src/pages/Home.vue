@@ -44,8 +44,6 @@ export default {
       assets: null,
       nbAssetsPerSlideDefault: 4,
       nbCarouselSlides: 4, // Can be less when there are few assets, set to 1 to disable
-
-      isBackgroundLoaded: false
     }
   },
   computed: {
@@ -73,15 +71,16 @@ export default {
     ...mapState({
       style: state => state.style,
       config: state => state.common.config,
+      content: state => state.content,
       locale: state => state.content.locale || 'en',
       auth: state => state.auth,
     }),
     ...mapGetters([
       'currentUser',
       'defaultSearchMode',
+      'getHomeHeroUrlTransformed',
       'getSearchModeUI',
       'searchModes',
-      'homeHeroUrlTransformed',
     ]),
   },
   watch: {
@@ -247,18 +246,53 @@ export default {
     <section
       :class="[
         'hero text-center',
-        style.homeHeroBase64 || isBackgroundLoaded ? 'text-white' : ''
+        (style.homeHeroBase64 || style.homeHeroUrl) && !style.homeHasLightBackground ? 'text-white' : ''
       ]"
-      :style="`background-image: url('${style.homeHeroBase64}')`"
+      :style="`background-image: url(${style.homeHeroBase64})`"
     >
-      <QImg
-        v-if="$q.screen.height > 720 && $q.screen.gt.xs"
-        class="hero__background absolute-full"
-        :src="homeHeroUrlTransformed"
-        no-default-spinner
-        basic
-        @load="isBackgroundLoaded = true"
-      />
+      <div class="hero__background absolute-full">
+        <picture>
+          <source
+            type="image/webp"
+            :srcset="`${
+              getHomeHeroUrlTransformed({ width: 1024 })
+            } 1024w, ${
+              getHomeHeroUrlTransformed({ width: 1366 })
+            } 1366w, ${
+              getHomeHeroUrlTransformed({ width: 1600 })
+            } 1600w, ${
+              getHomeHeroUrlTransformed({ width: 1920 })
+            } 1920w, ${
+              getHomeHeroUrlTransformed({ width: 2560 })
+            } 2560w`"
+            sizes="100vw"
+            media="(min-width: 640px)"
+          >
+          <!-- Handle browsers not supporting WebP, contrasting with prerendering env (Puppeter) -->
+          <!-- TODO: remove WebP test when upgrading to AWS image handler version supporting AUTO_WEBP -->
+          <source
+            :srcset="`${
+              getHomeHeroUrlTransformed({ noWebP: true, width: 1024 })
+            } 1024w, ${
+              getHomeHeroUrlTransformed({ noWebP: true, width: 1366 })
+            } 1366w, ${
+              getHomeHeroUrlTransformed({ noWebP: true, width: 1600 })
+            } 1600w, ${
+              getHomeHeroUrlTransformed({ noWebP: true, width: 1920 })
+            } 1920w, ${
+              getHomeHeroUrlTransformed({ noWebP: true, width: 2560 })
+            } 2560w`"
+            sizes="100vw"
+            media="(min-width: 640px)"
+          >
+          <!-- Transparent GIF for smaller devices, hidden with CSS -->
+          <img
+            :src="content.blankImageBase64"
+            :alt="$t({ id: 'pages.home.page_title' })"
+            class="fit"
+          >
+        </picture>
+      </div>
       <div class="hero__search stl-content-container stl-content-container--xlarge">
         <AppContent
           tag="h1"
@@ -447,11 +481,27 @@ export default {
 </template>
 
 <style lang="stylus" scoped>
+$background-image-loaded-from = 640px
+
 .hero
   position: relative
   padding 5rem 1rem 2.5rem
   background-size: cover
   background-position: 50% 50%
+  @media (max-width $background-image-loaded-from)
+    // on mobile, don’t disturb users with the rest of the page
+    // and make scroll required to see more
+    height: 85vh
+    display: flex
+    justify-content: center
+    align-items: center
+
+.hero__background
+  color: transparent
+  img
+    object-fit: cover
+    @media (max-width $background-image-loaded-from)
+      display: none
 
 .hero__search
   position: relative
