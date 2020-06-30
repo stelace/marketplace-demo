@@ -31,5 +31,6 @@ export default {
   customAttributesLastFetchedDate: isEmpty(customAttributes) ? null : now,
   configLastFetchedDate: isEmpty(config) ? null : now,
 
-  fetchingCategories: false
+  fetchingCategories: false,
+  fetchingCategoriesPromise: null,
 }
