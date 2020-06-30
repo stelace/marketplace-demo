@@ -31,7 +31,7 @@
     "seed": "node scripts/init-data.js",
     "test:e2e": "testcafe 'firefox' tests/e2e/**/*.e2e.{j,t}s",
     "test:e2e:headless": "testcafe 'firefox:headless' tests/e2e/**/*.e2e.{j,t}s",
-    "test:ci:e2e": "testcafe 'firefox:headless,chrome:headless' tests/e2e/**/*.e2e.{j,t}s -c 2 -r xunit:/tmp/test-results/e2e.xml"
+    "test:ci:e2e": "testcafe 'firefox:headless,chrome:headless' tests/e2e/**/*.e2e.{j,t}s -c 2 --skip-js-errors -r xunit:/tmp/test-results/e2e.xml"
   },
   "dependencies": {
     "@quasar/extras": "^1.8.2",
