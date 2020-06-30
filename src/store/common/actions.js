@@ -14,13 +14,22 @@ export async function initApp ({ dispatch, rootGetters }) {
 }
 
 export async function fetchCategories ({ state, commit }, { forceRefresh = false } = {}) {
-  const shouldFetchResults = forceRefresh || isPastExpirationDate(state.categoriesLastFetchedDate)
+  // storing promise in store seems more appropriate than using lodash debounce
+  // from performance point of view (blocking time in Lighthouse).
+  // This may be due to a inappropriate combination with Vue.js
+  const pending = state.fetchingCategoriesPromise
+  if (pending) return pending
 
+  const shouldFetchResults = forceRefresh || isPastExpirationDate(state.categoriesLastFetchedDate)
   if (!shouldFetchResults) return values(state.categoriesById)
 
-  commit({ type: types.SET_FETCHING_CATEGORIES })
+  const categoriesPromise = stelace.categories.list()
+  commit({
+    type: types.SET_FETCHING_CATEGORIES,
+    categoriesPromise
+  })
 
-  const categories = await stelace.categories.list()
+  const categories = await categoriesPromise
 
   commit({
     type: types.SET_CATEGORIES,
