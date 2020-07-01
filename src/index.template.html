@@ -37,7 +37,7 @@
     <link rel="prefetch" as="font" href="<%= f %>" crossorigin>
     <% } %>
     <% if (htmlWebpackPlugin.options.cdnUrl) { %>
-    <link rel="preconnect" href="<%= htmlWebpackPlugin.options.cdnUrl %>">
+    <link rel="preconnect" href="<%= htmlWebpackPlugin.options.cdnUrl %>" crossorigin>
     <% } %>
 
     <!-- Webpack chunks errors usually happen before Vue app boot -->
