@@ -141,6 +141,10 @@ export function baseImageHeight (state, getters, rootState, rootGetters) {
   return getters.baseImageWidth / rootGetters.baseImageRatio
 }
 
+export function smallImageWidth (state, getters, rootState) {
+  return Math.round(rootState.style.baseImageWidth / 2)
+}
+
 export function largeImageWidth (state, getters) {
   return 2 * getters.baseImageWidth
 }
@@ -165,15 +169,24 @@ export function getAvatarImageUrl (state, getters) {
   }
 }
 
-// TODO: handle high resolution (srcset)
-export function getBaseImageUrl (state, getters) {
-  return (resource, { accessorString, index = 0 } = {}) => {
+export function getBaseImageUrl (state, getters, rootState, rootGetters) {
+  return (resource, { accessorString, index = 0, width } = {}) => {
     const imgUri = getImageUri(resource, { accessorString, index })
+    const resize = {
+      width: getters.baseImageWidth,
+      height: getters.baseImageHeight,
+      withoutEnlargement: true
+    }
+
+    if (width) {
+      resize.width = width
+      resize.height = Math.round(width / rootGetters.baseImageRatio)
+    }
 
     return cdn.servedFromCdnBucket(imgUri)
       ? cdn.getUrl(imgUri, {
         webp: state.acceptWebP,
-        resize: { width: getters.baseImageWidth, height: getters.baseImageHeight }
+        resize
       })
       : imgUri || (isDevDebuggingStyles ? getters.placeholderImage : '')
   }
@@ -186,7 +199,11 @@ export function getLargeImageUrl (state, getters) {
     return cdn.servedFromCdnBucket(imgUri)
       ? cdn.getUrl(imgUri, {
         webp: state.acceptWebP,
-        resize: { width: getters.largeImageWidth, height: getters.largeImageHeight }
+        resize: {
+          width: getters.largeImageWidth,
+          height: getters.largeImageHeight,
+          withoutEnlargement: true
+        }
       })
       : imgUri || (isDevDebuggingStyles ? getters.placeholderImage : '')
   }

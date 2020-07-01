@@ -26,6 +26,11 @@ export default {
     reloading: { // card update pending
       type: Boolean,
       default: false,
+    },
+    imageSizes: {
+      type: String,
+      // Quasar 'sm' & 'md' breakpoints
+      default: '(max-width: 600px) 90vw, (max-width: 1024px) 45vw, 20vw'
     }
   },
   data () {
@@ -47,12 +52,27 @@ export default {
       const a = this.asset
       return !get(a, 'id')
     },
+    imageSrcset () {
+      if (!this.asset || this.reloading) return ''
+
+      return `${
+        this.getBaseImageUrl(this.asset, { width: this.smallImageWidth })
+      } ${this.smallImageWidth}w, ${
+        this.getBaseImageUrl(this.asset, { width: this.baseImageWidth })
+      } ${this.baseImageWidth}w, ${
+        this.getLargeImageUrl(this.asset)
+      } ${this.largeImageWidth}w`
+    },
     ...mapState([
       'content'
     ]),
     ...mapGetters([
       'baseImageRatio',
+      'baseImageWidth',
+      'smallImageWidth',
       'getBaseImageUrl',
+      'getLargeImageUrl',
+      'largeImageWidth',
       'ratingsActive',
     ]),
   }
@@ -85,7 +105,9 @@ export default {
             v-if="!!asset"
             class="asset-image"
             :src="(asset && !reloading) ? getBaseImageUrl(asset) : content.blankImageBase64"
+            :srcset="imageSrcset || false"
             :alt="asset ? asset.name : ''"
+            :sizes="imageSizes || false"
             loading="lazy"
             @load="isImageLoading = false"
           >
