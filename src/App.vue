@@ -16,6 +16,7 @@ import { get, debounce } from 'lodash'
 
 import { getAuthToken } from 'src/utils/auth'
 import EventBus from 'src/utils/event-bus'
+import { initSentry } from 'src/utils/logger'
 import stelace from 'src/utils/stelace'
 
 import contentEditingMixin from 'src/mixins/contentEditing'
@@ -61,6 +62,11 @@ export default {
     this.$store.dispatch('initApp')
 
     this.handleUserSessionExpiration()
+
+    setTimeout(() => {
+      if ('requestIdleCallback' in window) requestIdleCallback(initSentry)
+      else setTimeout(initSentry, 0)
+    }, 5000)
 
     // give some time to slower devices before loading socket.io
     // which is non-essential JS, and even useless during short sessions
