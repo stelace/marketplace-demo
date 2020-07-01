@@ -90,13 +90,19 @@ export async function fetchAppContent ({ state, commit, getters, dispatch }, { l
     // Content API translations are already included in build
     // and we just check for updates in a non-blocking way
     const entriesRequest = (...args) => stelace.entries.list(...args)
-
-    fetchAllResults(entriesRequest, { collection: 'website', locale })
+    const getAllEntries = () => fetchAllResults(entriesRequest, { collection: 'website', locale })
       .then(entries => {
-        dispatch('setApiEntries', { entries })
-        dispatch('registerNewPages')
+        const refreshContent = () => {
+          dispatch('setApiEntries', { entries })
+          dispatch('registerNewPages')
+        }
+        if ('requestIdleCallback' in window) requestIdleCallback(refreshContent)
+        else setTimeout(refreshContent, 0)
       })
       .catch(handleContentError)
+
+    if ('requestIdleCallback' in window) requestIdleCallback(getAllEntries)
+    else setTimeout(getAllEntries, 0)
 
     if (acceptWebP) commit({ type: types.SET_ACCEPT_WEBP })
 
