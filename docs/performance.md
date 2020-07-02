@@ -2,7 +2,7 @@
 
 The app must load in no more than a few seconds on a 3G connection.
 
-On January 2020, the app hits a 95 Google PageSpeed/Lighthouse score on Desktop with 3G connection.
+In July 2020, the app hits a 90+ Google PageSpeed/Lighthouse score on Desktop (with 3G connection).
 
 Here are some tips to keep a high score.
 
