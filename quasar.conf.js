@@ -105,7 +105,6 @@ module.exports = function (ctx) {
     title: injectServiceName(_.get(localTranslations.pages, 'home.header', '')),
     notice: injectServiceName(_.get(localTranslations.status, 'loading', '')),
     javascriptRequired: injectServiceName(_.get(localTranslations.error, 'javascript_required', '')),
-    backgroundImg: defaultStyles.homeHeroBase64
   }
   const seo = {
     ogDesc: injectServiceName(_.get(localTranslations.pages, 'home.meta_description', '')),

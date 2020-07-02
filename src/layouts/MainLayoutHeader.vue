@@ -53,7 +53,7 @@ export default {
       return this.route.name === 'home'
     },
     hasHomeBackground () {
-      return this.style.homeHeroUrl || this.style.homeHeroBase64
+      return !!this.style.homeHeroUrl
     },
     isSearch () {
       return this.route.name === 'search'
