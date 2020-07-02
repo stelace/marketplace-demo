@@ -1,5 +1,4 @@
 import { createInstance } from 'stelace'
-import URL from 'url-parse'
 
 const apiBaseURL = process.env.STELACE_API_URL
 const apiKey = process.env.STELACE_PUBLISHABLE_API_KEY

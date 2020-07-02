@@ -1,5 +1,4 @@
 const { createInstance } = require('stelace')
-const URL = require('url-parse')
 
 function initStelaceSdk ({ apiBaseURL, apiKey }) {
   const stelace = createInstance({ apiKey })
