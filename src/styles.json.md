@@ -30,7 +30,7 @@ Injected into App’s style store, enabling configurable theme.
   "colorfulTheme": false,
   "pageTransitions": true,
   
-  // Changes home search card’s background and text color
+  // Home hero text color can only be set to white if this is false, for appropriate contrast
   "homeHasLightBackground": true,
   // Replaces default home search card’s white or black background
   "homeSearchCardBackground": "rgba(0, 0, 0, 0.6)",
@@ -53,7 +53,8 @@ Injected into App’s style store, enabling configurable theme.
   // Here is how you can manually generate a SVG placeholder (“SQIP” technique):
   // - Use this nice website to generate your SVG https://ondras.github.io/primitive.js/
   //   Default parameters are good to go. You can add triangles and ellipses to geometric shapes.
-  // - Then apply gaussian blur to the SVG (you may want to change stdDeviation value):
+  // - Then apply gaussian blur to the SVG (you may want to change stdDeviation value)
+  //   and preserveAspectRatio as well:
   /*
     <svg xmlns="…" viewBox="…" preserveAspectRatio="xMidYMid slice">
       <defs>
@@ -66,7 +67,6 @@ Injected into App’s style store, enabling configurable theme.
       </g>
     </svg>
   */
-  // - Minify the SVG using any online tool of your choice and encode it in base64
-  "homeHeroBase64": "data:image/svg+xml;base64,[BASE64_SVG]"
+  // - Update 'src/assets/home-blurred-background.svg' file content
 }
 ```

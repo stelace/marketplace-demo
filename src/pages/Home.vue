@@ -44,6 +44,8 @@ export default {
       assets: null,
       nbAssetsPerSlideDefault: 4,
       nbCarouselSlides: 4, // Can be less when there are few assets, set to 1 to disable
+
+      blurredBackgroundSVG: '',
     }
   },
   computed: {
@@ -88,7 +90,7 @@ export default {
       this.handleUrlRedirection(this.$route)
     }
   },
-  created () {
+  async created () {
     this.lastAssetsPromise = this.$store.dispatch('fetchLastAssets', {
       nbResults: this.nbAssetsPerSlideDefault * this.nbCarouselSlides
     })
@@ -96,6 +98,8 @@ export default {
     this.icons = {
       matSearch,
     }
+
+    this.blurredBackgroundSVG = (await import('!!html-loader!src/assets/home-blurred-background.svg')).default
   },
   async mounted () {
     if (window.__PRERENDER_INJECTED) document.dispatchEvent(new Event('prerender-ready'))
@@ -246,11 +250,15 @@ export default {
     <section
       :class="[
         'hero text-center',
-        (style.homeHeroBase64 || style.homeHeroUrl) && !style.homeHasLightBackground ? 'text-white' : ''
+        (blurredBackgroundSVG || style.homeHeroUrl) && !style.homeHasLightBackground ? 'text-white' : ''
       ]"
-      :style="`background-image: url(${style.homeHeroBase64})`"
     >
       <div class="hero__background absolute-full">
+        <!-- Blurred SVG background when loading page and background image.
+            SVG is permanently used on small screens for which no <picture> source is loaded.
+            It is also a fallback for browsers not supporting <picture> (and object-fit) such as IE11 -->
+        <!-- eslint-disable-next-line vue/no-v-html -->
+        <div class="blurred-svg-background" v-html="blurredBackgroundSVG" />
         <picture>
           <source
             type="image/webp"
@@ -285,7 +293,7 @@ export default {
             sizes="100vw"
             media="(min-width: 640px)"
           >
-          <!-- Transparent GIF for smaller devices, hidden with CSS -->
+          <!-- Transparent GIF for browsers not supporting <picture> -->
           <img
             :src="content.blankImageBase64"
             :alt="$t({ id: 'pages.home.page_title' })"
@@ -502,6 +510,13 @@ $background-image-loaded-from = 640px
     object-fit: cover
     @media (max-width $background-image-loaded-from)
       display: none
+.blurred-svg-background
+  position: absolute
+  z-index: -1
+  top: 0
+  left: 0
+  width: 100%
+  height: 100%
 
 .hero__search
   position: relative
@@ -590,4 +605,10 @@ $background-image-loaded-from = 640px
 
 .q-carousel
   height: auto
+</style>
+
+<style lang="stylus">
+.blurred-svg-background svg
+  height: 100%
+  width: 100%
 </style>
