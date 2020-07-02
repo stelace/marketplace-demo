@@ -55,7 +55,7 @@ Injected into App’s style store, enabling configurable theme.
   //   Default parameters are good to go. You can add triangles and ellipses to geometric shapes.
   // - Then apply gaussian blur to the SVG (you may want to change stdDeviation value):
   /*
-    <svg xmlns="…" viewBox="…">
+    <svg xmlns="…" viewBox="…" preserveAspectRatio="xMidYMid slice">
       <defs>
         <filter id="b">
           <feGaussianBlur stdDeviation="8"/>
