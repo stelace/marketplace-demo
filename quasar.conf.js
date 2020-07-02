@@ -382,6 +382,7 @@ module.exports = function (ctx) {
         if (prerender) {
           cfg.plugins.push(
             new PrerenderSPAPlugin({
+              // https://github.com/chrisvfritz/prerender-spa-plugin#plugin-options
               staticDir: path.join(__dirname, 'dist/spa'),
               routes: [
                 '/', // Home
@@ -399,7 +400,9 @@ module.exports = function (ctx) {
                 return context
               },
               minify: {
-                minifyJS: true
+                collapseWhitespace: true,
+                conservativeCollapse: true,
+                minifyJS: true,
               },
               renderer: new Renderer({
                 inject: { isPrerendering: true },
