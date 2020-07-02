@@ -349,6 +349,14 @@ module.exports = function (ctx) {
       ],
 
       extendWebpack (cfg, { isClient }) {
+        if (ctx.prod) {
+          // spare debug dependency
+          cfg.resolve.alias['socket.io-client'] = path.resolve(
+            __dirname,
+            './node_modules/socket.io-client/dist/socket.io.slim.js'
+          )
+        }
+
         cfg.module.rules.push({
           enforce: 'pre',
           test: /\.(js|vue)$/,
