@@ -62,11 +62,11 @@
                 {{ displayNameInitial }}
               </div>
               <!-- Assuming file handler cropping is like background cover style -->
-              <QImg
+              <img
                 v-if="uploadingAvatarSrc || hasAvatar"
                 :src="uploadingAvatarSrc || avatarUrl"
                 class="full-height"
-              />
+              >
               <div
                 v-if="!uploadingAvatarSrc"
                 class="avatar-placeholder absolute-full flex column flex-center"
