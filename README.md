@@ -17,7 +17,7 @@ Feel free to [fork](
   https://conventionalcommits.org
 )
 
-This starter kit offers **a [high-performance](#fast-by-default) AirBnB-like marketplace front-end (Vue.js) with pre-configured serverless deployment** based on [open-source](https://github.com/stelace/stelace) [Stelace API](https://stelace.com) server.
+This starter kit offers **a [high-performance](#fast-by-default-checkered_flag) AirBnB-like marketplace front-end (Vue.js) with pre-configured serverless deployment** based on [open-source](https://github.com/stelace/stelace) [Stelace API](https://stelace.com) server.
 
 ## Contents
 
@@ -62,7 +62,7 @@ Stelace [open-source marketplace backend](https://github.com/stelace/stelace) le
 
 ### Fast by default :checkered_flag:
 
-Get 95+ PageSpeed score out of the box:
+Get 90+ PageSpeed score out of the box:
 
 - Pre-rendered static pages for fastest page load, with Vue.js hydrating into full SPA.
 - Code-splitting with optimized Webpack config in `quasar.conf.js`.
