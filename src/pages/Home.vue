@@ -46,6 +46,7 @@ export default {
       nbCarouselSlides: 4, // Can be less when there are few assets, set to 1 to disable
 
       blurredBackgroundSVG: '',
+      showFeaturesSection: process.env.VUE_APP_HOME_FEATURES_COLUMNS === 'true',
     }
   },
   computed: {
@@ -390,11 +391,14 @@ export default {
         </form>
       </div>
     </section>
-    <section :class="['home__features row justify-center' ,style.colorfulTheme ? 'bg-primary-gradient text-white' : '']">
+    <section
+      v-if="showFeaturesSection"
+      :class="['home__features row justify-center q-my-lg q-pb-md' ,style.colorfulTheme ? 'bg-primary-gradient text-white' : '']"
+    >
       <div class="col-12 col-md-9 flex flex-center">
         <AppContent
           tag="h2"
-          class="text-h5 text-center text-weight-medium q-my-xl q-mx-md"
+          class="text-h5 text-center text-weight-medium q-mx-md"
           entry="pages"
           field="home.subheader"
         />
@@ -415,7 +419,7 @@ export default {
           />
         </div>
       </div>
-      <div class="col-12 stl-content-container stl-content-container--large row text-center q-mb-xl">
+      <div class="col-12 stl-content-container stl-content-container--large row text-center">
         <div class="col-12 col-md-4">
           <AppContent
             tag="h3"
@@ -461,7 +465,7 @@ export default {
     <section class="home__asset-gallery">
       <AppContent
         tag="h2"
-        class="text-h5 text-weight-medium text-center q-my-lg"
+        class="text-h5 text-weight-medium text-center"
         entry="pages"
         field="home.asset_gallery_header"
       />
@@ -597,11 +601,11 @@ $background-image-loaded-from = 640px
 // Assets
 
 .home__asset-gallery
-  padding: 0 0 4rem
+  padding: 1rem 0 4rem
   // Note that colon is required to avoid parsing errors
-  margin: $spaces.md.y $spaces.md.x $spaces.xl.y
+  margin: $spaces.lg.y $spaces.md.x $spaces.xl.y
   @media (min-width $breakpoint-sm-min)
-    margin: $spaces.md.y $spaces.xl.x $spaces.xl.y
+    margin: $spaces.lg.y $spaces.xl.x $spaces.xl.y
 
 .q-carousel
   height: auto
