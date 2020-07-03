@@ -41,8 +41,10 @@
           :nav-control="{ show: true, position: 'top-left' }"
           @map-resize="mapResized"
           @map-load="mapLoaded"
-          @map-movestart="mapMoveStarted"
-          @map-moveend="mapMoveEnded"
+          @map-dragstart="mapMoveStarted"
+          @map-dragend="mapMoveEnded"
+          @map-zoomstart="mapMoveStarted"
+          @map-zoomend="mapMoveEnded"
         />
 
         <template v-if="searchAfterMapMoveActive && isSearchMapVisible">
@@ -182,7 +184,7 @@ export default {
     }
     if (window.__PRERENDER_INJECTED) document.dispatchEvent(new Event('prerender-ready'))
 
-    await this.searchAssets()
+    // await this.searchAssets() // already called in afterAuth
     this.$store.dispatch('getHighestPrice')
 
     if ('requestIdleCallback' in window) requestIdleCallback(this.showMapOnLargeScreen)
