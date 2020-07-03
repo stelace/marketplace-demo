@@ -55,19 +55,6 @@ export default {
 
 <template>
   <footer class="stl-footer bg-accent-gradient text-white">
-    <div class="absolute-top">
-      <svg
-        class="full-width shape"
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 100 100"
-        preserveAspectRatio="none"
-      >
-        <polygon
-          fill="currentColor"
-          points="0,0 100,0 0,100"
-        />
-      </svg>
-    </div>
     <div class="row q-col-gutter-sm justify-center text-center q-px-lg">
       <!-- "Instant Pages" fetched from Stelace Content API -->
       <AppLink
@@ -82,7 +69,7 @@ export default {
           :field="target.field"
         />
       </AppLink>
-      <div v-if="socialIconFooterLinks.length > 0" class="col-12 col-md-4">
+      <div v-if="socialIconFooterLinks.length > 0" class="col-12 col-md-4 gt-xs">
         <AppLink
           v-for="net in socialIconFooterLinks"
           :key="net.url"
@@ -91,18 +78,12 @@ export default {
           class="anchor-text--reset s-icon-link"
         >
           <QIcon :name="net.icon" size="3.5rem" />
-          <svg class="s-icon q-pa-sm">
-            <use
-              :xlink:href="net.icon"
-              xmlns:xlink="http://www.w3.org/1999/xlink"
-            />
-          </svg>
         </AppLink>
       </div>
     </div>
     <h3
       v-if="route.name === 'home'"
-      class="text-subtitle2 text-center q-my-xl"
+      class="text-subtitle2 text-center q-mt-xl q-mb-none"
     >
       <AppContent
         tag="a"
@@ -118,13 +99,10 @@ export default {
 <style lang="stylus" scoped>
 .stl-footer
   position: relative
-  padding: 10vw $spaces.lg.x 8vw
+  padding: 5rem $spaces.lg.x 5rem
   font-size: 1.25em
-
-.shape
-  position: relative
-  top: -1px // ensure we get no top border due to pixel rounding
-  height: 6vw
+  @media (max-width: 1024px)
+    padding: 2.5rem $spaces.lg.x 2.5rem
 
 .s-icon
   fill: currentColor
@@ -137,12 +115,16 @@ export default {
 $stl-footer-height = 18rem // Adjust to footer content length
 
 .q-page.stl-footer--bottom
-  padding-bottom: $stl-footer-height + 2rem
+  padding-bottom: $stl-footer-height
   .stl-footer
     position: absolute
-    right: 0
     bottom: 0
     right: 0
     width: 100%
     height: $stl-footer-height
+
+.q-page-container.header--overlay
+  .q-page.stl-footer--bottom
+    .stl-footer
+      bottom: -82px // should be at least equal to current height of app header
 </style>

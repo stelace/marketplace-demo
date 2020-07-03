@@ -63,7 +63,6 @@ export default {
     :autoplay="slideDuration"
     :arrows="arrows"
     padding
-    navigation
     animated
     infinite
     v-bind="$attrs"
