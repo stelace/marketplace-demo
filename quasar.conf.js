@@ -429,6 +429,7 @@ module.exports = function (ctx) {
               blockJSRequests: false,
               keepLargerMediaQueries: true,
               forceInclude: [
+                /stl-footer/,
                 // skeleton styles
                 /q-skeleton/,
                 '.fit',

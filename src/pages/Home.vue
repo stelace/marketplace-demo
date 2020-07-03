@@ -247,7 +247,7 @@ export default {
 </script>
 
 <template>
-  <q-page>
+  <QPage class="stl-footer--bottom">
     <section
       :class="[
         'hero text-center',
@@ -489,7 +489,7 @@ export default {
     </section> -->
 
     <AppFooter />
-  </q-page>
+  </QPage>
 </template>
 
 <style lang="stylus" scoped>
