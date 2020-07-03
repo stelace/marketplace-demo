@@ -310,15 +310,6 @@
         </section>
       </div>
     </div>
-    <!-- Sticky sidebar for booking apps -->
-    <!-- Use these classes for asset-content div: col-md-7 col-lg-4 col-xl-3 offset-md-1 offset-lg-3 offset-xl-4 -->
-    <!-- <q-page-sticky class="force-flex-start no-pointer-events" position="top" :offset="[0,0]" expand>
-      <div class="sticky-transaction-container offset-md-8 offset-lg-7 offset-xl-7 col-md-3 col-lg-2 col-xl-1">
-        <div class="sticky-transaction all-pointer-events q-ml-lg">
-          Qui officia est deserunt qui ipsum qui esse id. Cillum esse duis non cupidatat. Consectetur culpa velit magna laborum quis et exercitation et eu veniam. Labore velit anim officia nisi. Culpa sit nulla laboris excepteur labore. Dolor Lorem irure anim mollit enim consequat quis ullamco velit in culpa. Nostrud sunt culpa et sint dolore ex sit proident consectetur quis aute ut ullamco.
-        </div>
-      </div>
-    </q-page-sticky> -->
     <AppFooter />
   </q-page>
 </template>
