@@ -64,7 +64,7 @@
   "devDependencies": {
     "@babel/cli": "^7.10.4",
     "@babel/compat-data": "7.8.0",
-    "@babel/core": "^7.9.6",
+    "@babel/core": "^7.10.4",
     "@babel/preset-env": "^7.10.4",
     "@quasar/app": "^1.9.6",
     "@sentry/webpack-plugin": "^1.12.0",
