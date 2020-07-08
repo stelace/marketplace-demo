@@ -100,7 +100,10 @@ export default {
       matSearch,
     }
 
-    this.blurredBackgroundSVG = (await import('!!html-loader!src/assets/home-blurred-background.svg')).default
+    this.blurredBackgroundSVG = (await import(
+      /* webpackMode: "eager" */
+      '!!html-loader!src/assets/home-blurred-background.svg'
+    )).default
   },
   async mounted () {
     if (window.__PRERENDER_INJECTED) document.dispatchEvent(new Event('prerender-ready'))
