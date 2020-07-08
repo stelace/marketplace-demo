@@ -1,6 +1,5 @@
 const dotenv = require('dotenv')
-const PreloadPlugin = require('@vue/preload-webpack-plugin')
-const CopyWebpackPlugin = require('copy-webpack-plugin')
+const PreloadPlugin = require('preload-webpack-plugin')
 const SentryWebpackPlugin = require('@sentry/webpack-plugin')
 const PrerenderSPAPlugin = require('prerender-spa-plugin')
 const Renderer = PrerenderSPAPlugin.PuppeteerRenderer
@@ -280,8 +279,6 @@ module.exports = function (ctx) {
       // lang: 'de' // Quasar language
     },
 
-    supportIE: true,
-
     htmlVariables: {
       // Preconnecting to improve performance
       apiBaseUrl,
@@ -370,14 +367,6 @@ module.exports = function (ctx) {
             ignore: ['node_modules']
           }))
         }
-
-        cfg.plugins.push(new CopyWebpackPlugin({
-          patterns: [
-            { context: `${path.resolve('src')}/statics`, from: '*.txt' },
-            { context: `${path.resolve('src')}/statics`, from: '*.ico' },
-            { context: `${path.resolve('src')}/statics`, from: '*.xml' },
-          ]
-        }))
 
         if (prerender) {
           cfg.plugins.push(
@@ -520,48 +509,48 @@ module.exports = function (ctx) {
 
       // Explicit environment variable is required (unlike VueCLI when using VUE_APP prefix)
       env: {
-        STELACE_API_URL: JSON.stringify(apiBaseUrl),
-        STELACE_PUBLISHABLE_API_KEY: JSON.stringify(process.env.STELACE_PUBLISHABLE_API_KEY),
-        STELACE_INSTANT_WEBSITE_URL: JSON.stringify(websiteUrl),
-        CONTEXT: JSON.stringify(process.env.CONTEXT),
-        DEPLOY_PRIME_URL: JSON.stringify(process.env.DEPLOY_PRIME_URL),
-        STELACE_PUBLIC_PLATFORM_ID: JSON.stringify(process.env.STELACE_PUBLIC_PLATFORM_ID),
-        VUE_APP_SSO_PROVIDERS: JSON.stringify(process.env.VUE_APP_SSO_PROVIDERS),
-        VUE_APP_SSO_LOGIN_ONLY: JSON.stringify(process.env.VUE_APP_SSO_LOGIN_ONLY),
-        VUE_APP_SERVICE_NAME: JSON.stringify(process.env.VUE_APP_SERVICE_NAME),
-        VUE_APP_MAPBOX_STYLE: JSON.stringify(process.env.VUE_APP_MAPBOX_STYLE),
-        VUE_APP_MAPBOX_TOKEN: JSON.stringify(process.env.VUE_APP_MAPBOX_TOKEN),
-        VUE_APP_MAP_CENTER_COORDINATES: JSON.stringify(process.env.VUE_APP_MAP_CENTER_COORDINATES),
-        VUE_APP_DISABLE_AUTO_SEARCH_ON_MAP_MOVE: JSON.stringify(process.env.VUE_APP_DISABLE_AUTO_SEARCH_ON_MAP_MOVE),
-        VUE_APP_DEFAULT_LANGUAGE: JSON.stringify(process.env.VUE_APP_DEFAULT_LANGUAGE),
-        VUE_APP_LOCALE_SWITCH: JSON.stringify(process.env.VUE_APP_LOCALE_SWITCH),
-        VUE_APP_DEFAULT_CURRENCY: JSON.stringify(process.env.VUE_APP_DEFAULT_CURRENCY),
-        VUE_APP_DEBUG_STYLES: JSON.stringify(process.env.VUE_APP_DEBUG_STYLES),
-        VUE_APP_USE_PROD_FONTS_CSS: JSON.stringify(process.env.VUE_APP_USE_PROD_FONTS_CSS),
-        VUE_APP_NOMINATIM_HOST: JSON.stringify(process.env.VUE_APP_NOMINATIM_HOST),
-        VUE_APP_NOMINATIM_KEY: JSON.stringify(process.env.VUE_APP_NOMINATIM_KEY),
-        VUE_APP_SENTRY_LOGGING_DSN: JSON.stringify(process.env.VUE_APP_SENTRY_LOGGING_DSN),
-        VUE_APP_GIT_COMMIT_SHA: JSON.stringify(commitSHA),
-        VUE_APP_GOOGLE_ANALYTICS_ID: JSON.stringify(process.env.VUE_APP_GOOGLE_ANALYTICS_ID),
-        VUE_APP_GOOGLE_ANALYTICS_DEBUG: JSON.stringify(process.env.VUE_APP_GOOGLE_ANALYTICS_DEBUG),
-        VUE_APP_CDN_POLICY_ENDPOINT: JSON.stringify(cdnUploadUrl),
-        VUE_APP_CDN_WITH_IMAGE_HANDLER_URL: JSON.stringify(cdnUrl),
-        VUE_APP_CDN_S3_BUCKET: JSON.stringify(cdnS3Bucket),
-        VUE_APP_CDN_S3_DEV_BUCKET: JSON.stringify(process.env.VUE_APP_CDN_S3_DEV_BUCKET),
-        VUE_APP_CDN_UPLOAD_PREFIX: JSON.stringify(process.env.VUE_APP_CDN_UPLOAD_PREFIX),
-        VUE_APP_SEARCH_BY_CATEGORY: JSON.stringify(process.env.VUE_APP_SEARCH_BY_CATEGORY),
-        VUE_APP_DISABLE_RATINGS: JSON.stringify(process.env.VUE_APP_DISABLE_RATINGS),
-        VUE_APP_INSTANT_PAGE_PREFIX: JSON.stringify('/l'),
-        VUE_APP_POST_MESSAGE_ALLOWED_ORIGINS: JSON.stringify(postMessageAllowedOrigins),
-        VUE_APP_GITHUB_FORK_BUTTON: JSON.stringify(process.env.VUE_APP_GITHUB_FORK_BUTTON),
-        VUE_APP_DISPLAY_ASSET_DISTANCE: JSON.stringify(process.env.VUE_APP_DISPLAY_ASSET_DISTANCE),
-        VUE_APP_HOME_FEATURES_COLUMNS: JSON.stringify(process.env.VUE_APP_HOME_FEATURES_COLUMNS),
-        VUE_APP_STRIPE_PUBLISHABLE_KEY: JSON.stringify(process.env.VUE_APP_STRIPE_PUBLISHABLE_KEY),
-        VUE_APP_STRIPE_OAUTH_CLIENT_ID: JSON.stringify(process.env.VUE_APP_STRIPE_OAUTH_CLIENT_ID),
+        STELACE_API_URL: apiBaseUrl,
+        STELACE_PUBLISHABLE_API_KEY: process.env.STELACE_PUBLISHABLE_API_KEY,
+        STELACE_INSTANT_WEBSITE_URL: websiteUrl,
+        CONTEXT: process.env.CONTEXT,
+        DEPLOY_PRIME_URL: process.env.DEPLOY_PRIME_URL,
+        STELACE_PUBLIC_PLATFORM_ID: process.env.STELACE_PUBLIC_PLATFORM_ID,
+        VUE_APP_SSO_PROVIDERS: process.env.VUE_APP_SSO_PROVIDERS,
+        VUE_APP_SSO_LOGIN_ONLY: process.env.VUE_APP_SSO_LOGIN_ONLY,
+        VUE_APP_SERVICE_NAME: process.env.VUE_APP_SERVICE_NAME,
+        VUE_APP_MAPBOX_STYLE: process.env.VUE_APP_MAPBOX_STYLE,
+        VUE_APP_MAPBOX_TOKEN: process.env.VUE_APP_MAPBOX_TOKEN,
+        VUE_APP_MAP_CENTER_COORDINATES: process.env.VUE_APP_MAP_CENTER_COORDINATES,
+        VUE_APP_DISABLE_AUTO_SEARCH_ON_MAP_MOVE: process.env.VUE_APP_DISABLE_AUTO_SEARCH_ON_MAP_MOVE,
+        VUE_APP_DEFAULT_LANGUAGE: process.env.VUE_APP_DEFAULT_LANGUAGE,
+        VUE_APP_LOCALE_SWITCH: process.env.VUE_APP_LOCALE_SWITCH,
+        VUE_APP_DEFAULT_CURRENCY: process.env.VUE_APP_DEFAULT_CURRENCY,
+        VUE_APP_DEBUG_STYLES: process.env.VUE_APP_DEBUG_STYLES,
+        VUE_APP_USE_PROD_FONTS_CSS: process.env.VUE_APP_USE_PROD_FONTS_CSS,
+        VUE_APP_NOMINATIM_HOST: process.env.VUE_APP_NOMINATIM_HOST,
+        VUE_APP_NOMINATIM_KEY: process.env.VUE_APP_NOMINATIM_KEY,
+        VUE_APP_SENTRY_LOGGING_DSN: process.env.VUE_APP_SENTRY_LOGGING_DSN,
+        VUE_APP_GIT_COMMIT_SHA: commitSHA,
+        VUE_APP_GOOGLE_ANALYTICS_ID: process.env.VUE_APP_GOOGLE_ANALYTICS_ID,
+        VUE_APP_GOOGLE_ANALYTICS_DEBUG: process.env.VUE_APP_GOOGLE_ANALYTICS_DEBUG,
+        VUE_APP_CDN_POLICY_ENDPOINT: cdnUploadUrl,
+        VUE_APP_CDN_WITH_IMAGE_HANDLER_URL: cdnUrl,
+        VUE_APP_CDN_S3_BUCKET: cdnS3Bucket,
+        VUE_APP_CDN_S3_DEV_BUCKET: process.env.VUE_APP_CDN_S3_DEV_BUCKET,
+        VUE_APP_CDN_UPLOAD_PREFIX: process.env.VUE_APP_CDN_UPLOAD_PREFIX,
+        VUE_APP_SEARCH_BY_CATEGORY: process.env.VUE_APP_SEARCH_BY_CATEGORY,
+        VUE_APP_DISABLE_RATINGS: process.env.VUE_APP_DISABLE_RATINGS,
+        VUE_APP_INSTANT_PAGE_PREFIX: '/l',
+        VUE_APP_POST_MESSAGE_ALLOWED_ORIGINS: postMessageAllowedOrigins,
+        VUE_APP_GITHUB_FORK_BUTTON: process.env.VUE_APP_GITHUB_FORK_BUTTON,
+        VUE_APP_DISPLAY_ASSET_DISTANCE: process.env.VUE_APP_DISPLAY_ASSET_DISTANCE,
+        VUE_APP_HOME_FEATURES_COLUMNS: process.env.VUE_APP_HOME_FEATURES_COLUMNS,
+        VUE_APP_STRIPE_PUBLISHABLE_KEY: process.env.VUE_APP_STRIPE_PUBLISHABLE_KEY,
+        VUE_APP_STRIPE_OAUTH_CLIENT_ID: process.env.VUE_APP_STRIPE_OAUTH_CLIENT_ID,
 
-        NETLIFY_FUNCTION_GET_STRIPE_CUSTOMER_URL: JSON.stringify(process.env.NETLIFY_FUNCTION_GET_STRIPE_CUSTOMER_URL),
-        NETLIFY_FUNCTION_CREATE_STRIPE_CHECKOUT_SESSION_URL: JSON.stringify(process.env.NETLIFY_FUNCTION_CREATE_STRIPE_CHECKOUT_SESSION_URL),
-        NETLIFY_FUNCTION_LINK_STRIPE_ACCOUNT: JSON.stringify(process.env.NETLIFY_FUNCTION_LINK_STRIPE_ACCOUNT),
+        NETLIFY_FUNCTION_GET_STRIPE_CUSTOMER_URL: process.env.NETLIFY_FUNCTION_GET_STRIPE_CUSTOMER_URL,
+        NETLIFY_FUNCTION_CREATE_STRIPE_CHECKOUT_SESSION_URL: process.env.NETLIFY_FUNCTION_CREATE_STRIPE_CHECKOUT_SESSION_URL,
+        NETLIFY_FUNCTION_LINK_STRIPE_ACCOUNT: process.env.NETLIFY_FUNCTION_LINK_STRIPE_ACCOUNT,
       }
     },
 
