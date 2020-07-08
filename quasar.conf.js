@@ -433,6 +433,8 @@ module.exports = function (ctx) {
                 // skeleton styles
                 /q-skeleton/,
                 '.fit',
+                // typography
+                /^text-/
               ],
               /* screenshots: {
                 basePath: 'criticalcss',
