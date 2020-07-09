@@ -418,12 +418,14 @@ module.exports = function (ctx) {
               blockJSRequests: false,
               keepLargerMediaQueries: true,
               forceInclude: [
+                // footer styles
                 /stl-footer/,
+                '.bg-accent-gradient',
                 // skeleton styles
                 /q-skeleton/,
                 '.fit',
                 // typography
-                /^text-/
+                /text-[a-z0-9]+/ // excluding precise color classes such as '.text-orange-4'
               ],
               /* screenshots: {
                 basePath: 'criticalcss',
