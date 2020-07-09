@@ -6,7 +6,6 @@ import MainLayoutHeader from 'src/layouts/MainLayoutHeader'
 
 import AppUpdateDialog from 'src/components/AppUpdateDialog'
 import AuthDialog from 'src/components/AuthDialog'
-import CheckoutButton from 'src/components/CheckoutButton'
 import EmailValidationDialog from 'src/components/EmailValidationDialog'
 import TransactionCard from 'src/components/TransactionCard'
 
@@ -18,7 +17,6 @@ export default {
 
     AppUpdateDialog,
     AuthDialog,
-    CheckoutButton,
     EmailValidationDialog,
     TransactionCard,
   },
@@ -29,6 +27,8 @@ export default {
     return {
       routeTransitionName: '',
       checkoutOpenedDialog: false,
+      hasLoadingBar: false,
+      loadingBarRouteGuard: _ => _,
     }
   },
   computed: {
@@ -84,6 +84,10 @@ export default {
           : toDepth < fromDepth ? 'fadeInLeft' : 'fadeInRight'
     },
   },
+  mounted () {
+    // Don’t show AjaxBar before first navigation for consistency
+    this.loadingBarRouteGuard = this.$router.afterEach(this.showLoadingBar)
+  },
   methods: {
     toggleLeftDrawer (visible = !this.isLeftDrawerOpened) {
       this.$store.commit(mutationTypes.LAYOUT__TOGGLE_LEFT_DRAWER, { visible })
@@ -91,6 +95,10 @@ export default {
     checkout () {
       this.checkoutOpenedDialog = true
     },
+    showLoadingBar () {
+      this.hasLoadingBar = true
+      this.loadingBarRouteGuard() // unregister
+    }
   },
 }
 </script>
@@ -102,6 +110,7 @@ export default {
   >
     <MainLayoutHeader />
     <QAjaxBar
+      v-if="hasLoadingBar"
       ref="loadingBar"
       position="top"
       color="secondary"

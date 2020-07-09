@@ -1,18 +1,18 @@
 <template>
   <q-page class="row items-stretch">
-    <div :class="['col-12 q-pa-md', isSearchMapVisible ? 'col-md-8' : '']">
+    <div :class="['col-12 q-pa-md col-md-8']">
       <div class="row q-col-gutter-md items-start">
         <AssetCard
-          v-for="asset of searchedAssets"
-          :key="asset.id"
+          v-for="(asset, index) of searchResults"
+          :key="index"
           :class="[
-            'col-12 col-sm-6 col-md-4 col-lg-3',
-            isSearchMapVisible ? 'col-xl-3' : 'col-xl-2'
+            'col-12 col-sm-6 col-md-4 col-lg-3 col-xl-3'
           ]"
           :asset="asset"
-          :show-distance="displayAssetDistance"
-          @mouseenter.native="animateMarker(asset.id)"
-          @mouseleave.native="animateMarker(asset.id, false)"
+          :reloading="search.searchingAssets"
+          :show-distance="!search.searchingAssets && displayAssetDistance"
+          @mouseenter.native="animateMarker(asset)"
+          @mouseleave.native="animateMarker(asset, false)"
         />
       </div>
       <div class="row justify-center q-mt-md">
@@ -30,54 +30,56 @@
     <!-- Rebuilding the map with v-if for appropriate sizing
     https://github.com/mapbox/mapbox-gl-js/issues/3265 -->
     <QPageSticky
-      v-if="mapSized || isSearchMapVisible"
-      v-show="isSearchMapVisible"
-      class="gt-sm col-md-4 full-height"
+      :class="`gt-${mapBreakpoint || 'sm'} col-md-4 full-height`"
       position="top-right"
     >
       <QNoSsr>
         <AppMap
+          v-if="mapSized || isSearchMapVisible"
+          v-show="isSearchMapVisible"
           class="absolute-full"
           :nav-control="{ show: true, position: 'top-left' }"
           @map-resize="mapResized"
           @map-load="mapLoaded"
-          @map-movestart="mapMoveStarted"
-          @map-moveend="mapMoveEnded"
+          @map-dragstart="mapMoveStarted"
+          @map-dragend="mapMoveEnded"
+          @map-zoomstart="mapMoveStarted"
+          @map-zoomend="mapMoveEnded"
         />
 
-        <QBtn
-          v-if="searchAfterMapMoveActive"
-          v-show="!showRetriggerSearchLabel"
-          class="map-search-on-map-move bg-white q-py-sm"
-          size="sm"
-          @click="toggleSearchAfterMapMove"
-        >
-          <QCheckbox
-            :value="shouldSearchAfterMapMove"
-            dense
-            @input="toggleSearchAfterMapMove"
-          />
+        <template v-if="searchAfterMapMoveActive && isSearchMapVisible">
+          <QBtn
+            v-show="!showRetriggerSearchLabel"
+            class="map-search-on-map-move bg-white q-py-sm"
+            size="sm"
+            @click="toggleSearchAfterMapMove"
+          >
+            <QCheckbox
+              :value="shouldSearchAfterMapMove"
+              dense
+              @input="toggleSearchAfterMapMove"
+            />
 
-          <AppContent
-            class="q-ml-sm"
-            entry="pages"
-            field="search.search_after_map_move"
-          />
-        </QBtn>
-        <QBtn
-          v-if="searchAfterMapMoveActive"
-          v-show="showRetriggerSearchLabel"
-          color="secondary"
-          class="map-search-on-map-move q-py-sm"
-          size="sm"
-          @click="triggerSearchWithMapCenter"
-        >
-          <AppContent
+            <AppContent
+              class="q-ml-sm"
+              entry="pages"
+              field="search.search_after_map_move"
+            />
+          </QBtn>
+          <QBtn
             v-show="showRetriggerSearchLabel"
-            entry="pages"
-            field="search.redo_search"
-          />
-        </QBtn>
+            color="secondary"
+            class="map-search-on-map-move q-py-sm"
+            size="sm"
+            @click="triggerSearchWithMapCenter"
+          >
+            <AppContent
+              v-show="showRetriggerSearchLabel"
+              entry="pages"
+              field="search.redo_search"
+            />
+          </QBtn>
+        </template>
       </QNoSsr>
     </QPageSticky>
   </q-page>
@@ -89,7 +91,7 @@ import Vue from 'vue'
 import { mapState, mapGetters } from 'vuex'
 import * as mutationTypes from 'src/store/mutation-types'
 
-import { get, set } from 'lodash'
+import { fill, get, set } from 'lodash'
 import getDistance from 'geolib/es/getDistance'
 import p from 'src/utils/promise'
 
@@ -111,6 +113,7 @@ export default {
   data () {
     return {
       // map: null, // DON’T keep map object in Vue, this BREAKS the map (probably reactivity)
+      mapBreakpoint: 'sm', // automatically show map above this Quasar screen size
       mapSized: false,
       populatedMapMarkers: { // Keep track of generated popup contents.
         // assetId: markerDOMElement // to clean up before destroy
@@ -144,6 +147,15 @@ export default {
       if (this.shouldSearchAfterMapMove) return false
       return this.mapCenterChanged
     },
+    searchResults () {
+      if (this.search.searchingAssets && !this.searchedAssets.length) {
+        // Array.fill not polyfilled (IE11)
+        // TODO: Reconsider using it with @quasar/app v2
+        return fill(Array(this.search.searchFilters.nbResultsPerPage / 2), null)
+      } else {
+        return this.searchedAssets
+      }
+    },
   },
   watch: {
     'search.assets' () {
@@ -157,8 +169,6 @@ export default {
     }
   },
   beforeMount () {
-    if (this.$q.screen.gt.sm) this.$store.commit(mutationTypes.TOGGLE_SEARCH_MAP, { visible: true })
-
     // keeping track of generated markers, use assetIds as keys
     // We need full mapbox objects, stored outside of vue (reactivity not needed, and even full of bugs)
     window.stlMapMarkers = {}
@@ -172,9 +182,13 @@ export default {
     if (!this.$store.state.search.searchMode) {
       await this.$store.dispatch('selectSearchMode', { searchMode: this.$store.getters.defaultSearchMode })
     }
+    if (window.__PRERENDER_INJECTED) document.dispatchEvent(new Event('prerender-ready'))
 
-    await this.$store.dispatch('searchAssets')
+    // await this.searchAssets() // already called in afterAuth
     this.$store.dispatch('getHighestPrice')
+
+    if ('requestIdleCallback' in window) requestIdleCallback(this.showMapOnLargeScreen)
+    else setTimeout(this.showMapOnLargeScreen, 0)
   },
   updated () { // e.g. when switching locale
     this.refreshMap()
@@ -194,10 +208,15 @@ export default {
         await this.$store.dispatch('selectSearchMode', { searchMode: this.defaultSearchMode })
       }
 
-      await this.$store.dispatch('searchAssets')
+      await this.searchAssets()
     },
     mapResized () {
       this.mapSized = true
+    },
+    showMapOnLargeScreen () {
+      if (this.$q.screen.gt[this.mapBreakpoint]) {
+        this.$store.commit(mutationTypes.TOGGLE_SEARCH_MAP, { visible: true })
+      }
     },
     async changePage (page) {
       this.$store.commit({
@@ -337,8 +356,9 @@ export default {
         }
       })
     },
-    animateMarker (assetId, animate = true) {
-      const marker = get(window.stlMapMarkers, assetId)
+    animateMarker (asset, animate = true) {
+      if (!asset || !asset.id) return
+      const marker = get(window.stlMapMarkers, asset.id)
       const el = marker && marker.getElement()
 
       if (!el) return

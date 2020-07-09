@@ -3,7 +3,6 @@ import stelace, { fetchAllResults } from 'src/utils/stelace'
 import * as types from 'src/store/mutation-types'
 
 import { isAssetId } from 'src/utils/id'
-import EventBus from 'src/utils/event-bus'
 
 export async function fetchMessages ({ commit, dispatch, state, rootGetters }, { forceRefreshAll = false } = {}) {
   // fetch the current user here
@@ -246,10 +245,4 @@ export async function sendMessage ({ commit, state, getters }, {
   }
 
   return message
-}
-
-/* eslint-disable-next-line camelcase */
-export async function signal_newMessage ({ dispatch }, { message }) {
-  await dispatch('fetchMessages')
-  EventBus.$emit('newMessage')
 }

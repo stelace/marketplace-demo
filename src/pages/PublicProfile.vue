@@ -4,7 +4,6 @@
 import { mapGetters, mapState } from 'vuex'
 import * as mutationTypes from 'src/store/mutation-types'
 
-import AppGalleryUploader from 'src/components/AppGalleryUploader'
 import OwnerAssetCard from 'src/components/OwnerAssetCard'
 import PlacesAutocomplete from 'src/components/PlacesAutocomplete'
 import TransactionRatingsList from 'src/components/TransactionRatingsList'
@@ -14,11 +13,10 @@ import StripeLinkAccount from 'src/components/StripeLinkAccount'
 import PageComponentMixin from 'src/mixins/pageComponent'
 import StripeMixin from 'src/mixins/stripe'
 
-import { extractLocationDataFromPlace } from 'src/utils/places'
+import { extractLocationDataFromPlace, isPlaceSearchEnabled } from 'src/utils/places'
 
 export default {
   components: {
-    AppGalleryUploader,
     OwnerAssetCard,
     PlacesAutocomplete,
     TransactionRatingsList,
@@ -36,6 +34,7 @@ export default {
       isEditingImages: false,
       maxNbLocations: 1,
       locationsChanged: false,
+      isPlaceSearchEnabled,
       userRatingsByTransaction: [],
       userRatingsLoaded: false,
     }
@@ -174,6 +173,7 @@ export default {
           <div v-if="isCurrentUser || (!isCurrentUser && selectedUserLocations.length)">
             <div class="row justify-between q-my-md">
               <AppSwitchableEditor
+                v-if="isPlaceSearchEnabled"
                 :value="locationValue"
                 :active="isCurrentUser && selectedUserLocations.length <= maxNbLocations"
                 :custom-save="updateUserFn('locations')"

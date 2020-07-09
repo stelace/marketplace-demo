@@ -1,6 +1,7 @@
-import { deburr } from 'lodash'
+import { deburr, isString } from 'lodash'
 
 const regexOperatorsRegex = /[|\\{}()[\]^$+*?.-]/g
+const emailRegex = /^[^\s@]+@([^\s@.,]+\.)+[^\s@.,]{2,}$/
 
 export function escapeRegexp (str) {
   if (typeof str !== 'string') {
@@ -42,4 +43,8 @@ function safePath (str) {
   path = path.replace(duplicateJoinRegex, opts.joinString)
 
   return path
+}
+
+export function isEmail (value) {
+  return isString(value) && emailRegex.test(value)
 }

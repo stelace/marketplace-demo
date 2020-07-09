@@ -103,15 +103,26 @@ export function termsPath (state, getters) {
   return getters.entries['instant_pages.terms.INSTANT_PAGE_PATH'] || 'terms'
 }
 
-export function homeHeroUrlTransformed (state, getters, rootState) {
+export function getHomeHeroUrlTransformed (state, getters, rootState) {
   const url = rootState.style.homeHeroUrl || ''
 
-  if (url && cdn.servedFromCdnBucket(url)) {
-    return cdn.getUrl(url, {
-      webp: state.acceptWebP
-    })
+  return ({ noWebP, width } = {}) => {
+    const edits = {
+      webp: state.acceptWebP && !noWebP
+    }
+
+    if (width) {
+      edits.resize = {
+        width,
+        withoutEnlargement: true
+      }
+    }
+
+    if (url && cdn.servedFromCdnBucket(url)) {
+      return cdn.getUrl(url, edits)
+    }
+    return url
   }
-  return url
 }
 
 export function placeholderImage (state, getters) {
@@ -128,6 +139,10 @@ export function baseImageWidth (state, getters, rootState) {
 
 export function baseImageHeight (state, getters, rootState, rootGetters) {
   return getters.baseImageWidth / rootGetters.baseImageRatio
+}
+
+export function smallImageWidth (state, getters, rootState) {
+  return Math.round(rootState.style.baseImageWidth / 2)
 }
 
 export function largeImageWidth (state, getters) {
@@ -154,15 +169,24 @@ export function getAvatarImageUrl (state, getters) {
   }
 }
 
-// TODO: handle high resolution (srcset)
-export function getBaseImageUrl (state, getters) {
-  return (resource, { accessorString, index = 0 } = {}) => {
+export function getBaseImageUrl (state, getters, rootState, rootGetters) {
+  return (resource, { accessorString, index = 0, width } = {}) => {
     const imgUri = getImageUri(resource, { accessorString, index })
+    const resize = {
+      width: getters.baseImageWidth,
+      height: getters.baseImageHeight,
+      withoutEnlargement: true
+    }
+
+    if (width) {
+      resize.width = width
+      resize.height = Math.round(width / rootGetters.baseImageRatio)
+    }
 
     return cdn.servedFromCdnBucket(imgUri)
       ? cdn.getUrl(imgUri, {
         webp: state.acceptWebP,
-        resize: { width: getters.baseImageWidth, height: getters.baseImageHeight }
+        resize
       })
       : imgUri || (isDevDebuggingStyles ? getters.placeholderImage : '')
   }
@@ -175,7 +199,11 @@ export function getLargeImageUrl (state, getters) {
     return cdn.servedFromCdnBucket(imgUri)
       ? cdn.getUrl(imgUri, {
         webp: state.acceptWebP,
-        resize: { width: getters.largeImageWidth, height: getters.largeImageHeight }
+        resize: {
+          width: getters.largeImageWidth,
+          height: getters.largeImageHeight,
+          withoutEnlargement: true
+        }
       })
       : imgUri || (isDevDebuggingStyles ? getters.placeholderImage : '')
   }

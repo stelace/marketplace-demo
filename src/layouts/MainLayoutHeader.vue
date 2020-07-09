@@ -4,15 +4,15 @@ import * as mutationTypes from 'src/store/mutation-types'
 
 import {
   matAddBox,
-  matAttachMoney,
   matClose,
-  matEuroSymbol,
   matLock,
   matMail,
   matPowerSettingsNew,
   matSearch
 } from '@quasar/extras/material-icons'
 import { mdiGithubCircle } from '@quasar/extras/mdi-v4'
+
+import { isPlaceSearchEnabled } from 'src/utils/places'
 
 import AppLocaleSwitch from 'src/components/AppLocaleSwitch'
 import AppLogo from 'src/components/AppLogo'
@@ -42,6 +42,7 @@ export default {
       priceInputTouched: false,
       searchByCategory: process.env.VUE_APP_SEARCH_BY_CATEGORY === 'true',
       creatingOrganization: false,
+      isPlaceSearchEnabled,
     }
   },
   computed: {
@@ -50,6 +51,9 @@ export default {
     },
     isHome () {
       return this.route.name === 'home'
+    },
+    hasHomeBackground () {
+      return !!this.style.homeHeroUrl
     },
     isSearch () {
       return this.route.name === 'search'
@@ -63,11 +67,6 @@ export default {
 
       const category = this.common.categoriesById[selectedCategoryId]
       return category
-    },
-    maximumPrice () {
-      if (!this.priceInputTouched) return ''
-
-      return this.search.priceRange.max
     },
     userConversations () {
       return this.conversations.filter(c => !c.isEmpty)
@@ -159,9 +158,7 @@ export default {
   created () {
     this.icons = {
       matAddBox,
-      matAttachMoney,
       matClose,
-      matEuroSymbol,
       matLock,
       matMail,
       matSearch,
@@ -225,36 +222,6 @@ export default {
 
       this.searchAssets()
     },
-    updateMaxPrice (maximumPrice) {
-      if (isNaN(maximumPrice)) return
-
-      this.priceInputTouched = true
-
-      let maxPrice
-      if (maximumPrice === '') {
-        maxPrice = this.search.priceDefault.max
-        this.priceInputTouched = false
-      } else {
-        maxPrice = maximumPrice
-      }
-
-      this.$store.commit(mutationTypes.SET_PRICE_RANGE, {
-        min: this.search.priceRange.min,
-        max: maxPrice
-      })
-
-      this.searchAssets()
-    },
-    resetMaxPrice () {
-      this.priceInputTouched = false
-
-      this.$store.commit(mutationTypes.SET_PRICE_RANGE, {
-        min: this.search.priceRange.min,
-        max: null
-      })
-
-      this.searchAssets()
-    },
     async fetchUserGeolocation () {
       if (!this.displayAssetDistance) return
       if (this.currentUserPosition) return
@@ -276,14 +243,16 @@ export default {
     :bordered="!isHome && !isMenuOpened"
     :reveal-offset="100"
     :class="[
-      isHome ? 'q-pa-md transparent-header' : 'bg-white',
+      isHome && hasHomeBackground ? 'q-pa-md transparent-header' : 'bg-white',
       isMenuOpened ? 'header--raise-above-menu-dialog' : ''
     ]"
   >
     <QToolbar>
       <AppLink
-        v-if="showAccountAvatar"
-        :class="[isHome ? '' : 'text-primary', 'logo-container anchor-text--reset cursor-pointer q-mr-sm']"
+        :class="[
+          isHome && hasHomeBackground ? '' : 'text-primary',
+          'logo-container anchor-text--reset cursor-pointer q-mr-sm'
+        ]"
         :to="{ name: 'home' }"
         :aria-label="$t({ id: 'navigation.home' })"
         flat
@@ -292,8 +261,10 @@ export default {
       </AppLink>
 
       <QBtn
-        v-else
-        :class="[isHome ? '' : 'text-primary', 'logo-container q-mr-sm']"
+        :class="[
+          isHome && hasHomeBackground ? '' : 'text-primary',
+          'logo-container mini-logo-container q-mr-sm'
+        ]"
         :aria-label="$t({ id: 'navigation.menu' })"
         flat
         @click="toggleMenu"
@@ -303,7 +274,7 @@ export default {
 
       <div
         v-show="!isHome && !isMenuOpened"
-        class="header__search-bar row no-wrap shadow-2 q-px-sm"
+        class="header__search-bar row no-wrap shadow-2"
       >
         <QInput
           v-if="!searchByCategory"
@@ -345,12 +316,14 @@ export default {
           :label="$t({ id: 'form.search.query_placeholder' })"
           :icon-button-action="searchAssets"
           dense
+          pad-left
           icon-color="primary"
           search-icon-position="left"
           @category-changed="selectCategory"
           @text-changed="updateQuery"
         />
         <PlacesAutocomplete
+          v-show="isPlaceSearchEnabled"
           class="gt-sm"
           :label="$t({ id: 'form.search.near_location_placeholder' })"
           :hide-input-on-select="true"
@@ -359,32 +332,9 @@ export default {
           read-search-store
           prompt-current-position
           dense
+          pad-left
           @selectPlace="selectPlace"
         />
-
-        <AppInputNumber
-          :value="maximumPrice"
-          :label="$t({ id: 'form.search.maximum_price' })"
-          class="gt-md"
-          input-class="text-right"
-          min="0"
-          dense
-          @input="updateMaxPrice"
-        >
-          <template v-slot:prepend>
-            <QIcon
-              :name="content.currency === 'EUR' ? icons.matEuroSymbol : icons.matAttachMoney"
-              color="grey-4"
-            />
-          </template>
-          <template v-slot:append>
-            <QIcon
-              :class="['cursor-pointer', maximumPrice ? '' : 'hidden']"
-              :name="icons.matClose"
-              @click="resetMaxPrice"
-            />
-          </template>
-        </AppInputNumber>
       </div>
 
       <QSpace />
@@ -609,6 +559,12 @@ $header-min-breakpoint = 359px
 
 .logo-container svg
   max-height: $toolbar-min-height
+.logo-container:not(.mini-logo-container)
+  @media (max-width $breakpoint-xs-max)
+    display: none
+.mini-logo-container
+  @media (min-width $breakpoint-sm-min)
+    display: none
 .company-logo
   width: 9rem
 .company-mini-logo

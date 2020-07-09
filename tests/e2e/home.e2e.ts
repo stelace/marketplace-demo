@@ -16,6 +16,7 @@ test('can search from home with text query', async t => {
 
   await t
     .typeText(Home.searchInput.find('input'), 'bright charming flat')
+    .wait(500) // input debouncing
     .click(Home.searchButton)
     .expect(getLocation()).match(/\/s$/)
     // exact count can make the test flaky but it will warn about significant text search changes

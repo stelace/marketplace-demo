@@ -4,7 +4,7 @@ Injected into App’s style store, enabling configurable theme.
 
 ```js
 {
-  "name": "Stelace Instant - Work",
+  "name": "Stelace Marketplace Demo",
 
   // Easily test additional fonts in dev environment with Webfontloader
   // This is also used as CSS 'font-family' name in production
@@ -30,7 +30,7 @@ Injected into App’s style store, enabling configurable theme.
   "colorfulTheme": false,
   "pageTransitions": true,
   
-  // Changes home search card’s background and text color
+  // Home hero text color can only be set to white if this is false, for appropriate contrast
   "homeHasLightBackground": true,
   // Replaces default home search card’s white or black background
   "homeSearchCardBackground": "rgba(0, 0, 0, 0.6)",
@@ -46,9 +46,27 @@ Injected into App’s style store, enabling configurable theme.
   "baseImageWidth": 640,
   "avatarImageWidth": 96 // 6 * 16
 
-  // Your hero image hosted on CDN (like Stelace Instant CDN)
+  // Your hero image URL, should be hosted on some CDN
+  // like Stelace Instant CDN used to upload asset images in the demo.
   "homeHeroUrl": "",
-  // Improves home page loading speed and UX with SVG image placeholder
-  "homeHeroBase64": "data:image/svg+xml;base64…"
+  // SVG image placeholder improves home page loading speed and UX.
+  // Here is how you can manually generate a SVG placeholder (“SQIP” technique):
+  // - Use this nice website to generate your SVG https://ondras.github.io/primitive.js/
+  //   Default parameters are good to go. You can add triangles and ellipses to geometric shapes.
+  // - Then apply gaussian blur to the SVG (you may want to change stdDeviation value)
+  //   and preserveAspectRatio as well:
+  /*
+    <svg xmlns="…" viewBox="…" preserveAspectRatio="xMidYMid slice">
+      <defs>
+        <filter id="b">
+          <feGaussianBlur stdDeviation="8"/>
+        </filter>
+      </defs>
+      <g filter="url(#b)">
+        [SVG shapes]
+      </g>
+    </svg>
+  */
+  // - Update 'src/assets/home-blurred-background.svg' file content
 }
 ```

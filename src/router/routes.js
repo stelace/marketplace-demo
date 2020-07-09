@@ -87,9 +87,7 @@ export const catchAllRoute = {
 }
 
 // Always leave this as last one
-if (process.env.MODE !== 'ssr') {
-  routes.push(catchAllRoute)
-}
+routes.push(catchAllRoute)
 
 export default routes
 

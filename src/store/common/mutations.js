@@ -14,8 +14,10 @@ export default {
     state.categoriesLastFetchedDate = new Date().toISOString()
   },
 
-  [types.SET_FETCHING_CATEGORIES] (state, { fetching = true }) {
+  [types.SET_FETCHING_CATEGORIES] (state, { fetching = true, categoriesPromise }) {
     state.fetchingCategories = fetching
+    if (categoriesPromise) state.fetchingCategoriesPromise = categoriesPromise
+    else state.fetchingCategoriesPromise = null
   },
 
   [types.SET_ROLES] (state, { roles }) {

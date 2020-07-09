@@ -48,6 +48,10 @@ export default {
       type: Boolean,
       default: false
     },
+    hideHint: {
+      type: Boolean,
+      default: false
+    }
   },
   computed: {
     localizedDate () {
@@ -67,14 +71,19 @@ export default {
     },
     missingStartDateHint () {
       return typeof this.$attrs['start-date-required'] === 'string'
-        ? this.$t({ id: 'form.error.missing_field' }) : ''
+        ? this.$t({ id: 'form.error.missing_field' }) : this.defaultHint
     },
     missingEndDateHint () {
       if (typeof this.$attrs['end-date-required'] === 'string') {
         return this.$t({ id: 'form.error.missing_field' })
-      } else if (this.missingEndDateMeaning) {
-        return this.missingEndDateMeaning
-      } else return ''
+      } else {
+        return this.missingEndDateMeaning || this.defaultHint
+      }
+    },
+    defaultHint () {
+      // undefined is needed to remove quasar attribute
+      // (false doesn’t work as it should)
+      return this.hideHint ? undefined : ''
     }
   },
   methods: {
@@ -98,7 +107,7 @@ export default {
       <DatePickerInput
         :date="startDate"
         :label="$t({ id: 'time.start_date_label' })"
-        :hint="!startDate ? missingStartDateHint : ''"
+        :hint="!startDate ? missingStartDateHint : defaultHint"
         v-bind="startDateInputAttrs"
         :get-valid-dates="getValidStartDates"
         :hide-calendar-icon="hideCalendarIcon"
@@ -110,7 +119,7 @@ export default {
       <DatePickerInput
         :date="endDate"
         :label="$t({ id: 'time.end_date_label' })"
-        :hint="!endDate ? missingEndDateHint : ''"
+        :hint="!endDate ? missingEndDateHint : defaultHint"
         :get-valid-dates="getValidEndDates || forceEndDateAfterStartDate"
         :disabled="!startDate"
         :hide-calendar-icon="hideCalendarIcon"

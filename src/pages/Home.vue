@@ -1,10 +1,15 @@
 <script>
 import { mapState, mapGetters } from 'vuex'
-import { get, isString } from 'lodash'
+import { get, isString, isUndefined } from 'lodash'
+
+import {
+  matSearch
+} from '@quasar/extras/material-icons'
+
+import { isPlaceSearchEnabled } from 'src/utils/places'
 
 import AppCarousel from 'src/components/AppCarousel'
-import AppSVGActionButton from 'src/components/AppSVGActionButton'
-import DatePickerInput from 'src/components/DatePickerInput'
+import AppDateRangePicker from 'src/components/AppDateRangePicker'
 import PlacesAutocomplete from 'src/components/PlacesAutocomplete'
 import CategoryAutocomplete from 'src/components/CategoryAutocomplete'
 
@@ -17,8 +22,7 @@ export default {
   name: 'Home',
   components: {
     AppCarousel,
-    AppSVGActionButton,
-    DatePickerInput,
+    AppDateRangePicker,
     PlacesAutocomplete,
     CategoryAutocomplete,
   },
@@ -28,17 +32,28 @@ export default {
   ],
   data () {
     return {
+      searchMode: 'default',
       location: null,
       selectedCategory: null,
       query: '',
       startDate: '',
+      endDate: '',
       searchByCategory: process.env.VUE_APP_SEARCH_BY_CATEGORY === 'true',
-      assets: [],
-      nbAssetsPerSlideDefault: 3,
+      isPlaceSearchEnabled,
+      lastAssetsPromise: null,
+      assets: null,
+      nbAssetsPerSlideDefault: 4,
       nbCarouselSlides: 4, // Can be less when there are few assets, set to 1 to disable
+
+      blurredBackgroundSVG: '',
+      showFeaturesSection: process.env.VUE_APP_HOME_FEATURES_COLUMNS === 'true',
     }
   },
   computed: {
+    showDates () {
+      const hasDates = this.getSearchModeUI(this.searchMode).hasDates
+      return (!this.searchModes.length || hasDates === null) ? true : hasDates
+    },
     nbAssetsVisiblePerSlide () {
       const nbAssetsWithoutCarousel = this.$q.screen.gt.xs ? (this.$q.screen.lt.md ? 4 : 3) : 2
       return this.showCarousel ? this.nbAssetsPerSlideDefault : nbAssetsWithoutCarousel
@@ -53,16 +68,22 @@ export default {
       // YouTube: 'https://www.youtube-nocookie.com/embed/eY1XtWyKlJA'
       return get(config, 'instant.videoUrl', '')
     },
+    nonDefaultSearchModes () {
+      return this.searchModes.filter(m => m !== 'default')
+    },
     ...mapState({
       style: state => state.style,
       config: state => state.common.config,
+      content: state => state.content,
       locale: state => state.content.locale || 'en',
       auth: state => state.auth,
     }),
     ...mapGetters([
       'currentUser',
       'defaultSearchMode',
-      'homeHeroUrlTransformed',
+      'getHomeHeroUrlTransformed',
+      'getSearchModeUI',
+      'searchModes',
     ]),
   },
   watch: {
@@ -70,10 +91,23 @@ export default {
       this.handleUrlRedirection(this.$route)
     }
   },
-  created () {
-    this.$store.dispatch('fetchLastAssets', {
+  async created () {
+    this.lastAssetsPromise = this.$store.dispatch('fetchLastAssets', {
       nbResults: this.nbAssetsPerSlideDefault * this.nbCarouselSlides
-    }).then(assets => { this.assets = assets })
+    })
+
+    this.icons = {
+      matSearch,
+    }
+
+    this.blurredBackgroundSVG = (await import(
+      /* webpackMode: "eager" */
+      '!!html-loader!src/assets/home-blurred-background.svg'
+    )).default
+  },
+  async mounted () {
+    if (window.__PRERENDER_INJECTED) document.dispatchEvent(new Event('prerender-ready'))
+    this.assets = await this.lastAssetsPromise
   },
   methods: {
     async afterAuth () {
@@ -161,6 +195,10 @@ export default {
     selectCategory (category) {
       this.selectedCategory = category
     },
+    setDates ({ startDate, endDate }) {
+      if (!isUndefined(startDate)) this.startDate = startDate
+      if (!isUndefined(endDate)) this.endDate = endDate
+    },
     handleUrlRedirection (route) {
       const routeQuery = route.query
 
@@ -171,9 +209,6 @@ export default {
           this.openAuthDialog()
         }
       }
-    },
-    selectStartDate (startDate) {
-      this.startDate = startDate
     },
     async searchAssets () {
       if (this.searchByCategory && !this.query) {
@@ -200,8 +235,13 @@ export default {
       this.$store.commit({
         type: types.SET_SEARCH_DATES,
         startDate: this.startDate ? new Date(this.startDate).toISOString() : null,
+        endDate: this.endDate ? new Date(this.endDate).toISOString() : null,
         reset: true
       })
+
+      if (this.searchMode && this.searchMode !== 'default') {
+        this.$store.dispatch('selectSearchMode', { searchMode: this.searchMode })
+      }
 
       this.$router.push({ name: 'search' })
     },
@@ -210,101 +250,158 @@ export default {
 </script>
 
 <template>
-  <q-page>
+  <QPage class="stl-footer--bottom">
     <section
-      class="hero row items-center"
-      :style="`background-image: url('${style.homeHeroBase64}')`"
+      :class="[
+        'hero text-center',
+        (blurredBackgroundSVG || style.homeHeroUrl) && !style.homeHasLightBackground ? 'text-white' : ''
+      ]"
     >
-      <QImg
-        class="hero__background absolute-full"
-        :src="homeHeroUrlTransformed"
-        no-default-spinner
-        basic
-      />
-      <div class="hero__content col-12 col-sm-6 col-md-4 offset-sm-2">
-        <div
+      <div class="hero__background absolute-full">
+        <!-- Blurred SVG background when loading page and background image.
+            SVG is permanently used on small screens for which no <picture> source is loaded.
+            It is also a fallback for browsers not supporting <picture> (and object-fit) such as IE11 -->
+        <!-- eslint-disable-next-line vue/no-v-html -->
+        <div class="blurred-svg-background" v-html="blurredBackgroundSVG" />
+        <picture>
+          <source
+            type="image/webp"
+            :srcset="`${
+              getHomeHeroUrlTransformed({ width: 1024 })
+            } 1024w, ${
+              getHomeHeroUrlTransformed({ width: 1366 })
+            } 1366w, ${
+              getHomeHeroUrlTransformed({ width: 1600 })
+            } 1600w, ${
+              getHomeHeroUrlTransformed({ width: 1920 })
+            } 1920w, ${
+              getHomeHeroUrlTransformed({ width: 2560 })
+            } 2560w`"
+            sizes="100vw"
+            media="(min-width: 640px)"
+          >
+          <!-- Handle browsers not supporting WebP, contrasting with prerendering env (Puppeter) -->
+          <!-- TODO: remove WebP test when upgrading to AWS image handler version supporting AUTO_WEBP -->
+          <source
+            :srcset="`${
+              getHomeHeroUrlTransformed({ noWebP: true, width: 1024 })
+            } 1024w, ${
+              getHomeHeroUrlTransformed({ noWebP: true, width: 1366 })
+            } 1366w, ${
+              getHomeHeroUrlTransformed({ noWebP: true, width: 1600 })
+            } 1600w, ${
+              getHomeHeroUrlTransformed({ noWebP: true, width: 1920 })
+            } 1920w, ${
+              getHomeHeroUrlTransformed({ noWebP: true, width: 2560 })
+            } 2560w`"
+            sizes="100vw"
+            media="(min-width: 640px)"
+          >
+          <!-- Transparent GIF for browsers not supporting <picture> -->
+          <img
+            :src="content.blankImageBase64"
+            :alt="$t({ id: 'pages.home.page_title' })"
+            class="fit"
+          >
+        </picture>
+      </div>
+      <div class="hero__search stl-content-container stl-content-container--xlarge">
+        <AppContent
+          tag="h1"
           :class="[
-            'q-pa-md hero__search',
-            style.homeHasLightBackground ? 'hero__search--dark' : 'hero__search--light',
-            style.roundedTheme ? 'hero__search--round' : ''
+            'text-h4 text-weight-medium q-my-none',
           ]"
+          entry="pages"
+          field="home.header"
+        />
+        <QTabs
+          v-model="searchMode"
+          class="q-my-sm hero__search-modes"
+          align="left"
+          breakpoint="0"
+          dense
+          no-caps
         >
-          <AppContent
-            tag="h1"
-            :class="[
-              'text-h4 text-weight-medium q-mt-none',
-              style.homeHasLightBackground ? 'text-white' : ''
-            ]"
-            entry="pages"
-            field="home.header"
+          <QTab
+            v-for="mode in nonDefaultSearchModes"
+            :key="mode"
+            :name="mode"
+            :label="$t({ id: `form.search.modes.${mode}` })"
           />
-          <div class="hero__search-form">
-            <q-input
+        </QTabs>
+        <form class="hero__search-bar row justify-center shadow-2" @submit.prevent="searchAssets">
+          <div class="row no-wrap flex-item--grow">
+            <QInput
               v-if="!searchByCategory"
               ref="heroSearchInput"
               v-model="query"
-              dense
-              bottom-slots
-              :dark="style.homeHasLightBackground"
-              :standout="style.homeHasLightBackground"
-              :filled="!style.homeHasLightBackground"
+              class="flex-item--grow-shrink-auto"
               :label="$t({ id: 'form.search.query_placeholder' })"
+              :debounce="300"
             />
             <CategoryAutocomplete
               v-if="searchByCategory"
               ref="heroSearchCategoryAutocomplete"
+              class="hero__search-field flex-item--grow-shrink-auto"
+              :text-debounce="300"
               :set-category="selectedCategory"
-              dense
-              bottom-slots
-              :dark="style.homeHasLightBackground"
-              :standout="style.homeHasLightBackground"
-              :filled="!style.homeHasLightBackground"
               :label="$t({ id: 'form.search.query_placeholder' })"
               :show-search-icon="false"
+              pad-left
               @category-changed="selectCategory"
               @text-changed="t => { query = t }"
             />
             <PlacesAutocomplete
-              dense
-              bottom-slots
-              :dark="style.homeHasLightBackground"
-              :standout="style.homeHasLightBackground"
-              :filled="!style.homeHasLightBackground"
+              v-show="isPlaceSearchEnabled"
+              class="hero__search-field hero__search-place flex-item--grow-shrink-auto"
+              pad-left
               :label="$t({ id: 'form.search.near_location_placeholder' })"
+              :show-search-icon="false"
+              prompt-current-position
               @selectPlace="selectPlace"
             />
-            <DatePickerInput
-              dense
-              bottom-slots
-              :date="startDate"
-              :dark="style.homeHasLightBackground"
-              :standout="style.homeHasLightBackground"
-              :filled="!style.homeHasLightBackground"
+            <AppDateRangePicker
+              v-show="showDates"
+              :start-date="startDate"
+              :end-date="endDate"
+              class="hero__search-field hero__search-dates"
+              column-class="col-6"
               :label="$t({ id: 'form.date_placeholder' })"
-              @change="selectStartDate"
+              hide-hint
+              @changeStartDate="startDate => setDates({ startDate })"
+              @changeEndDate="endDate => setDates({ endDate })"
             />
           </div>
-          <div class="row justify-end">
-            <component
-              :is="style.hasSVGActionButton ? 'AppSVGActionButton' : 'QBtn'"
-              ref="heroSearchButton"
-              class="text-weight-medium"
-              :rounded="style.roundedTheme"
-              :label="$t({ id: 'pages.home.form_button' })"
-              color="info"
-              size="lg"
-              no-caps
-              @click="searchAssets"
+          <QBtn
+            ref="heroSearchButton"
+            class="hero__search-button text-weight-medium q-ma-sm q-px-sm"
+            type="submit"
+            :rounded="style.roundedTheme"
+            color="info"
+            dense
+            no-caps
+          >
+            <QIcon
+              :name="icons.matSearch"
+              :left="true"
             />
-          </div>
-        </div>
+            <AppContent
+              class="gt-xs"
+              entry="pages"
+              field="home.form_button"
+            />
+          </QBtn>
+        </form>
       </div>
     </section>
-    <section :class="['home__features row justify-center' ,style.colorfulTheme ? 'bg-primary-gradient text-white' : '']">
+    <section
+      v-if="showFeaturesSection"
+      :class="['home__features row justify-center q-my-lg q-pb-md' ,style.colorfulTheme ? 'bg-primary-gradient text-white' : '']"
+    >
       <div class="col-12 col-md-9 flex flex-center">
         <AppContent
           tag="h2"
-          class="text-h4 text-center text-weight-medium q-my-xl q-mx-md"
+          class="text-h5 text-center text-weight-medium q-mx-md"
           entry="pages"
           field="home.subheader"
         />
@@ -325,7 +422,7 @@ export default {
           />
         </div>
       </div>
-      <div class="col-12 stl-content-container stl-content-container--large row text-center q-mb-xl">
+      <div class="col-12 stl-content-container stl-content-container--large row text-center">
         <div class="col-12 col-md-4">
           <AppContent
             tag="h3"
@@ -395,40 +492,70 @@ export default {
     </section> -->
 
     <AppFooter />
-  </q-page>
+  </QPage>
 </template>
 
 <style lang="stylus" scoped>
+$background-image-loaded-from = 640px
+
 .hero
-  position relative
+  position: relative
+  padding 5rem 1rem 2.5rem
   background-size: cover
   background-position: 50% 50%
+  @media (max-width $background-image-loaded-from)
+    // on mobile, don’t disturb users with the rest of the page
+    // and make scroll required to see more
+    height: 85vh
+    display: flex
+    justify-content: center
+    align-items: center
 
-@media (min-width $breakpoint-sm-min)
-  .hero
-    min-height 100vh // can be higher on mobile screen with landscape orientation
-    padding 5rem 0
+.hero__background
+  color: transparent
+  img
+    object-fit: cover
+    @media (max-width $background-image-loaded-from)
+      display: none
+.blurred-svg-background
+  position: absolute
+  z-index: -1
+  top: 0
+  left: 0
+  width: 100%
+  height: 100%
 
 .hero__search
+  position: relative
+  margin: 1rem auto
+.hero__search-modes
+  min-height: 2.5rem
+  @media (max-width $breakpoint-xs-max)
+    visibility: hidden
+.hero__search-bar
+  background-color: #FFF
   border-radius $generic-border-radius
-.hero__search--round
-  border-radius 10px
-.hero__search--dark
-  background-color $dimmed-background
-  background-color var(--stl-home-search-card-background, $dimmed-background)
-.hero__search--light
-  background-color $light-dimmed-background
-  background-color var(--stl-home-search-card-background, $light-dimmed-background)
+.hero__search-field
+  position:relative
+  &:not(:first-child)::after
+    content: ''
+    position:absolute
+    top: 25%
+    bottom: 25%
+    left: 0
+    border-right: 1px solid $grey-4
 
-@media (max-width $breakpoint-xs-max)
-  .hero__search
-    border-radius 0
-  .hero__search--dark, .hero__search--light
-    padding-top 1.5 * $toolbar-min-height
-
-@media (min-width $breakpoint-sm-min)
-  .hero__search
-    max-width 26rem
+.hero__search-place
+  @media (max-width $breakpoint-xs-max)
+    display: none
+.hero__search-dates
+  flex: 1 1 14rem
+  @media (max-width $breakpoint-sm-max)
+    display: none
+.hero__search-button
+  flex: 0 1 auto
+  @media (max-width $breakpoint-xs-max)
+    padding-left: $spaces.md.x
 
 .hero__content
   z-index: 1
@@ -477,12 +604,18 @@ export default {
 // Assets
 
 .home__asset-gallery
-  padding: 2rem 0 4rem
+  padding: 1rem 0 4rem
   // Note that colon is required to avoid parsing errors
-  margin: $spaces.md.y $spaces.md.x $spaces.xl.y
+  margin: $spaces.lg.y $spaces.md.x $spaces.xl.y
   @media (min-width $breakpoint-sm-min)
-    margin: $spaces.md.y $spaces.xl.x $spaces.xl.y
+    margin: $spaces.lg.y $spaces.xl.x $spaces.xl.y
 
 .q-carousel
   height: auto
+</style>
+
+<style lang="stylus">
+.blurred-svg-background svg
+  height: 100%
+  width: 100%
 </style>

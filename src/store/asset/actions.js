@@ -150,6 +150,7 @@ export async function fetchUserAssets ({ commit, dispatch, rootState, rootGetter
 export async function getHighestPrice ({ rootState, commit }, { setPriceRange = true } = {}) {
   const assetTypeIds = rootState.search.assetTypesIds
   const params = {
+    validated: true,
     nbResultsPerPage: 1,
     orderBy: 'price',
     order: 'desc'

@@ -17,7 +17,7 @@ Feel free to [fork](
   https://conventionalcommits.org
 )
 
-This starter kit offers **a [high-performance](#fast-by-default) AirBnB-like marketplace front-end (Vue.js) with pre-configured serverless deployment** based on [open-source](https://github.com/stelace/stelace) [Stelace API](https://stelace.com) server.
+This starter kit offers **a [high-performance](#fast-by-default-checkered_flag) AirBnB-like marketplace front-end (Vue.js) with pre-configured serverless deployment** based on [open-source](https://github.com/stelace/stelace) [Stelace API](https://stelace.com) server.
 
 ## Contents
 
@@ -62,7 +62,7 @@ Stelace [open-source marketplace backend](https://github.com/stelace/stelace) le
 
 ### Fast by default :checkered_flag:
 
-Get 95+ PageSpeed score out of the box:
+Get 90+ PageSpeed score out of the box:
 
 - Pre-rendered static pages for fastest page load, with Vue.js hydrating into full SPA.
 - Code-splitting with optimized Webpack config in `quasar.conf.js`.
@@ -137,24 +137,26 @@ You need to fill the following environment variables:
 - `STELACE_SECRET_API_KEY` (*seck_*...) used in data seeding scripts
 - `STELACE_API_URL` can be left blank unless you use your own server rather than default `api.stelace.com`
 
-4. Start the development server
+Please refer to [`.env.example`](./.env.example) for more details about environment variables, including map, payment gateway, logging and analytics.
 
-```sh
-yarn dev
-# same as
-quasar dev
-```
-
-Please refer to [Quasar docs](https://v1.quasar-framework.org/) for more details about configuration and info on components.
-
-5. Seed development [data](./docs/development-data.md)
+4. Seed development [data](./docs/development-data.md)
 
 ```sh
 yarn seed
 ```
 
+5. Start the development server
+
+```sh
+quasar dev
+# or, if you want to run Netlify functions with stripe payments as well:
+yarn dev
+```
+
+Please refer to [Quasar docs](https://quasar.dev/introduction-to-quasar) for more details about front-end configuration and components.
+
 <details>
-<summary>Developing with self-hosted Stelace API server.</summary>
+<summary>Developing with self-hosted Stelace API server (open-source backend).</summary>
 
 Stelace Core API server has to be launched locally before starting this project's server.
 
@@ -181,9 +183,13 @@ Let’s start the server.
 yarn dev
 ```
 
-Please refer to`.env.example`.
+Please refer to`.env.example` in `stelace-server` project.
 
 </details>
+
+6. Branding
+
+Customize the app with your own colors and branding in `src/styles.json`, documented in [styles.json.md](https://github.com/stelace/marketplace-demo/blob/dev/src/styles.json.md).
 
 ## Deployment
 

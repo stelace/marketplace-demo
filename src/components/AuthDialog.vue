@@ -29,7 +29,7 @@
           :rounded="style.roundedTheme"
           color="primary"
           class="absolute-top-right"
-          label="X"
+          :icon="icons.matClose"
           @click="onCloseButtonClick"
         />
       </q-card-section>
@@ -75,24 +75,37 @@
             @submit.prevent="authenticate"
           >
             <q-input
+              ref="email"
               v-model="user.email"
               type="email"
               :label="$t({ id: 'authentication.placeholder.email' })"
               autocomplete="username"
               autofocus
               required
+              :rules="[
+                email => !!email || $t({ id: 'form.error.missing_field' }),
+                email => isEmail(email) || $t({ id: 'authentication.error.invalid_email' })
+              ]"
+              lazy-rules
             >
               <template v-slot:append>
                 <q-icon :name="icons.matEmail" />
               </template>
             </q-input>
             <q-input
+              ref="password"
               v-model="user.password"
               type="password"
               :label="$t({ id: 'authentication.placeholder.password' })"
               autocomplete="current-password"
               required
               minlength="passwordMinLength"
+              :rules="[
+                password => type === 'login' || !!password || $t({ id: 'form.error.missing_field' }),
+                password => type === 'login' || password.length >= passwordMinLength
+                  || $t({ id: 'form.error.min_characters' }, { min_number_of_characters: passwordMinLength })
+              ]"
+              lazy-rules
             >
               <template v-slot:append>
                 <q-icon :name="icons.matLock" />
@@ -114,7 +127,10 @@
 
             <div
               v-show="type === 'signup'"
-              class="row items-center q-mt-lg q-mb-md"
+              :class="[
+                'row items-center q-mt-md q-mb-sm q-pa-sm',
+                signupFormSubmitted && !termsAccepted ? 'signup-form-error-background' : ''
+              ]"
             >
               <div class="col-2">
                 <QCheckbox v-model="termsAccepted" />
@@ -138,7 +154,6 @@
               type="submit"
               :rounded="style.roundedTheme"
               class="full-width q-my-md"
-              :disabled="authButtonDisabled"
             >
               <span v-show="type === 'login'">
                 <AppContent
@@ -159,11 +174,17 @@
             @submit.prevent="sendLostPassword"
           >
             <q-input
+              ref="email"
               v-model="user.email"
               type="email"
               :label="$t({ id: 'authentication.placeholder.email' })"
               autocomplete="username"
               required
+              :rules="[
+                email => !!email || $t({ id: 'form.error.missing_field' }),
+                email => isEmail(email) || $t({ id: 'authentication.error.invalid_email' })
+              ]"
+              lazy-rules
             >
               <template v-slot:append>
                 <q-icon :name="icons.matEmail" />
@@ -184,7 +205,6 @@
               type="submit"
               :rounded="style.roundedTheme"
               class="full-width q-my-md"
-              :disabled="lostPasswordButtonDisabled"
             >
               <span>
                 <AppContent
@@ -199,12 +219,20 @@
             @submit.prevent="resetPassword"
           >
             <q-input
+              ref="password"
               v-model="user.password"
               type="password"
               :label="$t({ id: 'authentication.placeholder.password' })"
               autocomplete="new-password"
+              autofocus
               required
               minlength="passwordMinLength"
+              :rules="[
+                password => !!password || $t({ id: 'form.error.missing_field' }),
+                password => password.length >= passwordMinLength
+                  || $t({ id: 'form.error.min_characters' }, { min_number_of_characters: passwordMinLength })
+              ]"
+              lazy-rules
             >
               <template v-slot:append>
                 <q-icon :name="icons.matLock" />
@@ -235,7 +263,6 @@
               type="submit"
               :rounded="style.roundedTheme"
               class="full-width q-my-md"
-              :disabled="resetPasswordButtonDisabled"
             >
               <span>
                 <AppContent
@@ -250,10 +277,12 @@
             @submit.prevent="changePassword"
           >
             <q-input
+              ref="newPassword"
               v-model="user.password"
               type="password"
               :label="$t({ id: 'user.account.current_password_label' })"
               autocomplete="password"
+              autofocus
               required
               minlength="passwordMinLength"
               :bottom-slots="errorType === 'incorrectCurrentPassword'"
@@ -278,6 +307,12 @@
               required
               minlength="passwordMinLength"
               class="q-mt-sm"
+              :rules="[
+                newPassword => !!newPassword || $t({ id: 'form.error.missing_field' }),
+                newPassword => newPassword.length >= passwordMinLength
+                  || $t({ id: 'form.error.min_characters' }, { min_number_of_characters: passwordMinLength })
+              ]"
+              lazy-rules
             >
               <template v-slot:append>
                 <q-icon :name="icons.matLock" />
@@ -298,7 +333,6 @@
               type="submit"
               :rounded="style.roundedTheme"
               class="full-width q-my-md"
-              :disabled="changePasswordButtonDisabled"
             >
               <span>
                 <AppContent
@@ -418,11 +452,11 @@
 import { mapState, mapGetters } from 'vuex'
 import { upperFirst } from 'lodash'
 import * as mutationTypes from 'src/store/mutation-types'
-import { required, email, minLength } from 'vuelidate/lib/validators'
-import { matEmail, matLock } from '@quasar/extras/material-icons'
+import { matClose, matEmail, matLock } from '@quasar/extras/material-icons'
 import { mdiGithubCircle } from '@quasar/extras/mdi-v4'
 
 import EventBus from 'src/utils/event-bus'
+import { isEmail } from 'src/utils/string'
 import { getInstantRoutePath } from 'src/router/routes'
 
 import { getDisplayName } from 'src/utils/user'
@@ -458,23 +492,8 @@ export default {
       newPassword: null,
       actionPending: false,
       termsAccepted: false,
-      errorType: null
-    }
-  },
-  validations: {
-    user: {
-      email: {
-        required,
-        email
-      },
-      password: {
-        required,
-        minLength: minLength(8)
-      }
-    },
-    newPassword: {
-      required,
-      minLength: minLength(8)
+      errorType: null,
+      signupFormSubmitted: false,
     }
   },
   computed: {
@@ -506,21 +525,6 @@ export default {
     showAuthenticationForm () {
       return ['signup', 'login'].includes(this.type)
     },
-    authButtonDisabled () {
-      return this.$v.user.email.$invalid ||
-        this.$v.user.password.$invalid ||
-        (this.type === 'signup' && !this.termsAccepted)
-    },
-    lostPasswordButtonDisabled () {
-      return this.type === 'lostPassword' && this.$v.user.email.$invalid
-    },
-    resetPasswordButtonDisabled () {
-      return this.type === 'resetPassword' && this.$v.user.password.$invalid
-    },
-    changePasswordButtonDisabled () {
-      return this.type === 'changePassword' &&
-        (this.$v.user.password.$invalid || this.$v.newPassword.$invalid)
-    },
     resetPasswordToken () {
       return this.auth.resetPasswordToken
     },
@@ -530,6 +534,7 @@ export default {
   },
   created () {
     this.icons = {
+      matClose,
       matEmail,
       matLock,
       mdiGithubCircle
@@ -540,12 +545,22 @@ export default {
       this.actionPending = true
 
       try {
+        this.$refs.email.validate()
+        if (this.$refs.email.hasError) return this.shake()
+
         if (this.type === 'login') {
           await this.$store.dispatch('login', {
             username: this.user.email,
             password: this.user.password
           })
         } else if (this.type === 'signup') {
+          this.signupFormSubmitted = true
+
+          this.$refs.password.validate()
+          if (this.$refs.password.hasError) return this.shake()
+
+          if (!this.termsAccepted) return this.shake()
+
           const params = Object.assign({}, this.user)
           params.displayName = getDisplayName(this.user.firstname)
           params.username = params.email
@@ -596,6 +611,9 @@ export default {
       this.actionPending = true
 
       try {
+        this.$refs.email.validate()
+        if (this.$refs.email.hasError) return this.shake()
+
         await this.$store.dispatch('sendResetPasswordRequest', {
           username: this.user.email
         }).catch(err => {
@@ -620,6 +638,9 @@ export default {
       this.actionPending = true
 
       try {
+        this.$refs.password.validate()
+        if (this.$refs.password.hasError) return this.shake()
+
         await this.$store.dispatch('sendResetPasswordConfirmation', {
           resetToken: this.auth.resetPasswordToken,
           newPassword: this.user.password
@@ -654,6 +675,9 @@ export default {
       this.actionPending = true
 
       try {
+        this.$refs.newPassword.validate()
+        if (this.$refs.newPassword.hasError) return this.shake()
+
         await this.$store.dispatch('changePassword', {
           currentPassword: this.user.password,
           newPassword: this.newPassword
@@ -726,6 +750,14 @@ export default {
         formType: type
       })
 
+      // the user should be able to start typing before getting an error,
+      // but email field shares the same name in different forms,
+      // which prematurely triggers the error message on blur.
+      if (['lostPassword', 'login', 'signup'].includes(type)) {
+        this.$refs.email.resetValidation()
+        this.$refs.email.focus() // autofocus doesn’t work when changing forms
+      }
+
       this.errorType = null
     },
     resetForm () {
@@ -733,9 +765,14 @@ export default {
       this.newPassword = null
       this.termsAccepted = false
       this.errorType = null
+      this.signupFormSubmitted = false
+
+      this.$refs.email.resetValidation()
+      this.$refs.password.resetValidation()
+      this.$refs.newPassword.validate.resetValidation()
     },
     shake () {
-      this.$refs.authDialog.shake()
+      this.$refs.authDialog.shake() // Quasar method
     },
     ssoLogin (provider) {
       const loginUrl = getSSOLoginUrl(provider)
@@ -749,7 +786,8 @@ export default {
     },
     upperFirst (str) {
       return upperFirst(str)
-    }
+    },
+    isEmail
   }
 }
 </script>
@@ -760,8 +798,12 @@ export default {
 
 .auth-card .q-card__section
   @media (min-width $breakpoint-sm-min)
-    max-width: 20rem
+    max-width: 25rem
 
 .auth-card .error-message
   color: $negative
+
+.signup-form-error-background
+  background: rgba($negative, 0.1)
+  border-radius: $generic-border-radius
 </style>

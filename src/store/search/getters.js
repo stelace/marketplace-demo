@@ -1,6 +1,6 @@
 import { populateAsset } from 'src/utils/asset'
 import { populateUser } from 'src/utils/user'
-import { get } from 'lodash'
+import { compact, get, isEmpty, uniq } from 'lodash'
 
 // used to map search config label to getters computed value
 // 'getters.isPremium' will map to `rootGetters.isPremium`
@@ -151,6 +151,25 @@ export function defaultSearchMode (state, getters, rootState, rootGetters) {
 
 export function searchModeConfig (state, getters, rootState, rootGetters) {
   return get(rootGetters.searchOptions, `modes.${rootState.search.searchMode}`)
+}
+
+export function getSearchModeUI (state, getters, rootState, rootGetters) {
+  const assetTypesById = rootState.common.assetTypesById
+
+  return (mode) => {
+    const cfg = get(rootGetters.searchOptions, `modes.${mode}`, {})
+    const assetTypesIds = uniq(get(cfg, 'assetTypesIds') || [])
+    const assetTypes = compact(assetTypesIds.map(assetTypeId => assetTypesById[assetTypeId]))
+
+    return {
+      // null means we don’t know yet
+      hasDates: !isEmpty(assetTypesById) ? assetTypes.some(assetType => assetType.timeBased) : null,
+      // TODO: implement search UI toggles
+      // hasQuantity: get(cfg, 'hasQuantity', false),
+      // hasQuery: get(cfg, 'hasQuantity', false),
+      // hasPlaceSearch: get(cfg, 'hasQuantity', false),
+    }
+  }
 }
 
 export function searchAfterMapMoveActive () {
