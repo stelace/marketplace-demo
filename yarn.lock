@@ -10733,10 +10733,10 @@ qs@~6.5.2:
   resolved "https://registry.yarnpkg.com/qs/-/qs-6.5.2.tgz#cb3ae806e8740444584ef154ce8ee98d403f3e36"
   integrity sha512-N5ZAX4/LxJmF+7wN74pUD6qAh9/wnvdQcjq9TZjevvXzSUo7bfmw91saqMjzGS2xq91/odN2dW/WOl7qQHNDGA==
 
-quasar@^1.12.8:
-  version "1.12.8"
-  resolved "https://registry.yarnpkg.com/quasar/-/quasar-1.12.8.tgz#842a4af517257812b573fbaf4b6bd57eb71039d4"
-  integrity sha512-IUcug03OuYSiNiggksQzS8MNorQxR6QJTiuDHsMPLRS63BUBmI8YYq+xADkZm2E2z2xwS1SnyDbX8ceU+shYXQ==
+quasar@^1.12.11:
+  version "1.12.11"
+  resolved "https://registry.yarnpkg.com/quasar/-/quasar-1.12.11.tgz#269034a442c9889a7839e797053b9460c5427479"
+  integrity sha512-FeB/9Y1r3Uq0yVu8puOZ+8PrzOAKAvOpZInbJ8S6Qy3JnmUvZass/doDj0wtnLZ8uRjTRjwSw4uopSZMtVk+hQ==
 
 query-string@^4.1.0:
   version "4.3.4"
@@ -11675,7 +11675,7 @@ shelljs@^0.8.4:
     interpret "^1.0.0"
     rechoir "^0.6.2"
 
-signal-exit@^3.0.0, signal-exit@^3.0.2:
+signal-exit@^3.0.0:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/signal-exit/-/signal-exit-3.0.2.tgz#b5fdc08f1287ea1178628e415e25132b73646c6d"
   integrity sha1-tf3AjxKH6hF4Yo5BXiUTK3NkbG0=
