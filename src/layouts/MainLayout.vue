@@ -158,7 +158,7 @@ export default {
           v-if="!isOwnerCurrentUser"
           class="col-6 col-sm-5 text-right"
         >
-          <CheckoutButton
+          <AppCheckoutButton
             :disabled="!isActiveAssetAvailable"
             @click="checkout"
           />
