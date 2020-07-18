@@ -439,7 +439,7 @@ export default {
       </div>
     </div>
     <div class="row">
-      <CheckoutButton
+      <AppCheckoutButton
         class="full-width"
         :disabled="!validTransactionOptions || isOwnerCurrentUser"
         @click="checkout"
