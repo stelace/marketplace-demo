@@ -160,7 +160,7 @@ export default {
       const delay = this.fromNow(date)
 
       if (delay.timeUnit === 'd' && delay.nbUnits > 7) {
-        return this.$t({ id: 'time.date_long' }, { date })
+        return this.$t({ id: 'time.date_long' }, { date: new Date(date) })
       }
 
       return this.$t({ id: 'time.ago' }, {
