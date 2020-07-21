@@ -446,7 +446,6 @@ export default {
             :key="message.id"
             class="q-mb-md"
             :name="message.senderId === currentUser.id ? currentUser.displayName : inbox.interlocutor.displayName"
-            :avatar="message.senderId === currentUser.id ? currentUserAvatar : interlocutorAvatar"
             :text="message.contents"
             text-sanitize
             :sent="message.senderId === currentUser.id"
@@ -457,7 +456,15 @@ export default {
               ? (style.colorfulTheme ? 'primary' : 'grey-8')
               : style.colorfulTheme ? 'secondary' : lightBackgroundColor"
             :stamp="getTimestamp(message.createdDate)"
-          />
+          >
+            <template v-slot:avatar>
+              <AppAvatar
+                class="q-mx-sm"
+                :user="message.senderId === currentUser.id ? currentUser : inbox.interlocutor"
+                size="3rem"
+              />
+            </template>
+          </QChatMessage>
         </component>
 
         <QSeparator
