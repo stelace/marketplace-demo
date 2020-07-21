@@ -38,9 +38,21 @@ export default {
       uploadFolder: 'attachments', // used by AppUpload
       uploadedAttachments: [],
       lightBackgroundColor: 'grey-2',
+      messagesScrollAreaState: {
+        verticalSize: 0,
+        verticalContainerSize: 0,
+        verticalPosition: 0
+      },
     }
   },
   computed: {
+    topMessagesOverflowing () {
+      return this.messagesScrollAreaState.verticalPosition > 0
+    },
+    bottomMessagesOverflowing () {
+      const { verticalSize, verticalContainerSize, verticalPosition } = this.messagesScrollAreaState
+      return verticalSize - (verticalPosition + verticalContainerSize) > 1
+    },
     conversation () {
       if (!this.conversationId) return
 
@@ -155,6 +167,9 @@ export default {
         await this.$store.dispatch('fetchConversationInfo', { conversationId: this.conversationId })
         await this.$store.dispatch('markConversationAsRead', { conversationId: this.conversationId })
       }
+    },
+    reportScrollAreaState ({ verticalSize, verticalContainerSize, verticalPosition }) {
+      Object.assign(this.messagesScrollAreaState, { verticalSize, verticalContainerSize, verticalPosition })
     },
     getTimestamp (date) {
       const delay = this.fromNow(date)
@@ -432,14 +447,12 @@ export default {
         <!-- Each message increases total height up to CSS max-height depending on viewport height -->
         <!--
           TODO: show some indicator than scroll is available (without having to hover)
-          We will probably need to get computed styles as q-scroll-area does not expose this
-          We could also submit a new PR to expose scroll percentage
-          https://github.com/quasarframework/quasar/blob/dev/ui/src/components/scroll-area/QScrollArea.js
         -->
         <component
           :is="inbox.conversationMessages.length > 3 ? 'q-scroll-area' : 'div'"
           :style="inbox.conversationMessages.length > 3 ? `height: ${inbox.conversationMessages.length * 6}rem` : ''"
           class="conversation__messages-container"
+          @scroll="reportScrollAreaState"
         >
           <QChatMessage
             v-for="message in groupedChatMessages"
