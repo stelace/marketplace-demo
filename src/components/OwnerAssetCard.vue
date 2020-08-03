@@ -180,7 +180,6 @@ export default {
 
 <template>
   <AssetCard
-    class="col-10 col-sm-6"
     v-bind="assetCardAttributes"
   >
     <template
@@ -233,8 +232,9 @@ export default {
           v-if="!unavailable"
           :loading="updatingStatus"
           :rounded="style.roundedTheme"
-          color="grey-2"
+          color="grey-1"
           text-color="default-color"
+          class="q-ma-xs"
           unelevated
           @click.stop.prevent="toggleActive"
         >
@@ -250,7 +250,7 @@ export default {
         <QBtn
           :loading="removingAsset"
           :rounded="style.roundedTheme"
-          class="q-ml-sm"
+          class="q-ma-xs"
           color="grey-2"
           text-color="default-color"
           unelevated

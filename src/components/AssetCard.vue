@@ -1,6 +1,7 @@
 <script>
 import { mapGetters, mapState } from 'vuex'
-import { get, isNil } from 'lodash'
+import { get, isNil, isNumber } from 'lodash'
+import { mdiTruck, mdiTruckCheck } from '@quasar/extras/mdi-v5'
 
 export default {
   props: {
@@ -22,6 +23,10 @@ export default {
     showDistance: {
       type: Boolean,
       default: false,
+    },
+    flat: {
+      type: Boolean,
+      default: true,
     },
     reloading: { // card update pending
       type: Boolean,
@@ -47,6 +52,16 @@ export default {
       if (!this.asset || !this.asset.distance) return null
 
       return Math.round(this.asset.distance / 1000)
+    },
+    showAvailability () {
+      return this.asset && this.asset.assetType && !this.asset.assetType.timeBased
+    },
+    isAvailable () {
+      if (!this.asset) return false
+      return this.asset.quantity > 0 && this.asset.active
+    },
+    showDeliveryFee () {
+      return isNumber(this.asset.deliveryFee)
     },
     showPlaceholder () {
       const a = this.asset
@@ -74,8 +89,15 @@ export default {
       'getLargeImageUrl',
       'largeImageWidth',
       'ratingsActive',
+      'isEcommerceMarketplace',
     ]),
-  }
+  },
+  created () {
+    this.icons = {
+      mdiTruck,
+      mdiTruckCheck,
+    }
+  },
 }
 </script>
 
@@ -86,7 +108,7 @@ export default {
     :to="to || (!!asset ? { name: 'asset', params: { id: asset.id } } : false)"
   >
     <QCard
-      flat
+      :flat="flat"
       class="asset-card cursor-pointer"
     >
       <slot
@@ -171,10 +193,12 @@ export default {
                 :options="{ price: $fx(asset.price) }"
               />
             </div>
+            <QSkeleton v-else type="text" class="text-subtitle2 flex-item--grow" />
             <!-- <h3 class="text-subtitle2 text-weight-medium text-grey-6 q-ma-none text-right ellipsis">
               {{ categoryName }}
             </h3> -->
           </div>
+
           <slot name="bottom" />
         </slot>
       </QCardSection>
@@ -188,13 +212,9 @@ export default {
 
 .asset-card
   max-width: 100%
-  &:focus, &:hover
-    .asset-image, .image-skeleton
-      transform: translateZ(0) scale(1.02)
-    .asset-content
-      transform: translateY(5px)
-.asset-image, .asset-content
   transition: all $transition-duration
+  &:focus, &:hover
+    transform: translateY(-5px)
 
 // padding-bottom aspect-ratio technique (ratio is inlined in HTML)
 .asset-image-container
@@ -218,6 +238,9 @@ export default {
 
 .asset-card .asset-image
   border-radius: $generic-border-radius
+
+.asset-ratings
+  flex: 1 0
 
 .distance-chip
   background-color: rgba(0, 0, 0, 0.4)

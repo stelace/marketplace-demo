@@ -173,6 +173,7 @@ export default {
       'activeAssetTypes',
       'defaultActiveAssetType',
       'stripeActive',
+      'isEcommerceMarketplace',
     ]),
   },
   async preFetch ({ store }) {
@@ -289,7 +290,8 @@ export default {
               images,
               // Save dates to create custom availabilities with Workflows
               startDate: this.startDate,
-              endDate: this.endDate
+              endDate: this.endDate,
+              deliveryFee: this.isEcommerceMarketplace ? this.currentUser.deliveryFee : undefined,
             }
           }
 

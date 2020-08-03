@@ -415,21 +415,6 @@ export default {
       this.notifyFailure('error.failed_updoad')
       this.uploadingAvatarSrc = ''
     },
-    async requestEmailCheck () {
-      try {
-        await this.$store.dispatch('sendCustomEvent', {
-          type: 'email_check_request',
-          objectId: this.selectedUser.id, // automatically populated in event for workflows
-          metadata: {
-            email: this.selectedUser.newEmail || this.selectedUser.email
-          }
-        })
-
-        this.notifySuccess('user.account.email_validation_link_sent')
-      } catch (err) {
-        this.notifyWarning('error.unknown_happened_header')
-      }
-    },
     openValidationDialogIfAllowed ({ formType }) {
       if (formType === 'email' && !this.canValidateEmail) return
 

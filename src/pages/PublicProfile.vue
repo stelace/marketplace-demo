@@ -3,6 +3,7 @@
 
 import { mapGetters, mapState } from 'vuex'
 import * as mutationTypes from 'src/store/mutation-types'
+import { values } from 'lodash'
 
 import OwnerAssetCard from 'src/components/OwnerAssetCard'
 import PlacesAutocomplete from 'src/components/PlacesAutocomplete'
@@ -14,6 +15,7 @@ import PageComponentMixin from 'src/mixins/pageComponent'
 import StripeMixin from 'src/mixins/stripe'
 
 import { extractLocationDataFromPlace, isPlaceSearchEnabled } from 'src/utils/places'
+import { groupAssetsByCategory } from 'src/utils/asset'
 
 export default {
   components: {
@@ -21,6 +23,7 @@ export default {
     PlacesAutocomplete,
     TransactionRatingsList,
     ProfileCard,
+    ProviderProfileSection: () => import(/* webpackChunkName: 'ecommerce' */ 'src/components/ProviderProfileSection'),
     StripeLinkAccount,
     VuePhotoSwipe: () => import(/* webpackChunkName: 'photoswipe' */ 'src/components/VuePhotoSwipe'),
   },
@@ -46,6 +49,11 @@ export default {
     selectedUserAssets () {
       return this.usersAssets[this.selectedUser.id] || []
     },
+    selectedUserAssetsByCategory () {
+      const categories = values(this.common.categoriesById)
+      const searchedAssets = this.searchedAssets
+      return groupAssetsByCategory(this.selectedUserAssets, categories, { searchedAssets })
+    },
     selectedUserLocations () {
       return this.selectedUser.locations || []
     },
@@ -59,6 +67,9 @@ export default {
       'searchOptions',
       'ratingsActive',
       'stripeActive',
+      'isSelectedUserProvider',
+      'searchedAssets',
+      'isEcommerceMarketplace',
     ]),
     ...mapState([
       'asset',
@@ -79,7 +90,10 @@ export default {
         user
       })
 
-      await store.dispatch('fetchAssetTypes')
+      await Promise.all([
+        store.dispatch('fetchAssetTypes'),
+        store.dispatch('fetchCategories'),
+      ])
     } catch (err) {
       const code = err.statusCode
       if (code >= 400 && code < 500) redirect(`/${code}`) // needs a string for SSR
@@ -99,7 +113,7 @@ export default {
     loadProfile () {
       return Promise.all([
         this.fetchUserAssets(),
-        this.fetchRatingsStatsByTargetId({ targetId: [this.selectedUserId] }),
+        this.fetchRatingsStatsByTargetId({ targetId: [this.selectedUser.id] }),
         this.fetchUserRatingsByTransaction({ userId: this.selectedUser.id })
       ])
     },
@@ -159,60 +173,77 @@ export default {
     class="stl-footer--bottom"
   >
     <div class="row flex-center">
-      <div class="full-width stl-content-container q-pb-xl">
-        <section class="q-px-lg q-pt-lg">
-          <AppSwitchableEditor
-            tag="h1"
-            class="text-h4 text-weight-bold q-my-xs"
-            :value="selectedUser.profileTitle"
-            :active="isCurrentUser"
-            :custom-save="updateUserFn('profileTitle')"
-            :input-label="$t({ id: 'user.account.my_profile_title_label' })"
-          />
-
-          <div v-if="isCurrentUser || (!isCurrentUser && selectedUserLocations.length)">
-            <div class="row justify-between q-my-md">
-              <AppSwitchableEditor
-                v-if="isPlaceSearchEnabled"
-                :value="locationValue"
-                :active="isCurrentUser && selectedUserLocations.length <= maxNbLocations"
-                :custom-save="updateUserFn('locations')"
-                :allow-falsy-save="true"
-                tag="div"
-                class="text-body1"
-              >
-                <template v-slot:default>
-                  <div class="row items-center">
-                    <div class="text-h6 ellipsis">
-                      {{ selectedUser.locationName }}
-                    </div>
-                  </div>
-                </template>
-                <template v-slot:placeholder>
-                  <AppContent
-                    class="switchable-editor-placeholder"
-                    entry="places"
-                    field="address_placeholder"
-                  />
-                </template>
-                <template v-slot:edition="{ content, saveDraft }">
-                  <PlacesAutocomplete
-                    :initial-query="locationValue"
-                    :label="$t({ id: 'places.address_placeholder' })"
-                    @selectPlace="loc => prepareUpdatedLocations(loc, saveDraft)"
-                  />
-                </template>
-              </AppSwitchableEditor>
-            </div>
+      <div
+        :class="[
+          'full-width stl-content-container q-pb-xl',
+          isEcommerceMarketplace ? 'stl-content-container--large' : ''
+        ]"
+      >
+        <template v-if="isEcommerceMarketplace">
+          <div v-if="isSelectedUserProvider" class="q-mt-xl">
+            <ProviderProfileSection />
           </div>
-        </section>
+          <div v-else class="q-mt-xl">
+            <ProfileCard />
+          </div>
+        </template>
 
-        <div class="q-mt-xl">
-          <ProfileCard />
-        </div>
+        <template v-else>
+          <section class="q-px-lg q-pt-lg">
+            <AppSwitchableEditor
+              tag="h1"
+              class="text-h4 text-weight-bold q-my-xs"
+              :value="selectedUser.profileTitle"
+              :active="isCurrentUser"
+              :custom-save="updateUserFn('profileTitle')"
+              :input-label="$t({ id: 'user.account.my_profile_title_label' })"
+            />
+
+            <div v-if="isCurrentUser || (!isCurrentUser && selectedUserLocations.length)">
+              <div class="row justify-between q-my-md">
+                <AppSwitchableEditor
+                  v-if="isPlaceSearchEnabled"
+                  :value="locationValue"
+                  :active="isCurrentUser && selectedUserLocations.length <= maxNbLocations"
+                  :custom-save="updateUserFn('locations')"
+                  :allow-falsy-save="true"
+                  tag="div"
+                  class="text-body1"
+                >
+                  <template v-slot:default>
+                    <div class="row items-center">
+                      <div class="text-h6 ellipsis">
+                        {{ selectedUser.locationName }}
+                      </div>
+                    </div>
+                  </template>
+                  <template v-slot:placeholder>
+                    <AppContent
+                      class="switchable-editor-placeholder"
+                      entry="places"
+                      field="address_placeholder"
+                    />
+                  </template>
+                  <template v-slot:edition="{ content, saveDraft }">
+                    <PlacesAutocomplete
+                      :initial-query="locationValue"
+                      :label="$t({ id: 'places.address_placeholder' })"
+                      @selectPlace="loc => prepareUpdatedLocations(loc, saveDraft)"
+                    />
+                  </template>
+                </AppSwitchableEditor>
+              </div>
+            </div>
+          </section>
+
+          <div class="q-mt-xl">
+            <ProfileCard />
+          </div>
+        </template>
 
         <!-- Wait for API before hiding this so we can show some skeleton screen in the future -->
         <section
+          v-if="(isEcommerceMarketplace && !isSelectedUserProvider) || !isEcommerceMarketplace"
           v-show="!(selectedUser.id && !isCurrentUser && !selectedUser.description)"
           class="q-px-sm"
         >
@@ -249,18 +280,6 @@ export default {
         </section>
 
         <section
-          v-show="userRatingsLoaded && ratingsActive"
-          class="q-mt-md"
-        >
-          <QSeparator class="q-mt-xl" />
-
-          <TransactionRatingsList
-            :ratings="userRatingsByTransaction"
-            :target="selectedUser"
-          />
-        </section>
-
-        <section
           v-show="suggestedOffers.length"
           class="q-px-sm"
         >
@@ -276,7 +295,10 @@ export default {
             <AssetCard
               v-for="asset of suggestedOffers"
               :key="asset.id"
-              class="col-10 col-sm-6"
+              :class="[
+                'col-10',
+                isEcommerceMarketplace ? 'col-sm-3' : 'col-sm-6',
+              ]"
               :asset="asset"
             />
           </div>
@@ -296,15 +318,39 @@ export default {
             field="assets_title"
             :options="{ user: (isCurrentUser ? '_SELF_' : selectedUser.displayName) || undefined }"
           />
-          <div class="row q-col-gutter-md justify-assets">
-            <component
-              :is="isCurrentUser ? 'OwnerAssetCard' : 'AssetCard'"
-              v-for="asset of selectedUserAssets"
-              :key="asset.id"
-              class="col-10 col-sm-6"
-              :asset="asset"
-            />
+          <div v-for="category of selectedUserAssetsByCategory" :key="category.id">
+            <div v-if="category.assets.length">
+              <div class="text-h5 text-weight-medium q-mb-lg">
+                {{ category.name }}
+              </div>
+
+              <div class="row q-col-gutter-md justify-assets">
+                <component
+                  :is="isCurrentUser ? 'OwnerAssetCard' : 'AssetCard'"
+                  v-for="asset of category.assets"
+                  :key="asset.id"
+                  :class="[
+                    'col-10',
+                    isEcommerceMarketplace ? 'col-sm-3' : 'col-sm-6',
+                  ]"
+                  :asset="asset"
+                  :flat="!asset.previouslySearched"
+                />
+              </div>
+            </div>
           </div>
+        </section>
+
+        <section
+          v-show="userRatingsLoaded && ratingsActive"
+          class="q-mt-md"
+        >
+          <QSeparator class="q-mt-xl" />
+
+          <TransactionRatingsList
+            :ratings="userRatingsByTransaction"
+            :target="selectedUser"
+          />
         </section>
       </div>
     </div>

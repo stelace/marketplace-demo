@@ -1,4 +1,4 @@
-import { get } from 'lodash'
+import { get, sortBy, keyBy, isEmpty } from 'lodash'
 import { convertApiToDisplayScore } from 'src/utils/rating'
 import bounds from 'binary-search-bounds'
 import getDistance from 'geolib/es/getDistance'
@@ -18,6 +18,8 @@ export function populateAsset ({
   newAsset.assetType = assetTypesById[asset.assetTypeId]
 
   newAsset.images = get(newAsset, 'metadata.images')
+
+  newAsset.deliveryFee = get(newAsset, 'metadata.deliveryFee') || get(newAsset, 'owner.deliveryFee')
 
   newAsset.categoryName = get(newAsset, 'category.name')
 
@@ -131,4 +133,61 @@ function getRemainingQuantity (graphDate) {
 
 function getTimestamp (date) {
   return new Date(date).getTime()
+}
+
+export function groupAssetsByCategory (assets, categories, { searchedAssets }) {
+  const searchedAssetsById = keyBy(searchedAssets || {}, 'id')
+
+  let newCategories = categories.concat([{
+    // fake category to group all assets that aren't related to any category
+    id: 'none',
+    name: 'none',
+  }])
+
+  newCategories = newCategories.map(cat => {
+    let nbPreviouslySearchedAssets = 0
+    const categoryAssets = []
+
+    assets.forEach(asset => {
+      const isRelatedToCategory = cat.id === 'none'
+        ? !asset.categoryId
+        : asset.categoryId === cat.id
+
+      if (isRelatedToCategory) {
+        const previouslySearched = Boolean(searchedAssetsById[asset.id])
+
+        categoryAssets.push({
+          ...asset,
+          previouslySearched,
+        })
+
+        if (previouslySearched) nbPreviouslySearchedAssets += 1
+      }
+    })
+
+    return {
+      ...cat,
+      nbPreviouslySearchedAssets,
+      assets: categoryAssets,
+    }
+  })
+
+  if (isEmpty(searchedAssetsById)) {
+    // sort categories by total number of assets in descending order
+    newCategories = sortBy(newCategories, cat => cat.assets.length).reverse()
+  } else {
+    // sort categories by number of assets that are previously searched number in descending order
+    newCategories = sortBy(newCategories, cat => cat.nbPreviouslySearchedAssets).reverse()
+
+    newCategories = newCategories.map(cat => {
+      return {
+        ...cat,
+
+        // sort assets by the ones that are previously searched first
+        assets: sortBy(cat.assets, asset => !asset.previouslySearched)
+      }
+    })
+  }
+
+  return newCategories
 }
