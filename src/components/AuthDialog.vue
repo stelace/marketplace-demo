@@ -584,9 +584,9 @@ export default {
         }
 
         this.closeAuthDialog({ triggerEvent: false })
-        this.resetForm()
-
         EventBus.$emit('authStatusChanged', 'success')
+
+        this.resetForm()
       } catch (err) {
         this.shake()
 

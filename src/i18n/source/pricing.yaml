@@ -118,6 +118,17 @@ pricing:
   total:
     en: Total
     fr: Total
+  subtotal_with_price:
+    en: >-
+      Subtotal: {price, select, 0 {Free} other {{price, number, currency}} }
+    fr: >-
+      Sous-total: {price, select, 0 {Gratuit} other {{price, number, currency}} }
+      subtotal_with_price:
+  total_with_price:
+    en: >-
+      Total: {price, select, 0 {Free} other {{price, number, currency}} }
+    fr: >-
+      Total: {price, select, 0 {Gratuit} other {{price, number, currency}} }
   quantity:
     en: Quantity
     fr: Quantité

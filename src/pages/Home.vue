@@ -16,6 +16,7 @@ import CategoryAutocomplete from 'src/components/CategoryAutocomplete'
 import * as types from 'src/store/mutation-types'
 
 import PageComponentMixin from 'src/mixins/pageComponent'
+import PaymentMixin from 'src/mixins/payment'
 import StripeMixin from 'src/mixins/stripe'
 
 export default {
@@ -28,6 +29,7 @@ export default {
   },
   mixins: [
     PageComponentMixin,
+    PaymentMixin,
     StripeMixin,
   ],
   data () {
@@ -84,6 +86,7 @@ export default {
       'getHomeHeroUrlTransformed',
       'getSearchModeUI',
       'searchModes',
+      'isEcommerceMarketplace',
     ]),
   },
   watch: {
@@ -170,6 +173,11 @@ export default {
           if (validSsoRedirectUrlPath) this.$router.push(ssoRedirectUrlPath)
         }
       }
+
+      // if the user was redirected from Stripe
+      // perform logic to retrieve the order and redirect to the conversation
+      // if the payment is successful
+      if (this.isEcommerceMarketplace) this.viewConversationAfterSuccessfulPayment()
     },
     removeQueryParams (queryParams) {
       const newQuery = Object.assign({}, this.$route.query)

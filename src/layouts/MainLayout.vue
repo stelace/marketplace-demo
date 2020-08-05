@@ -26,7 +26,7 @@ export default {
   data () {
     return {
       routeTransitionName: '',
-      checkoutOpenedDialog: false,
+      transactionCardOpened: false,
       hasLoadingBar: false,
       loadingBarRouteGuard: _ => _,
     }
@@ -48,16 +48,26 @@ export default {
     isProfilePage () {
       return this.route.name === 'publicProfile'
     },
+    isCartPage () {
+      return this.route.name === 'cart'
+    },
     hasLeftDrawer () {
       return this.route.meta.hasLeftDrawer
     },
     isFooterDrawerOpened () {
-      const showOnAssetPage = this.isAssetPage && !this.$q.screen.gt.md && !this.isOwnerCurrentUser
+      const showOnAssetPage = (this.isAssetPage && !this.$q.screen.gt.md && !this.isOwnerCurrentUser) ||
+        (this.isCartPage && !this.$q.screen.gt.md)
       return showOnAssetPage
     },
     blurredPage () {
       return (this.auth.authDialogOpened && this.auth.authDialogPersistent) ||
         this.layout.isPageBlurred
+    },
+    timeBased () {
+      if (!this.activeAsset) return true
+      const assetType = this.common.assetTypesById[this.activeAsset.assetTypeId]
+      if (!assetType) return true
+      return assetType.timeBased
     },
     ...mapState([
       'asset',
@@ -65,6 +75,8 @@ export default {
       'layout',
       'route',
       'style',
+      'cart',
+      'common',
     ]),
     ...mapGetters([
       'currentUser',
@@ -72,6 +84,10 @@ export default {
       'activeAsset',
       'isActiveAssetAvailable',
       'isSelectedUserNatural',
+      'shoppingCart',
+      'maxAvailableQuantity',
+      'isEcommerceMarketplace',
+      'marketplaceType',
     ]),
   },
   watch: {
@@ -92,8 +108,8 @@ export default {
     toggleLeftDrawer (visible = !this.isLeftDrawerOpened) {
       this.$store.commit(mutationTypes.LAYOUT__TOGGLE_LEFT_DRAWER, { visible })
     },
-    checkout () {
-      this.checkoutOpenedDialog = true
+    openTransactionCard () {
+      this.transactionCardOpened = true
     },
     showLoadingBar () {
       this.hasLoadingBar = true
@@ -127,41 +143,91 @@ export default {
     >
       <div
         v-if="isAssetPage"
-        class="q-pa-md row"
+        class="q-pa-md row items-center"
       >
         <div class="col-1 gt-xs" />
         <div class="col-6 col-sm-5">
           <div>
             {{ activeAsset.name || activeAsset.categoryName }}
           </div>
-          <AppContent
-            entry="pricing"
-            field="price_label"
-          />:&nbsp;
-          <AppContent
-            v-if="activeAsset.assetType && activeAsset.assetType.timeBased"
-            entry="pricing"
-            field="price_per_time_unit_label"
-            :options="{
-              price: $fx(activeAsset.price),
-              timeUnit: activeAsset.timeUnit
-            }"
-          />
-          <AppContent
-            v-else
-            entry="pricing"
-            field="price_with_currency"
-            :options="{ price: $fx(activeAsset.price) }"
-          />
+          <div>
+            <AppContent
+              entry="pricing"
+              field="price_label"
+            />:&nbsp;
+            <AppContent
+              v-if="activeAsset.assetType && activeAsset.assetType.timeBased"
+              entry="pricing"
+              field="price_per_time_unit_label"
+              :options="{
+                price: $fx(activeAsset.price),
+                timeUnit: activeAsset.timeUnit
+              }"
+            />
+            <AppContent
+              v-else
+              entry="pricing"
+              field="price_with_currency"
+              :options="{ price: $fx(activeAsset.price) }"
+            />
+          </div>
+          <div v-if="isEcommerceMarketplace">
+            <AppContent
+              entry="asset"
+              field="delivery_fee_with_price"
+              :options="{ price: $fx(activeAsset.owner ? activeAsset.owner.deliveryFee : 0) }"
+            />
+          </div>
         </div>
         <div
           v-if="!isOwnerCurrentUser"
           class="col-6 col-sm-5 text-right"
         >
-          <AppCheckoutButton
-            :disabled="!isActiveAssetAvailable"
-            @click="checkout"
+          <QBtn
+            :disabled="isOwnerCurrentUser || maxAvailableQuantity === 0"
+            :rounded="style.roundedTheme"
+            :label="
+              isEcommerceMarketplace
+                ? $t({ id: 'cart.prompt.add_to_cart' })
+                : $t({ id: 'asset.checkout_action' }, { timeBased, marketplaceType })
+            "
+            color="secondary"
+            @click="openTransactionCard"
           />
+        </div>
+        <div class="col-1 gt-xs" />
+      </div>
+      <div
+        v-if="isCartPage"
+        class="q-pa-md row items-center"
+      >
+        <div class="col-1 gt-xs" />
+        <div class="col-6 col-sm-5">
+          <AppContent
+            :class="[!cart.previewedTransactions.length ? 'invisible' : '']"
+            tag="div"
+            entry="pricing"
+            field="subtotal_with_price"
+            :options="{ price: cart.subTotalPrice }"
+          />
+          <AppContent
+            :class="[!cart.previewedTransactions.length ? 'invisible' : '']"
+            tag="div"
+            entry="asset"
+            field="delivery_fee_with_price"
+            :options="{ price: cart.deliveryFee }"
+          />
+          <AppContent
+            :class="[!cart.previewedTransactions.length ? 'invisible' : '']"
+            tag="div"
+            class="text-h6 text-weight-medium"
+            entry="pricing"
+            field="total_with_price"
+            :options="{ price: cart.totalPrice }"
+          />
+        </div>
+        <div class="col-6 col-sm-5 text-right">
+          <AppCheckoutButton />
         </div>
         <div class="col-1 gt-xs" />
       </div>
@@ -181,8 +247,8 @@ export default {
     </template>
 
     <QDialog
-      :value="checkoutOpenedDialog"
-      @hide="checkoutOpenedDialog = false"
+      :value="transactionCardOpened"
+      @hide="transactionCardOpened = false"
     >
       <TransactionCard class="bg-white" />
     </QDialog>

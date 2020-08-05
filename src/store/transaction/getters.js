@@ -45,7 +45,7 @@ export function promptTransactionQuantity (state, getters, rootState, rootGetter
 export function maxAvailableQuantity (state, getters, rootState, rootGetters) {
   const { startDate, endDate } = state
   const { availabilityGraphByAssetId } = rootState.asset
-  const { activeAsset } = rootGetters
+  const { activeAsset, shoppingCart, isEcommerceMarketplace } = rootGetters
 
   if (!activeAsset || !activeAsset.id) return 0
 
@@ -54,15 +54,29 @@ export function maxAvailableQuantity (state, getters, rootState, rootGetters) {
 
   const { graphDates, defaultQuantity } = availabilityGraph
 
+  let cartLine
+  let cartQuantity = 0
+
+  if (isEcommerceMarketplace) {
+    cartLine = shoppingCart.lines.find(l => l.assetId === activeAsset.id)
+    cartQuantity = cartLine ? cartLine.quantity : 0
+  }
+
+  const getQuantityByMarketplaceType = (quantity) => {
+    // subtract by selected quantity in cart
+    if (isEcommerceMarketplace) return Math.max(quantity - cartQuantity, 0)
+    else return quantity
+  }
+
   if (promptTransactionDates && startDate && endDate) {
-    return getAvailableQuantityByDate({ availabilityGraph, startDate, endDate })
+    return getQuantityByMarketplaceType(getAvailableQuantityByDate({ availabilityGraph, startDate, endDate }))
   } else {
-    if (!graphDates.length) return defaultQuantity
+    if (!graphDates.length) return getQuantityByMarketplaceType(defaultQuantity)
 
     let maxQuantity = 0
     graphDates.forEach(graphDate => {
       maxQuantity = Math.max(maxQuantity, getAvailableQuantityByDate({ availabilityGraph, date: graphDate.date }))
     })
-    return maxQuantity
+    return getQuantityByMarketplaceType(maxQuantity)
   }
 }

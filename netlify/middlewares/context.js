@@ -9,6 +9,7 @@ export default function addToContext () {
       context.urls = {
         websiteUrl: getWebsiteUrl()
       }
+      context.isEcommerceMarketplace = process.env.VUE_APP_MARKETPLACE_TYPE === 'ecommerce'
       next()
     }
   }

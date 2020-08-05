@@ -236,6 +236,7 @@ export default {
           text-color="default-color"
           class="q-ma-xs"
           unelevated
+          dense
           @click.stop.prevent="toggleActive"
         >
           <QIcon
@@ -254,6 +255,7 @@ export default {
           color="grey-2"
           text-color="default-color"
           unelevated
+          dense
           @click.stop.prevent="openConfirmDeleteDialog"
         >
           <QIcon :name="icons.matDelete" />

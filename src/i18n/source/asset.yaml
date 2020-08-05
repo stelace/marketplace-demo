@@ -81,19 +81,28 @@ asset:
       }
   checkout_action:
     en: |
-      {timeBased, select,
+      {marketplaceType, select,
+        ecommerce {Proceed to payment}
+        other {{timeBased, select,
           true {Book}
           false {Order}
           other {Order}
           undefined {Contact}
+        }}
       }
     fr: |
-      {timeBased, select,
+      {marketplaceType, select,
+        ecommerce {Procéder au paiement}
+        other {{timeBased, select,
           true {Réserver}
           false {Commander}
           other {Commander}
           undefined {Contacter}
+        }}
       }
+  delivery_fee_label:
+    en: Delivery fee
+    fr: Frais de livraison
   delivery_fee_with_price:
     en: >-
       Delivery fee: {price, select, 0 {Free} other {{price, number, currency}} }

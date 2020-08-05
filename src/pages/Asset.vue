@@ -277,6 +277,7 @@
               :key="asset.id"
               class="col-10 col-sm-6"
               :asset="asset"
+              show-add-to-cart
             />
           </div>
         </section>
@@ -312,6 +313,7 @@
                   class="col-10 col-sm-6"
                   :asset="asset"
                   :flat="!asset.previouslySearched"
+                  show-add-to-cart
                   @remove="removeAsset"
                 />
               </div>
@@ -459,6 +461,7 @@ export default {
       'paymentActive',
       'conversations',
       'searchedAssets',
+      'isEcommerceMarketplace',
     ]),
   },
   watch: {
@@ -467,7 +470,9 @@ export default {
 
       this.afterAuth()
 
-      if (this.paymentActive && current.id) this.viewConversationAfterSuccessfulPayment()
+      if (!this.isEcommerceMarketplace && this.paymentActive && current.id) {
+        this.viewConversationAfterSuccessfulPayment()
+      }
     },
     $route () {
       this.fetchRelatedAssets()

@@ -3,7 +3,14 @@ import { mapGetters, mapState } from 'vuex'
 import { get, isNil, isNumber } from 'lodash'
 import { mdiTruck, mdiTruckCheck } from '@quasar/extras/mdi-v5'
 
+import { matShoppingCart } from '@quasar/extras/material-icons'
+
+import CartMixin from 'src/modules/ecommerce/mixins/cart'
+
 export default {
+  mixins: [
+    CartMixin,
+  ],
   props: {
     asset: { // expecting to be null when loading to show skeleton
       required: true,
@@ -28,6 +35,10 @@ export default {
       type: Boolean,
       default: true,
     },
+    showAddToCart: {
+      type: Boolean,
+      default: false,
+    },
     reloading: { // card update pending
       type: Boolean,
       default: false,
@@ -48,6 +59,11 @@ export default {
       const a = this.asset // cf. docs about using lodash and Vue reactivity
       return get(a, 'category.name')
     },
+    quantityInCart () {
+      const cartLine = this.shoppingCart.lines.find(l => l.assetId === this.asset.id)
+      if (cartLine) return cartLine.quantity
+      else return 0
+    },
     distanceKm () {
       if (!this.asset || !this.asset.distance) return null
 
@@ -60,12 +76,21 @@ export default {
       if (!this.asset) return false
       return this.asset.quantity > 0 && this.asset.active
     },
+    addCartButtonDisabled () {
+      return this.asset.quantity <= this.quantityInCart
+    },
+    isAssetOwner () {
+      return this.currentUser.id === this.asset.ownerId
+    },
     showDeliveryFee () {
       return isNumber(this.asset.deliveryFee)
     },
     showPlaceholder () {
       const a = this.asset
       return !get(a, 'id')
+    },
+    timeBased () {
+      return get(this.asset, 'assetType.timeBased')
     },
     imageSrcset () {
       if (!this.asset || this.reloading) return ''
@@ -79,7 +104,8 @@ export default {
       } ${this.largeImageWidth}w`
     },
     ...mapState([
-      'content'
+      'content',
+      'style',
     ]),
     ...mapGetters([
       'baseImageRatio',
@@ -90,12 +116,16 @@ export default {
       'largeImageWidth',
       'ratingsActive',
       'isEcommerceMarketplace',
+      'shoppingCart',
+      'currentUser',
     ]),
   },
   created () {
     this.icons = {
       mdiTruck,
       mdiTruckCheck,
+
+      matShoppingCart,
     }
   },
 }
@@ -133,6 +163,25 @@ export default {
             loading="lazy"
             @load="isImageLoading = false"
           >
+        </div>
+
+        <div
+          v-if="isEcommerceMarketplace && showAddToCart && !isAssetOwner && isAvailable && !timeBased"
+          class="row justify-end q-mt-xs q-mb-md absolute-top-right cart-button"
+          :disabled="addCartButtonDisabled"
+          @click.stop.prevent
+        >
+          <QBtn
+            :loading="addingToCart"
+            round
+            color="secondary"
+            text-color="white"
+            class="q-ma-xs"
+            :disabled="addCartButtonDisabled"
+            @click.stop.prevent="() => addToCart(asset)"
+          >
+            <QIcon :name="icons.matShoppingCart" />
+          </QBtn>
         </div>
 
         <div
@@ -215,6 +264,12 @@ export default {
   transition: all $transition-duration
   &:focus, &:hover
     transform: translateY(-5px)
+  .cart-button
+    display: none
+    z-index: 2
+  &:hover
+    .cart-button
+      display: block
 
 // padding-bottom aspect-ratio technique (ratio is inlined in HTML)
 .asset-image-container

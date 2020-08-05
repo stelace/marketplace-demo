@@ -23,7 +23,7 @@ export default {
     PlacesAutocomplete,
     TransactionRatingsList,
     ProfileCard,
-    ProviderProfileSection: () => import(/* webpackChunkName: 'ecommerce' */ 'src/components/ProviderProfileSection'),
+    ProviderProfileSection: () => import(/* webpackChunkName: 'ecommerce' */ 'src/modules/ecommerce/components/ProviderProfileSection'),
     StripeLinkAccount,
     VuePhotoSwipe: () => import(/* webpackChunkName: 'photoswipe' */ 'src/components/VuePhotoSwipe'),
   },
@@ -300,6 +300,7 @@ export default {
                 isEcommerceMarketplace ? 'col-sm-3' : 'col-sm-6',
               ]"
               :asset="asset"
+              show-add-to-cart
             />
           </div>
         </section>
@@ -335,6 +336,7 @@ export default {
                   ]"
                   :asset="asset"
                   :flat="!asset.previouslySearched"
+                  show-add-to-cart
                 />
               </div>
             </div>

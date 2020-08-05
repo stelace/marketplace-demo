@@ -3,7 +3,7 @@ import stelace, { fetchAllResults } from 'src/utils/stelace'
 import * as types from 'src/store/mutation-types'
 import { paymentsApi } from 'src/utils/url'
 
-export async function createTransaction ({ state, dispatch, rootGetters }, { asset } = {}) {
+export async function createTransaction ({ state, dispatch, rootGetters }, { asset, withOrder = false } = {}) {
   const {
     startDate,
     endDate,
@@ -22,7 +22,16 @@ export async function createTransaction ({ state, dispatch, rootGetters }, { ass
 
   let transaction = await stelace.transactions.create(transactionAttrs)
 
-  if (paymentActive) return { transaction }
+  let order
+  if (withOrder) {
+    const url = paymentsApi.createOrder
+
+    order = await stelace.forward.post(url, {
+      transactionIds: [transaction.id]
+    })
+  }
+
+  if (paymentActive) return { order, transaction }
 
   const message = await stelace.messages.create({
     content: ' ',
@@ -39,6 +48,7 @@ export async function createTransaction ({ state, dispatch, rootGetters }, { ass
   })
 
   return {
+    order,
     transaction,
     message
   }
@@ -119,12 +129,10 @@ export async function getStripeCustomer ({ dispatch, rootGetters }) {
   await dispatch('fetchCurrentUser', { forceRefresh: true })
 }
 
-export async function createStripeCheckoutSession ({ rootGetters }, { transactionId }) {
+export async function createStripeCheckoutSession ({ rootGetters }, { orderId }) {
   const url = paymentsApi.createStripeCheckoutSession
 
-  const { id: sessionId } = await stelace.forward.post(url, {
-    transactionId
-  })
+  const { id: sessionId } = await stelace.forward.post(url, { orderId })
 
   return sessionId
 }

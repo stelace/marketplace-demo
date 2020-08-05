@@ -8,7 +8,8 @@ import {
   matLock,
   matMail,
   matPowerSettingsNew,
-  matSearch
+  matSearch,
+  matShoppingCart,
 } from '@quasar/extras/material-icons'
 import { mdiGithubCircle } from '@quasar/extras/mdi-v4'
 
@@ -90,6 +91,9 @@ export default {
     showGithubForkButton () {
       return process.env.VUE_APP_GITHUB_FORK_BUTTON === 'true'
     },
+    nbCartItems () {
+      return this.shoppingCart.lines.reduce((nbItems, line) => nbItems + line.quantity, 0)
+    },
     ...mapState([
       'common',
       'content',
@@ -106,6 +110,8 @@ export default {
       'defaultSearchMode',
       'currentUserPosition',
       'displayAssetDistance',
+      'shoppingCart',
+      'isEcommerceMarketplace',
     ]),
   },
   watch: {
@@ -163,7 +169,8 @@ export default {
       matMail,
       matSearch,
       matPowerSettingsNew,
-      mdiGithubCircle
+      mdiGithubCircle,
+      matShoppingCart,
     }
   },
   methods: {
@@ -338,6 +345,25 @@ export default {
       </div>
 
       <QSpace />
+
+      <QBtn
+        v-if="isEcommerceMarketplace"
+        :to="{ name: 'cart' }"
+        :class="['q-mx-md header__cart', isMenuOpened ? 'invisible' : '']"
+        :aria-label="$t({ id: 'navigation.inbox' })"
+        :color="isHome ? 'white' : ( style.colorfulTheme ? 'primary' : 'default-color')"
+        flat
+        round
+        :icon="icons.matShoppingCart"
+      >
+        <QBadge
+          v-show="nbCartItems"
+          class="inbox-badge"
+          color="red"
+        >
+          {{ nbCartItems }}
+        </QBadge>
+      </QBtn>
 
       <QBtn
         v-if="currentUser.id"

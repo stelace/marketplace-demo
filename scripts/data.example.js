@@ -5,6 +5,7 @@ const { getWorkflows } = require('../workflows')
 
 // Please ensure you add your own translations if not using 'en' or 'fr'
 const locale = process.env.VUE_APP_DEFAULT_LANGUAGE || 'en'
+const marketplaceType = process.env.VUE_APP_MARKETPLACE_TYPE
 
 /* eslint-disable quotes */
 module.exports = {
@@ -558,6 +559,6 @@ module.exports = {
       }
     }
   },
-  workflows: getWorkflows(locale)
+  workflows: getWorkflows(locale, marketplaceType)
   /* eslint-enable quotes */
 }

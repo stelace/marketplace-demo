@@ -11,6 +11,10 @@ const expirationDuration = {
 export async function initApp ({ dispatch, rootGetters }) {
   await dispatch('fetchConfig')
   await dispatch('selectSearchMode', { searchMode: rootGetters.defaultSearchMode })
+  if (rootGetters.isEcommerceMarketplace) {
+    await dispatch('loadLocalCart')
+    await dispatch('verifyCart')
+  }
 }
 
 export async function fetchCategories ({ state, commit }, { forceRefresh = false } = {}) {

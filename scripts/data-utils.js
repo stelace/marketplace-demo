@@ -422,8 +422,9 @@ class DataManager {
     if (!this.data.workflows) return
 
     for (const key in this.data.workflows) {
-      const payload = this.data.workflows[key]
       const alias = key
+      const payload = this.data.workflows[key]
+      if (!payload) continue // skip falsy payload
 
       const computed = payload.computed || {}
       for (const k in computed) {
@@ -471,7 +472,7 @@ class DataManager {
     for (const key in this.data.tasks) {
       const alias = key
       const payload = this.data.tasks[key]
-      if (!payload) return // skip falsy payload
+      if (!payload) continue // skip falsy payload
 
       const metadata = Object.assign({}, payload.metadata, { initDataScript, alias })
       payload.metadata = metadata
@@ -603,6 +604,8 @@ class DataManager {
     let objects = Array.isArray(data) ? data : this.existingData[type]
 
     for (const object of objects) {
+      if (isNil(object)) return
+
       if (!this.shouldOnlyRemoveScriptObjects || isCreatedBySeedScript(object)) {
         if (type === 'categories') {
           const childrenCategories = objects.filter(c => c.parentId === object.id)

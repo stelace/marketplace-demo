@@ -9,6 +9,7 @@ export const userMetadataMapping = {
   profileTitle: 'metadata.instant.profileTitle',
   locations: 'metadata.instant.locations',
   deliveryFee: 'metadata.instant.deliveryFee',
+  deliveryAddress: 'metadata.instant.deliveryAddress',
 
   images: 'metadata.images',
 
@@ -48,6 +49,7 @@ export function populateUser (user, {
   user.locations = get(user, userMetadataMapping.locations) || []
   user.locationName = get(user.locations, '[0].shortDisplayName', '')
   user.deliveryFee = get(user, userMetadataMapping.deliveryFee, null)
+  user.deliveryAddress = get(user, userMetadataMapping.deliveryAddress, '')
 
   user.images = get(user, userMetadataMapping.images, [])
 
