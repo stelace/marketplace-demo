@@ -1,7 +1,7 @@
 <script>
 import { mapState, mapGetters } from 'vuex'
 import { date } from 'quasar'
-import { get, values } from 'lodash'
+import { get, values, isNumber } from 'lodash'
 import { matAttachment, matClear, matInsertDriveFile, matSend } from '@quasar/extras/material-icons'
 
 import EventBus from 'src/utils/event-bus'
@@ -21,6 +21,7 @@ export default {
   components: {
     TransactionActions,
     TransactionStatus,
+    ProductsList: () => import(/* webpackChunkName: 'ecommerce' */ 'src/modules/ecommerce/components/ProductsList'),
     ProfileCard,
   },
   mixins: [
@@ -45,6 +46,25 @@ export default {
       if (!this.conversationId) return
 
       return this.conversations.find(conversation => conversation.id === this.conversationId)
+    },
+    order () {
+      return this.conversation && this.conversation.order
+    },
+    subTotalPrice () {
+      return Math.max(this.totalPrice - this.deliveryFee, 0)
+    },
+    totalPrice () {
+      if (!this.order) return 0
+      return this.order.amountDue
+    },
+    showPrices () {
+      return Boolean(this.order) && isNumber(this.totalPrice)
+    },
+    deliveryFee () {
+      if (!this.conversation || !this.conversation.order) return 0
+      const order = this.conversation.order
+      const orderLine = (order.lines || []).find(l => get(l, 'metadata.feeType') === 'deliveryFee')
+      return orderLine ? orderLine.payerAmount : 0
     },
     ownerDisplayName () {
       return get(this.inbox.asset, 'owner.displayName')
@@ -117,6 +137,7 @@ export default {
       'getAvatarImageUrl',
       'currentUser',
       'conversations',
+      'isEcommerceMarketplace',
     ]),
   },
   async preFetch ({ store }) {
@@ -212,10 +233,12 @@ export default {
         const firstNotification = this.inbox.conversation.isEmpty ? true : undefined
 
         await this.$store.dispatch('sendMessage', {
-          topicId: this.inbox.transaction.id || this.inbox.asset.id,
-          conversationId: this.inbox.conversation.id,
+          topicId: this.isEcommerceMarketplace
+            ? this.order.id
+            : this.inbox.transaction.id || this.inbox.asset.id,
+          conversationId: this.conversation.id,
           content: this.draftMessage,
-          receiverId: this.inbox.interlocutor.id,
+          receiverId: this.conversation.interlocutor.id,
           attachments: this.getTransformedUploadedFiles(),
           metadata: {
             instant: {
@@ -242,6 +265,90 @@ export default {
   <QPage padding>
     <div class="row flex-center">
       <div class="stl-content-container conversation-container">
+        <div v-if="isEcommerceMarketplace && showPrices" class="q-mb-lg">
+          <AppContent
+            tag="h1"
+            class="text-h4 text-weight-medium"
+            entry="order"
+            field="order_label"
+          />
+
+          <ProductsList
+            v-if="order"
+            :order="order"
+            :delivery-fee="deliveryFee"
+          />
+
+          <div class="shadow-2 q-mt-md q-pa-md">
+            <div class="row q-py-sm justify-between">
+              <AppContent
+                tag="div"
+                entry="pricing"
+                field="price_label"
+              />
+
+              <AppContent
+                tag="div"
+                entry="pricing"
+                field="price_with_currency"
+                :options="{ price: $fx(subTotalPrice) }"
+              />
+            </div>
+
+            <QSeparator />
+
+            <div class="row q-py-sm justify-between">
+              <div>
+                <AppContent
+                  entry="asset"
+                  field="delivery_fee_label"
+                />
+              </div>
+
+              <div>
+                <AppContent
+                  v-show="$fx(deliveryFee) !== 0"
+                  entry="pricing"
+                  field="price_with_currency"
+                  :options="{ price: $fx(deliveryFee) }"
+                />
+                <AppContent
+                  v-show="$fx(deliveryFee) === 0"
+                  entry="pricing"
+                  field="free"
+                />
+              </div>
+            </div>
+
+            <QSeparator />
+
+            <div class="row q-py-sm justify-between text-weight-medium text-h6">
+              <div>
+                <AppContent
+                  entry="pricing"
+                  field="total"
+                />
+              </div>
+
+              <div>
+                <AppContent
+                  v-show="$fx(totalPrice) !== 0"
+                  entry="pricing"
+                  field="price_with_currency"
+                  :options="{ price: $fx(totalPrice) }"
+                />
+                <AppContent
+                  v-show="$fx(totalPrice) === 0"
+                  entry="pricing"
+                  field="free"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <QSeparator v-if="!messageDisabled" class="q-mt-xl" color="transparent" />
+
         <AppContent
           tag="h1"
           class="text-h4 text-weight-medium"
@@ -251,6 +358,7 @@ export default {
         />
         <div class="row justify-center">
           <AssetCard
+            v-if="!isEcommerceMarketplace"
             :asset="inbox.asset"
             class="mobile-stacked"
           />
@@ -315,7 +423,7 @@ export default {
               :transaction="conversation.transaction"
             />
             <TransactionActions
-              v-if="conversation && conversation.transaction"
+              v-if="!isEcommerceMarketplace && conversation && conversation.transaction"
               container-class="row justify-center"
               :transaction="conversation.transaction"
               :actions="conversation.transactionActions"
@@ -328,8 +436,6 @@ export default {
             />
           </div>
         </div>
-
-        <QSeparator v-if="!messageDisabled" class="q-my-lg" />
 
         <div
           v-if="!messageDisabled"
@@ -459,19 +565,21 @@ export default {
           >
             <template v-slot:avatar>
               <AppAvatar
-                class="q-mx-sm"
+                :class="`q-message-avatar q-message-avatar--${message.senderId === currentUser.id ? 'sent' : 'received'}`"
                 :user="message.senderId === currentUser.id ? currentUser : inbox.interlocutor"
-                size="3rem"
+                :label="message.senderId === currentUser.id ? currentUser.displayName : inbox.interlocutor.displayName"
               />
             </template>
           </QChatMessage>
         </component>
 
-        <QSeparator
-          v-if="!layout.isLeftDrawerOpened"
-          class="q-my-lg"
-        />
-        <ProfileCard />
+        <template v-if="!isEcommerceMarketplace">
+          <QSeparator
+            v-if="!layout.isLeftDrawerOpened"
+            class="q-my-lg"
+          />
+          <ProfileCard />
+        </template>
       </div>
     </div>
   </QPage>

@@ -419,6 +419,7 @@ export default {
       </AppLink>
 
       <QBtn
+        v-show="$route.name !== 'cart'"
         class="create-asset-button q-px-md flex-item--auto text-weight-bold"
         :to="{ name: 'newAsset' }"
         :loading="content.fetchingContentStatus"

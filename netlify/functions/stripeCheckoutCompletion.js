@@ -48,13 +48,34 @@ const stripeCheckoutCompletion = async (event, context, callback) => {
       transitionName = 'confirmAndPay'
     }
 
-    // create a message to show the conversation to both parties
-    await stelace.messages.create({
-      content: ' ',
-      topicId,
-      senderId: order.payerId,
-      receiverId,
-    })
+    // remove message hidden attribute so both parties can see it in inbox
+    const messages = await stelace.messages.list({ topicId })
+
+    const hiddenMessage = messages.find(message => message.metadata.isHiddenMessage)
+    if (hiddenMessage) {
+      await stelace.messages.update(hiddenMessage.id, {
+        metadata: {
+          isHiddenMessage: false
+        }
+      })
+
+      const sendSignalTo = (userId) => {
+        return stelace.forward.post('/signal', {
+          message: { id: hiddenMessage.id },
+          destination: hiddenMessage.receiverId,
+          event: 'newMessage'
+        })
+      }
+
+      // send signal to both sender and receiver for message update
+      // (contrary to signal for message creation in workflows)
+      // when the updated message is propagated to client-side
+      // inbox will display the conversation in the list thanks to `isHiddenMessage` is false
+      await Promise.all([
+        sendSignalTo(hiddenMessage.receiverId),
+        sendSignalTo(hiddenMessage.senderId),
+      ])
+    }
 
     const transactionIds = uniq(order.lines.reduce((ids, l) => {
       const transactionId = get(l, 'metadata.transactionId')

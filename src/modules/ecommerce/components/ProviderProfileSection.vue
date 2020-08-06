@@ -1,7 +1,6 @@
 <template>
   <div
     :key="contextResource.id"
-    class="full-height"
   >
     <div class="row">
       <div class="col-12 col-sm-4 q-pb-md q-px-md">
@@ -97,7 +96,7 @@
           />
         </div>
       </div>
-      <div class="col-12 col-sm-8">
+      <div class="col-12 col-sm-8 q-pb-md q-px-md">
         <div class="row text-h6">
           <div v-if="isCurrentUser">
             <AppSwitchableEditor
@@ -158,7 +157,7 @@
             :custom-save="updateUserFn('locations')"
             :allow-falsy-save="true"
             tag="div"
-            class="text-body1 col"
+            class="col"
           >
             <template v-slot:default>
               <div class="row items-center">
@@ -187,7 +186,7 @@
         <div class="row q-mt-md">
           <AppSwitchableEditor
             tag="p"
-            class="text-body1 text-justify"
+            class="text-justify"
             :value="selectedUser.description"
             :active="isCurrentUser"
             :custom-save="updateUserFn('description')"

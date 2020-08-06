@@ -77,7 +77,8 @@ export default {
     ...mapGetters([
       'currentUser',
       'conversations',
-      'ratingsActive'
+      'ratingsActive',
+      'isEcommerceMarketplace',
     ]),
     // do not display conversations without any visible message
     visibleConversations () {
@@ -322,7 +323,7 @@ export default {
                       }}
                     </span>
                   </QItemLabel>
-                  <QItemLabel class="inbox-prompt-bar q-mt-xs text-body2">
+                  <QItemLabel v-if="isEcommerceMarketplace" class="inbox-prompt-bar q-mt-xs text-body2">
                     <!-- Also use .stop modifier in case a click handler is added on a parent -->
                     <div
                       class="inbox-action-button-container"

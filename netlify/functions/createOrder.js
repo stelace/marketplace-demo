@@ -79,6 +79,9 @@ const createOrder = async (event, context, callback) => {
         receiverAmount: deliveryFee,
         platformAmount: 0,
         currency,
+        metadata: {
+          feeType: 'deliveryFee',
+        },
       })
     }
 

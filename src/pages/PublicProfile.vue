@@ -180,7 +180,7 @@ export default {
         ]"
       >
         <template v-if="isEcommerceMarketplace">
-          <div v-if="isSelectedUserProvider" class="q-mt-xl">
+          <div v-if="isSelectedUserProvider" class="q-mt-xl q-px-sm">
             <ProviderProfileSection />
           </div>
           <div v-else class="q-mt-xl">
@@ -245,7 +245,7 @@ export default {
         <section
           v-if="(isEcommerceMarketplace && !isSelectedUserProvider) || !isEcommerceMarketplace"
           v-show="!(selectedUser.id && !isCurrentUser && !selectedUser.description)"
-          class="q-px-sm"
+          class="q-px-sm q-px-sm"
         >
           <QSeparator class="q-mt-xl" />
           <!-- Shared by natural user and orgs -->
@@ -275,8 +275,8 @@ export default {
           class="q-px-sm"
         >
           <QSeparator class="q-mt-xl" />
-
-          <StripeLinkAccount />
+          <StripeLinkAccount class="q-px-md" />
+          <QSeparator class="q-mt-xl" color="transparent" />
         </section>
 
         <section
@@ -297,7 +297,7 @@ export default {
               :key="asset.id"
               :class="[
                 'col-10',
-                isEcommerceMarketplace ? 'col-sm-3' : 'col-sm-6',
+                isEcommerceMarketplace ? 'col-sm-3' : 'col-sm-4 col-md-3',
               ]"
               :asset="asset"
               show-add-to-cart
@@ -332,7 +332,7 @@ export default {
                   :key="asset.id"
                   :class="[
                     'col-10',
-                    isEcommerceMarketplace ? 'col-sm-3' : 'col-sm-6',
+                    isEcommerceMarketplace ? 'col-sm-3' : 'col-sm-4 col-md-3',
                   ]"
                   :asset="asset"
                   :flat="!asset.previouslySearched"
@@ -345,13 +345,14 @@ export default {
 
         <section
           v-show="userRatingsLoaded && ratingsActive"
-          class="q-mt-md"
+          class="q-mt-md q-px-sm"
         >
           <QSeparator class="q-mt-xl" />
 
           <TransactionRatingsList
             :ratings="userRatingsByTransaction"
             :target="selectedUser"
+            class="q-pa-md"
           />
         </section>
       </div>

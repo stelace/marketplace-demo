@@ -218,45 +218,39 @@ export default {
 
 <template>
   <div class="transaction-card q-pa-md">
-    <div class="q-pb-md">
-      <div class="text-weight-bold">
-        <AppContent
-          v-if="activeAsset.assetType && activeAsset.assetType.timeBased"
-          entry="pricing"
-          field="price_per_time_unit_label"
-          :options="{
-            price: $fx(activeAsset.price),
-            timeUnit: activeAsset.timeUnit
-          }"
-        />
-        <AppContent
-          v-else
-          entry="pricing"
-          field="price_with_currency"
-          :options="{ price: $fx(activeAsset.price) }"
-        />
-      </div>
-      <div v-if="nbRatings">
-        <div class="row items-center">
-          <AppRating
-            class="asset-score"
-            :score="ratingAverageScore"
-            rating-label="default"
-            :show-label="false"
-            rating-class="q-mr-sm"
-            readonly
-            size="0.8rem"
+    <template v-if="nbRatings || (activeAsset.assetType && activeAsset.assetType.timeBased)">
+      <div class="q-pb-md">
+        <div class="text-weight-bold">
+          <AppContent
+            v-if="activeAsset.assetType && activeAsset.assetType.timeBased"
+            entry="pricing"
+            field="price_per_time_unit_label"
+            :options="{
+              price: $fx(activeAsset.price),
+              timeUnit: activeAsset.timeUnit
+            }"
           />
-          <div class="text-weigh-bold">
-            {{ nbRatings }}
+        </div>
+        <div v-if="nbRatings">
+          <div class="row items-center">
+            <AppRating
+              class="asset-score"
+              :score="ratingAverageScore"
+              rating-label="default"
+              :show-label="false"
+              rating-class="q-mr-sm"
+              readonly
+              size="0.8rem"
+            />
+            <div class="text-weigh-bold">
+              {{ nbRatings }}
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- Ratings -->
-
-    <QSeparator />
+      <QSeparator />
+    </template>
 
     <div class="q-py-md transaction-card__content">
       <div
@@ -319,7 +313,7 @@ export default {
           <div>
             <AppContent
               entry="pricing"
-              field="price_with_currency"
+              :field="(promptTransactionDates || promptTransactionQuantity) ? 'price_with_currency' : 'price_label'"
               :options="{ price: $fx(preview.unitPrice) }"
             />
             <span v-if="promptTransactionDates">
@@ -404,7 +398,7 @@ export default {
 
         <QSeparator />
 
-        <div class="row q-py-sm justify-between text-weight-medium">
+        <div class="row q-py-sm justify-between text-h6 text-weight-medium">
           <div>
             <AppContent
               entry="pricing"

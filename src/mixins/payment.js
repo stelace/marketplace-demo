@@ -24,11 +24,7 @@ export default {
           await this.$store.dispatch('removeAssetsFromOrder', { orderId })
 
           findConversationFn = (conv) => {
-            const order = conv.order
-
-            return order &&
-              order.id === orderId &&
-              order.payerId === this.currentUser.id
+            return conv.orderId === orderId
           }
         } else {
           const transactionId = routeQuery.transactionId

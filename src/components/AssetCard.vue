@@ -264,12 +264,13 @@ export default {
   transition: all $transition-duration
   &:focus, &:hover
     transform: translateY(-5px)
-  .cart-button
-    display: none
-    z-index: 2
-  &:hover
+  @media (min-width $breakpoint-sm-min)
     .cart-button
-      display: block
+      display: none
+      z-index: 2
+    &:hover
+      .cart-button
+        display: block
 
 // padding-bottom aspect-ratio technique (ratio is inlined in HTML)
 .asset-image-container

@@ -43,7 +43,7 @@ export default {
       }
 
       let routerLinkTo
-      if (this.to.name) routerLinkTo = { name: this.to.name }
+      if (this.to.name) routerLinkTo = this.to
       if (isStringTo && this.to.match(/^\//)) routerLinkTo = this.to
 
       return {

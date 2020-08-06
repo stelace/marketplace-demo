@@ -31,21 +31,21 @@ export async function createTransaction ({ state, dispatch, rootGetters }, { ass
     })
   }
 
-  if (paymentActive) return { order, transaction }
-
   const message = await stelace.messages.create({
     content: ' ',
     topicId: transaction.id,
     receiverId: transaction.ownerId,
     metadata: {
-      isHiddenMessage: true
+      isHiddenMessage: paymentActive
     }
   })
 
-  transaction = await dispatch('createTransactionTransition', {
-    transactionId: transaction.id,
-    transitionName: 'confirmAndPay'
-  })
+  if (!paymentActive) {
+    transaction = await dispatch('createTransactionTransition', {
+      transactionId: transaction.id,
+      transitionName: 'confirmAndPay'
+    })
+  }
 
   return {
     order,

@@ -1,7 +1,7 @@
 <script>
 import { mapState, mapGetters } from 'vuex'
 import { matDelete } from '@quasar/extras/material-icons'
-import { values } from 'lodash'
+import { compact, values } from 'lodash'
 
 import { populateAsset } from 'src/utils/asset'
 import { convertEndDate } from 'src/utils/time'
@@ -49,8 +49,35 @@ export default {
     },
     productLines () {
       if (this.order && this.order.lines) {
-        // TODO
-        return []
+        return compact(this.order.lines.map(line => {
+          const transaction = line.transaction || {}
+          let asset = transaction.assetSnapshot
+          if (!asset) return
+
+          asset = populateAsset({
+            asset,
+            usersById: {},
+            categoriesById: this.common.categoriesById,
+            assetTypesById: this.common.assetTypesById,
+          })
+
+          const timeBased = transaction.assetType.timeBased
+          const nbTimeUnits = timeBased ? values(transaction.duration)[0] : 0
+
+          return {
+            id: asset.id,
+            asset: asset,
+            imageUrl: this.getBaseImageUrl(asset),
+            name: asset.name,
+            description: asset.description,
+            quantity: transaction.quantity,
+            maxQuantity: asset.quantity,
+            unitPrice: transaction.unitPrice * (timeBased ? nbTimeUnits : 1),
+            price: transaction.value,
+            startDate: transaction.startDate ? new Date(transaction.startDate) : null,
+            endDate: transaction.endDate ? new Date(convertEndDate(transaction.endDate, { target: 'ui' })) : null,
+          }
+        }))
       } else {
         return this.previewedTransactions.map(previewed => {
           let asset = previewed.assetSnapshot
@@ -120,63 +147,76 @@ export default {
     <QList v-for="line of productLines" :key="line.assetId">
       <QItem class="product-line">
         <QItemSection class="col-2">
-          <QImg
-            class="asset-image"
-            :src="line.imageUrl"
-            :alt="line.name"
-            :ratio="baseImageRatio"
+          <AppLink
+            class="anchor-text--reset fit"
+            :to="{ name: 'asset', params: { id: line.asset.id } }"
           >
-            <slot name="caption" />
-          </QImg>
+            <QImg
+              class="asset-image"
+              :src="line.imageUrl"
+              :alt="line.name"
+              :ratio="baseImageRatio"
+            >
+              <slot name="caption" />
+            </QImg>
+          </AppLink>
         </QItemSection>
         <QItemSection>
           <QItemLabel lines="1">
-            <router-link
-              class="anchor-text--reset cursor-pointer asset-name text-weight-medium"
-              style="width: 100%; height: 100%"
+            <AppLink
+              class="anchor-text--reset asset-name text-weight-medium"
               :to="{ name: 'asset', params: { id: line.asset.id } }"
             >
               {{ line.name }}
-            </router-link>
+            </AppLink>
           </QItemLabel>
           <QItemLabel
             class="text-body2 text-grey-7"
             lines="1"
           >
-            <router-link
-              class="anchor-text--reset cursor-pointer"
-              style="width: 100%; height: 100%"
+            <AppLink
+              class="anchor-text--reset"
               :to="{ name: 'asset', params: { id: line.asset.id } }"
             >
               {{ line.description }}
-            </router-link>
+            </AppLink>
           </QItemLabel>
           <QItemLabel>
-            <AppContent
-              v-if="line.startDate && line.endDate"
-              entry="time"
-              field="from_start_date_to_end_date"
-              :options="{ startDate: line.startDate, endDate: line.endDate }"
-            />
+            <AppLink
+              class="anchor-text--reset"
+              :to="{ name: 'asset', params: { id: line.asset.id } }"
+            >
+              <AppContent
+                v-if="line.startDate && line.endDate"
+                entry="time"
+                field="from_start_date_to_end_date"
+                :options="{ startDate: line.startDate, endDate: line.endDate }"
+              />
+            </AppLink>
           </QItemLabel>
         </QItemSection>
-        <QItemSection class="text-right col-3">
-          <QItemLabel class="row justify-between items-center">
+        <QItemSection class="col-3">
+          <QItemLabel class="row justify-end items-center text-body1">
             <AppContent
               entry="pricing"
               field="price_with_currency"
               :options="{ price: $fx(line.unitPrice) }"
             />
-            <span>x</span>
+            <span class="q-px-xs">
+              x
+            </span>
             <SelectNumber
-              dense
+              v-if="!readonly"
+              class="text-body1 q-ml-xs"
               :number="line.quantity"
               :max-number="line.maxQuantity"
+              dense
               @change="quantity => selectQuantity(line.asset, quantity)"
             />
+            <span v-if="readonly">{{ line.quantity }}</span>
           </QItemLabel>
         </QItemSection>
-        <QItemSection side>
+        <QItemSection v-if="!readonly" side>
           <QItemLabel>
             <QBtn
               flat

@@ -10,6 +10,7 @@ export default {
   usersById: {},
   transactionsById: {},
   assetsById: {},
+  ordersById: {},
 
   conversation: {},
   asset: {},

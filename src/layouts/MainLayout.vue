@@ -201,35 +201,87 @@ export default {
         v-if="isCartPage"
         class="q-pa-md row items-center"
       >
-        <div class="col-1 gt-xs" />
-        <div class="col-6 col-sm-5">
-          <AppContent
-            :class="[!cart.previewedTransactions.length ? 'invisible' : '']"
-            tag="div"
-            entry="pricing"
-            field="subtotal_with_price"
-            :options="{ price: cart.subTotalPrice }"
-          />
-          <AppContent
-            :class="[!cart.previewedTransactions.length ? 'invisible' : '']"
-            tag="div"
-            entry="asset"
-            field="delivery_fee_with_price"
-            :options="{ price: cart.deliveryFee }"
-          />
-          <AppContent
-            :class="[!cart.previewedTransactions.length ? 'invisible' : '']"
-            tag="div"
-            class="text-h6 text-weight-medium"
-            entry="pricing"
-            field="total_with_price"
-            :options="{ price: cart.totalPrice }"
-          />
+        <div class="col-1 col-md-2 gt-xs" />
+        <div class="col-5 col-md-4 q-pr-md">
+          <div
+            :class="[
+              'row justify-between',
+              !cart.previewedTransactions.length ? 'invisible' : ''
+            ]"
+          >
+            <AppContent
+              tag="div"
+              entry="pricing"
+              field="price_label"
+            />
+
+            <AppContent
+              tag="div"
+              entry="pricing"
+              field="price_with_currency"
+              :options="{ price: $fx(cart.subTotalPrice) }"
+            />
+          </div>
+
+          <div
+            :class="[
+              'row justify-between',
+              !cart.previewedTransactions.length ? 'invisible' : ''
+            ]"
+          >
+            <div>
+              <AppContent
+                entry="asset"
+                field="delivery_fee_label"
+              />
+            </div>
+
+            <div>
+              <AppContent
+                v-show="$fx(cart.deliveryFee) !== 0"
+                entry="pricing"
+                field="price_with_currency"
+                :options="{ price: $fx(cart.deliveryFee) }"
+              />
+              <AppContent
+                v-show="$fx(cart.deliveryFee) === 0"
+                entry="pricing"
+                field="free"
+              />
+            </div>
+          </div>
+
+          <div
+            :class="[
+              'row justify-between text-weight-medium text-h6',
+              !cart.previewedTransactions.length ? 'invisible' : ''
+            ]"
+          >
+            <div>
+              <AppContent
+                entry="pricing"
+                field="total"
+              />
+            </div>
+
+            <div>
+              <AppContent
+                v-show="$fx(cart.totalPrice) !== 0"
+                entry="pricing"
+                field="price_with_currency"
+                :options="{ price: $fx(cart.totalPrice) }"
+              />
+              <AppContent
+                v-show="$fx(cart.totalPrice) === 0"
+                entry="pricing"
+                field="free"
+              />
+            </div>
+          </div>
         </div>
-        <div class="col-6 col-sm-5 text-right">
+        <div class="col-7 col-sm-5 col-md-4 text-right">
           <AppCheckoutButton />
         </div>
-        <div class="col-1 gt-xs" />
       </div>
     </QFooter>
 

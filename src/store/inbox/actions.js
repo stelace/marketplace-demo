@@ -1,4 +1,4 @@
-import { compact, uniqBy } from 'lodash'
+import { compact, uniqBy, get, uniq } from 'lodash'
 import stelace, { fetchAllResults } from 'src/utils/stelace'
 import * as types from 'src/store/mutation-types'
 
@@ -10,6 +10,7 @@ export async function fetchMessages ({ commit, dispatch, state, rootGetters }, {
   // OR the current user changes (login/logout or organization)
   await dispatch('fetchCurrentUser')
   const currentUser = rootGetters.currentUser
+  const isEcommerceMarketplace = rootGetters.isEcommerceMarketplace
   if (!currentUser) return
 
   const userId = currentUser.id
@@ -52,6 +53,8 @@ export async function fetchMessages ({ commit, dispatch, state, rootGetters }, {
 
   let topicsIds = []
   let usersIds = []
+  let assetsIds = []
+  let transactionsIds = []
 
   messages.forEach(message => {
     if (message.senderId !== userId) {
@@ -68,34 +71,67 @@ export async function fetchMessages ({ commit, dispatch, state, rootGetters }, {
 
   usersIds = compact(uniqBy(usersIds))
   topicsIds = uniqBy(topicsIds)
-
-  const assetsIds = topicsIds.filter(isAssetId)
+  assetsIds = topicsIds.filter(isAssetId)
 
   const fetchAssetsRequest = (...args) => stelace.assets.list(...args)
   const fetchAllAssets = fetchAllResults(fetchAssetsRequest, { id: assetsIds })
 
-  const assets = await fetchAllAssets
+  const fetchOrdersRequest = (...args) => stelace.orders.list(...args)
+  const fetchAllOrdersAsPayer = fetchAllResults(fetchOrdersRequest, { payerId: userId })
+  const fetchAllOrdersAsReceiver = fetchAllResults(fetchOrdersRequest, { receiverId: userId })
+
+  const fetchTransactionsRequest = (...args) => stelace.transactions.list(...args)
+  const fetchAllTransactionsAsOwner = fetchAllResults(fetchTransactionsRequest, { ownerId: userId })
+  const fetchAllTransactionsAsTaker = fetchAllResults(fetchTransactionsRequest, { takerId: userId })
+
+  let orders
+
+  if (isEcommerceMarketplace) {
+    const [
+      ordersAsPayer,
+      ordersAsReceiver,
+    ] = await Promise.all([
+      fetchAllOrdersAsPayer,
+      fetchAllOrdersAsReceiver,
+    ])
+
+    orders = ordersAsPayer.concat(ordersAsReceiver)
+
+    orders.forEach(order => {
+      order.lines.forEach(l => {
+        const transactionId = get(l, 'metadata.transactionId')
+        const assetId = get(l, 'metadata.assetId')
+
+        if (transactionId) transactionsIds.push(transactionId)
+        if (assetId) assetsIds.push(assetId)
+
+        if (l.payerId) usersIds.push(l.payerId)
+        if (l.receiverId) usersIds.push(l.receiverId)
+      })
+    })
+  }
+
+  transactionsIds = uniq(transactionsIds)
+  assetsIds = uniq(assetsIds)
+
+  const [
+    assets,
+    transactionsAsOwner,
+    transactionsAsTaker,
+  ] = await Promise.all([
+    assetsIds.length ? fetchAllAssets : [],
+    fetchAllTransactionsAsOwner,
+    fetchAllTransactionsAsTaker,
+  ])
+
+  const transactions = transactionsAsOwner.concat(transactionsAsTaker)
 
   usersIds = compact(uniqBy(usersIds.concat(assets.map(asset => asset.ownerId))))
 
   const fetchUsersRequest = (...args) => stelace.users.list(...args)
   const fetchAllUsers = fetchAllResults(fetchUsersRequest, { id: usersIds })
 
-  const fetchTransactionsRequest = (...args) => stelace.transactions.list(...args)
-  const fetchAllTransactionsAsOwner = fetchAllResults(fetchTransactionsRequest, { ownerId: userId })
-  const fetchAllTransactionsAsTaker = fetchAllResults(fetchTransactionsRequest, { takerId: userId })
-
-  const [
-    users,
-    transactionsAsOwner,
-    transactionsAsTaker,
-  ] = await Promise.all([
-    usersIds.length ? fetchAllUsers : [],
-    fetchAllTransactionsAsOwner,
-    fetchAllTransactionsAsTaker,
-  ])
-
-  const allTransactions = transactionsAsOwner.concat(transactionsAsTaker)
+  const users = usersIds.length ? await fetchAllUsers : []
 
   commit({
     type: types.INBOX__SET_USERS,
@@ -103,15 +139,19 @@ export async function fetchMessages ({ commit, dispatch, state, rootGetters }, {
   })
   commit({
     type: types.INBOX__SET_TRANSACTIONS,
-    transactions: allTransactions
+    transactions
   })
   commit({
-    type: types.INBOX__SET_ASSETS_WITHOUT_TRANSACTIONS,
+    type: types.INBOX__SET_ASSETS,
     assets
+  })
+  commit({
+    type: types.INBOX__SET_ORDERS,
+    orders
   })
 
   if (rootGetters.ratingsActive) {
-    const transactionsIds = uniqBy(allTransactions.map(b => b.id))
+    const transactionsIds = uniqBy(transactions.map(b => b.id))
     const assetIds = uniqBy(assets.map(asset => asset.id))
 
     await Promise.all([

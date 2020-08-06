@@ -232,8 +232,6 @@ export async function createOrderFromCart ({ state, getters, rootGetters, dispat
     transactionIds: transactions.map(t => t.id)
   })
 
-  if (paymentActive) return { order }
-
   // create a message if payment isn't enabled
   // so the current user is directly redirected to conversation
   const message = await stelace.messages.create({
@@ -241,7 +239,7 @@ export async function createOrderFromCart ({ state, getters, rootGetters, dispat
     topicId: order.id,
     receiverId: owner.id,
     metadata: {
-      isHiddenMessage: true
+      isHiddenMessage: paymentActive
     }
   })
 
