@@ -17,9 +17,9 @@ export default {
       type: Array,
       default: () => [],
     },
-    deliveryFee: {
-      type: Number,
-      default: 0
+    orderFees: {
+      type: Array,
+      default: () => [],
     },
     order: {
       type: Object,
@@ -111,7 +111,8 @@ export default {
       return this.productLines.reduce((sum, line) => sum + line.price, 0)
     },
     totalPrice () {
-      return this.subTotalPrice + this.deliveryFee
+      const totalFees = this.orderFees.reduce((sum, orderFee) => sum + orderFee.amount, 0)
+      return this.subTotalPrice + totalFees
     },
   },
   watch: {
@@ -133,7 +134,7 @@ export default {
     },
     emitNewPrices () {
       this.$emit('updatePrice', {
-        deliveryFee: this.deliveryFee,
+        orderFees: this.orderFees,
         subTotalPrice: this.subTotalPrice,
         totalPrice: this.totalPrice,
       })

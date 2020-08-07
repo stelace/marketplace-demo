@@ -51,7 +51,8 @@ export default {
       return this.conversation && this.conversation.order
     },
     subTotalPrice () {
-      return Math.max(this.totalPrice - this.deliveryFee, 0)
+      const totalFees = this.orderFees.reduce((sum, orderFee) => sum + orderFee.amount, 0)
+      return Math.max(this.totalPrice - totalFees, 0)
     },
     totalPrice () {
       if (!this.order) return 0
@@ -60,11 +61,18 @@ export default {
     showPrices () {
       return Boolean(this.order) && isNumber(this.totalPrice)
     },
-    deliveryFee () {
-      if (!this.conversation || !this.conversation.order) return 0
+    orderFees () {
+      if (!this.conversation || !this.conversation.order) return []
       const order = this.conversation.order
-      const orderLine = (order.lines || []).find(l => get(l, 'metadata.feeType') === 'deliveryFee')
-      return orderLine ? orderLine.payerAmount : 0
+
+      return (order.lines || [])
+        .filter(l => Boolean(get(l, 'metadata.feeType')))
+        .map(l => {
+          return {
+            feeType: get(l, 'metadata.feeType'),
+            amount: l.payerAmount || 0
+          }
+        })
     },
     ownerDisplayName () {
       return get(this.inbox.asset, 'owner.displayName')
@@ -276,51 +284,59 @@ export default {
           <ProductsList
             v-if="order"
             :order="order"
-            :delivery-fee="deliveryFee"
+            :order-fees="orderFees"
           />
 
           <div class="shadow-2 q-mt-md q-pa-md">
-            <div class="row q-py-sm justify-between">
-              <AppContent
-                tag="div"
-                entry="pricing"
-                field="price_label"
-              />
-
-              <AppContent
-                tag="div"
-                entry="pricing"
-                field="price_with_currency"
-                :options="{ price: $fx(subTotalPrice) }"
-              />
-            </div>
-
-            <QSeparator />
-
-            <div class="row q-py-sm justify-between">
-              <div>
+            <template v-if="orderFees.length">
+              <div class="row q-py-sm justify-between">
                 <AppContent
-                  entry="asset"
-                  field="delivery_fee_label"
+                  tag="div"
+                  entry="pricing"
+                  field="price_label"
                 />
-              </div>
 
-              <div>
                 <AppContent
-                  v-show="$fx(deliveryFee) !== 0"
+                  tag="div"
                   entry="pricing"
                   field="price_with_currency"
-                  :options="{ price: $fx(deliveryFee) }"
-                />
-                <AppContent
-                  v-show="$fx(deliveryFee) === 0"
-                  entry="pricing"
-                  field="free"
+                  :options="{ price: $fx(subTotalPrice) }"
                 />
               </div>
-            </div>
 
-            <QSeparator />
+              <QSeparator />
+            </template>
+
+            <template v-if="orderFees.length">
+              <div
+                v-for="orderFee in orderFees"
+                :key="orderFee.feeType"
+                class="row q-py-sm justify-between"
+              >
+                <div>
+                  <AppContent
+                    entry="pricing"
+                    :field="'fee_types.' + orderFee.feeType + '_label'"
+                  />
+                </div>
+
+                <div>
+                  <AppContent
+                    v-show="$fx(orderFee.amount) !== 0"
+                    entry="pricing"
+                    field="price_with_currency"
+                    :options="{ price: $fx(orderFee.amount) }"
+                  />
+                  <AppContent
+                    v-show="$fx(orderFee.amount) === 0"
+                    entry="pricing"
+                    field="free"
+                  />
+                </div>
+              </div>
+
+              <QSeparator />
+            </template>
 
             <div class="row q-py-sm justify-between text-weight-medium text-h6">
               <div>

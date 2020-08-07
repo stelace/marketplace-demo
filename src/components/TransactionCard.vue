@@ -15,6 +15,8 @@ import {
   getAvailableQuantityByDate
 } from 'src/utils/asset'
 
+import { getOrderFees } from 'src/utils/order'
+
 import * as mutationTypes from 'src/store/mutation-types'
 
 export default {
@@ -70,11 +72,13 @@ export default {
       return this.preview.takerAmount - this.preview.value
     },
     totalPrice () {
-      return this.preview.takerAmount + this.deliveryFee
+      const feesAmount = this.orderFees.reduce((amount, fee) => amount + fee.amount, 0)
+      return this.preview.takerAmount + feesAmount
     },
-    deliveryFee () {
-      if (!this.isEcommerceMarketplace) return 0
-      else return (this.activeAsset.owner && this.activeAsset.owner.deliveryFee) || 0
+    orderFees () {
+      if (!this.isEcommerceMarketplace || !this.activeAsset || !this.activeAsset.owner) return []
+
+      return getOrderFees(this.orderFeeTypes, this.activeAsset.owner)
     },
     ratingAverageScore () {
       return get(this.rating.ratingsStatsByAssetId, `default.${this.activeAsset.id}.avg`, 0)
@@ -100,6 +104,7 @@ export default {
       'maxAvailableQuantity',
       'paymentActive',
       'isEcommerceMarketplace',
+      'orderFeeTypes',
     ]),
   },
   watch: {
@@ -373,26 +378,32 @@ export default {
           </div>
         </div>
 
-        <div v-else class="row q-py-sm justify-between">
-          <div>
-            <AppContent
-              entry="asset"
-              field="delivery_fee_label"
-            />
-          </div>
+        <div v-else>
+          <div
+            v-for="orderFee in orderFees"
+            :key="orderFee.feeType"
+            class="row q-py-sm justify-between"
+          >
+            <div>
+              <AppContent
+                entry="pricing"
+                :field="'fee_types.' + orderFee.feeType + '_label'"
+              />
+            </div>
 
-          <div>
-            <AppContent
-              v-show="$fx(deliveryFee) !== 0"
-              entry="pricing"
-              field="price_with_currency"
-              :options="{ price: $fx(deliveryFee) }"
-            />
-            <AppContent
-              v-show="$fx(deliveryFee) === 0"
-              entry="pricing"
-              field="free"
-            />
+            <div>
+              <AppContent
+                v-show="$fx(orderFee.amount) !== 0"
+                entry="pricing"
+                field="price_with_currency"
+                :options="{ price: $fx(orderFee.amount) }"
+              />
+              <AppContent
+                v-show="$fx(orderFee.amount) === 0"
+                entry="pricing"
+                field="free"
+              />
+            </div>
           </div>
         </div>
 

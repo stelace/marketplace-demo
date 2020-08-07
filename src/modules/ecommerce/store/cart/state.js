@@ -3,7 +3,7 @@ export default {
   localCart: null,
   owner: {},
 
-  deliveryFee: 0,
+  orderFees: [],
   subTotalPrice: 0,
   totalPrice: 0,
 }

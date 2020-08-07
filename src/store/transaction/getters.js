@@ -80,3 +80,7 @@ export function maxAvailableQuantity (state, getters, rootState, rootGetters) {
     return getQuantityByMarketplaceType(maxQuantity)
   }
 }
+
+export function orderFeeTypes () {
+  return (process.env.VUE_APP_ORDER_FEE_TYPES || '').split(',')
+}

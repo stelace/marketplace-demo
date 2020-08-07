@@ -11,6 +11,8 @@ import TransactionCard from 'src/components/TransactionCard'
 
 import AuthDialogMixin from 'src/mixins/authDialog'
 
+import { getOrderFees } from 'src/utils/order'
+
 export default {
   components: {
     MainLayoutHeader,
@@ -69,6 +71,11 @@ export default {
       if (!assetType) return true
       return assetType.timeBased
     },
+    orderFees () {
+      if (!this.isEcommerceMarketplace || !this.activeAsset || !this.activeAsset.owner) return []
+
+      return getOrderFees(this.orderFeeTypes, this.activeAsset.owner)
+    },
     ...mapState([
       'asset',
       'auth',
@@ -88,6 +95,7 @@ export default {
       'maxAvailableQuantity',
       'isEcommerceMarketplace',
       'marketplaceType',
+      'orderFeeTypes',
     ]),
   },
   watch: {
@@ -173,9 +181,11 @@ export default {
           </div>
           <div v-if="isEcommerceMarketplace">
             <AppContent
-              entry="asset"
-              field="delivery_fee_with_price"
-              :options="{ price: $fx(activeAsset.owner ? activeAsset.owner.deliveryFee : 0) }"
+              v-for="orderFee in orderFees"
+              :key="orderFee.type"
+              entry="pricing"
+              :field="'fee_types.' + orderFee.feeType + '_with_price'"
+              :options="{ price: $fx(orderFee.amount) }"
             />
           </div>
         </div>
@@ -204,6 +214,7 @@ export default {
         <div class="col-1 col-md-2 gt-xs" />
         <div class="col-5 col-md-4 q-pr-md">
           <div
+            v-if="cart.orderFees.length"
             :class="[
               'row justify-between',
               !cart.previewedTransactions.length ? 'invisible' : ''
@@ -224,6 +235,8 @@ export default {
           </div>
 
           <div
+            v-for="orderFee in cart.orderFees"
+            :key="orderFee.feeType"
             :class="[
               'row justify-between',
               !cart.previewedTransactions.length ? 'invisible' : ''
@@ -231,20 +244,20 @@ export default {
           >
             <div>
               <AppContent
-                entry="asset"
-                field="delivery_fee_label"
+                entry="pricing"
+                :field="'fee_types.' + orderFee.feeType + '_label'"
               />
             </div>
 
             <div>
               <AppContent
-                v-show="$fx(cart.deliveryFee) !== 0"
+                v-show="$fx(orderFee.amount) !== 0"
                 entry="pricing"
                 field="price_with_currency"
-                :options="{ price: $fx(cart.deliveryFee) }"
+                :options="{ price: $fx(orderFee.amount) }"
               />
               <AppContent
-                v-show="$fx(cart.deliveryFee) === 0"
+                v-show="$fx(orderFee.amount) === 0"
                 entry="pricing"
                 field="free"
               />

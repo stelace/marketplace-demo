@@ -14,8 +14,8 @@ export default {
     state.owner = owner
   },
 
-  [types.CART__SET_PRICES] (state, { deliveryFee, subTotalPrice, totalPrice }) {
-    if (!isUndefined(deliveryFee)) state.deliveryFee = deliveryFee
+  [types.CART__SET_PRICES] (state, { orderFees, subTotalPrice, totalPrice }) {
+    if (!isUndefined(orderFees)) state.orderFees = orderFees
     if (!isUndefined(subTotalPrice)) state.subTotalPrice = subTotalPrice
     if (!isUndefined(totalPrice)) state.totalPrice = totalPrice
   }

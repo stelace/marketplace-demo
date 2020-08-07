@@ -291,7 +291,6 @@ export default {
               // Save dates to create custom availabilities with Workflows
               startDate: this.startDate,
               endDate: this.endDate,
-              deliveryFee: this.isEcommerceMarketplace ? this.currentUser.deliveryFee : undefined,
             }
           }
 

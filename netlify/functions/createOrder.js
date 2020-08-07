@@ -54,7 +54,6 @@ const createOrder = async (event, context, callback) => {
     const currency = transactions[0].currency
 
     const owner = await stelace.users.read(ownerId)
-    const deliveryFee = get(owner, 'metadata.instant.deliveryFee') || 0
 
     const lines = transactions.map(transaction => {
       return {
@@ -71,17 +70,23 @@ const createOrder = async (event, context, callback) => {
       }
     })
 
-    if (deliveryFee) {
-      lines.push({
-        payerId: takerId,
-        payerAmount: deliveryFee,
-        receiverId: ownerId,
-        receiverAmount: deliveryFee,
-        platformAmount: 0,
-        currency,
-        metadata: {
-          feeType: 'deliveryFee',
-        },
+    if (context.isEcommerceMarketplace) {
+      context.orderFeeTypes.forEach(feeType => {
+        const feeAmount = get(owner, `metadata.instant.${feeType}`)
+
+        if (isNumber(feeAmount) && feeAmount > 0) {
+          lines.push({
+            payerId: takerId,
+            payerAmount: feeAmount,
+            receiverId: ownerId,
+            receiverAmount: feeAmount,
+            platformAmount: 0,
+            currency,
+            metadata: {
+              feeType,
+            },
+          })
+        }
       })
     }
 

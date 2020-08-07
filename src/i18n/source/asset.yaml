@@ -100,19 +100,6 @@ asset:
           undefined {Contacter}
         }}
       }
-  delivery_fee_label:
-    en: Delivery fee
-    fr: Frais de livraison
-  delivery_fee_with_price:
-    en: >-
-      Delivery fee: {price, select, 0 {Free} other {{price, number, currency}} }
-    fr: >-
-      Frais de livraison: {price, select, 0 {Gratuit} other {{price, number, currency}} }
-  delivery_fee_amount:
-    en: >-
-      {price, select, 0 {Free} other {{price, number, currency}} }
-    fr: >-
-      {price, select, 0 {Gratuit} other {{price, number, currency}} }
   delete_listing_warning:
     en: "Please confirm you want to delete this listing."
     fr: "Confirmez-vous la suppression de cette annonce?"

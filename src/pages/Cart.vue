@@ -10,6 +10,8 @@ import PageComponentMixin from 'src/mixins/pageComponent'
 
 import ProductsList from 'src/modules/ecommerce/components/ProductsList'
 
+import { getOrderFees } from 'src/utils/order'
+
 import { getDeliveryAddressFromLocalStorage, setDeliveryAddressInLocalStorage } from 'src/modules/ecommerce/store/cart/localStorage'
 
 export default {
@@ -24,9 +26,6 @@ export default {
     return {
       shoppingCartSynchronized: false,
       localDeliveryAddress: getDeliveryAddressFromLocalStorage(),
-      deliveryFee: 0,
-      subTotalPrice: 0,
-      totalPrice: 0,
     }
   },
   computed: {
@@ -38,8 +37,10 @@ export default {
     previewedTransactions () {
       return this.cart.previewedTransactions
     },
-    ownerDeliveryFee () {
-      return (this.cart.owner && this.cart.owner.deliveryFee) || 0
+    orderFees () {
+      if (!this.cart.owner || !this.cart.owner.id) return []
+
+      return getOrderFees(this.orderFeeTypes, this.cart.owner)
     },
     ...mapState([
       'style',
@@ -51,6 +52,7 @@ export default {
       'conversations',
       'ratingsActive',
       'shoppingCart',
+      'orderFeeTypes',
     ]),
   },
   watch: {
@@ -117,7 +119,7 @@ export default {
       <div class="gt-md">
         <QPageSticky position="top-right" :offset="[50, 20]">
           <div class="order-price-card q-ma-md q-pa-md text-right">
-            <div class="row q-py-sm justify-between">
+            <div v-if="orderFees.length" class="row q-py-sm justify-between">
               <AppContent
                 tag="div"
                 entry="pricing"
@@ -132,32 +134,36 @@ export default {
               />
             </div>
 
-            <QSeparator />
+            <QSeparator v-if="orderFees.length" />
 
-            <div class="row q-py-sm justify-between">
+            <div
+              v-for="orderFee in orderFees"
+              :key="orderFee.feeType"
+              class="row justify-between"
+            >
               <div>
                 <AppContent
-                  entry="asset"
-                  field="delivery_fee_label"
+                  entry="pricing"
+                  :field="'fee_types.' + orderFee.feeType + '_label'"
                 />
               </div>
 
               <div>
                 <AppContent
-                  v-show="$fx(cart.deliveryFee) !== 0"
+                  v-show="$fx(orderFee.amount) !== 0"
                   entry="pricing"
                   field="price_with_currency"
-                  :options="{ price: $fx(cart.deliveryFee) }"
+                  :options="{ price: $fx(orderFee.amount) }"
                 />
                 <AppContent
-                  v-show="$fx(cart.deliveryFee) === 0"
+                  v-show="$fx(orderFee.amount) === 0"
                   entry="pricing"
                   field="free"
                 />
               </div>
             </div>
 
-            <QSeparator />
+            <QSeparator v-if="orderFees.length" />
 
             <div class="row q-py-sm justify-between text-weight-medium text-h6">
               <div>
@@ -229,7 +235,7 @@ export default {
             <ProductsList
               v-show="previewedTransactions"
               :previewed-transactions="previewedTransactions"
-              :delivery-fee="ownerDeliveryFee"
+              :order-fees="orderFees"
               @change="({ asset, quantity }) => updateCart(asset, quantity)"
               @updatePrice="updatePrice"
             />

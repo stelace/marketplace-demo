@@ -19,8 +19,6 @@ export function populateAsset ({
 
   newAsset.images = get(newAsset, 'metadata.images')
 
-  newAsset.deliveryFee = get(newAsset, 'metadata.deliveryFee') || get(newAsset, 'owner.deliveryFee')
-
   newAsset.categoryName = get(newAsset, 'category.name')
 
   newAsset.locationName = get(newAsset, 'locations[0].shortDisplayName')

@@ -1,6 +1,6 @@
 <script>
 import { mapGetters, mapState } from 'vuex'
-import { get, isNil, isNumber } from 'lodash'
+import { get, isNil } from 'lodash'
 import { mdiTruck, mdiTruckCheck } from '@quasar/extras/mdi-v5'
 
 import { matShoppingCart } from '@quasar/extras/material-icons'
@@ -81,9 +81,6 @@ export default {
     },
     isAssetOwner () {
       return this.currentUser.id === this.asset.ownerId
-    },
-    showDeliveryFee () {
-      return isNumber(this.asset.deliveryFee)
     },
     showPlaceholder () {
       const a = this.asset

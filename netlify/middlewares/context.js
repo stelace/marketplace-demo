@@ -10,6 +10,7 @@ export default function addToContext () {
         websiteUrl: getWebsiteUrl()
       }
       context.isEcommerceMarketplace = process.env.VUE_APP_MARKETPLACE_TYPE === 'ecommerce'
+      context.orderFeeTypes = (process.env.VUE_APP_ORDER_FEE_TYPES || '').split(',')
       next()
     }
   }

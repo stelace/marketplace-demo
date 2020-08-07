@@ -1,4 +1,4 @@
-import { get } from 'lodash'
+import { get, isNumber } from 'lodash'
 
 export function populateOrder ({
   order,
@@ -15,4 +15,20 @@ export function populateOrder ({
     }
   })
   return newOrder
+}
+
+export function getOrderFees (orderFeeTypes, user) {
+  const getFeeAmount = feeType => get(user, `metadata.instant.${feeType}`)
+
+  return orderFeeTypes.reduce((orderFees, orderFeeType) => {
+    const amount = getFeeAmount(orderFeeType)
+    if (isNumber(amount)) {
+      return orderFees.concat([{
+        feeType: orderFeeType,
+        amount,
+      }])
+    } else {
+      return orderFees
+    }
+  }, [])
 }
