@@ -8519,10 +8519,10 @@ mapbox-gl-vue@^2.0.4:
   resolved "https://registry.yarnpkg.com/mapbox-gl-vue/-/mapbox-gl-vue-2.0.4.tgz#225fc85fd13fdd8ccc6f40048d2c29424bcf9f39"
   integrity sha512-vJKoZh4tlvZnGxgJfWNjSjeKmzIKl2AFWXfRsEIt7Itb1efAGsMc9BzTb6C/nalel+z3cDVIpIo/Q8AmDPqC7w==
 
-mapbox-gl@~1.11.0:
-  version "1.11.1"
-  resolved "https://registry.yarnpkg.com/mapbox-gl/-/mapbox-gl-1.11.1.tgz#063e72b591d506b6b1f483df563e3e48cd0a971b"
-  integrity sha512-UjXpPUTUzHTLfhl5dLefwV3Jgu7DN9phpn8RnnkQVe1sOXfVYMS5Vhjn225krhzRc7xnKIBHxLyu0rHZGyeXuQ==
+mapbox-gl@~1.12.0:
+  version "1.12.0"
+  resolved "https://registry.yarnpkg.com/mapbox-gl/-/mapbox-gl-1.12.0.tgz#7d1c73b1153d7ee219d30d80728d7df079bc7c05"
+  integrity sha512-B3URR4qY9R/Bx+DKqP8qmGCai8IOZYMSZF7ZSvcCZaYTaOYhQQi8ErTEDZtFMOR0ZPj7HFWOkkhl5SqvDfpJpA==
   dependencies:
     "@mapbox/geojson-rewind" "^0.5.0"
     "@mapbox/geojson-types" "^1.0.2"
