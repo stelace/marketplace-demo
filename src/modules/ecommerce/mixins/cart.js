@@ -1,3 +1,5 @@
+import { mapGetters } from 'vuex'
+import { get } from 'lodash'
 import NotifyMixin from 'src/mixins/notify'
 
 export default {
@@ -12,19 +14,44 @@ export default {
       syncingCart: false,
     }
   },
+  computed: {
+    ...mapGetters([
+      'shoppingCart',
+    ]),
+  },
   methods: {
     async addToCart (asset, incrementQuantityBy, { startDate, endDate } = {}) {
       this.addingToCart = true
       let error
 
       try {
+        const timeBased = get(asset, 'assetType.timeBased')
+
+        let replacingCartLine = false
+
+        if (timeBased) {
+          const cartLine = this.shoppingCart.lines.find(l => l.assetId === asset.id)
+          if (cartLine) {
+            const sameDates = startDate === cartLine.startDate && endDate === cartLine.endDate
+
+            if (!sameDates) {
+              await this.$store.dispatch('removeFromCart', { assetIds: [asset.id] })
+              replacingCartLine = true
+            }
+          }
+        }
+
         const { cartChanges } = await this.$store.dispatch('addToCart', {
           asset,
           incrementQuantityBy,
           startDate,
           endDate,
         })
-        this.notifySuccess('cart.notification.added_to_cart')
+        if (!replacingCartLine) {
+          this.notifySuccess('cart.notification.added_to_cart')
+        } else {
+          this.notifyInfo('cart.notification.replaced_quantity')
+        }
         this.displayCartChangesNotification(cartChanges)
       } catch (err) {
         this.notifyCartError(err)

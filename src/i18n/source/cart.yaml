@@ -7,6 +7,9 @@ cart:
     added_to_cart:
       en: Added to cart
       fr: Ajouté au panier
+    replaced_quantity:
+      en: The product quantity has replaced the old value because dates have changed.
+      fr: La quantité du produit a remplacé l'ancienne valeur car les dates ont changé.
     removed_from_cart:
       not_found:
         en: Some products were removed from the cart because they are not available anymore
