@@ -42,9 +42,7 @@ export async function fetchRatingsStats ({ commit, rootGetters }, { assetId, tar
  * Returns an array of ratings with property owner added
  */
 export async function fetchRatingsByTransaction ({ rootGetters }, { targetId, assetId }) {
-  const fetchRatings = (...args) => stelace.ratings.list(...args)
-
-  const ratings = await fetchAllResults(fetchRatings, { targetId, assetId, label: 'main' })
+  const ratings = await api.fetchRatings({ targetId, assetId, label: 'main' })
 
   const usersIds = uniqBy(compact(ratings.map(rating => rating.authorId)))
 
@@ -94,8 +92,7 @@ export async function fetchRatedTransactions ({ commit, rootGetters }, { transac
 }
 
 export async function fetchRatings ({ commit }, { transactionId }) {
-  const ratings = await stelace.ratings.list({ transactionId })
-  return ratings
+  return api.fetchRatings({ transactionId })
 }
 
 export async function createRating ({ commit }, { attrs }) {
