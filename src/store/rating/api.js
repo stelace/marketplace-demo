@@ -1,5 +1,7 @@
 import stelace, { fetchAllResults } from 'src/utils/stelace'
+import pMap from 'p-map'
 
+const fetchRatingsRequest = (...args) => stelace.ratings.list(...args)
 const fetchRatingsStatsRequest = (...args) => stelace.ratings.getStats(...args)
 
 export async function fetchRatingsStatsByType ({ assetId, targetId, transactionId, groupBy, ratingsOptions }) {
@@ -10,28 +12,62 @@ export async function fetchRatingsStatsByType ({ assetId, targetId, transactionI
     const ratingType = ratingTypes[i]
     const ratingConfig = ratingsOptions.stats[ratingType]
 
-    const fetchRatingsStats = fetchAllResults(fetchRatingsStatsRequest, {
-      groupBy,
+    ratingsStatsByType[ratingType] = await fetchRatingsStats({
       assetId,
       targetId,
       transactionId,
-      label: ratingConfig.labels.join(',')
+      groupBy,
+      label: ratingConfig.labels.join(','),
     })
-
-    const ratingsStats = await fetchRatingsStats
-    ratingsStatsByType[ratingType] = ratingsStats
   }
 
   return ratingsStatsByType
 }
 
-export async function fetchRatingsStats ({ assetId, targetId, transactionId, groupBy }) {
-  const ratingsStats = await fetchAllResults(fetchRatingsStatsRequest, {
-    groupBy,
-    assetId,
-    targetId,
-    transactionId,
-  })
+export async function fetchRatingsStats ({ assetId, targetId, transactionId, groupBy, label }) {
+  return fetchRatingsHelper({ assetId, targetId, transactionId, groupBy, label }, fetchRatingsStatsRequest)
+}
 
-  return ratingsStats
+export async function fetchRatings ({ assetId, targetId, transactionId, label }) {
+  return fetchRatingsHelper({ assetId, targetId, transactionId, label }, fetchRatingsRequest)
+}
+
+// helper to fetch ratings
+// accepts `assetId` or `transactionId` as array by convenience
+// but loops on their values because Stelace API accepts only single filter value
+async function fetchRatingsHelper (params, fetchRequest) {
+  const clonedParams = { ...params }
+
+  const { assetId, transactionId } = clonedParams
+
+  if (assetId && transactionId) throw new Error('Cannot provide both assetId and transactionId')
+
+  let filterValues = []
+  let filter
+
+  if (assetId) {
+    filter = 'assetId'
+    if (Array.isArray(assetId)) filterValues = assetId
+    else filterValues = [assetId]
+  } else if (transactionId) {
+    filter = 'transactionId'
+    if (Array.isArray(transactionId)) filterValues = transactionId
+    else filterValues = [transactionId]
+  }
+
+  if (filter) {
+    delete clonedParams.assetId
+    delete clonedParams.transactionId
+
+    const ratingsStatsByFilterValue = await pMap(filterValues, filterValue => {
+      return fetchAllResults(fetchRequest, {
+        ...clonedParams,
+        [filter]: filterValue,
+      })
+    }, { concurrency: 10 })
+
+    return ratingsStatsByFilterValue.reduce((allStats, stats) => allStats.concat(stats), [])
+  } else {
+    return fetchAllResults(fetchRequest, clonedParams)
+  }
 }
