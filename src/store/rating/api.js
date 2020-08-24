@@ -1,5 +1,6 @@
 import stelace, { fetchAllResults } from 'src/utils/stelace'
 import pMap from 'p-map'
+import { isEmpty } from 'lodash'
 
 const fetchRatingsRequest = (...args) => stelace.ratings.list(...args)
 const fetchRatingsStatsRequest = (...args) => stelace.ratings.getStats(...args)
@@ -54,6 +55,14 @@ async function fetchRatingsHelper (params, fetchRequest) {
     if (Array.isArray(transactionId)) filterValues = transactionId
     else filterValues = [transactionId]
   }
+
+  const arrayFilters = ['authorId', 'targetId', 'assetId', 'transactionId']
+  const hasEmptyArrayFilter = arrayFilters.some(filter => {
+    return Array.isArray(clonedParams[filter]) && isEmpty(clonedParams[filter])
+  })
+
+  // do not perform the request
+  if (hasEmptyArrayFilter) return []
 
   if (filter) {
     delete clonedParams.assetId
