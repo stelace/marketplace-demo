@@ -59,7 +59,7 @@
     "vuex-router-sync": "^5.0.0"
   },
   "devDependencies": {
-    "@quasar/app": "^2.0.6",
+    "@quasar/app": "^2.0.8",
     "@sentry/webpack-plugin": "^1.12.1",
     "babel-eslint": "^10.1.0",
     "babel-plugin-lodash": "^3.3.4",
