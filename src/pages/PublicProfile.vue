@@ -99,7 +99,7 @@ export default {
     loadProfile () {
       return Promise.all([
         this.fetchUserAssets(),
-        this.fetchRatingsStatsByTargetId({ targetId: [this.selectedUserId] }),
+        this.fetchRatingsStatsByTargetId({ targetId: this.selectedUser.id }),
         this.fetchUserRatingsByTransaction({ userId: this.selectedUser.id })
       ])
     },
@@ -110,11 +110,13 @@ export default {
     },
     fetchRatingsStatsByTargetId ({ targetId }) {
       if (!this.ratingsActive) return
+      if (!targetId) return
 
       return this.$store.dispatch('fetchRatingsStats', { targetId, groupBy: 'targetId' })
     },
     async fetchUserRatingsByTransaction ({ userId }) {
       if (!this.ratingsActive) return
+      if (!userId) return
 
       this.userRatingsByTransaction = await this.$store.dispatch('fetchRatingsByTransaction', { targetId: userId })
       this.userRatingsLoaded = true

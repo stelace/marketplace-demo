@@ -74,7 +74,7 @@ export async function fetchMessages ({ commit, dispatch, state, rootGetters }, {
   const fetchAssetsRequest = (...args) => stelace.assets.list(...args)
   const fetchAllAssets = fetchAllResults(fetchAssetsRequest, { id: assetsIds })
 
-  const assets = await fetchAllAssets
+  const assets = assetsIds.length ? await fetchAllAssets : []
 
   usersIds = compact(uniqBy(usersIds.concat(assets.map(asset => asset.ownerId))))
 
