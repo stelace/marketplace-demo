@@ -83,6 +83,8 @@ typings/
 
 # Marketplace data
 data.js
+data-service.js
+data-ecommerce.js
 
 # Netlify functions
 /netlify-functions

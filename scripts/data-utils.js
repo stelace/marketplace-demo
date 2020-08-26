@@ -129,6 +129,22 @@ class DataManager {
         throw new Error('data.js file not found')
       }
     }
+    if (!fs.existsSync(path.join(__dirname, 'data-service.js'))) {
+      if (createNotFoundFile) {
+        log('Creating data-service.js file from data-service.example.js')
+        execSync('cp scripts/data-service.example.js scripts/data-service.js')
+      } else {
+        throw new Error('data-service.js file not found')
+      }
+    }
+    if (!fs.existsSync(path.join(__dirname, 'data-ecommerce.js'))) {
+      if (createNotFoundFile) {
+        log('Creating data-ecommerce.js file from data-ecommerce.example.js')
+        execSync('cp scripts/data-ecommerce.example.js scripts/data-ecommerce.js')
+      } else {
+        throw new Error('data-ecommerce.js file not found')
+      }
+    }
 
     this.data = require('./data')
   }
