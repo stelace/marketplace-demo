@@ -20,7 +20,7 @@
  * Solution: prevent keypress event to be transmitted to QInput if the key isn't a number or a separator (comma, dot).
  */
 
-import { omit } from 'lodash'
+import { omit, isString, isNumber } from 'lodash'
 
 const numberStringRegex = /^\d+([,.]\d+)?$/
 
@@ -46,10 +46,10 @@ export default {
   },
   methods: {
     sanitizeValue (value) {
-      if (typeof value === 'string') {
+      if (isString(value)) {
         if (numberStringRegex.test(value)) return parseFloat(value.replace(/,/g, '.'))
         return null
-      } else if (value === 'number') {
+      } else if (isNumber(value)) {
         if (isFinite(value)) return value
         else return null
       } else {
