@@ -150,7 +150,10 @@
           </div>
         </div>
 
-        <div class="row q-mt-sm">
+        <div
+          v-show="isCurrentUser || selectedUser.locationName"
+          class="row q-mt-sm"
+        >
           <AppSwitchableEditor
             :value="locationValue"
             :active="isCurrentUser && selectedUserLocations.length <= maxNbLocations"
@@ -183,7 +186,10 @@
           </AppSwitchableEditor>
         </div>
 
-        <div class="row q-mt-md">
+        <div
+          v-show="isCurrentUser || selectedUser.description"
+          class="row q-mt-md"
+        >
           <AppSwitchableEditor
             tag="p"
             class="text-justify"
@@ -194,6 +200,47 @@
             allow-falsy-save
             input-type="textarea"
           />
+        </div>
+
+        <div
+          v-if="showDeliveryFee && (isCurrentUser || selectedUser.deliveryFee)"
+          class="row q-mt-md"
+        >
+          <AppSwitchableEditor
+            :value="selectedUser.deliveryFee"
+            :active="isCurrentUser"
+            :custom-save="updateUserFn('deliveryFee')"
+            :allow-falsy-save="true"
+            tag="p"
+            class="text-justify"
+          >
+            <template v-slot:default>
+              <div v-show="selectedUser.deliveryFee" class="row items-center">
+                <AppContent
+                  entry="pricing"
+                  field="fee_types.deliveryFee_with_price"
+                  :options="{ price: $fx(selectedUser.deliveryFee) }"
+                />
+              </div>
+            </template>
+            <template v-slot:placeholder>
+              <AppContent
+                class="switchable-editor-placeholder"
+                entry="pricing"
+                field="fee_types.deliveryFee_label"
+              />
+            </template>
+            <template v-slot:edition="{ saveDraft }">
+              <AppInputNumber
+                tag="p"
+                :value="selectedUser.deliveryFee"
+                class="text-justify"
+                :label="$t({ id: 'pricing.fee_types.deliveryFee_label' })"
+                min="0"
+                @input="fee => saveDraft(fee)"
+              />
+            </template>
+          </AppSwitchableEditor>
         </div>
       </div>
     </div>
@@ -277,6 +324,9 @@ export default {
     canValidateEmail () {
       return this.isCurrentUser
     },
+    showDeliveryFee () {
+      return this.orderFeeTypes.includes('deliveryFee')
+    },
     ...mapState([
       'route',
       'search',
@@ -293,6 +343,7 @@ export default {
       'selectedUserIsCurrentUser',
       'ratingsActive',
       'isProvider',
+      'orderFeeTypes',
     ]),
   },
   mounted () {
