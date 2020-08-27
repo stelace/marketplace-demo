@@ -62,28 +62,47 @@ export async function fetchRatingsByTransaction ({ rootGetters }, { targetId, as
 
 export async function fetchRatedTransactions ({ commit, rootGetters }, { transactionsIds }) {
   const ratingsOptions = rootGetters.ratingsOptions
-  const nbEditableRatings = Object.keys(ratingsOptions.types).reduce((memo, key) => {
+
+  const ratingTypes = Object.keys(ratingsOptions.types)
+
+  const nbEditableRatings = ratingTypes.reduce((memo, key) => {
     if (!isRatingOptional(ratingsOptions.types[key])) memo += 1
     return memo
   }, 0)
 
-  const ratingsStats = await api.fetchRatingsStats({
-    transactionId: transactionsIds,
-    groupBy: 'transactionId'
-  })
-
-  const ratingsStatsByTransactionId = keyBy(ratingsStats, 'transactionId')
+  const fetchStats = ratingTypes.length > 1
 
   const ratedTransactions = {}
 
-  transactionsIds.forEach(transactionId => {
-    const stats = ratingsStatsByTransactionId[transactionId]
-    if (!stats) {
-      ratedTransactions[transactionId] = false
-    } else {
-      ratedTransactions[transactionId] = ratingsStatsByTransactionId[transactionId].count >= nbEditableRatings
-    }
-  })
+  if (fetchStats) {
+    const ratingsStats = await api.fetchRatingsStats({
+      transactionId: transactionsIds,
+      groupBy: 'transactionId'
+    })
+
+    const ratingsStatsByTransactionId = keyBy(ratingsStats, 'transactionId')
+
+    transactionsIds.forEach(transactionId => {
+      const stats = ratingsStatsByTransactionId[transactionId]
+      if (!stats) {
+        ratedTransactions[transactionId] = false
+      } else {
+        ratedTransactions[transactionId] = ratingsStatsByTransactionId[transactionId].count >= nbEditableRatings
+      }
+    })
+  } else {
+    const ratings = await api.fetchRatings({
+      transactionId: transactionsIds,
+      groupBy: 'transactionId'
+    })
+
+    const ratingsByTransactionId = keyBy(ratings, 'transactionId')
+
+    transactionsIds.forEach(transactionId => {
+      const rating = ratingsByTransactionId[transactionId]
+      ratedTransactions[transactionId] = Boolean(rating)
+    })
+  }
 
   commit({
     type: types.SET_RATED_TRANSACTIONS,
