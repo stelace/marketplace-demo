@@ -114,7 +114,10 @@ export const fetchMessages = debounce(async function ({ commit, dispatch, state,
 
   if (rootGetters.ratingsActive) {
     const transactionsIds = uniqBy(allTransactions.map(b => b.id))
-    const assetIds = uniqBy(assets.map(asset => asset.id))
+    const assetIds = uniqBy(compact(
+      allTransactions.map(t => t.assetId) // assets referenced from transactions
+        .concat(assets.map(asset => asset.id))
+    ))
 
     await Promise.all([
       dispatch('fetchRatingsStats', { targetId: usersIds, groupBy: 'targetId' }),
