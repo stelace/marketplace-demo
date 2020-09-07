@@ -1169,10 +1169,10 @@
     promise-limit "^2.5.0"
     puppeteer "^1.7.0"
 
-"@quasar/app@^2.0.8":
-  version "2.0.8"
-  resolved "https://registry.yarnpkg.com/@quasar/app/-/app-2.0.8.tgz#d7480b4d7982cb57ff40ec6689fb150f55150f8a"
-  integrity sha512-EHomvTxJ1coLAErceDNp0qFy9FRMI6Uw694OIWvuXQqFGB0myJdPr958u5MWaEP8zVhWUNv/lyFTYcI/R+k59Q==
+"@quasar/app@^2.0.9":
+  version "2.0.9"
+  resolved "https://registry.yarnpkg.com/@quasar/app/-/app-2.0.9.tgz#9a8c47cafb0e5618964604a31997c7faa5b7c39e"
+  integrity sha512-Iy7W2R6sF8y0iZVudYjOYAWUBu7chuGA0w9eDopUoSW5g4qahXMFeDgAUsQXfL3PquJFZogzyTcu7EHoj6XuGg==
   dependencies:
     "@quasar/babel-preset-app" "2.0.1"
     "@quasar/fastclick" "1.1.4"
@@ -1218,7 +1218,7 @@
     minimist "1.2.5"
     node-loader "1.0.1"
     node-sass "4.14.1"
-    open "7.2.0"
+    open "7.1.0"
     optimize-css-assets-webpack-plugin "5.0.3"
     ouch "2.0.0"
     postcss-loader "3.0.0"
@@ -9464,10 +9464,10 @@ onetime@^5.1.0:
   dependencies:
     mimic-fn "^2.1.0"
 
-open@7.2.0:
-  version "7.2.0"
-  resolved "https://registry.yarnpkg.com/open/-/open-7.2.0.tgz#212959bd7b0ce2e8e3676adc76e3cf2f0a2498b4"
-  integrity sha512-4HeyhxCvBTI5uBePsAdi55C5fmqnWZ2e2MlmvWi5KW5tdH5rxoiv/aMtbeVxKZc3eWkT1GymMnLG8XC4Rq4TDQ==
+open@7.1.0:
+  version "7.1.0"
+  resolved "https://registry.yarnpkg.com/open/-/open-7.1.0.tgz#68865f7d3cb238520fa1225a63cf28bcf8368a1c"
+  integrity sha512-lLPI5KgOwEYCDKXf4np7y1PBEkj7HYIyP2DY8mVDRnx0VIIu6bNrRB0R66TuO7Mack6EnTNLm4uvcl1UoklTpA==
   dependencies:
     is-docker "^2.0.0"
     is-wsl "^2.1.1"
