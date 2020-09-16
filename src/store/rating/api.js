@@ -1,5 +1,5 @@
 import stelace, { fetchAllResults } from 'src/utils/stelace'
-import pMap from 'p-map'
+import p from 'src/utils/promise'
 import { isEmpty } from 'lodash'
 
 const fetchRatingsRequest = (...args) => stelace.ratings.list(...args)
@@ -68,7 +68,7 @@ async function fetchRatingsHelper (params, fetchRequest) {
     delete clonedParams.assetId
     delete clonedParams.transactionId
 
-    const ratingsStatsByFilterValue = await pMap(filterValues, filterValue => {
+    const ratingsStatsByFilterValue = await p.map(filterValues, filterValue => {
       return fetchAllResults(fetchRequest, {
         ...clonedParams,
         [filter]: filterValue,
