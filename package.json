@@ -60,7 +60,7 @@
   },
   "devDependencies": {
     "@quasar/app": "^2.1.0",
-    "@sentry/webpack-plugin": "^1.12.1",
+    "@sentry/webpack-plugin": "^1.13.0",
     "babel-eslint": "^10.1.0",
     "babel-plugin-lodash": "^3.3.4",
     "chalk": "^4.1.0",
