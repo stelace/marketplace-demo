@@ -1700,10 +1700,10 @@
     "@types/express-serve-static-core" "*"
     "@types/mime" "*"
 
-"@types/socket.io-client@1.4.33":
-  version "1.4.33"
-  resolved "https://registry.yarnpkg.com/@types/socket.io-client/-/socket.io-client-1.4.33.tgz#8e705b9b3f7fba6cb329d27cd2eda222812adbf1"
-  integrity sha512-m4LnxkljsI9fMsjwpW5QhRpMixo2BeeLpFmg0AE+sS4H1pzAd/cs/ftTiL60FLZgfFa8PFRPx5KsHu8O0bADKQ==
+"@types/socket.io-client@1.4.34":
+  version "1.4.34"
+  resolved "https://registry.yarnpkg.com/@types/socket.io-client/-/socket.io-client-1.4.34.tgz#8ca5f5732a9ad92b79aba71083cda5e5821e3ed9"
+  integrity sha512-Lzia5OTQFJZJ5R4HsEEldywiiqT9+W2rDbyHJiiTGqOcju89sCsQ8aUXDljY6Ls33wKZZGC0bfMhr/VpOyjtXg==
 
 "@types/source-list-map@*":
   version "0.1.2"
@@ -13443,12 +13443,12 @@ vue-slicksort@^1.1.3:
   resolved "https://registry.yarnpkg.com/vue-slicksort/-/vue-slicksort-1.1.3.tgz#f8e0a1623bfb8aa39db683e28ac7bea5d9a2d9dc"
   integrity sha512-zGa0t2tyYOJpHsg2eqLZS095ZLHJsyPBoxlRZ/UUzE17VUM0skdz0MElp3/LHrUuK+MzD7wV2cAPZ+LNq6C/nw==
 
-vue-socket.io-extended@4.0.4:
-  version "4.0.4"
-  resolved "https://registry.yarnpkg.com/vue-socket.io-extended/-/vue-socket.io-extended-4.0.4.tgz#af7295881dc38edf6d3139cef51f857d67c24fef"
-  integrity sha512-vSbhWmoHGhkm0143TTPXqbfMEO0uLfF0MX0tmhRaInzWCQliCei5BjmMBRDuqEOuSZuvnKHGjpUKCifFeo3BDg==
+vue-socket.io-extended@4.0.5:
+  version "4.0.5"
+  resolved "https://registry.yarnpkg.com/vue-socket.io-extended/-/vue-socket.io-extended-4.0.5.tgz#ad3e7ede1d2d3f538f714af0ae1329574cc6668f"
+  integrity sha512-7OUA76lpqHqVWD6+Qpc9UnEGBL4HzswDnaJSSOtd0TGwOLj+E2L59ExwLhHUuXB7QlLheFU/RzGJQ708YysABA==
   dependencies:
-    "@types/socket.io-client" "1.4.33"
+    "@types/socket.io-client" "1.4.34"
 
 vue-style-loader@4.1.2, vue-style-loader@^4.1.0:
   version "4.1.2"
