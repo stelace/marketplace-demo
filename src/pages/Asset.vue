@@ -277,6 +277,7 @@
               :key="asset.id"
               class="col-10 col-sm-6"
               :asset="asset"
+              show-add-to-cart
             />
           </div>
         </section>
@@ -298,15 +299,25 @@
             field="assets_title"
             :options="{ user: (isCurrentUserTheOwner ? '_SELF_' : ownerDisplayName) || undefined }"
           />
-          <div class="row q-col-gutter-md justify-assets">
-            <component
-              :is="isCurrentUserTheOwner ? 'OwnerAssetCard' : 'AssetCard'"
-              v-for="asset of ownerAssets"
-              :key="asset.id"
-              class="col-10 col-sm-6"
-              :asset="asset"
-              @remove="removeAsset"
-            />
+          <div v-for="category of ownerAssetsByCategory" :key="category.id">
+            <div v-if="category.assets.length">
+              <div class="text-h5 text-weight-medium q-mb-md">
+                {{ category.name }}
+              </div>
+
+              <div class="row q-col-gutter-md justify-assets">
+                <component
+                  :is="isCurrentUserTheOwner ? 'OwnerAssetCard' : 'AssetCard'"
+                  v-for="asset of category.assets"
+                  :key="asset.id"
+                  class="col-10 col-sm-6"
+                  :asset="asset"
+                  :flat="!asset.previouslySearched"
+                  show-add-to-cart
+                  @remove="removeAsset"
+                />
+              </div>
+            </div>
           </div>
         </section>
       </div>
@@ -322,7 +333,7 @@ import { get, map, sortBy, values, compact, flatten, groupBy, isUndefined } from
 import { mdiWhiteBalanceSunny, mdiImage } from '@quasar/extras/mdi-v4'
 
 import { extractLocationDataFromPlace, isPlaceSearchEnabled } from 'src/utils/places'
-import { populateAsset } from 'src/utils/asset'
+import { populateAsset, groupAssetsByCategory } from 'src/utils/asset'
 
 import * as mutationTypes from 'src/store/mutation-types'
 import CustomAttributesEditor from 'src/components/CustomAttributesEditor'
@@ -420,6 +431,11 @@ export default {
     ownerAssets () {
       return this.isCurrentUserTheOwner ? this.ownAssets : this.ownerSimilarAssets
     },
+    ownerAssetsByCategory () {
+      const categories = values(this.common.categoriesById)
+      const searchedAssets = this.searchedAssets
+      return groupAssetsByCategory(this.ownerAssets, categories, { searchedAssets })
+    },
     isAvailable () {
       return this.isActiveAssetAvailable
     },
@@ -444,6 +460,8 @@ export default {
       'ratingsActive',
       'paymentActive',
       'conversations',
+      'searchedAssets',
+      'isEcommerceMarketplace',
     ]),
   },
   watch: {
@@ -452,7 +470,9 @@ export default {
 
       this.afterAuth()
 
-      if (this.paymentActive && current.id) this.viewConversationAfterSuccessfulPayment()
+      if (!this.isEcommerceMarketplace && this.paymentActive && current.id) {
+        this.viewConversationAfterSuccessfulPayment()
+      }
     },
     $route () {
       this.fetchRelatedAssets()

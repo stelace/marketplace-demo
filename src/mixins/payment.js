@@ -4,6 +4,8 @@ export default {
   computed: {
     ...mapGetters([
       'paymentActive',
+      'conversations',
+      'isEcommerceMarketplace',
     ]),
   },
   methods: {
@@ -13,8 +15,29 @@ export default {
       if (!this.paymentActive) return
 
       if (routeQuery['payment-success'] === 'true' && this.currentUser.id) {
-        const transactionId = routeQuery.transactionId
-        if (!transactionId) return
+        let findConversationFn
+
+        if (this.isEcommerceMarketplace) {
+          const orderId = routeQuery.orderId
+          if (!orderId) return
+
+          await this.$store.dispatch('removeAssetsFromOrder', { orderId })
+
+          findConversationFn = (conv) => {
+            return conv.orderId === orderId
+          }
+        } else {
+          const transactionId = routeQuery.transactionId
+          if (!transactionId) return
+
+          findConversationFn = (conv) => {
+            const transaction = conv.transaction
+
+            return transaction &&
+              transaction.id === transactionId &&
+              transaction.takerId === this.currentUser.id
+          }
+        }
 
         this.$q.loading.show()
 
@@ -24,13 +47,7 @@ export default {
           this.$q.loading.hide()
         }
 
-        const conversation = this.conversations.find(conv => {
-          const transaction = conv.transaction
-
-          return transaction &&
-            transaction.id === transactionId &&
-            transaction.takerId === this.currentUser.id
-        })
+        const conversation = this.conversations.find(findConversationFn)
         if (conversation) {
           this.notifySuccess('payment.checkout_success_message')
           this.$router.replace({ name: 'conversation', params: { id: conversation.id } })

@@ -1,6 +1,6 @@
 import { get } from 'lodash'
 
-import { populateUser } from 'src/utils/user'
+import { populateUser, isProvider } from 'src/utils/user'
 
 export function selectedUser (state, getters, rootState, rootGetters) {
   const currentUser = rootGetters.currentUser
@@ -25,6 +25,10 @@ export function selectedUser (state, getters, rootState, rootGetters) {
 export function isSelectedUserNatural (state, getters) {
   const roles = get(getters.selectedUser, 'roles', [])
   return !roles.includes('organization')
+}
+
+export function isSelectedUserProvider (state, getters) {
+  return isProvider(getters.selectedUser)
 }
 
 export function currentUserPosition (state, getters, rootState, rootGetters) {

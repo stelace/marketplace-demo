@@ -1,0 +1,33 @@
+cart:
+  prompt:
+    add_to_cart:
+      en: Add to cart
+      fr: Ajouter au panier
+  notification:
+    added_to_cart:
+      en: Added to cart
+      fr: Ajouté au panier
+    replaced_quantity:
+      en: The product quantity has replaced the old value because dates have changed.
+      fr: La quantité du produit a remplacé l'ancienne valeur car les dates ont changé.
+    removed_from_cart:
+      not_found:
+        en: Some products were removed from the cart because they are not available anymore
+        fr: Certains produits ont été retirés de votre panier car ils ne sont plus disponibles
+      ownership:
+        en: Some products were removed from the cart because you are the owner
+        fr: Certains produits ont été retirés de votre panier car vous en êtes le propriétaire
+      availability_update:
+        en: |
+          Some products availability have changed. They may have been removed from cart
+          or the quantity was adjusted
+        fr: |
+          La disponibilité de cerains produits a changé. Il est possible qu’ils aient été retirés du panier
+          ou que leur quantité ait été ajustée
+  error:
+    max_quantity_exceeded:
+      en: Max quantity cannot be exceeded
+      fr: La quantité maximale ne peut être dépassée
+    multi_owner_cart_not_allowed:
+      en: Multi-owner cart isn’t allowed
+      fr: Le panier multi-propriétaire n'est pas autorisé

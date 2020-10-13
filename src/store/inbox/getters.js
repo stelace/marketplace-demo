@@ -3,8 +3,9 @@ import { groupBy, get } from 'lodash'
 import { convertApiToDisplayScore } from 'src/utils/rating'
 import { populateUser } from 'src/utils/user'
 import { populateAsset } from 'src/utils/asset'
+import { populateOrder } from 'src/utils/order'
 import { getTopicId } from 'src/utils/conversation'
-import { isTransactionId, isAssetId } from 'src/utils/id'
+import { isTransactionId, isAssetId, isOrderId } from 'src/utils/id'
 
 export function conversations (state, getters, rootState, rootGetters) {
   const {
@@ -12,6 +13,7 @@ export function conversations (state, getters, rootState, rootGetters) {
     usersById,
     transactionsById,
     assetsById,
+    ordersById,
   } = state
   const {
     ratingsStatsByTargetId,
@@ -35,25 +37,35 @@ export function conversations (state, getters, rootState, rootGetters) {
     const conversationMessages = messagesByConversationId[conversationId]
 
     const exposedConversationMessages = conversationMessages.filter(message => {
-      return !message.metadata.isHiddenMessage
+      return !message.metadata.isHiddenMessage && message.content.trim() !== ''
     })
 
-    const isEmptyConversation = !exposedConversationMessages.length
+    const isEmptyConversation = !conversationMessages.filter(message => {
+      return !message.metadata.isHiddenMessage
+    }).length
 
     const archived = isConversationArchived({ messages: conversationMessages, currentUser })
 
     const topicId = getTopicId(conversationMessages)
 
+    const orderId = isOrderId(topicId) ? topicId : null
     const transactionId = isTransactionId(topicId) ? topicId : null
     const assetId = isAssetId(topicId) ? topicId : null
 
+    let order = orderId ? ordersById[orderId] || {} : {}
     const transaction = transactionId ? transactionsById[transactionId] || {} : {}
     let asset = assetId ? assetsById[assetId] : {}
 
     const interlocutorId = getInterlocutorId({ currentUser, messages: conversationMessages })
+
     const interlocutor = usersById[interlocutorId] || {}
 
     populateUser(interlocutor)
+
+    order = populateOrder({
+      order,
+      transactionsById,
+    })
 
     if (assetId && asset) {
       asset = populateAsset({
@@ -95,7 +107,9 @@ export function conversations (state, getters, rootState, rootGetters) {
     let ratingsPrompt
     let ratingsReadonly
     if (rootGetters.ratingsActive) {
-      ratingsPrompt = transactionId ? getRatingsPrompt({ currentUser, transaction }) : false
+      if (order && order.id) ratingsPrompt = getRatingsPrompt({ currentUser, order })
+      else if (transaction && transaction.id) ratingsPrompt = getRatingsPrompt({ currentUser, transaction })
+      else ratingsPrompt = false
       ratingsReadonly = !!ratedTransactionsById[transactionId]
     } else {
       ratingsPrompt = false
@@ -122,6 +136,8 @@ export function conversations (state, getters, rootState, rootGetters) {
     const conversation = {
       id: conversationId,
       asset: transactionId ? transactionAsset : asset,
+      orderId,
+      order,
       transaction,
       transactionActions,
       ratingsPrompt,
@@ -177,10 +193,16 @@ function getTransactionActions ({ currentUser, transaction, isEmptyConversation 
   return transactionActions
 }
 
-function getRatingsPrompt ({ currentUser, transaction }) {
-  const isTaker = transaction.ownerId !== currentUser.id
+function getRatingsPrompt ({ currentUser, order, transaction }) {
+  if (order) {
+    const isPayer = order.payerId === currentUser.id
+    if (!isPayer) return false
 
-  if (!isTaker) return false
+    transaction = get(order, 'lines[0].transaction') || {}
+  } else if (transaction) {
+    const isTaker = transaction.ownerId !== currentUser.id
+    if (!isTaker) return false
+  }
 
   return ['validated', 'completed'].includes(transaction.status)
 }

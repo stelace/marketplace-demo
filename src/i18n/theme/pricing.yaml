@@ -1,0 +1,12 @@
+pricing:
+  fee_types:
+    # When introducing a new order fee type,
+    # add translations with keys `<feeType>_label` and `<feeType>_with_price`
+    deliveryFee_label:
+      en: Delivery fee
+      fr: Frais de livraison
+    deliveryFee_with_price:
+      en: >-
+        Delivery fee: {price, select, 0 {Free} other {{price, number, currency}} }
+      fr: >-
+        Frais de livraison: {price, select, 0 {Gratuit} other {{price, number, currency}} }

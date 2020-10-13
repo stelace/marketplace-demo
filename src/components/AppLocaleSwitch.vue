@@ -28,7 +28,7 @@ export default {
 
 <template>
   <QBtnDropdown
-    class="q-mr-md q-px-xs"
+    class="q-px-xs"
     :label="content.locale"
     :rounded="style.roundedTheme"
     :text-color="isHome ? 'white' : textColor"

@@ -11,6 +11,8 @@ import TransactionCard from 'src/components/TransactionCard'
 
 import AuthDialogMixin from 'src/mixins/authDialog'
 
+import { getOrderFees } from 'src/utils/order'
+
 export default {
   components: {
     MainLayoutHeader,
@@ -26,7 +28,7 @@ export default {
   data () {
     return {
       routeTransitionName: '',
-      checkoutOpenedDialog: false,
+      transactionCardOpened: false,
       hasLoadingBar: false,
       loadingBarRouteGuard: _ => _,
     }
@@ -48,16 +50,31 @@ export default {
     isProfilePage () {
       return this.route.name === 'publicProfile'
     },
+    isCartPage () {
+      return this.route.name === 'cart'
+    },
     hasLeftDrawer () {
       return this.route.meta.hasLeftDrawer
     },
     isFooterDrawerOpened () {
-      const showOnAssetPage = this.isAssetPage && !this.$q.screen.gt.md && !this.isOwnerCurrentUser
+      const showOnAssetPage = (this.isAssetPage && !this.$q.screen.gt.md && !this.isOwnerCurrentUser) ||
+        (this.isCartPage && !this.$q.screen.gt.md)
       return showOnAssetPage
     },
     blurredPage () {
       return (this.auth.authDialogOpened && this.auth.authDialogPersistent) ||
         this.layout.isPageBlurred
+    },
+    timeBased () {
+      if (!this.activeAsset) return true
+      const assetType = this.common.assetTypesById[this.activeAsset.assetTypeId]
+      if (!assetType) return true
+      return assetType.timeBased
+    },
+    orderFees () {
+      if (!this.isEcommerceMarketplace || !this.activeAsset || !this.activeAsset.owner) return []
+
+      return getOrderFees(this.orderFeeTypes, this.activeAsset.owner)
     },
     ...mapState([
       'asset',
@@ -65,6 +82,8 @@ export default {
       'layout',
       'route',
       'style',
+      'cart',
+      'common',
     ]),
     ...mapGetters([
       'currentUser',
@@ -72,6 +91,11 @@ export default {
       'activeAsset',
       'isActiveAssetAvailable',
       'isSelectedUserNatural',
+      'shoppingCart',
+      'maxAvailableQuantity',
+      'isEcommerceMarketplace',
+      'marketplaceType',
+      'orderFeeTypes',
     ]),
   },
   watch: {
@@ -92,8 +116,8 @@ export default {
     toggleLeftDrawer (visible = !this.isLeftDrawerOpened) {
       this.$store.commit(mutationTypes.LAYOUT__TOGGLE_LEFT_DRAWER, { visible })
     },
-    checkout () {
-      this.checkoutOpenedDialog = true
+    openTransactionCard () {
+      this.transactionCardOpened = true
     },
     showLoadingBar () {
       this.hasLoadingBar = true
@@ -127,43 +151,150 @@ export default {
     >
       <div
         v-if="isAssetPage"
-        class="q-pa-md row"
+        class="q-pa-md row items-center"
       >
         <div class="col-1 gt-xs" />
         <div class="col-6 col-sm-5">
           <div>
             {{ activeAsset.name || activeAsset.categoryName }}
           </div>
-          <AppContent
-            entry="pricing"
-            field="price_label"
-          />:&nbsp;
-          <AppContent
-            v-if="activeAsset.assetType && activeAsset.assetType.timeBased"
-            entry="pricing"
-            field="price_per_time_unit_label"
-            :options="{
-              price: $fx(activeAsset.price),
-              timeUnit: activeAsset.timeUnit
-            }"
-          />
-          <AppContent
-            v-else
-            entry="pricing"
-            field="price_with_currency"
-            :options="{ price: $fx(activeAsset.price) }"
-          />
+          <div>
+            <AppContent
+              entry="pricing"
+              field="price_label"
+            />:&nbsp;
+            <AppContent
+              v-if="activeAsset.assetType && activeAsset.assetType.timeBased"
+              entry="pricing"
+              field="price_per_time_unit_label"
+              :options="{
+                price: $fx(activeAsset.price),
+                timeUnit: activeAsset.timeUnit
+              }"
+            />
+            <AppContent
+              v-else
+              entry="pricing"
+              field="price_with_currency"
+              :options="{ price: $fx(activeAsset.price) }"
+            />
+          </div>
+          <div v-if="isEcommerceMarketplace">
+            <AppContent
+              v-for="orderFee in orderFees"
+              :key="orderFee.type"
+              entry="pricing"
+              :field="'fee_types.' + orderFee.feeType + '_with_price'"
+              :options="{ price: $fx(orderFee.amount) }"
+            />
+          </div>
         </div>
         <div
           v-if="!isOwnerCurrentUser"
           class="col-6 col-sm-5 text-right"
         >
-          <AppCheckoutButton
-            :disabled="!isActiveAssetAvailable"
-            @click="checkout"
+          <QBtn
+            :disabled="isOwnerCurrentUser || maxAvailableQuantity === 0"
+            :rounded="style.roundedTheme"
+            :label="
+              isEcommerceMarketplace
+                ? $t({ id: 'cart.prompt.add_to_cart' })
+                : $t({ id: 'asset.checkout_action' }, { timeBased, marketplaceType })
+            "
+            color="secondary"
+            @click="openTransactionCard"
           />
         </div>
         <div class="col-1 gt-xs" />
+      </div>
+      <div
+        v-if="isCartPage"
+        class="q-pa-md row items-center"
+      >
+        <div class="col-1 col-md-2 gt-xs" />
+        <div class="col-5 col-md-4 q-pr-md">
+          <div
+            v-if="cart.orderFees.length"
+            :class="[
+              'row justify-between',
+              !cart.previewedTransactions.length ? 'invisible' : ''
+            ]"
+          >
+            <AppContent
+              tag="div"
+              entry="pricing"
+              field="price_label"
+            />
+
+            <AppContent
+              tag="div"
+              entry="pricing"
+              field="price_with_currency"
+              :options="{ price: $fx(cart.subTotalPrice) }"
+            />
+          </div>
+
+          <div
+            v-for="orderFee in cart.orderFees"
+            :key="orderFee.feeType"
+            :class="[
+              'row justify-between',
+              !cart.previewedTransactions.length ? 'invisible' : ''
+            ]"
+          >
+            <div>
+              <AppContent
+                entry="pricing"
+                :field="'fee_types.' + orderFee.feeType + '_label'"
+              />
+            </div>
+
+            <div>
+              <AppContent
+                v-show="$fx(orderFee.amount) !== 0"
+                entry="pricing"
+                field="price_with_currency"
+                :options="{ price: $fx(orderFee.amount) }"
+              />
+              <AppContent
+                v-show="$fx(orderFee.amount) === 0"
+                entry="pricing"
+                field="free"
+              />
+            </div>
+          </div>
+
+          <div
+            :class="[
+              'row justify-between text-weight-medium text-h6',
+              !cart.previewedTransactions.length ? 'invisible' : ''
+            ]"
+          >
+            <div>
+              <AppContent
+                entry="pricing"
+                field="total"
+              />
+            </div>
+
+            <div>
+              <AppContent
+                v-show="$fx(cart.totalPrice) !== 0"
+                entry="pricing"
+                field="price_with_currency"
+                :options="{ price: $fx(cart.totalPrice) }"
+              />
+              <AppContent
+                v-show="$fx(cart.totalPrice) === 0"
+                entry="pricing"
+                field="free"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="col-7 col-sm-5 col-md-4 text-right">
+          <AppCheckoutButton />
+        </div>
       </div>
     </QFooter>
 
@@ -181,8 +312,8 @@ export default {
     </template>
 
     <QDialog
-      :value="checkoutOpenedDialog"
-      @hide="checkoutOpenedDialog = false"
+      :value="transactionCardOpened"
+      @hide="transactionCardOpened = false"
     >
       <TransactionCard class="bg-white" />
     </QDialog>

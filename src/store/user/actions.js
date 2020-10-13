@@ -25,6 +25,9 @@ export async function updateUser ({ commit, rootGetters }, { userId, attrs }) {
   if (isEmpty(attrs)) throw new Error('User update attrs expected')
 
   const currentUser = rootGetters.currentUser
+  const selectedUser = rootGetters.selectedUser
+
+  const sameUser = currentUser.id && currentUser.id === selectedUser.id
 
   const shouldUpdateDisplayName = !isUndefined(attrs.firstname) || !isUndefined(attrs.lastname)
 
@@ -40,15 +43,20 @@ export async function updateUser ({ commit, rootGetters }, { userId, attrs }) {
     user
   })
 
-  // should also commit to selected user
+  // selected user represents the user information the public profile is currently exposing
+
+  // as any user update is only allowed on current user,
+  // should also commit to selected user only if the selected user is the current user
   // otherwise selected user data will be obsolete if the user logs out
 
   // DRAWBACK: private fields remain in store until a new selected user is stored
   // but it is ok as the data aren't displayed
-  commit({
-    type: types.SET_SELECTED_USER,
-    user
-  })
+  if (sameUser) {
+    commit({
+      type: types.SET_SELECTED_USER,
+      user
+    })
+  }
 
   const isOrganization = user.roles.includes('organization')
   if (isOrganization) {

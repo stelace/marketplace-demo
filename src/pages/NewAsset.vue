@@ -1,5 +1,5 @@
 <script>
-import { compact, flatten, get, groupBy, values, pick } from 'lodash'
+import { compact, flatten, get, groupBy, values, pick, isNumber } from 'lodash'
 import { mapState, mapGetters } from 'vuex'
 import { date } from 'quasar'
 
@@ -53,6 +53,7 @@ export default {
       newUserImages: [], // to add to user images for reuse
       uploaderFiles: [],
       creatingAsset: false,
+      deliveryFee: null,
     }
   },
   computed: {
@@ -162,6 +163,9 @@ export default {
     reusableImages () {
       return this.currentUser.id ? this.currentUser.images : []
     },
+    showDeliveryFee () {
+      return this.orderFeeTypes.includes('deliveryFee')
+    },
     ...mapState([
       'asset',
       'common',
@@ -173,6 +177,8 @@ export default {
       'activeAssetTypes',
       'defaultActiveAssetType',
       'stripeActive',
+      'orderFeeTypes',
+      'isEcommerceMarketplace',
     ]),
   },
   async preFetch ({ store }) {
@@ -188,6 +194,10 @@ export default {
     afterAuth () {
       if (this.currentUser.id && this.currentUser.locations.length) {
         this.locations = [this.currentUser.locations[0]]
+      }
+
+      if (this.showDeliveryFee && this.currentUser.id) {
+        this.deliveryFee = this.currentUser.deliveryFee || null
       }
     },
     changeCustomAttributes (customAttributes) {
@@ -289,7 +299,7 @@ export default {
               images,
               // Save dates to create custom availabilities with Workflows
               startDate: this.startDate,
-              endDate: this.endDate
+              endDate: this.endDate,
             }
           }
 
@@ -307,9 +317,10 @@ export default {
           this.notifySuccess('notification.saved')
           // this.resetForm() // useful when not keeping the user on the current page
 
+          const updateDeliveryFee = this.showDeliveryFee && isNumber(this.deliveryFee)
           const updateUserImages = !!this.newUserImages.length
           const updateUserLocations = !!(!this.currentUser.locations.length && asset.locations.length)
-          const needUpdateUser = updateUserImages || updateUserLocations
+          const needUpdateUser = updateUserImages || updateUserLocations || updateDeliveryFee
 
           if (needUpdateUser) {
             const attrs = {}
@@ -323,6 +334,10 @@ export default {
             }
             if (updateUserLocations) {
               attrs.locations = [asset.locations[0]]
+            }
+
+            if (this.showDeliveryFee && isNumber(this.deliveryFee)) {
+              attrs.deliveryFee = this.deliveryFee
             }
 
             try { // not awaiting this since it’s not critical
@@ -472,6 +487,23 @@ export default {
                   bottom-slots
                 />
               </div>
+            </div>
+
+            <div
+              v-if="showDeliveryFee"
+              class="row justify-center"
+            >
+              <AppInputNumber
+                v-model="deliveryFee"
+                class="row-input -small"
+                :label="$t({ id: 'pricing.fee_types.deliveryFee_label' })"
+                min="0"
+                :rules="[
+                  deliveryFee => Number.isFinite(deliveryFee) || deliveryFee === null ||
+                    $t({ id: 'form.error.missing_price' })
+                ]"
+                bottom-slots
+              />
             </div>
           </div>
         </transition>

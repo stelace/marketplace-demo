@@ -15,8 +15,12 @@ export default {
     state.transactionsById = keyBy(transactions, 'id')
   },
 
-  [types.INBOX__SET_ASSETS_WITHOUT_TRANSACTIONS] (state, { assets }) {
+  [types.INBOX__SET_ASSETS] (state, { assets }) {
     state.assetsById = keyBy(assets, 'id')
+  },
+
+  [types.INBOX__SET_ORDERS] (state, { orders }) {
+    state.ordersById = keyBy(orders, 'id')
   },
 
   [types.SET_CONVERSATION] (state, { conversation, asset }) {

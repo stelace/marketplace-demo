@@ -2,11 +2,13 @@
 
 ## Setup
 
+`cp scripts/data-service.example.js scripts/data-service.js`
+`cp scripts/data-ecommerce.example.js scripts/data-ecommerce.js`
 `cp scripts/data.example.js scripts/data.js`
 
 ## Initializing data
 
-We provide the `init-data.js` script to initialize Stelace Core API to ease development with sample data provided in `data.js`.
+We provide the `init-data.js` script to initialize Stelace Core API to ease development with sample data provided in `data-service.js` and `data-ecommerce.js`.
 
 Currently, the script supports the following object types:
 
@@ -17,6 +19,7 @@ Currently, the script supports the following object types:
 - config
 - messages
 - ratings
+- tasks
 - transactions
 - users
 - workflows
@@ -32,6 +35,6 @@ Note: Transactions cannot be removed via API. Instead transactions are cancelled
 
 ## Local Stelace server
 
-If you need to initialize the platform database with the exact state specified in data.js rather than updating existing resources, please first run `yarn setup:instant` locally to reset database before `node run scripts/init-data.js`.
+If you need to initialize the platform database with the exact state specified in data.js rather than updating existing resources, please first run `yarn seed` locally to reset database in stelace-server before `yarn seed`.
 
-You may also need to run `yarn setup:instant` in stelace-server when some object structure has changed after data migration or Stelace version upgrade.
+You may also need to run `yarn seed` in stelace-server when some object structure has changed after data migration or Stelace version upgrade.

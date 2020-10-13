@@ -129,6 +129,22 @@ class DataManager {
         throw new Error('data.js file not found')
       }
     }
+    if (!fs.existsSync(path.join(__dirname, 'data-service.js'))) {
+      if (createNotFoundFile) {
+        log('Creating data-service.js file from data-service.example.js')
+        execSync('cp scripts/data-service.example.js scripts/data-service.js')
+      } else {
+        throw new Error('data-service.js file not found')
+      }
+    }
+    if (!fs.existsSync(path.join(__dirname, 'data-ecommerce.js'))) {
+      if (createNotFoundFile) {
+        log('Creating data-ecommerce.js file from data-ecommerce.example.js')
+        execSync('cp scripts/data-ecommerce.example.js scripts/data-ecommerce.js')
+      } else {
+        throw new Error('data-ecommerce.js file not found')
+      }
+    }
 
     this.data = require('./data')
   }
@@ -422,8 +438,9 @@ class DataManager {
     if (!this.data.workflows) return
 
     for (const key in this.data.workflows) {
-      const payload = this.data.workflows[key]
       const alias = key
+      const payload = this.data.workflows[key]
+      if (!payload) continue // skip falsy payload
 
       const computed = payload.computed || {}
       for (const k in computed) {
@@ -471,7 +488,7 @@ class DataManager {
     for (const key in this.data.tasks) {
       const alias = key
       const payload = this.data.tasks[key]
-      if (!payload) return // skip falsy payload
+      if (!payload) continue // skip falsy payload
 
       const metadata = Object.assign({}, payload.metadata, { initDataScript, alias })
       payload.metadata = metadata
@@ -603,6 +620,8 @@ class DataManager {
     let objects = Array.isArray(data) ? data : this.existingData[type]
 
     for (const object of objects) {
+      if (isNil(object)) return
+
       if (!this.shouldOnlyRemoveScriptObjects || isCreatedBySeedScript(object)) {
         if (type === 'categories') {
           const childrenCategories = objects.filter(c => c.parentId === object.id)

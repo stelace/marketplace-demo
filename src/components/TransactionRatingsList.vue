@@ -63,7 +63,7 @@ export default {
 
 <template>
   <div class="transaction-ratings-list">
-    <div class="row justify-between items-center q-px-sm">
+    <div class="row justify-between items-center">
       <slot name="title">
         <AppContent
           tag="h2"

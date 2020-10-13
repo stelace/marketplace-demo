@@ -12,7 +12,7 @@
 
 /* eslint-disable no-template-curly-in-string */
 module.exports = {
-  getWorkflows: (locale = 'en') => ({
+  getWorkflows: (locale = 'en', marketplaceType) => ({
     getEmailCheckTokenAtRegistration: {
       name: '[Check] Email check token at user registration',
       description: 'Create a token used to validate the email address of a new user',
@@ -343,11 +343,29 @@ module.exports = {
       ]
     },
 
+    acceptTransactions: marketplaceType === 'ecommerce' ? {
+      name: 'Accept transactions',
+      description: `
+        Automatic acceptance of transactions with pending-acceptance status.
+      `,
+      event: 'transaction__status_changed',
+      run: [
+        {
+          endpointMethod: 'POST',
+          stop: 'transaction.status !== "pending-acceptance"',
+          endpointUri: '/transactions/${transaction.id}/transitions',
+          endpointPayload: {
+            name: '"accept"'
+          }
+        }
+      ]
+    } : undefined,
+
     completeTransactions: {
       name: 'Complete transactions',
       description: `
         Trigger completion transition of validated transactions.
-        Completed transactions won't block assets removal.
+        Completed transactions won't block assets removal, while validated ones will.
       `,
       event: 'transaction__status_changed',
       run: [
@@ -362,7 +380,7 @@ module.exports = {
       ]
     },
 
-    captureStripePaymentIntent: {
+    captureStripePaymentIntent: marketplaceType !== 'ecommerce' ? {
       name: 'Capture Stripe payment intent',
       description: `
         When the owner accepts the transaction, capture the payment intent so the money is effectively taken from the taker
@@ -386,9 +404,9 @@ module.exports = {
           }
         }
       ]
-    },
+    } : undefined,
 
-    onStripePaymentIntentCancellation: {
+    onStripePaymentIntentCancellation: marketplaceType !== 'ecommerce' ? {
       name: 'On Stripe payment intent cancellation',
       description: `
         When a payment intent is cancelled because the uncapture duration max limit is exceeded,
@@ -413,14 +431,14 @@ module.exports = {
           }
         }
       ]
-    },
+    } : undefined,
 
     onStripeCheckoutCompletion: {
       name: 'On Stripe completed checkout session',
       description: `
         This event is created after a completed checkout session (notification via Stripe webhook).
-        The objective of this workflow is to retrieve the linked transaction to the session payment intent via metadata
-        and trigger the transition 'confirmAndPay' as taker has paid.
+        Pass the payment intent ID to a Netlify function that will perform order move creation
+        and triggers all transactions transition 'confirmAndPay' or 'pay' depending on marketplace type
       `,
       event: 'stripe_checkout.session.completed',
       context: ['stelace'],
@@ -430,43 +448,12 @@ module.exports = {
       run: [
         {
           stop: '!computed.paymentIntentId',
-          name: 'paymentIntent',
           endpointMethod: 'POST',
-          endpointUri: '/integrations/stripe/request',
+          endpointUri: '${env.STELACE_INSTANT_WEBSITE_URL}/.netlify/functions/stripeCheckoutCompletion',
           endpointPayload: {
-            method: '"paymentIntents.retrieve"',
-            args: 'computed.paymentIntentId'
+            paymentIntentId: 'computed.paymentIntentId'
           }
         },
-        {
-          stop: '!computed.transactionId',
-          computed: {
-            transactionId: '_.get(responses.paymentIntent, "metadata.transactionId")'
-          },
-          name: 'transaction',
-          endpointMethod: 'GET',
-          endpointUri: '/transactions/${computed.transactionId}'
-        },
-        {
-          computed: {
-            transaction: 'responses.transaction'
-          },
-          endpointMethod: 'POST',
-          endpointUri: '/messages',
-          endpointPayload: {
-            content: '" "',
-            topicId: 'computed.transactionId',
-            senderId: 'computed.transaction.takerId',
-            receiverId: 'computed.transaction.ownerId'
-          }
-        },
-        {
-          endpointMethod: 'POST',
-          endpointUri: '/transactions/${computed.transactionId}/transitions',
-          endpointPayload: {
-            name: '"confirmAndPay"'
-          }
-        }
       ],
     }
   })

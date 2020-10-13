@@ -3,12 +3,9 @@ import { get, values } from 'lodash'
 import { mapState, mapGetters } from 'vuex'
 import { date } from 'quasar'
 
-import EventBus from 'src/utils/event-bus'
-
 import SelectNumber from 'src/components/SelectNumber'
 
-import AuthDialogMixin from 'src/mixins/authDialog'
-import StripeMixin from 'src/mixins/stripe'
+import CartMixin from 'src/modules/ecommerce/mixins/cart'
 
 import {
   convertEndDate
@@ -18,6 +15,8 @@ import {
   getAvailableQuantityByDate
 } from 'src/utils/asset'
 
+import { getOrderFees } from 'src/utils/order'
+
 import * as mutationTypes from 'src/store/mutation-types'
 
 export default {
@@ -25,8 +24,7 @@ export default {
     SelectNumber,
   },
   mixins: [
-    AuthDialogMixin,
-    StripeMixin,
+    CartMixin
   ],
   data () {
     return {
@@ -73,6 +71,15 @@ export default {
 
       return this.preview.takerAmount - this.preview.value
     },
+    totalPrice () {
+      const feesAmount = this.orderFees.reduce((amount, fee) => amount + fee.amount, 0)
+      return this.preview.takerAmount + feesAmount
+    },
+    orderFees () {
+      if (!this.isEcommerceMarketplace || !this.activeAsset || !this.activeAsset.owner) return []
+
+      return getOrderFees(this.orderFeeTypes, this.activeAsset.owner)
+    },
     ratingAverageScore () {
       return get(this.rating.ratingsStatsByAssetId, `default.${this.activeAsset.id}.avg`, 0)
     },
@@ -86,6 +93,7 @@ export default {
       'asset',
       'transaction',
       'rating',
+      'style',
     ]),
     ...mapGetters([
       'currentUser',
@@ -95,6 +103,8 @@ export default {
       'validTransactionOptions',
       'maxAvailableQuantity',
       'paymentActive',
+      'isEcommerceMarketplace',
+      'orderFeeTypes',
     ]),
   },
   watch: {
@@ -105,14 +115,9 @@ export default {
     }
   },
   mounted () {
-    if (!this.promptTransactionDates && !this.promptTransactionQuantity) {
+    if (!this.promptTransactionDates) {
       this.fetchTransactionPreview()
     }
-
-    EventBus.$on('authStatusChanged', (status) => this.onAuthChange(status))
-  },
-  beforeDestroy () {
-    EventBus.$off('authStatusChanged', (status) => this.onAuthChange(status))
   },
   methods: {
     selectStartDate (startDate) {
@@ -200,49 +205,16 @@ export default {
         quantity: this.quantity
       })
     },
-    onAuthChange (status) {
-      if (status === 'success' && this.actionAfterAuthentication) {
-        if (this.actionAfterAuthentication === 'checkout') {
-          this.checkoutAfterAuth()
-        }
-        this.actionAfterAuthentication = null
-      } else if (status === 'closed') {
-        this.actionAfterAuthentication = null
-      }
-    },
-    async checkout () {
-      if (!this.validTransactionOptions) return
+    async addAssetToCart () {
+      const endDate = this.endDate ? convertEndDate(this.endDate, { target: 'api' }) : null
 
-      if (!this.currentUser.id) {
-        this.actionAfterAuthentication = 'checkout'
-        this.openAuthDialog()
-        return
-      }
-
-      this.checkoutAfterAuth()
-    },
-    async checkoutAfterAuth () {
-      // cannot checkout on her own asset
-      if (this.isOwnerCurrentUser) return
-
-      const asset = this.activeAsset
-
-      const { message, transaction } = await this.$store.dispatch('createTransaction', { asset })
-
-      if (this.stripeActive) {
-        await this.$store.dispatch('getStripeCustomer')
-        const sessionId = await this.$store.dispatch('createStripeCheckoutSession', { transactionId: transaction.id })
-
-        const stripe = await this.loadStripe()
-        await stripe.redirectToCheckout({ sessionId })
-      } else {
-        this.$router.push({
-          name: 'conversation',
-          params: { id: message.conversationId }
-        })
-
+      const { success } = await this.addToCart(this.activeAsset, this.quantity, {
+        startDate: this.startDate,
+        endDate,
+      })
+      if (success) {
         this.resetTransactionParameters()
-        this.$store.dispatch('resetTransactionPreview')
+        this.$router.push({ name: 'cart' })
       }
     },
   }
@@ -251,45 +223,39 @@ export default {
 
 <template>
   <div class="transaction-card q-pa-md">
-    <div class="q-pb-md">
-      <div class="text-weight-bold">
-        <AppContent
-          v-if="activeAsset.assetType && activeAsset.assetType.timeBased"
-          entry="pricing"
-          field="price_per_time_unit_label"
-          :options="{
-            price: $fx(activeAsset.price),
-            timeUnit: activeAsset.timeUnit
-          }"
-        />
-        <AppContent
-          v-else
-          entry="pricing"
-          field="price_with_currency"
-          :options="{ price: $fx(activeAsset.price) }"
-        />
-      </div>
-      <div v-if="nbRatings">
-        <div class="row items-center">
-          <AppRating
-            class="asset-score"
-            :score="ratingAverageScore"
-            rating-label="default"
-            :show-label="false"
-            rating-class="q-mr-sm"
-            readonly
-            size="0.8rem"
+    <template v-if="nbRatings || (activeAsset.assetType && activeAsset.assetType.timeBased)">
+      <div class="q-pb-md">
+        <div class="text-weight-bold">
+          <AppContent
+            v-if="activeAsset.assetType && activeAsset.assetType.timeBased"
+            entry="pricing"
+            field="price_per_time_unit_label"
+            :options="{
+              price: $fx(activeAsset.price),
+              timeUnit: activeAsset.timeUnit
+            }"
           />
-          <div class="text-weigh-bold">
-            {{ nbRatings }}
+        </div>
+        <div v-if="nbRatings">
+          <div class="row items-center">
+            <AppRating
+              class="asset-score"
+              :score="ratingAverageScore"
+              rating-label="default"
+              :show-label="false"
+              rating-class="q-mr-sm"
+              readonly
+              size="0.8rem"
+            />
+            <div class="text-weigh-bold">
+              {{ nbRatings }}
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- Ratings -->
-
-    <QSeparator />
+      <QSeparator />
+    </template>
 
     <div class="q-py-md transaction-card__content">
       <div
@@ -352,7 +318,7 @@ export default {
           <div>
             <AppContent
               entry="pricing"
-              field="price_with_currency"
+              :field="(promptTransactionDates || promptTransactionQuantity) ? 'price_with_currency' : 'price_label'"
               :options="{ price: $fx(preview.unitPrice) }"
             />
             <span v-if="promptTransactionDates">
@@ -387,9 +353,9 @@ export default {
           </div>
         </div>
 
-        <QSeparator />
+        <QSeparator v-if="!isEcommerceMarketplace" />
 
-        <div class="row q-py-sm justify-between">
+        <div v-if="!isEcommerceMarketplace" class="row q-py-sm justify-between">
           <div>
             <AppContent
               entry="pricing"
@@ -412,9 +378,38 @@ export default {
           </div>
         </div>
 
+        <div v-else>
+          <div
+            v-for="orderFee in orderFees"
+            :key="orderFee.feeType"
+            class="row q-py-sm justify-between"
+          >
+            <div>
+              <AppContent
+                entry="pricing"
+                :field="'fee_types.' + orderFee.feeType + '_label'"
+              />
+            </div>
+
+            <div>
+              <AppContent
+                v-show="$fx(orderFee.amount) !== 0"
+                entry="pricing"
+                field="price_with_currency"
+                :options="{ price: $fx(orderFee.amount) }"
+              />
+              <AppContent
+                v-show="$fx(orderFee.amount) === 0"
+                entry="pricing"
+                field="free"
+              />
+            </div>
+          </div>
+        </div>
+
         <QSeparator />
 
-        <div class="row q-py-sm justify-between text-weight-medium">
+        <div class="row q-py-sm justify-between text-h6 text-weight-medium">
           <div>
             <AppContent
               entry="pricing"
@@ -424,13 +419,13 @@ export default {
 
           <div>
             <AppContent
-              v-show="$fx(preview.takerAmount) !== 0"
+              v-show="$fx(totalPrice) !== 0"
               entry="pricing"
               field="price_with_currency"
-              :options="{ price: $fx(preview.takerAmount) }"
+              :options="{ price: $fx(totalPrice) }"
             />
             <AppContent
-              v-show="$fx(preview.takerAmount) === 0"
+              v-show="$fx(totalPrice) === 0"
               entry="pricing"
               field="free"
             />
@@ -439,11 +434,17 @@ export default {
       </div>
     </div>
     <div class="row">
-      <AppCheckoutButton
+      <QBtn
+        v-if="isEcommerceMarketplace"
+        :loading="addingToCart"
         class="full-width"
-        :disabled="!validTransactionOptions || isOwnerCurrentUser"
-        @click="checkout"
+        :disabled="!validTransactionOptions || isOwnerCurrentUser || maxAvailableQuantity === 0"
+        :rounded="style.roundedTheme"
+        :label="$t({ id: 'cart.prompt.add_to_cart' })"
+        color="secondary"
+        @click="addAssetToCart"
       />
+      <AppCheckoutButton v-else class="full-width" />
     </div>
   </div>
 </template>

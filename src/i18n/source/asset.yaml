@@ -63,6 +63,9 @@ asset:
     en: You may like…
     fr: "{SERVICE_NAME} recommande…"
     context: Introducing automatic asset suggestions depending on user profile or history.
+  available:
+    en: Available
+    fr: Disponible
   view_own_listings:
     en: |
       View my {nb_listings, plural,
@@ -78,18 +81,24 @@ asset:
       }
   checkout_action:
     en: |
-      {timeBased, select,
+      {marketplaceType, select,
+        ecommerce {Proceed to payment}
+        other {{timeBased, select,
           true {Book}
           false {Order}
           other {Order}
           undefined {Contact}
+        }}
       }
     fr: |
-      {timeBased, select,
+      {marketplaceType, select,
+        ecommerce {Procéder au paiement}
+        other {{timeBased, select,
           true {Réserver}
           false {Commander}
           other {Commander}
           undefined {Contacter}
+        }}
       }
   delete_listing_warning:
     en: "Please confirm you want to delete this listing."

@@ -370,6 +370,25 @@ pages:
       unread:
         en: Unread messages
         fr: Avec messages non lus
+  cart:
+    page_title:
+      en: Shopping cart
+      fr: Panier
+    cart_header:
+      en: Shopping cart
+      fr: Panier
+    delivery_address:
+      en: Delivery address
+      fr: Adresse de livraison
+    delete_cart:
+      en: Empty the cart
+      fr: Vider le panier
+    empty_cart:
+      en: Empty cart
+      fr: Panier vide
+    proceed_payment:
+      en: Proceed to payment
+      fr: Procéder au paiement
   conversation:
     page_title:
       en: Conversation

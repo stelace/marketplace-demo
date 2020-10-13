@@ -32,6 +32,10 @@ export default {
       type: Boolean,
       default: false
     },
+    form: {
+      type: String,
+      default: 'round'
+    },
   },
   data () {
     return {
@@ -50,6 +54,15 @@ export default {
     avatarPlaceholder () {
       return this.placeholder || (this.user ? this.displayNameInitial() : '')
     },
+    isSquare () {
+      return this.form === 'square'
+    },
+    isSquareRounded () {
+      return this.form === 'square-rounded'
+    },
+    isRound () {
+      return this.form === 'round'
+    },
     ...mapGetters([
       'getAvatarImageUrl'
     ])
@@ -66,6 +79,8 @@ export default {
   <QAvatar
     :class="['avatar-anchor', hasAvatar ? '' : placeholderBackgroundClass]"
     :size="size"
+    :square="isSquare"
+    :rounded="isSquareRounded"
   >
     <slot>
       <div
@@ -84,7 +99,11 @@ export default {
 
     <div
       v-if="showHoverPlaceholder"
-      class="absolute-full flex flex-center avatar-placeholder bg-primary"
+      :class="[
+        'absolute-full flex flex-center avatar-placeholder bg-primary',
+        isRound ? 'avatar-placeholder--rounded' : '',
+        isSquareRounded ? 'avatar-placeholder--square-rounded' : '',
+      ]"
     >
       <slot name="hover-placeholder" />
     </div>
@@ -93,10 +112,13 @@ export default {
 
 <style lang="stylus" scoped>
 .avatar-placeholder
-  border-radius 50%
   background $dimmed-background
   transition opacity ease $transition-duration
   opacity 0
+  &.avatar-placeholder--rounded
+    border-radius 50%
+  &.avatar-placeholder--square-rounded
+    border-radius 4px
   &.avatar-placeholder--show
     opacity: 0.9
 

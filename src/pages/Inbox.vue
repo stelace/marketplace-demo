@@ -77,11 +77,26 @@ export default {
     ...mapGetters([
       'currentUser',
       'conversations',
-      'ratingsActive'
+      'ratingsActive',
+      'isEcommerceMarketplace',
     ]),
+    transformedConversations () {
+      return this.conversations.map(conv => {
+        const order = conv.order
+        const totalPrice = order.amountDue || 0
+
+        return {
+          ...conv,
+          order: {
+            ...order,
+            totalPrice,
+          }
+        }
+      })
+    },
     // do not display conversations without any visible message
     visibleConversations () {
-      return this.conversations.filter(conversation => !conversation.isEmpty)
+      return this.transformedConversations.filter(conversation => !conversation.isEmpty)
     },
     filteredConversations () {
       if (this.selectFilter === 'active') return this.activeConversations
@@ -281,11 +296,12 @@ export default {
                   top
                   class="col-2 gt-xs"
                 >
-                  <QItemLabel class="interlocutor-name q-mt-sm">
+                  <QItemLabel class="interlocutor-name">
                     {{ props.row.interlocutor.displayName }}
                   </QItemLabel>
                   <AppRatingStars
                     v-if="ratingsActive && typeof props.row.interlocutor.ratings.default === 'number'"
+                    class="q-mt-xs"
                     :value="props.row.interlocutor.ratings.default"
                     readonly
                   />
@@ -322,7 +338,7 @@ export default {
                       }}
                     </span>
                   </QItemLabel>
-                  <QItemLabel class="inbox-prompt-bar q-mt-xs text-body2">
+                  <QItemLabel v-if="isEcommerceMarketplace" class="inbox-prompt-bar q-mt-xs text-body2">
                     <!-- Also use .stop modifier in case a click handler is added on a parent -->
                     <div
                       class="inbox-action-button-container"
@@ -342,14 +358,27 @@ export default {
                   </QItemLabel>
                 </QItemSection>
 
-                <QItemSection side>
+                <QItemSection v-if="isEcommerceMarketplace" class="q-mr-md" side>
+                  <div class="row justify-between text-weight-medium text-h6">
+                    <div>
+                      <AppContent
+                        v-show="$fx(props.row.order.totalPrice) !== 0"
+                        entry="pricing"
+                        field="price_with_currency"
+                        :options="{ price: $fx(props.row.order.totalPrice) }"
+                      />
+                    </div>
+                  </div>
+                </QItemSection>
+
+                <QItemSection v-if="!isEcommerceMarketplace" side>
                   <TransactionStatus
                     v-if="props.row.transaction"
                     :transaction="props.row.transaction"
                   />
                 </QItemSection>
 
-                <QItemSection side>
+                <QItemSection v-if="!isEcommerceMarketplace" side>
                   <div
                     class="text-grey-8 q-gutter-xs"
                     @click.stop.prevent

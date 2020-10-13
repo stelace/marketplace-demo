@@ -9,7 +9,7 @@ import Joi from '@hapi/joi'
 
 const schema = {
   body: Joi.object().keys({
-    transactionId: Joi.string().required()
+    orderId: Joi.string().required()
   }).required()
 }
 
@@ -20,31 +20,33 @@ if (!process.env.STELACE_INSTANT_WEBSITE_URL) {
 const { stelace, stripe } = loadSdks({ stripe: true })
 
 const createStripeCheckoutSession = async (event, context, callback) => {
-  const { transactionId } = event.body
+  const { orderId } = event.body
 
   try {
     if (!isAuthenticated(context)) throw createError(403)
 
-    const transaction = await stelace.transactions.read(transactionId)
+    const order = await stelace.orders.read(orderId)
 
-    const { assetId, takerId, ownerId } = transaction
+    const { payerId, lines } = order
 
-    if (!assetId) throw createError(422, 'Missing asset for this transaction')
-    if (!takerId) throw createError(422, 'Missing taker for this transaction')
-    if (!ownerId) throw createError(422, 'Missing owner for this transaction')
-    if (!isUser(context, takerId)) throw createError(403)
+    const ownerId = lines.reduce((ownerId, l) => {
+      if (ownerId) return ownerId
+      return l.receiverId || ownerId
+    }, null)
+
+    if (!ownerId) throw createError(422, 'Missing owner for this order')
+    if (!payerId) throw createError(422, 'Missing payer for this order')
+    if (!isUser(context, payerId)) throw createError(403)
 
     const [
-      asset,
-      taker,
+      payer,
       owner
     ] = await Promise.all([
-      stelace.assets.read(assetId),
-      stelace.users.read(takerId),
+      stelace.users.read(payerId),
       stelace.users.read(ownerId)
     ])
 
-    const stripeCustomer = get(taker, 'platformData._private.stripeCustomer')
+    const stripeCustomer = get(payer, 'platformData._private.stripeCustomer')
     const ownerStripeAccount = get(owner, 'platformData._private.stripeAccount')
 
     if (!ownerStripeAccount) throw createError(422, 'Owner has not linked their Stripe account')
@@ -54,42 +56,64 @@ const createStripeCheckoutSession = async (event, context, callback) => {
     // most of currencies work with 2 decimals
     let currencyDecimal = 2
     try {
-      currencyDecimal = getCurrencyDecimal(transaction.currency)
+      currencyDecimal = getCurrencyDecimal(order.currency)
     } catch (err) {
       // do nothing
     }
 
-    const applicationFeeAmount = transaction.platformAmount * Math.pow(10, currencyDecimal)
+    const platformAmount = lines.reduce((platformAmount, l) => {
+      return platformAmount + (l.platformAmount || 0)
+    }, 0)
+
+    // round the below amounts because of JS decimal precision (149.7 * 100 !== 14970)
+    const applicationFeeAmount = Math.round(platformAmount * Math.pow(10, currencyDecimal))
+
+    let successUrl
+    let cancelUrl
+    const paymentIntentDataMetadata = { orderId }
+
+    if (context.isEcommerceMarketplace) {
+      successUrl = `${websiteUrl}?payment-success=true&orderId=${orderId}`
+      cancelUrl = `${websiteUrl}?payment-cancel=true`
+    } else {
+      const transactionLine = order.lines.find(l => get(l, 'metadata.transactionId'))
+      const transactionId = transactionLine.metadata.transactionId
+
+      const transaction = await stelace.transactions.read(transactionId)
+      if (!transaction) throw createError(422, 'Missing transaction for this order')
+
+      const assetId = transaction.assetId
+
+      successUrl = `${websiteUrl}/a/${assetId}?payment-success=true&transactionId=${transactionId}`
+      cancelUrl = `${websiteUrl}/a/${assetId}?payment-cancel=true`
+      paymentIntentDataMetadata.transactionId = transactionId
+    }
 
     const checkoutSession = await stripe.checkout.sessions.create({
-      client_reference_id: taker.id,
+      client_reference_id: payer.id,
       customer: stripeCustomer.id,
-      success_url: `${websiteUrl}/a/${assetId}?payment-success=true&transactionId=${transactionId}`,
-      cancel_url: `${websiteUrl}/a/${assetId}?payment-cancel=true`,
+      success_url: successUrl,
+      cancel_url: cancelUrl,
       payment_method_types: ['card'],
       line_items: [
         {
-          name: asset.name,
-          description: asset.description,
-          amount: transaction.takerAmount * Math.pow(10, currencyDecimal),
-          currency: transaction.currency,
+          name: ' ', // name is required even we don't want to display it
+          amount: Math.round(order.amountDue * Math.pow(10, currencyDecimal)),
+          currency: order.currency,
           quantity: 1
         },
       ],
       payment_intent_data: {
         setup_future_usage: 'off_session',
-        metadata: {
-          transactionId: transactionId
-        },
+        metadata: paymentIntentDataMetadata,
         application_fee_amount: applicationFeeAmount || undefined, // application fee cannot be 0
-        capture_method: 'manual',
         transfer_data: {
           destination: owner.platformData._private.stripeAccount.id
         }
       }
     })
 
-    await stelace.transactions.update(transactionId, {
+    await stelace.orders.update(orderId, {
       platformData: {
         stripePaymentIntentId: checkoutSession.payment_intent,
         currencyDecimal // will be used in workflows

@@ -20,4 +20,6 @@ export const paymentsApi = {
     `${websiteUrl}/.netlify/functions/createStripeCheckoutSession`,
   linkStripeAccount: process.env.NETLIFY_FUNCTION_LINK_STRIPE_ACCOUNT ||
     `${websiteUrl}/.netlify/functions/linkStripeAccount`,
+  createOrder: process.env.NETLIFY_FUNCTION_CREATE_ORDER ||
+    `${websiteUrl}/.netlify/functions/createOrder`,
 }

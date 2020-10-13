@@ -19,10 +19,12 @@ import EventBus from 'src/utils/event-bus'
 import { initSentry } from 'src/utils/logger'
 import stelace from 'src/utils/stelace'
 
+import CartMixin from 'src/modules/ecommerce/mixins/cart'
 import contentEditingMixin from 'src/mixins/contentEditing'
 
 export default {
   mixins: [
+    CartMixin,
     contentEditingMixin,
   ],
   data () {
@@ -33,7 +35,8 @@ export default {
   computed: {
     ...mapGetters([
       'isNaturalUser',
-      'currentUser'
+      'currentUser',
+      'isEcommerceMarketplace',
     ])
   },
   watch: {
@@ -42,7 +45,20 @@ export default {
     '$q.appVisible' (visible) {
       if (!this.socket) return
       if (visible && !this.socket.connected) this.refreshSocket()
-    }
+    },
+
+    async currentUser (current, previous) {
+      if (this.isEcommerceMarketplace) {
+        if (current.id !== previous.id) {
+          const isAuthed = Boolean(current.id)
+          if (isAuthed) {
+            this.syncCart()
+          } else {
+            this.emptyCart()
+          }
+        }
+      }
+    },
   },
   created () {
     EventBus.$on('error', ({ data, level, notification } = {}) => {

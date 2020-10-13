@@ -1,16 +1,22 @@
 asset:
   checkout_action:
     en: |
-      {timeBased, select,
+      {marketplaceType, select,
+        ecommerce {Proceed to payment}
+        other {{timeBased, select,
           true {Book}
           false {Buy}
           other {Buy}
           undefined {Contact}
+        }}
       }
     fr: |
-      {timeBased, select,
+      {marketplaceType, select,
+        ecommerce {Procéder au paiement}
+        other {{timeBased, select,
           true {Réserver}
           false {Acheter}
           other {Acheter}
           undefined {Contacter}
+        }}
       }

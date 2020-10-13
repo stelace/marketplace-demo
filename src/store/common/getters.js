@@ -77,3 +77,11 @@ export function paymentActive (state, getters) {
 export function stripeActive () {
   return !!process.env.VUE_APP_STRIPE_PUBLISHABLE_KEY
 }
+
+export function marketplaceType () {
+  return process.env.VUE_APP_MARKETPLACE_TYPE || 'service'
+}
+
+export function isEcommerceMarketplace (state, getters) {
+  return getters.marketplaceType === 'ecommerce'
+}

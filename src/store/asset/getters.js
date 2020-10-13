@@ -9,13 +9,11 @@ export function activeAsset (state, getters, rootState, rootGetters) {
     assetTypesById
   } = rootState.common
   const {
-    selectedUser
-  } = rootState.user
-  const {
     ratingsStatsByAssetId
   } = rootState.rating
   const {
     ratingsOptions,
+    selectedUser, // need populated selected user
   } = rootGetters
 
   return populateAsset({

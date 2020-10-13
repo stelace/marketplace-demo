@@ -1,8 +1,16 @@
 <script>
 import { mapGetters, mapState } from 'vuex'
 import { get, isNil } from 'lodash'
+import { mdiTruck, mdiTruckCheck } from '@quasar/extras/mdi-v5'
+
+import { matShoppingCart } from '@quasar/extras/material-icons'
+
+import CartMixin from 'src/modules/ecommerce/mixins/cart'
 
 export default {
+  mixins: [
+    CartMixin,
+  ],
   props: {
     asset: { // expecting to be null when loading to show skeleton
       required: true,
@@ -20,6 +28,14 @@ export default {
       default: true,
     },
     showDistance: {
+      type: Boolean,
+      default: false,
+    },
+    flat: {
+      type: Boolean,
+      default: true,
+    },
+    showAddToCart: {
       type: Boolean,
       default: false,
     },
@@ -43,14 +59,35 @@ export default {
       const a = this.asset // cf. docs about using lodash and Vue reactivity
       return get(a, 'category.name')
     },
+    quantityInCart () {
+      const cartLine = this.shoppingCart.lines.find(l => l.assetId === this.asset.id)
+      if (cartLine) return cartLine.quantity
+      else return 0
+    },
     distanceKm () {
       if (!this.asset || !this.asset.distance) return null
 
       return Math.round(this.asset.distance / 1000)
     },
+    showAvailability () {
+      return this.asset && this.asset.assetType && !this.asset.assetType.timeBased
+    },
+    isAvailable () {
+      if (!this.asset) return false
+      return this.asset.quantity > 0 && this.asset.active
+    },
+    addCartButtonDisabled () {
+      return this.asset.quantity <= this.quantityInCart
+    },
+    isAssetOwner () {
+      return this.currentUser.id === this.asset.ownerId
+    },
     showPlaceholder () {
       const a = this.asset
       return !get(a, 'id')
+    },
+    timeBased () {
+      return get(this.asset, 'assetType.timeBased')
     },
     imageSrcset () {
       if (!this.asset || this.reloading) return ''
@@ -64,7 +101,8 @@ export default {
       } ${this.largeImageWidth}w`
     },
     ...mapState([
-      'content'
+      'content',
+      'style',
     ]),
     ...mapGetters([
       'baseImageRatio',
@@ -74,8 +112,19 @@ export default {
       'getLargeImageUrl',
       'largeImageWidth',
       'ratingsActive',
+      'isEcommerceMarketplace',
+      'shoppingCart',
+      'currentUser',
     ]),
-  }
+  },
+  created () {
+    this.icons = {
+      mdiTruck,
+      mdiTruckCheck,
+
+      matShoppingCart,
+    }
+  },
 }
 </script>
 
@@ -86,7 +135,7 @@ export default {
     :to="to || (!!asset ? { name: 'asset', params: { id: asset.id } } : false)"
   >
     <QCard
-      flat
+      :flat="flat"
       class="asset-card cursor-pointer"
     >
       <slot
@@ -111,6 +160,25 @@ export default {
             loading="lazy"
             @load="isImageLoading = false"
           >
+        </div>
+
+        <div
+          v-if="isEcommerceMarketplace && showAddToCart && !isAssetOwner && isAvailable && !timeBased"
+          class="row justify-end q-mt-xs q-mb-md absolute-top-right cart-button"
+          :disabled="addCartButtonDisabled"
+          @click.stop.prevent
+        >
+          <QBtn
+            :loading="addingToCart"
+            round
+            color="secondary"
+            text-color="white"
+            class="q-ma-xs"
+            :disabled="addCartButtonDisabled"
+            @click.stop.prevent="() => addToCart(asset)"
+          >
+            <QIcon :name="icons.matShoppingCart" />
+          </QBtn>
         </div>
 
         <div
@@ -171,10 +239,12 @@ export default {
                 :options="{ price: $fx(asset.price) }"
               />
             </div>
+            <QSkeleton v-else type="text" class="text-subtitle2 flex-item--grow" />
             <!-- <h3 class="text-subtitle2 text-weight-medium text-grey-6 q-ma-none text-right ellipsis">
               {{ categoryName }}
             </h3> -->
           </div>
+
           <slot name="bottom" />
         </slot>
       </QCardSection>
@@ -188,13 +258,16 @@ export default {
 
 .asset-card
   max-width: 100%
-  &:focus, &:hover
-    .asset-image, .image-skeleton
-      transform: translateZ(0) scale(1.02)
-    .asset-content
-      transform: translateY(5px)
-.asset-image, .asset-content
   transition: all $transition-duration
+  &:focus, &:hover
+    transform: translateY(-5px)
+  @media (min-width $breakpoint-sm-min)
+    .cart-button
+      display: none
+      z-index: 2
+    &:hover
+      .cart-button
+        display: block
 
 // padding-bottom aspect-ratio technique (ratio is inlined in HTML)
 .asset-image-container
@@ -218,6 +291,9 @@ export default {
 
 .asset-card .asset-image
   border-radius: $generic-border-radius
+
+.asset-ratings
+  flex: 1 0
 
 .distance-chip
   background-color: rgba(0, 0, 0, 0.4)
