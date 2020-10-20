@@ -40,6 +40,7 @@ export default {
       endDate: '',
       searchByCategory: process.env.VUE_APP_SEARCH_BY_CATEGORY === 'true',
       isPlaceSearchEnabled,
+      showPlacesAutocomplete: false, // hiding in this demo since most listings are in the same area
       lastAssetsPromise: null,
       assets: null,
       nbAssetsPerSlideDefault: 4,
@@ -352,7 +353,7 @@ export default {
               @text-changed="t => { query = t }"
             />
             <PlacesAutocomplete
-              v-show="isPlaceSearchEnabled"
+              v-show="isPlaceSearchEnabled && showPlacesAutocomplete"
               class="hero__search-field hero__search-place flex-item--grow-shrink-auto"
               pad-left
               :label="$t({ id: 'form.search.near_location_placeholder' })"
