@@ -3,6 +3,8 @@ import { createInstance } from 'stelace'
 const apiBaseURL = process.env.STELACE_API_URL
 const apiKey = process.env.STELACE_PUBLISHABLE_API_KEY
 
+const apiVersion = '2019-05-20'
+
 const MAX_RESULTS_PER_PAGE = 100 // cf. Stelace API reference for pagination details
 
 if (!apiKey) throw new Error('Missing Stelace publishable API key')
@@ -41,7 +43,7 @@ function getStelaceEnv () {
 }
 
 export function initStelaceSdk ({ apiBaseURL, apiKey }) {
-  const stelace = createInstance({ apiKey })
+  const stelace = createInstance({ apiKey, apiVersion })
 
   if (apiBaseURL) {
     const parsedUrl = new URL(apiBaseURL)
