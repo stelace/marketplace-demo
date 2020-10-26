@@ -1,10 +1,12 @@
-import { compact, uniqBy } from 'lodash'
+import { compact, uniqBy, debounce } from 'lodash'
 import stelace, { fetchAllResults } from 'src/utils/stelace'
 import * as types from 'src/store/mutation-types'
 
 import { isAssetId } from 'src/utils/id'
 
-export async function fetchMessages ({ commit, dispatch, state, rootGetters }, { forceRefreshAll = false } = {}) {
+const maxNetworkResourceDelay = 2000 // calls debounced up to this value
+
+export const fetchMessages = debounce(async function ({ commit, dispatch, state, rootGetters }, { forceRefreshAll = false } = {}) {
   // fetch the current user here
   // getters.currentUser may have not been populated in time
   // OR the current user changes (login/logout or organization)
@@ -74,7 +76,7 @@ export async function fetchMessages ({ commit, dispatch, state, rootGetters }, {
   const fetchAssetsRequest = (...args) => stelace.assets.list(...args)
   const fetchAllAssets = fetchAllResults(fetchAssetsRequest, { id: assetsIds })
 
-  const assets = await fetchAllAssets
+  const assets = assetsIds.length ? await fetchAllAssets : []
 
   usersIds = compact(uniqBy(usersIds.concat(assets.map(asset => asset.ownerId))))
 
@@ -112,7 +114,10 @@ export async function fetchMessages ({ commit, dispatch, state, rootGetters }, {
 
   if (rootGetters.ratingsActive) {
     const transactionsIds = uniqBy(allTransactions.map(b => b.id))
-    const assetIds = uniqBy(assets.map(asset => asset.id))
+    const assetIds = uniqBy(compact(
+      allTransactions.map(t => t.assetId) // assets referenced from transactions
+        .concat(assets.map(asset => asset.id))
+    ))
 
     await Promise.all([
       dispatch('fetchRatingsStats', { targetId: usersIds, groupBy: 'targetId' }),
@@ -120,7 +125,7 @@ export async function fetchMessages ({ commit, dispatch, state, rootGetters }, {
       dispatch('fetchRatedTransactions', { transactionsIds })
     ])
   }
-}
+}, maxNetworkResourceDelay, { leading: true, trailing: false })
 
 export async function setConversationArchivedStatus ({ commit, state, getters }, { conversationId, archived }) {
   const currentUser = getters.currentUser

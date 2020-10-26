@@ -1,4 +1,4 @@
-import { compact, uniqBy, pick } from 'lodash'
+import { compact, uniqBy, pick, isEmpty } from 'lodash'
 import stelace, { fetchAllResults } from 'src/utils/stelace'
 import * as types from 'src/store/mutation-types'
 import * as api from './api'
@@ -112,7 +112,7 @@ export async function searchAssets ({ state, rootState, rootGetters, commit, dis
 
   if (usersIds.length) {
     const fetchUserRequest = (...args) => stelace.users.list(...args)
-    users = await fetchAllResults(fetchUserRequest, { id: usersIds })
+    users = !isEmpty(usersIds) ? await fetchAllResults(fetchUserRequest, { id: usersIds }) : []
 
     commit({
       type: types.SEARCH__SET_USERS,
