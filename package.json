@@ -37,7 +37,7 @@
   "dependencies": {
     "@quasar/extras": "^1.9.9",
     "@sentry/browser": "^5.26.0",
-    "@sentry/integrations": "^5.25.0",
+    "@sentry/integrations": "^5.26.0",
     "axios": "^0.20.0",
     "binary-search-bounds": "^2.0.4",
     "geolib": "^3.3.1",
@@ -85,7 +85,7 @@
     "i18n-compile": "^1.1.1",
     "inquirer": "^7.3.3",
     "lint-staged": ">=10.4.2",
-    "markdown-it": "^11.0.1",
+    "markdown-it": "^12.0.0",
     "netlify-lambda": "^2.0.1",
     "npm-run-all": "^4.1.5",
     "p-map": "^4.0.0",
