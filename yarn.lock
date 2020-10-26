@@ -2453,10 +2453,10 @@ autoprefixer@9.8.6:
     postcss "^7.0.32"
     postcss-value-parser "^4.1.0"
 
-awesome-phonenumber@^2.32.0:
-  version "2.39.0"
-  resolved "https://registry.yarnpkg.com/awesome-phonenumber/-/awesome-phonenumber-2.39.0.tgz#7a6f3ef04df7e6168407ab73ac68a882e04ef5e7"
-  integrity sha512-GV1GZ/AZfsBU6EIYF4TlFhOuZus9IOT6wyVmFmFZvpUFCwsx8TRsyhEOhPxSUSdPgd/h4RehQmwgrWI/S26WKw==
+awesome-phonenumber@^2.39.0:
+  version "2.40.0"
+  resolved "https://registry.yarnpkg.com/awesome-phonenumber/-/awesome-phonenumber-2.40.0.tgz#02963b7a1a372572e42fb827401eb78d9ac4e294"
+  integrity sha512-ViGH+iNPzFCQ1s0Lut8jQC2dP05SjnntlA10emT8ANXy3UtyWykeWvKaDG17eWIcSjXqPvdKkPCco9Nu+Egj1g==
 
 aws-sign2@~0.7.0:
   version "0.7.0"
@@ -13449,13 +13449,13 @@ vue-style-loader@4.1.2, vue-style-loader@^4.1.0:
     hash-sum "^1.0.2"
     loader-utils "^1.0.2"
 
-vue-tel-input@4.4.1:
-  version "4.4.1"
-  resolved "https://registry.yarnpkg.com/vue-tel-input/-/vue-tel-input-4.4.1.tgz#7b716828c35e29063b6e9b48bcb83493ab369f13"
-  integrity sha512-YzyrwfyOwSaBTMDxnsyRolf1W7DJ0yIZ+C/Gc5PxZdgKVNBexw0PeYydJ2TQ1V4rG415VQcXWNdWdd6FZA1sTQ==
+vue-tel-input@4.4.2:
+  version "4.4.2"
+  resolved "https://registry.yarnpkg.com/vue-tel-input/-/vue-tel-input-4.4.2.tgz#a673f706f1e452b862908b9d7a0496df0e114a35"
+  integrity sha512-fZm9/gE2MFAe+EoF/R66t9oc0U9oI87TiPTxv6pHG8MGhrc62a+uvPqyE/clNhdEJJ0slGzVqkelBuw23HHWtw==
   dependencies:
     "@babel/runtime" "^7.8.4"
-    awesome-phonenumber "^2.32.0"
+    awesome-phonenumber "^2.39.0"
     core-js "^3.6.4"
 
 vue-template-compiler@2.6.12:
