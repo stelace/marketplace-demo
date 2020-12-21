@@ -97,7 +97,7 @@
     "testcafe-reporter-xunit": "^2.1.0",
     "testcafe-vue-selectors": "^3.1.0",
     "webfontloader": "^1.6.28",
-    "workbox-webpack-plugin": "^5.1.4"
+    "workbox-webpack-plugin": "^6.0.2"
   },
   "engines": {
     "node": ">= 10.18.0",
