@@ -81,7 +81,7 @@
     "glob": "^7.1.6",
     "html-critical-webpack-plugin": "^2.1.0",
     "html-loader": "^1.3.2",
-    "husky": ">=4.3.0",
+    "husky": ">=4.3.6",
     "i18n-compile": "^1.1.1",
     "inquirer": "^7.3.3",
     "lint-staged": ">=10.5.3",
