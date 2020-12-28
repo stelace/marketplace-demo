@@ -38,7 +38,7 @@
     "@quasar/extras": "^1.9.12",
     "@sentry/browser": "^5.29.2",
     "@sentry/integrations": "^5.28.0",
-    "axios": "^0.21.0",
+    "axios": "^0.21.1",
     "binary-search-bounds": "^2.0.4",
     "geolib": "^3.3.1",
     "intl-messageformat-parser": "^2.1.3",
