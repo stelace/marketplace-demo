@@ -1372,10 +1372,10 @@
     promise-limit "^2.5.0"
     puppeteer "^1.7.0"
 
-"@quasar/app@^2.1.13":
-  version "2.1.13"
-  resolved "https://registry.yarnpkg.com/@quasar/app/-/app-2.1.13.tgz#63ac26685725472e5619d4a2b340acee61d87d2e"
-  integrity sha512-L+j0ePAIhxWxRnUN48W/pQVRUzq0cPX8DbXpeIUh+F29oCAnq4Zk+bwefiT1HFQ253kpjW26x7fwLeuL8YqvdA==
+"@quasar/app@^2.1.14":
+  version "2.1.14"
+  resolved "https://registry.yarnpkg.com/@quasar/app/-/app-2.1.14.tgz#1922d6b81d6c38caaff5bd92d0985c395f659a73"
+  integrity sha512-NaUTJ7tuTMpObEwFfGrPYFFLs11i8yBFHVVMeM3qbjBoMrNLBATaQ9UCSGdgxVD3DpeoXfm81eLIVyJ20vAGzw==
   dependencies:
     "@quasar/babel-preset-app" "2.0.1"
     "@quasar/fastclick" "1.1.4"
@@ -2932,18 +2932,7 @@ browserify-zlib@^0.2.0:
   dependencies:
     pako "~1.0.5"
 
-browserslist@^4.0.0, browserslist@^4.12.0, browserslist@^4.14.7, browserslist@^4.8.5:
-  version "4.14.7"
-  resolved "https://registry.yarnpkg.com/browserslist/-/browserslist-4.14.7.tgz#c071c1b3622c1c2e790799a37bb09473a4351cb6"
-  integrity sha512-BSVRLCeG3Xt/j/1cCGj1019Wbty0H+Yvu2AOuZSuoaUWn3RatbL33Cxk+Q4jRMRAbOm0p7SLravLjpnT6s0vzQ==
-  dependencies:
-    caniuse-lite "^1.0.30001157"
-    colorette "^1.2.1"
-    electron-to-chromium "^1.3.591"
-    escalade "^3.1.1"
-    node-releases "^1.1.66"
-
-browserslist@^4.14.5, browserslist@^4.15.0:
+browserslist@^4.0.0, browserslist@^4.12.0, browserslist@^4.14.5, browserslist@^4.14.7, browserslist@^4.15.0, browserslist@^4.8.5:
   version "4.16.0"
   resolved "https://registry.yarnpkg.com/browserslist/-/browserslist-4.16.0.tgz#410277627500be3cb28a1bfe037586fbedf9488b"
   integrity sha512-/j6k8R0p3nxOC6kx5JGAxsnhc9ixaWJfYc+TNTzxg6+ARaESAvQGV7h0uNOB4t+pLQJZWzcrMxXOxjgsCj3dqQ==
@@ -3216,11 +3205,6 @@ caniuse-lite@^1.0.30001109:
   version "1.0.30001117"
   resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001117.tgz#69a9fae5d480eaa9589f7641a83842ad396d17c4"
   integrity sha512-4tY0Fatzdx59kYjQs+bNxUwZB03ZEBgVmJ1UkFPz/Q8OLiUUbjct2EdpnXj0fvFTPej2EkbPIG0w8BWsjAyk1Q==
-
-caniuse-lite@^1.0.30001157:
-  version "1.0.30001159"
-  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001159.tgz#bebde28f893fa9594dadcaa7d6b8e2aa0299df20"
-  integrity sha512-w9Ph56jOsS8RL20K9cLND3u/+5WASWdhC/PPrf+V3/HsM3uHOavWOR1Xzakbv4Puo/srmPHudkmCRWM7Aq+/UA==
 
 caniuse-lite@^1.0.30001165:
   version "1.0.30001170"
@@ -4706,11 +4690,6 @@ electron-osx-sign@^0.4.11:
     isbinaryfile "^3.0.2"
     minimist "^1.2.0"
     plist "^3.0.1"
-
-electron-to-chromium@^1.3.591:
-  version "1.3.603"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.603.tgz#1b71bec27fb940eccd79245f6824c63d5f7e8abf"
-  integrity sha512-J8OHxOeJkoSLgBXfV9BHgKccgfLMHh+CoeRo6wJsi6m0k3otaxS/5vrHpMNSEYY4MISwewqanPOuhAtuE8riQQ==
 
 electron-to-chromium@^1.3.621:
   version "1.3.629"
@@ -8408,7 +8387,7 @@ node-loader@1.0.2:
     loader-utils "^2.0.0"
     schema-utils "^3.0.0"
 
-node-releases@^1.1.66, node-releases@^1.1.67:
+node-releases@^1.1.67:
   version "1.1.67"
   resolved "https://registry.yarnpkg.com/node-releases/-/node-releases-1.1.67.tgz#28ebfcccd0baa6aad8e8d4d8fe4cbc49ae239c12"
   integrity sha512-V5QF9noGFl3EymEwUYzO+3NTDpGfQB4ve6Qfnzf3UNydMhjQRVPR1DZTuvWiLzaFJYw2fmDwAfnRNEVb64hSIg==
