@@ -35,7 +35,7 @@
     "test:ci:e2e": "testcafe 'firefox:headless,chrome:headless' tests/e2e/**/*.e2e.{j,t}s -c 2 --skip-js-errors -r xunit:/tmp/test-results/e2e.xml"
   },
   "dependencies": {
-    "@quasar/extras": "^1.9.12",
+    "@quasar/extras": "^1.9.13",
     "@sentry/browser": "^5.29.2",
     "@sentry/integrations": "^5.28.0",
     "axios": "^0.21.1",
