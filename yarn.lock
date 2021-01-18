@@ -2545,11 +2545,6 @@ autoprefixer@9.8.6:
     postcss "^7.0.32"
     postcss-value-parser "^4.1.0"
 
-awesome-phonenumber@^2.39.0:
-  version "2.40.0"
-  resolved "https://registry.yarnpkg.com/awesome-phonenumber/-/awesome-phonenumber-2.40.0.tgz#02963b7a1a372572e42fb827401eb78d9ac4e294"
-  integrity sha512-ViGH+iNPzFCQ1s0Lut8jQC2dP05SjnntlA10emT8ANXy3UtyWykeWvKaDG17eWIcSjXqPvdKkPCco9Nu+Egj1g==
-
 axios@^0.19.0:
   version "0.19.2"
   resolved "https://registry.yarnpkg.com/axios/-/axios-0.19.2.tgz#3ea36c5d8818d0d5f8a8a97a6d36b86cdc00cb27"
@@ -7351,6 +7346,11 @@ levn@^0.3.0, levn@~0.3.0:
   dependencies:
     prelude-ls "~1.1.2"
     type-check "~0.3.2"
+
+libphonenumber-js@^1.9.6:
+  version "1.9.8"
+  resolved "https://registry.yarnpkg.com/libphonenumber-js/-/libphonenumber-js-1.9.8.tgz#82f88ea473c2214667709c24220bade4b85e0752"
+  integrity sha512-gXzuhvlqdH20MlKAy1jXOVouCYByz43ZGCAeNnNuKQXUM+Wl36gbql0M27QQI3ahYCHJErd2W8ciqWweoQdbrQ==
 
 lie@3.1.1:
   version "3.1.1"
@@ -12311,14 +12311,14 @@ vue-style-loader@4.1.2, vue-style-loader@^4.1.0:
     hash-sum "^1.0.2"
     loader-utils "^1.0.2"
 
-vue-tel-input@4.4.2:
-  version "4.4.2"
-  resolved "https://registry.yarnpkg.com/vue-tel-input/-/vue-tel-input-4.4.2.tgz#a673f706f1e452b862908b9d7a0496df0e114a35"
-  integrity sha512-fZm9/gE2MFAe+EoF/R66t9oc0U9oI87TiPTxv6pHG8MGhrc62a+uvPqyE/clNhdEJJ0slGzVqkelBuw23HHWtw==
+vue-tel-input@5.0.2:
+  version "5.0.2"
+  resolved "https://registry.yarnpkg.com/vue-tel-input/-/vue-tel-input-5.0.2.tgz#c91f73402ede67e022819b9fa5113321b5ed2842"
+  integrity sha512-Rtg0JFcp/bgpKahGQ/tRea7uvp8Uh6PLY25iJm+lZuUZHlRpXOfxUQzlbvG5CwfcDNg89twkjg4Gsfd2TNI/Ew==
   dependencies:
-    "@babel/runtime" "^7.8.4"
-    awesome-phonenumber "^2.39.0"
-    core-js "^3.6.4"
+    core-js "^3.6.5"
+    libphonenumber-js "^1.9.6"
+    vue "^2.6.11"
 
 vue-template-compiler@2.6.12:
   version "2.6.12"
@@ -12333,7 +12333,7 @@ vue-template-es2015-compiler@^1.9.0:
   resolved "https://registry.yarnpkg.com/vue-template-es2015-compiler/-/vue-template-es2015-compiler-1.9.1.tgz#1ee3bc9a16ecbf5118be334bb15f9c46f82f5825"
   integrity sha512-4gDntzrifFnCEvyoO8PqyJDmguXgVPxKiIxrBKjIowvL9l+N66196+72XVYR8BBf1Uv1Fgt3bGevJ+sEmxfZzw==
 
-vue@2.6.12:
+vue@2.6.12, vue@^2.6.11:
   version "2.6.12"
   resolved "https://registry.yarnpkg.com/vue/-/vue-2.6.12.tgz#f5ebd4fa6bd2869403e29a896aed4904456c9123"
   integrity sha512-uhmLFETqPPNyuLLbsKz6ioJ4q7AZHzD8ZVFNATNyICSZouqP2Sz0rotWQC8UNBF6VGSCs5abnKJoStA6JbCbfg==
