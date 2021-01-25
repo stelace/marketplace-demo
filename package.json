@@ -37,7 +37,7 @@
   "dependencies": {
     "@quasar/extras": "^1.9.14",
     "@sentry/browser": "^6.0.1",
-    "@sentry/integrations": "^5.29.2",
+    "@sentry/integrations": "^6.0.1",
     "axios": "^0.21.1",
     "binary-search-bounds": "^2.0.4",
     "geolib": "^3.3.1",
