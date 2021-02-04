@@ -29,8 +29,11 @@ script
   .option('-l, --locales <list>', 'Deploy this comma-separated list of locales', commaSeparatedList)
 
 script.parse(process.argv)
-if (script.all === true) allLocales = true
-else if (Array.isArray(script.locales)) locales = _.uniq([...script.locales, 'context'])
+
+const options = script.opts()
+
+if (options.all === true) allLocales = true
+else if (Array.isArray(options.locales)) locales = _.uniq([...options.locales, 'context'])
 
 const {
   collection: defaultCollection,
