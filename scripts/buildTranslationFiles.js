@@ -42,7 +42,8 @@ const md = markdownIt({
 script
   .option('-v, --verbose', 'Show API changes for each website entry')
   .parse(process.argv)
-const verbose = script.verbose
+
+const { verbose } = script.opts()
 
 i18nCompile(
   [
