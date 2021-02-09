@@ -5,11 +5,11 @@ form:
         en: All
         fr: Tous
         context: Default search mode, generally “offers” as opposed to “requests” or submissions
-      renting:
-        en: For rent
+      vegan:
+        en: Vegan
         fr: Location
-        context: Renting search mode
-      selling:
-        en: For sale
+        context: Vegan search mode
+      glutenFree:
+        en: Gluten Free
         fr: Vente
-        context: Selling search mode
+        context:  Gluten Free search mode

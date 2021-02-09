@@ -15,9 +15,9 @@ instant:
         en: Freight included
         fr: Transport fourni
       # Housing marketplace
-      passive_label:
-        en: Passive House
+      vegan_label:
+        en: Vegan
         fr: Habitat passif
-      scenery_label:
-        en: Breathtaking Scenery
+      glutenFree_label:
+        en: Gluten Free
         fr: Paysage unique
