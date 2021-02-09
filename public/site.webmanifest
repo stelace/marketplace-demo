@@ -1,6 +1,7 @@
 {
-    "name": "Stelace",
-    "short_name": "Stelace",
+    "name": "Syr Market",
+    "short_name": "Syr Market",
+    "description": "A peer-to-peer marketplace for home cooked food.",
     "icons": [
         {
             "src": "/android-chrome-192x192.png",
@@ -13,7 +14,7 @@
             "type": "image/png"
         }
     ],
-    "theme_color": "#1055b6",
+    "theme_color": "#ffffff",
     "background_color": "#ffffff",
     "display": "standalone"
 }
