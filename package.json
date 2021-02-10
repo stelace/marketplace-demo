@@ -10,6 +10,7 @@
   "scripts": {
     "postinstall": "netlify-lambda install netlify && npm run fix-deps-crlf",
     "lint": "eslint --ext .js,.vue src",
+    "lint:fix": "eslint --ext .js,.vue src --fix",
     "fix-deps-crlf": "node scripts/fix-deps-crlf.js",
     "test": "echo \"No test specified\" && exit 0",
     "build": "quasar build && npm run functions:build",
