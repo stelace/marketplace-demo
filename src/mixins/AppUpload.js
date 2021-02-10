@@ -108,7 +108,7 @@ export default {
           return { formFields, url, fieldName }
         })
         .catch((err) => {
-          logger(err, { notification: 'error.failed_updoad' })
+          logger(err, { notification: 'error.failed_upload' })
         })
     },
     filesAdded (added) {

@@ -6,7 +6,7 @@ error:
   unknown_happened:
     en: An error has happened and we will do our best to fix the issue. Please retry later.
     fr: Une erreur s'est produite et nous cherchons à résoudre le problème. Veuillez réessayer plus tard.
-  failed_updoad:
+  failed_upload:
     en: File upload failed
     fr: Erreur lors du chargement de fichier
   file_upload_duplicate_name:
