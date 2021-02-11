@@ -23,7 +23,7 @@ const sentryLogger = {
  * @param {Object} [options] You can use the options exposed by Notify mixin.
  * @param {Boolean|String|Object} [options.notification] - Set to
  *   - `true` to use default error message,
- *   - or a valid translation content key String such as `error.failed_updoad`,
+ *   - or a valid translation content key String such as `error.failed_upload`,
  *   - or a full options object expected by Notify mixin.
  * @param {Object} [options.level=error] - console level (error, info…)
  * @param {Object} [options.isMessage=false] - should emit simple message instead of error

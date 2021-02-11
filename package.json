@@ -10,6 +10,7 @@
   "scripts": {
     "postinstall": "netlify-lambda install netlify && npm run fix-deps-crlf",
     "lint": "eslint --ext .js,.vue src",
+    "lint:fix": "eslint --ext .js,.vue src --fix",
     "fix-deps-crlf": "node scripts/fix-deps-crlf.js",
     "test": "echo \"No test specified\" && exit 0",
     "build": "quasar build && npm run functions:build",
@@ -24,6 +25,7 @@
     "translate": "node scripts/buildTranslationFiles.js",
     "translate:prod": "cross-env NODE_ENV=production node scripts/buildTranslationFiles.js",
     "deploy": "npm run build && netlify deploy --dir=dist/spa",
+    "deploy:dev": "npm run build && node scripts/deployManuallyToNetlifyDev.js",
     "deploy:prod": "npm run build && node scripts/deployManuallyToNetlifyProd.js",
     "deploy:translations": "node scripts/deployTranslations.js",
     "deploy:translations:prod": "cross-env NODE_ENV=production node scripts/deployTranslations.js",

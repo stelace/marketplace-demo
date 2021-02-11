@@ -412,7 +412,7 @@ export default {
       this.uploadingAvatarSrc = '' // wait for new user to be fetched
     },
     avatarUploadFailed (failed) {
-      this.notifyFailure('error.failed_updoad')
+      this.notifyFailure('error.failed_upload')
       this.uploadingAvatarSrc = ''
     },
     async requestEmailCheck () {

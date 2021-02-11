@@ -36,6 +36,22 @@ We advise you to set your website URL for POST requests as following:
 </CORSConfiguration>
 ```
 
+```json
+[
+  {
+    "AllowedOrigins": ["https://yourdomain.com"],
+    "AllowedMethods": ["POST"],
+    "AllowedHeaders": ["*"]
+  },
+  {
+    "AllowedOrigins": ["*"],
+    "AllowedMethods": ["GET"],
+    "MaxAgeSeconds": 3600,
+    "AllowedHeaders": ["*"]
+  }
+]
+```
+
 ## Getting signed URLs with AWS Lambda
 
 We need to secure uploads to this bucket by explicitly allowing them for every single file, rather than carelessly granting public write-access.
@@ -54,18 +70,15 @@ Here is the policy you can create as admin afterwards:
 
 ```json
 {
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Sid": "S3InstantTest",
-            "Effect": "Allow",
-            "Action": [
-                "s3:PutObject",
-                "s3:PutObjectAcl"
-            ],
-            "Resource": "arn:aws:s3:::YOUR_BUCKET_NAME/*"
-        }
-    ]
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "S3InstantTest",
+      "Effect": "Allow",
+      "Action": ["s3:PutObject", "s3:PutObjectAcl"],
+      "Resource": "arn:aws:s3:::YOUR_BUCKET_NAME/*"
+    }
+  ]
 }
 ```
 
@@ -86,11 +99,11 @@ Note that Cloud9 is only available in some AWS regions.
 
 You can also rely on AWS CLI `aws cloudformation` to deploy easily to any region.
 
-Here is the AWS SAM template you can use, feel free to adapt this to your needs:
+Here is the AWS SAM template you can use, feel free to adapt this to your needs, save it to a new file named `template.yaml`
 
 ```yaml
-AWSTemplateFormatVersion: '2010-09-09'
-Transform: 'AWS::Serverless-2016-10-31'
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: "AWS::Serverless-2016-10-31"
 Description: Managing upload to app's S3 bucket
 Globals:
   Api:
@@ -106,11 +119,11 @@ Globals:
       AllowOrigin: "'*'"
 Resources:
   getSignedUrlPolicy:
-    Type: 'AWS::Serverless::Function'
+    Type: "AWS::Serverless::Function"
     Properties:
       Handler: getSignedUrlPolicy/index.handler
-      Runtime: nodejs8.10
-      Description: 'Get short-lived signed URL with appropriate policy from S3-only user'
+      Runtime: nodejs12.x
+      Description: "Get short-lived signed URL with appropriate policy from S3-only user"
       MemorySize: 128
       Timeout: 15
       Environment:
@@ -130,41 +143,120 @@ Resources:
             Path: /upload/policy
             Method: GET
   getSignedUrlPolicyPermission:
-    Type: 'AWS::Lambda::Permission'
+    Type: "AWS::Lambda::Permission"
     Properties:
-      Action: 'lambda:InvokeFunction'
+      Action: "lambda:InvokeFunction"
       FunctionName:
-        'Fn::GetAtt':
+        "Fn::GetAtt":
           - getSignedUrlPolicy
           - Arn
       Principal: apigateway.amazonaws.com
       SourceArn:
-        'Fn::Sub': 'arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:*/*/*/*'
+        "Fn::Sub": "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:*/*/*/*"
 ```
+
+In the cloud9 console, run `sam validate` to check your template.
 
 ### Show me the real code
 
-Here is an example of signing code you can use in your Lambda function:
+Here is an example of signing code you can use in your Lambda function, save it at the location `getSignedUrlPolicy/index.js`
 
 ```js
-'use strict'
+"use strict";
 
-const crypto = require('crypto')
+const crypto = require("crypto");
 
-const s3 = require('./s3')
+// This is the entry function that produces data for the frontend
+// config is hash of S3 configuration:
+// * bucket
+// * region
+// * accessKey
+// * secretKey
+function s3Credentials(config, filename) {
+  return {
+    endpoint_url: "https://" + config.bucket + ".s3.amazonaws.com",
+    params: s3Params(config, filename)
+  };
+}
+
+// Returns the parameters that must be passed to the API call
+function s3Params(config, filename) {
+  var credential = amzCredential(config);
+  var policy = s3UploadPolicy(config, filename, credential);
+  var policyBase64 = new Buffer(JSON.stringify(policy)).toString("base64");
+  return {
+    key: filename,
+    acl: "public-read",
+    success_action_status: "201",
+    policy: policyBase64,
+    "x-amz-algorithm": "AWS4-HMAC-SHA256",
+    "x-amz-credential": credential,
+    "x-amz-date": dateString() + "T000000Z",
+    "x-amz-signature": s3UploadSignature(config, policyBase64, credential)
+  };
+}
+
+function dateString() {
+  var date = new Date().toISOString();
+  return date.substr(0, 4) + date.substr(5, 2) + date.substr(8, 2);
+}
+
+function amzCredential(config) {
+  return [
+    config.accessKey,
+    dateString(),
+    config.region,
+    "s3/aws4_request"
+  ].join("/");
+}
+
+// Constructs the policy
+function s3UploadPolicy(config, filename, credential) {
+  return {
+    // 5 minutes into the future
+    expiration: new Date(new Date().getTime() + 5 * 60 * 1000).toISOString(),
+    conditions: [
+      { bucket: config.bucket },
+      { key: filename },
+      { acl: "public-read" },
+      { success_action_status: "201" },
+      // Optionally control content type and file size
+      // {'Content-Type': 'application/pdf'},
+      ["content-length-range", 0, 1000000],
+      { "x-amz-algorithm": "AWS4-HMAC-SHA256" },
+      { "x-amz-credential": credential },
+      { "x-amz-date": dateString() + "T000000Z" }
+    ]
+  };
+}
+
+function hmac(key, string) {
+  var hmac = require("crypto").createHmac("sha256", key);
+  hmac.end(string);
+  return hmac.read();
+}
+
+// Signs the policy with the credential
+function s3UploadSignature(config, policyBase64, credential) {
+  var dateKey = hmac("AWS4" + config.secretKey, dateString());
+  var dateRegionKey = hmac(dateKey, config.region);
+  var dateRegionServiceKey = hmac(dateRegionKey, "s3");
+  var signingKey = hmac(dateRegionServiceKey, "aws4_request");
+  return hmac(signingKey, policyBase64).toString("hex");
+}
 
 exports.handler = async function(event, context) {
-  let result
-  let statusCode
-  let errorMessage
+  let result;
+  let statusCode;
+  let errorMessage;
 
-  let params = event
+  let params = event;
   // Handle both AWS Lambda and API Gateway (body nested) formats
   if (event.body) {
-    params = JSON.parse(event.body)
+    params = JSON.parse(event.body);
   }
   if (event.queryStringParameters) {
-    Object.assign(params, params.queryStringParameters)
+    Object.assign(params, params.queryStringParameters);
   }
 
   const s3Config = {
@@ -173,34 +265,43 @@ exports.handler = async function(event, context) {
     bucket: process.env.S3_BUCKET,
     region: process.env.S3_REGION,
     maxSize: process.env.MAX_SIZE || 10485760 // 10 MB
-  }
+  };
 
   if (params.filename) {
-    const filename = `${crypto.randomBytes(16).toString('hex')}-${ params.filename }`
+    const filename = `${crypto.randomBytes(16).toString("hex")}-${
+      params.filename
+    }`;
 
-    result = s3.s3Credentials(s3Config, {
+    result = s3Credentials(s3Config, {
       filename,
       contentType: params.content_type
-    })
+    });
   } else {
-    statusCode = 400
-    result = { message: 'Bad Request: filename is required' }
+    statusCode = 400;
+    result = { message: "Bad Request: filename is required" };
   }
 
   const response = {
     statusCode, // 200 by default
     headers: {
-      'Content-Type': 'application/json',
-      'Access-Control-Allow-Origin': '*'
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*"
     },
-    body: JSON.stringify(result),
-  }
+    body: JSON.stringify(result)
+  };
 
-  return response
-}
+  return response;
+};
 ```
 
-`./s3` required code is mostly adapted from [this article](http://leonid.shevtsov.me/post/demystifying-s3-browser-upload/), written for Express.
+## deploy your template and lambda function
+
+in the cloud9 console, `npm init` then, build `sam build`, then deploy `sam deploy --stack-name image-processing -g`
+
+## deploy the serverless-image-handler for image modification
+
+instructions here: https://docs.aws.amazon.com/solutions/latest/serverless-image-handler/deployment.html
+Make sure to choose the same region as your other services.
 
 ## Stelace Environment Variables
 
@@ -210,7 +311,7 @@ You can also get this in Lambda console by clicking on API gateway in function d
 It probably looks like `https://******.execute-api.eu-central-1.amazonaws.com/Prod/upload/policy`
 Paste this into Stelace Instant `VUE_APP_CDN_POLICY_ENDPOINT` .env variable.
 
-You’ll also need to set `VUE_APP_CDN_S3_BUCKET` and `VUE_APP_CDN_WITH_IMAGE_HANDLER_URL` CloudFront URL, like `https://******.cloudfront.net/`.
+You’ll also need to set `VUE_APP_CDN_S3_BUCKET` and `VUE_APP_CDN_WITH_IMAGE_HANDLER_URL` CloudFront URL, like `https://******.cloudfront.net/`. Values from the serverless-image-handler stack.
 
 You can get this last one in CloudFormation Stack page in Outputs tab, from "Sample Request".
 
