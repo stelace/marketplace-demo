@@ -37,11 +37,11 @@
     "test:ci:e2e": "testcafe 'firefox:headless,chrome:headless' tests/e2e/**/*.e2e.{j,t}s -c 2 --skip-js-errors -r xunit:/tmp/test-results/e2e.xml"
   },
   "dependencies": {
-    "@quasar/extras": "^1.9.14",
-    "@sentry/browser": "^6.0.1",
-    "@sentry/integrations": "^6.0.1",
+    "@quasar/extras": "^1.9.16",
+    "@sentry/browser": "^6.1.0",
+    "@sentry/integrations": "^6.1.0",
     "axios": "^0.21.1",
-    "binary-search-bounds": "^2.0.4",
+    "binary-search-bounds": "^2.0.5",
     "geolib": "^3.3.1",
     "intl-messageformat-parser": "^2.1.3",
     "lodash": "^4.17.20",
@@ -66,7 +66,7 @@
     "babel-eslint": "^10.1.0",
     "babel-plugin-lodash": "^3.3.4",
     "chalk": "^4.1.0",
-    "commander": "^6.2.1",
+    "commander": "^7.0.0",
     "core-js": "^3.8.3",
     "cross-env": "^7.0.3",
     "csvtojson": "^2.0.10",
@@ -86,9 +86,9 @@
     "husky": ">=4.3.8",
     "i18n-compile": "^1.1.1",
     "inquirer": "^7.3.3",
-    "lint-staged": ">=10.5.3",
+    "lint-staged": ">=10.5.4",
     "markdown-it": "^12.0.4",
-    "netlify-lambda": "^2.0.2",
+    "netlify-lambda": "^2.0.3",
     "npm-run-all": "^4.1.5",
     "p-map": "^4.0.0",
     "p-props": "^4.0.0",
@@ -99,7 +99,7 @@
     "testcafe-reporter-xunit": "^2.1.0",
     "testcafe-vue-selectors": "^3.1.0",
     "webfontloader": "^1.6.28",
-    "workbox-webpack-plugin": "^6.0.2"
+    "workbox-webpack-plugin": "^6.1.0"
   },
   "engines": {
     "node": ">= 10.18.0",
