@@ -172,20 +172,20 @@ const crypto = require("crypto");
 // * region
 // * accessKey
 // * secretKey
-function s3Credentials(config, filename) {
+function s3Credentials(config, file) {
   return {
     endpoint_url: "https://" + config.bucket + ".s3.amazonaws.com",
-    params: s3Params(config, filename)
+    params: s3Params(config, file)
   };
 }
 
 // Returns the parameters that must be passed to the API call
-function s3Params(config, filename) {
+function s3Params(config, file) {
   var credential = amzCredential(config);
-  var policy = s3UploadPolicy(config, filename, credential);
+  var policy = s3UploadPolicy(config, file, credential);
   var policyBase64 = new Buffer(JSON.stringify(policy)).toString("base64");
   return {
-    key: filename,
+    key: file.folder + "/" + file.filename,
     acl: "public-read",
     success_action_status: "201",
     policy: policyBase64,
@@ -211,17 +211,17 @@ function amzCredential(config) {
 }
 
 // Constructs the policy
-function s3UploadPolicy(config, filename, credential) {
+function s3UploadPolicy(config, file, credential) {
   return {
     // 5 minutes into the future
     expiration: new Date(new Date().getTime() + 5 * 60 * 1000).toISOString(),
     conditions: [
       { bucket: config.bucket },
-      { key: filename },
+      { key: file.folder + "/" + file.filename },
       { acl: "public-read" },
       { success_action_status: "201" },
       // Optionally control content type and file size
-      // {'Content-Type': 'application/pdf'},
+      { "content-type": file.contentType },
       ["content-length-range", 0, 1000000],
       { "x-amz-algorithm": "AWS4-HMAC-SHA256" },
       { "x-amz-credential": credential },
@@ -274,6 +274,7 @@ exports.handler = async function(event, context) {
 
     result = s3Credentials(s3Config, {
       filename,
+      folder: params.folder,
       contentType: params.content_type
     });
   } else {
