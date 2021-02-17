@@ -319,7 +319,7 @@
 import { mapState, mapGetters } from 'vuex'
 import { get, map, sortBy, values, compact, flatten, groupBy, isUndefined } from 'lodash'
 // WARNING: icons referenced in customAttributes should be included below
-import { mdiWhiteBalanceSunny, mdiImage } from '@quasar/extras/mdi-v4'
+import { mdiWhiteBalanceSunny, mdiImage, mdiSprout, mdiBarleyOff, mdiMoped, mdiWalk } from '@quasar/extras/mdi-v4'
 
 import { extractLocationDataFromPlace, isPlaceSearchEnabled } from 'src/utils/places'
 import { populateAsset } from 'src/utils/asset'
@@ -388,10 +388,14 @@ export default {
 
       const populatedAssetAttrs = map(attrs, (v, k) => {
         const def = values(definitions).find(d => d.name === k)
+        // FIXME: create a map of stings to 'mdiIcon' name
         // custom attribute icon
         if (def.materialIcon === 'insert_photo') def.icon = this.icons.mdiImage
         if (def.materialIcon === 'wb_sunny') def.icon = this.icons.mdiWhiteBalanceSunny
-
+        if (def.materialIcon === 'grass') def.icon = this.icons.mdiSprout
+        if (def.materialIcon === 'no_food') def.icon = this.icons.mdiBarleyOff
+        if (def.materialIcon === 'directions_walk') def.icon = this.icons.mdiWalk
+        if (def.materialIcon === 'delivery_dining') def.icon = this.icons.mdiMoped
         return Object.assign({ value: v }, def)
       })
 
@@ -481,6 +485,10 @@ export default {
     this.icons = {
       mdiImage,
       mdiWhiteBalanceSunny,
+      mdiSprout,
+      mdiBarleyOff,
+      mdiMoped,
+      mdiWalk
     }
   },
   methods: {

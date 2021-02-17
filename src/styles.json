@@ -1,5 +1,5 @@
 {
-  "name": "Stelace Instant Marketplace Demo",
+  "name": "Syr Market",
 
   "userFont": "Fira Sans",
 
@@ -18,20 +18,20 @@
 
   "homeHasLightBackground": false,
   "homeSearchCardBackground": "rgba(0, 0, 0, 0.6)",
-  "hasSVGActionButton": true,
+  "hasSVGActionButton": false,
 
   "baseImageAspectRatioWidth": 3,
   "baseImageAspectRatioHeight": 2,
   "baseImageWidth": 600,
   "avatarImageWidth": 96,
 
-  "primaryColor": "#1C3661",
-  "secondaryColor": "#AC0B70",
-  "accentColor": "#0F1D34",
+  "primaryColor": "#d32f2f",
+  "secondaryColor": "#d81b60",
+  "accentColor": "#9a0007",
   "positiveColor": "#139933",
   "negativeColor": "#C10015",
-  "infoColor": "#22A3BD",
+  "infoColor": "#d81b60",
   "warningColor": "#ED7F12",
 
-  "homeHeroUrl": "https://stelace-instant-files.s3.amazonaws.com/p/238380/live/images/0e1989c0b282c6c97b5b13d438711880-V2Voyage.jpg"
+  "homeHeroUrl": "https://d328vk3fbp0jh4.cloudfront.net/prod/jason-briscoe-7MAjXGUmaPw-unsplash.jpg"
 }

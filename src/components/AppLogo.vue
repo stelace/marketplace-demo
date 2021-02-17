@@ -11,9 +11,7 @@
     id="svg"
     xmlns="http://www.w3.org/2000/svg"
     xmlns:xlink="http://www.w3.org/1999/xlink"
-    width="60"
-    height="40"
-    viewBox="0, 0, 400,213.33333333333334"
+    viewBox="0, -30, 330, 260"
     version="1.1"
   ><g id="svgg"><path
     id="path0"
