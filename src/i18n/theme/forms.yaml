@@ -5,11 +5,11 @@ form:
         en: All
         fr: Tous
         context: Default search mode, generally “offers” as opposed to “requests” or submissions
-      vegan:
-        en: Vegan
+      pickup:
+        en: Pickup
         fr: Location
-        context: Vegan search mode
-      glutenFree:
-        en: Gluten Free
+        context: Search for things available for pick-up
+      delivery:
+        en: Delivery
         fr: Vente
-        context:  Gluten Free search mode
+        context: Search for things available for Delivery

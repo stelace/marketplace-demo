@@ -70,14 +70,14 @@ pages:
         fr: Présentation 3
   new_asset:
     page_title:
-      en: New listing - {SERVICE_NAME}
+      en: New meal - {SERVICE_NAME}
       fr: Nouvelle annonce {SERVICE_NAME}
       context: Window/Tab title (SEO).
     meta_description:
       en: Create your own listing in no time.
       fr: Créez votre propre annonce en quelques instants.
     header:
-      en: Create your new offer
+      en: Create your listing
       fr: Créez votre nouvelle annonce
     header__EDITOR_LABEL:
       en: Main header of your listing creation page

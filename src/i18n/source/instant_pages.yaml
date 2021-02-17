@@ -73,3 +73,18 @@ instant_pages:
         Available soon
       fr: |-
         Bientôt disponible
+  privacy:
+    header:
+      en: Privacy Policy
+      fr: Qui sommes-nous ?
+    subheader:
+      en: Privacy Policy
+      fr: Qui sommes-nous ?
+    INSTANT_PAGE_PATH:
+      en: privacy
+      fr: privacy
+    content[markdown]:
+      en: |-
+        Available soon
+      fr: |-
+        Bientôt disponible
