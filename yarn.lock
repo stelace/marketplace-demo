@@ -2560,11 +2560,6 @@ autoprefixer@9.8.6:
     postcss "^7.0.32"
     postcss-value-parser "^4.1.0"
 
-awesome-phonenumber@^2.39.0:
-  version "2.40.0"
-  resolved "https://registry.yarnpkg.com/awesome-phonenumber/-/awesome-phonenumber-2.40.0.tgz#02963b7a1a372572e42fb827401eb78d9ac4e294"
-  integrity sha512-ViGH+iNPzFCQ1s0Lut8jQC2dP05SjnntlA10emT8ANXy3UtyWykeWvKaDG17eWIcSjXqPvdKkPCco9Nu+Egj1g==
-
 axios@^0.19.0:
   version "0.19.2"
   resolved "https://registry.yarnpkg.com/axios/-/axios-0.19.2.tgz#3ea36c5d8818d0d5f8a8a97a6d36b86cdc00cb27"
@@ -12294,15 +12289,6 @@ vue-style-loader@4.1.2, vue-style-loader@^4.1.0:
   dependencies:
     hash-sum "^1.0.2"
     loader-utils "^1.0.2"
-
-vue-tel-input@4.4.2:
-  version "4.4.2"
-  resolved "https://registry.yarnpkg.com/vue-tel-input/-/vue-tel-input-4.4.2.tgz#a673f706f1e452b862908b9d7a0496df0e114a35"
-  integrity sha512-fZm9/gE2MFAe+EoF/R66t9oc0U9oI87TiPTxv6pHG8MGhrc62a+uvPqyE/clNhdEJJ0slGzVqkelBuw23HHWtw==
-  dependencies:
-    "@babel/runtime" "^7.8.4"
-    awesome-phonenumber "^2.39.0"
-    core-js "^3.6.4"
 
 vue-template-compiler@2.6.12:
   version "2.6.12"
