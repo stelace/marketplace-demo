@@ -2,7 +2,7 @@
 common:
   preheader_content: &preheader
     en: >-
-      Please add <a href="mailto:contact@example.com">contact@example.com</a> to your whitelist
+      Please add <a href="mailto:info@syr.market">info@syr.market</a> to your whitelist
       to receive our emails.
     fr: >-
       Ajoutez <a href="mailto:contact@example.com">contact@example.com</a>
@@ -12,7 +12,7 @@ common:
     fr: A très vite !
   footer_content: &footer_text
     en: >-
-      We’ll be happy to <a href="mailto:contact@example.com">give a hand</a> if you have any question.
+      We’ll be happy to <a href="mailto:support@syr.market">give a hand</a> if you have any question.
     fr: >-
       Une question ? Écrivez-nous à l’adresse <a href="mailto:contact@example.com">contact@example.com</a>
       et nous vous répondrons dès que possible.
@@ -20,25 +20,19 @@ common:
     en: "All rights reserved © 2019 {serviceName, select, undefined {} other {{serviceName}}}"
     fr: "Tous droits réservés © 2019 {serviceName, select, undefined {} other {{serviceName}}}"
   style__color_brand: &brand_color
-    en: "#1C3661"
+    en: "#d32f2f"
     fr: "#1C3661"
   style__color_calltoaction: &cta_color
-    en: "#1C3661"
+    en: "#d32f2f"
     fr: "#1C3661"
 
 # Individual template entry in email collection
 registration:
   subject:
     en: >-
-      "Confirm your{serviceName, select,
-        undefined {}
-        other {\_{serviceName}}
-      } email address"
+      Confirm your {serviceName, select, undefined {}  other {{serviceName}}} email address
     fr: >-
-      "Confirmez votre inscription{serviceName, select,
-        undefined {}
-        other {\_sur {serviceName}}
-      }"
+      Confirmez votre inscription {serviceName, select, undefined {}  other {\_sur {serviceName}}  }
   content:
     fr: >-
       Bonjour et bienvenue !<br><br>
@@ -61,15 +55,9 @@ registration:
 emailCheck:
   subject:
     en: >-
-      "Confirm your{serviceName, select,
-        undefined {}
-        other {\_{serviceName}}
-      } email address"
+      Confirm your {serviceName, select, undefined {} other {{serviceName}} } email address
     fr: >-
-      "Confirmez votre adresse email{serviceName, select,
-        undefined {}
-        other {\_sur {serviceName}}
-      }"
+      Confirmez votre adresse email {serviceName, select, undefined {}  other {\_sur {serviceName}} }
   content:
     en: >-
       Please confirm your new email address by clicking the following button.
@@ -84,14 +72,8 @@ emailCheck:
 
 passwordReset:
   subject:
-    en: "Lost{serviceName, select,
-        undefined {}
-        other {\_{serviceName}}
-      } password"
-    fr: "Nouveau mot de passe{serviceName, select,
-        undefined {}
-        other {\_{serviceName}}
-      }"
+    en: "Lost {serviceName, select,  undefined {}  other {\_{serviceName}}  } password"
+    fr: "Nouveau mot de passe {serviceName, select,  undefined {}  other {\_{serviceName}}  }"
   content:
     en: >-
       Please click the following link to reset your password. If you’ve not initiated this request,

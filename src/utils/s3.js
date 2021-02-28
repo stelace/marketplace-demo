@@ -22,7 +22,7 @@ export function getS3SignedUrl (file, { folder = 'files' } = {}) {
       encodeURIComponent(file.name)
     }&folder=${
       cleanPrefix(process.env.VUE_APP_CDN_UPLOAD_PREFIX)
-    }${folder}`,
+    }${folder}&content_type=${file.type}`,
     {
       headers: { 'x-api-key': publishable },
     }
@@ -37,7 +37,7 @@ export function getS3SignedUrl (file, { folder = 'files' } = {}) {
       const baseUrl = S3Sign.endpoint_url
 
       const path = get(fields.find(obj => obj.name === 'key'), 'value')
-      if (!path) throw new Error('Could not get signed upload path from S3')
+      if (!path || typeof path !== 'string') throw new Error('Could not get signed upload path from S3')
 
       const S3FileUrl = `${baseUrl}/${path}`
 

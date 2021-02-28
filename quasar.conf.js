@@ -33,18 +33,18 @@ module.exports = function (ctx) {
   })
 
   // Ensuring we have local translations up-to-date. Runs once.
-  execSync(`npm run translate${ctx.dev ? '' : ':prod'}`, { stdio: 'inherit' })
+  execSync(`npm run translate${ctx.dev ? ':dev' : ':prod'}`, { stdio: 'inherit' })
 
   // Upload latest translations in default locale to enable Stelace Dashboard editing
   // This must be done manually in production
   if (ctx.dev && process.env.STELACE_SECRET_API_KEY) {
-    execSync(`npm run deploy:translations${ctx.dev ? '' : ':prod'}`, { stdio: 'inherit' })
+    execSync(`npm run deploy:translations${ctx.dev ? ':dev' : ':prod'}`, { stdio: 'inherit' })
   }
 
   // Include API resources in build to save hundreds of milliseconds when loading app.
   // This means that app may have to be rebuilt and deployed again when updating Config,
   // Asset Types or Custom Attributes
-  execSync(`npm run conf${ctx.dev ? '' : ':prod'}`, { stdio: 'inherit' })
+  execSync(`npm run conf${ctx.dev ? ':dev' : ':prod'}`, { stdio: 'inherit' })
 
   // ///////// //
   // Dev tools //
@@ -300,7 +300,7 @@ module.exports = function (ctx) {
       vueRouterMode: 'history',
       // htmlFilename: 'index.html',
       sourceMap: ctx.dev || uploadSourceMapsToSentry,
-      devtool: ctx.dev ? '#cheap-module-eval-source-map'
+      devtool: ctx.dev ? 'source-map'
         // remove source map references from bundle when uploading .map files to sentry
         // instead of using default quasar setting '#source-map' when sourceMap option is enabled
         : (uploadSourceMapsToSentry ? '#hidden-source-map' : '#source-map'),
@@ -313,7 +313,7 @@ module.exports = function (ctx) {
         // Delete source map files once uploaded to sentry
         // Remove these lines if you need to serve source map in production.
         // Then you may need to adjust webpack devtool build option
-        if (!ctx.dev && uploadSourceMapsToSentry) {
+        if (uploadSourceMapsToSentry) {
           const mapFiles = glob.sync('dist/**/*.map')
           await pMap(mapFiles, async (f) => {
             await deleteFile(path.join(__dirname, f))

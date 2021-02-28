@@ -11,6 +11,7 @@ export default {
       return [
         { name: 'about-us', entry: 'navigation', field: 'about_us' },
         { name: 'terms', entry: 'navigation', field: 'terms' },
+        { name: 'privacy', entry: 'navigation', field: 'privacy' },
       ]
     },
     socialIconFooterLinks () {
@@ -81,7 +82,7 @@ export default {
         </AppLink>
       </div>
     </div>
-    <h3
+    <!-- <h3
       v-if="route.name === 'home'"
       class="text-subtitle2 text-center q-mt-xl q-mb-none"
     >
@@ -92,7 +93,7 @@ export default {
         entry="stelace"
         field="service_powered_by_stelace"
       />
-    </h3>
+    </h3> -->
   </footer>
 </template>
 
@@ -112,7 +113,7 @@ export default {
 
 <style lang="stylus">
 // stl-footer--bottom class on QPage parent component makes footer stick to bottom when page is empty
-$stl-footer-height = 18rem // Adjust to footer content length
+$stl-footer-height = 12rem // Adjust to footer content length
 
 .q-page.stl-footer--bottom
   padding-bottom: $stl-footer-height

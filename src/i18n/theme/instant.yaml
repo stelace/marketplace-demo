@@ -21,3 +21,9 @@ instant:
       glutenFree_label:
         en: Gluten Free
         fr: Paysage unique
+      pickup_label:
+        en: Pick-up
+        fr: Pick-up
+      delivery_label:
+        en: Delivery
+        fr: Delivery

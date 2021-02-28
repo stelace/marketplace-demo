@@ -5,17 +5,11 @@
 # Marketplace starter kit
 
 > This Stelace starter kit is free to use, under the terms of the [MIT license](./LICENSE).
-Feel free to [fork](
-  https://app.netlify.com/start/deploy?repository=https://github.com/stelace/marketplace-demo
-), contribute or just make it your own :heart:.
+> Feel free to [fork](https://app.netlify.com/start/deploy?repository=https://github.com/stelace/marketplace-demo), contribute or just make it your own :heart:.
 
 ---
 
-[![CircleCI](https://circleci.com/gh/stelace/marketplace-demo.svg?style=svg)](https://circleci.com/gh/stelace/marketplace-demo)[ ![Netlify Status](https://api.netlify.com/api/v1/badges/b3500c61-82b1-4cdd-a002-890a718ad5ea/deploy-status)](
-  https://app.netlify.com/sites/stelace-marketplace-test/deploys
-)[ ![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg)](
-  https://conventionalcommits.org
-)
+[![CircleCI](https://circleci.com/gh/stelace/marketplace-demo.svg?style=svg)](https://circleci.com/gh/stelace/marketplace-demo)[ ![Netlify Status](https://api.netlify.com/api/v1/badges/b3500c61-82b1-4cdd-a002-890a718ad5ea/deploy-status)](https://app.netlify.com/sites/stelace-marketplace-test/deploys)[ ![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg)](https://conventionalcommits.org)
 
 This starter kit offers **a [high-performance](#fast-by-default-checkered_flag) AirBnB-like marketplace front-end (Vue.js) with pre-configured serverless deployment** based on [open-source](https://github.com/stelace/stelace) [Stelace API](https://stelace.com) server.
 
@@ -31,7 +25,7 @@ This starter kit offers **a [high-performance](#fast-by-default-checkered_flag) 
 
 [![marketplace-demo-screenshot](https://stelace-instant-files.s3.amazonaws.com/p/238393/test/images/22d115c4e340b125120ce0f29ab36db8-stelace-marketplace-demo-laptop.png)](https://marketplace.demo.stelace.com)
 
-__[Live Demo](https://marketplace.demo.stelace.com)__
+**[Live Demo](https://marketplace.demo.stelace.com)**
 
 A platform template focused on search, automation and real-time is [also available](https://github.com/stelace/heroes-platform-demo).
 
@@ -133,19 +127,13 @@ cp .env.example .env.production
 You need to fill the following environment variables:
 
 - `STELACE_INSTANT_WEBSITE_URL`
-- `STELACE_PUBLISHABLE_API_KEY` (*pubk_*...) used in Vue app
-- `STELACE_SECRET_API_KEY` (*seck_*...) used in data seeding scripts
+- `STELACE_PUBLISHABLE_API_KEY` (\_pubk\_\_...) used in Vue app
+- `STELACE_SECRET_API_KEY` (\_seck\_\_...) used in data seeding scripts
 - `STELACE_API_URL` can be left blank unless you use your own server rather than default `api.stelace.com`
 
 Please refer to [`.env.example`](./.env.example) for more details about environment variables, including map, payment gateway, logging and analytics.
 
-4. Seed development [data](./docs/development-data.md)
-
-```sh
-yarn seed
-```
-
-5. Start the development server
+4. Start the development server
 
 ```sh
 quasar dev
@@ -155,39 +143,7 @@ yarn dev
 
 Please refer to [Quasar docs](https://quasar.dev/introduction-to-quasar) for more details about front-end configuration and components.
 
-<details>
-<summary>Developing with self-hosted Stelace API server (open-source backend).</summary>
-
-Stelace Core API server has to be launched locally before starting this project's server.
-
-First we need to launch services needed by Stelace Core API.
-
-```sh
-yarn docker:db
-```
-
-Then we need to initialize the database with Instant configuration.
-
-```sh
-cd /path/to/stelace-core
-git checkout dev
-yarn setup:instant
-```
-
-Secret and publishable api keys will be displayed so you can use it as environment variables for this project.
-You’ll also need to set some environment variables such as `STELACE_API_URL` (http://127.0.0.1:API_PORT).
-
-Let’s start the server.
-
-```sh
-yarn dev
-```
-
-Please refer to`.env.example` in `stelace-server` project.
-
-</details>
-
-6. Branding
+5. Branding
 
 Customize the app with your own colors and branding in `src/styles.json`, documented in [styles.json.md](https://github.com/stelace/marketplace-demo/blob/dev/src/styles.json.md).
 

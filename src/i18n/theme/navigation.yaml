@@ -2,6 +2,9 @@ navigation:
   terms:
     en: Terms of Use
     fr: Conditions Générales d’Utilisation
+  privacy:
+    en: Privacy Policy
+    fr: Privacy Policy
   github_button:
     en: Fork me on Github
     fr: Créez un fork Github
