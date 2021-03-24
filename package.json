@@ -8,7 +8,7 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "postinstall": "netlify-lambda install netlify && npm run fix-deps-crlf",
+    "postinstall": "netlify-lambda install netlify && npm run fix-deps-crlf && npm run huskyinstall",
     "lint": "eslint --ext .js,.vue src",
     "fix-deps-crlf": "node scripts/fix-deps-crlf.js",
     "test": "echo \"No test specified\" && exit 0",
@@ -32,7 +32,10 @@
     "seed": "node scripts/init-data.js",
     "test:e2e": "testcafe 'firefox' tests/e2e/**/*.e2e.{j,t}s",
     "test:e2e:headless": "testcafe 'firefox:headless' tests/e2e/**/*.e2e.{j,t}s",
-    "test:ci:e2e": "testcafe 'firefox:headless,chrome:headless' tests/e2e/**/*.e2e.{j,t}s -c 2 --skip-js-errors -r xunit:/tmp/test-results/e2e.xml"
+    "test:ci:e2e": "testcafe 'firefox:headless,chrome:headless' tests/e2e/**/*.e2e.{j,t}s -c 2 --skip-js-errors -r xunit:/tmp/test-results/e2e.xml",
+    "huskyinstall": "husky install",
+    "prepublishOnly": "pinst --disable",
+    "postpublish": "pinst --enable"
   },
   "dependencies": {
     "@quasar/extras": "^1.9.19",
@@ -89,6 +92,7 @@
     "npm-run-all": "^4.1.5",
     "p-map": "^4.0.0",
     "p-props": "^4.0.0",
+    "pinst": "^2.1.6",
     "preload-webpack-plugin": "^3.0.0-beta.4",
     "prerender-spa-plugin": "^3.4.0",
     "shelljs": "^0.8.4",
@@ -109,11 +113,6 @@
     "ie 11",
     "not dead"
   ],
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
   "lint-staged": {
     "*.{js,vue}": [
       "eslint --fix"
