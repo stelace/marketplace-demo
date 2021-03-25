@@ -6,7 +6,7 @@
     @close="closeDialog"
     @open="initEmail"
   >
-    <template v-slot:step1="{ goNext }">
+    <template #step1="{ goNext }">
       <q-card-section class="text-center">
         <AppContent
           entry="user"
@@ -31,7 +31,7 @@
             ]"
             lazy-rules
           >
-            <template v-slot:append>
+            <template #append>
               <q-icon :name="icons.matEmail" />
             </template>
           </q-input>
@@ -67,7 +67,7 @@
       </q-card-section>
     </template>
 
-    <template v-slot:step2>
+    <template #step2>
       <q-card-section class="text-center">
         <AppContent
           entry="user"

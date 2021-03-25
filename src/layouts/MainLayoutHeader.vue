@@ -286,7 +286,7 @@ export default {
           dense
           @input="updateQuery"
         >
-          <template v-slot:prepend>
+          <template #prepend>
             <QBtn
               :aria-label="$t({ id: 'form.search.query_placeholder' })"
               color="primary"
@@ -297,7 +297,7 @@ export default {
               @click="searchAssets"
             />
           </template>
-          <template v-slot:append>
+          <template #append>
             <QIcon
               v-show="search.query.length"
               ref="clearHeaderSearchInput"

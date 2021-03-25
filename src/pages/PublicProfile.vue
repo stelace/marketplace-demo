@@ -183,21 +183,21 @@ export default {
                 tag="div"
                 class="text-body1"
               >
-                <template v-slot:default>
+                <template #default>
                   <div class="row items-center">
                     <div class="text-h6 ellipsis">
                       {{ selectedUser.locationName }}
                     </div>
                   </div>
                 </template>
-                <template v-slot:placeholder>
+                <template #placeholder>
                   <AppContent
                     class="switchable-editor-placeholder"
                     entry="places"
                     field="address_placeholder"
                   />
                 </template>
-                <template v-slot:edition="{ content, saveDraft }">
+                <template #edition="{ saveDraft }">
                   <PlacesAutocomplete
                     :initial-query="locationValue"
                     :label="$t({ id: 'places.address_placeholder' })"

@@ -144,7 +144,7 @@ export default {
             :label="$t({ id: contentKey(customAttribute) })"
             @input="(value) => onCustomAttributeChange(customAttribute.name, value)"
           >
-            <template v-slot:append>
+            <template #append>
               <QBtn
                 v-show="customAttributes[customAttribute.name]"
                 :icon="icons.matClose"
@@ -177,7 +177,7 @@ export default {
             @input="(value) => onCustomAttributeChange(customAttribute.name, value)"
             @filter="(val, updated) => filterTagsFn(val, updated, customAttribute.name)"
           >
-            <template v-slot:selected-item="scope">
+            <template #selected-item="scope">
               <QChip
                 v-if="customAttributes[customAttribute.name]"
                 :tabindex="scope.tabindex"

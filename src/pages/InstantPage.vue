@@ -34,7 +34,7 @@ export default {
     https://itnext.io/anyway-heres-how-to-create-a-multiple-layout-system-with-vue-and-vue-router-b379baa91a05
   -->
   <BasicHeroLayout class="stl-instant-page">
-    <template v-slot:heroContent>
+    <template #heroContent>
       <AppContent
         class="text-h3"
         tag="h1"

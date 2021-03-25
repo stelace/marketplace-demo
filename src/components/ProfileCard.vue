@@ -20,7 +20,7 @@
             size="6rem"
             :show-hover-placeholder="!isProfilePage"
           >
-            <template v-slot:hover-placeholder>
+            <template #hover-placeholder>
               <AppContent
                 class="text-h6 text-weight-medium text-white"
                 entry="navigation"
@@ -44,7 +44,7 @@
           @uploaded="avatarUploaded"
           @failed="avatarUploadFailed"
         >
-          <template v-slot:header="scope">
+          <template #header="scope">
             <QAvatar
               ref="avatarUploader"
               :class="[
@@ -93,7 +93,7 @@
             </QAvatar>
           </template>
           <template>
-            <!-- Nothing: v-slot:list="uploader" -->
+            <!-- Nothing: #list="uploader" -->
           </template>
         </QUploader>
       </div>

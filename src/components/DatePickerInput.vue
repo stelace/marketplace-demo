@@ -7,7 +7,7 @@
     input-class="cursor-pointer"
     @click.native.stop="!$attrs.disabled && $refs.datePopup && $refs.datePopup.show()"
   >
-    <template v-slot:prepend>
+    <template #prepend>
       <QBtn
         v-if="calendarIconPosition === 'left' && !hideCalendarIcon"
         :aria-label="$t({ id: 'form.date_placeholder' })"
@@ -29,7 +29,7 @@
       </QBtn>
     </template>
 
-    <template v-slot:append>
+    <template #append>
       <QBtn
         v-if="calendarIconPosition === 'right' || hideCalendarIcon"
         :class="[hideCalendarIcon ? 'no-pointer-events' : '']"

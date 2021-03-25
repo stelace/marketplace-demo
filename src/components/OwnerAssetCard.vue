@@ -185,7 +185,7 @@ export default {
   >
     <template
       v-if="status"
-      v-slot:caption
+      #caption
     >
       <div class="absolute-full text-weight-medium text-h5 column flex-center">
         <template v-if="unavailable">
@@ -224,7 +224,7 @@ export default {
       </div>
     </template>
 
-    <template v-slot:bottom>
+    <template #bottom>
       <div
         class="row justify-end q-mt-sm q-mb-md"
         @click.prevent

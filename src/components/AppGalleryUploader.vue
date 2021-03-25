@@ -103,7 +103,7 @@ export default {
     >
       <template>
         <!-- This is global progress -->
-        <!-- v-slot:header="scope" -->
+        <!-- #header="scope" -->
         <!-- <div>
           {{ scope.uploadSizeLabel }} / {{ scope.uploadProgressLabel }}
         </div> -->
@@ -115,7 +115,7 @@ export default {
           field="drag_change_picture_order"
         />
       </template>
-      <template v-slot:list="scope">
+      <template #list="scope">
         <SlickList
           v-model="uploaderTransformedFiles"
           lock-axis="y"
