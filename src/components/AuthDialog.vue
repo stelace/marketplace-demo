@@ -88,7 +88,7 @@
               ]"
               lazy-rules
             >
-              <template v-slot:append>
+              <template #append>
                 <q-icon :name="icons.matEmail" />
               </template>
             </q-input>
@@ -107,7 +107,7 @@
               ]"
               lazy-rules
             >
-              <template v-slot:append>
+              <template #append>
                 <q-icon :name="icons.matLock" />
               </template>
             </q-input>
@@ -186,7 +186,7 @@
               ]"
               lazy-rules
             >
-              <template v-slot:append>
+              <template #append>
                 <q-icon :name="icons.matEmail" />
               </template>
             </q-input>
@@ -234,7 +234,7 @@
               ]"
               lazy-rules
             >
-              <template v-slot:append>
+              <template #append>
                 <q-icon :name="icons.matLock" />
               </template>
             </q-input>
@@ -288,14 +288,14 @@
               :bottom-slots="errorType === 'incorrectCurrentPassword'"
               :error="errorType === 'incorrectCurrentPassword'"
             >
-              <template v-slot:error>
+              <template #error>
                 <AppContent
                   v-if="errorType === 'incorrectCurrentPassword'"
                   entry="user"
                   field="account.incorrect_current_password"
                 />
               </template>
-              <template v-slot:append>
+              <template #append>
                 <q-icon :name="icons.matLock" />
               </template>
             </q-input>
@@ -314,7 +314,7 @@
               ]"
               lazy-rules
             >
-              <template v-slot:append>
+              <template #append>
                 <q-icon :name="icons.matLock" />
               </template>
             </q-input>

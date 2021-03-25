@@ -25,7 +25,7 @@
   >
     <template
       v-if="showSearchIcon && searchIconPosition === 'left'"
-      v-slot:prepend
+      #prepend
     >
       <QBtn
         v-if="iconButtonAction"
@@ -43,7 +43,7 @@
       />
     </template>
 
-    <template v-slot:append>
+    <template #append>
       <template v-if="showSearchIcon && searchIconPosition === 'right' && !selectedAssetType">
         <QBtn
           v-if="iconButtonAction"

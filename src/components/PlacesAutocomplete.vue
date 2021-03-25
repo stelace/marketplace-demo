@@ -15,7 +15,7 @@
     @keyup.up.native="focusChanged"
     @keyup.enter.native="onEnter"
   >
-    <template v-slot:option="scope">
+    <template #option="scope">
       <QItem
         v-bind="scope.itemProps"
         v-on="scope.itemEvents"
@@ -34,7 +34,7 @@
         (showSearchIcon && searchIconPosition === 'left')
           || padLeft
       "
-      v-slot:prepend
+      #prepend
     >
       <template v-if="showSearchIcon && searchIconPosition === 'left'">
         <QIcon
@@ -52,7 +52,7 @@
       </template>
     </template>
 
-    <template v-slot:append>
+    <template #append>
       <QBtn
         v-if="location !== null"
         :icon="icons.matClear"
@@ -77,7 +77,7 @@
       />
     </template>
 
-    <template v-slot:no-option>
+    <template #no-option>
       <QItem>
         <QItemSection class="text-grey">
           {{ $t({ id: 'status.no_results' }) }}

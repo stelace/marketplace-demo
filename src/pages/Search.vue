@@ -87,6 +87,7 @@
 
 <script>
 /* global mapboxgl */
+/* eslint-disable vue/one-component-per-file */
 import Vue from 'vue'
 import { mapState, mapGetters } from 'vuex'
 import * as mutationTypes from 'src/store/mutation-types'

@@ -351,7 +351,7 @@ export default {
               @uploaded="filesUploaded"
               @failed="filesFailed"
             >
-              <template v-slot:header="scope">
+              <template #header="scope">
                 <div
                   class="row no-wrap items-center q-px-sm q-py-md q-gutter-xs cursor-pointer relative-position"
                 >
@@ -405,7 +405,7 @@ export default {
           >
             <template
               v-if="canUploadAttachments && !fileUpload.bigger"
-              v-slot:prepend
+              #prepend
             >
               <QBtn
                 round
@@ -414,7 +414,7 @@ export default {
                 :icon="icons.matAttachment"
               />
             </template>
-            <template v-slot:append>
+            <template #append>
               <QBtn
                 :disabled="!draftMessage"
                 :icon="icons.matSend"
@@ -457,7 +457,7 @@ export default {
               : style.colorfulTheme ? 'secondary' : lightBackgroundColor"
             :stamp="getTimestamp(message.createdDate)"
           >
-            <template v-slot:avatar>
+            <template #avatar>
               <AppAvatar
                 class="q-mx-sm"
                 :user="message.senderId === currentUser.id ? currentUser : inbox.interlocutor"

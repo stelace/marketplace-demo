@@ -50,18 +50,18 @@
             :custom-save="updateAssetFn('locations')"
           >
             <template>
-              <!-- v-slot:default="{ content }" -->
+              <!-- #default="{ content }" -->
               <div class="text-h6 ellipsis">
                 {{ activeAsset.locationName }}
               </div>
             </template>
-            <template v-slot:placeholder>
+            <template #placeholder>
               <AppContent
                 entry="places"
                 field="address_placeholder"
               />
             </template>
-            <template v-slot:edition="{ content, saveDraft }">
+            <template #edition="{ saveDraft }">
               <PlacesAutocomplete
                 :initial-query="activeAsset.locationName"
                 :label="$t({ id: 'places.address_placeholder' })"

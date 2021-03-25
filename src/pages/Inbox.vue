@@ -201,7 +201,7 @@ export default {
           grid
         >
           <template>
-            <!-- v-slot:top="props" -->
+            <!-- #top="props" -->
             <QSpace />
 
             <div
@@ -248,13 +248,13 @@ export default {
               debounce="300"
               :placeholder="$t({ id: 'form.search.placeholder' })"
             >
-              <template v-slot:append>
+              <template #append>
                 <QIcon :name="icons.matSearch" />
               </template>
             </QInput>
           </template>
 
-          <template v-slot:item="props">
+          <template #item="props">
             <router-link
               :to="{ name: 'conversation', params: { id: props.row.id } }"
               :class="[

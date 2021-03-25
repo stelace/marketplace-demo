@@ -45,6 +45,10 @@ module.exports = {
         "max": 1, // default
         "allowFirstLine": false // default
       }
-    }]
+    }],
+
+    // https://eslint.vuejs.org/rules/no-lone-template.html
+    // consider turn it on when upgrading to Vue 3
+    "vue/no-lone-template": 'off'
   }
 }

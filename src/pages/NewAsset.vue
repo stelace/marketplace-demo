@@ -379,7 +379,7 @@ export default {
 
 <template>
   <BasicHeroLayout>
-    <template v-slot:heroContent>
+    <template #heroContent>
       <AppContent
         class="text-h4"
         tag="h1"
