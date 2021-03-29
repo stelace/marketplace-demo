@@ -57,7 +57,7 @@
     "vue-intl": "3.1.0",
     "vue-meta": "^2.4.0",
     "vue-slicksort": "^1.2.0",
-    "vue-socket.io-extended": "4.0.7",
+    "vue-socket.io-extended": "4.1.0",
     "vuex-router-sync": "^5.0.0"
   },
   "devDependencies": {
