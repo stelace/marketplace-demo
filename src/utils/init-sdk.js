@@ -1,8 +1,10 @@
 const { createInstance } = require('stelace')
 const URL = require('url-parse')
 
+const apiVersion = '2019-05-20'
+
 function initStelaceSdk ({ apiBaseURL, apiKey }) {
-  const stelace = createInstance({ apiKey })
+  const stelace = createInstance({ apiKey, apiVersion })
 
   if (apiBaseURL) {
     const parsedUrl = new URL(apiBaseURL)
