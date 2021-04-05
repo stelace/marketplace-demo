@@ -39,7 +39,7 @@
   },
   "dependencies": {
     "@quasar/extras": "^1.9.19",
-    "@sentry/browser": "^6.2.3",
+    "@sentry/browser": "^6.2.5",
     "@sentry/integrations": "^6.2.5",
     "axios": "^0.21.1",
     "binary-search-bounds": "^2.0.5",
