@@ -37,6 +37,7 @@ export default {
       isPlaceSearchEnabled,
       userRatingsByTransaction: [],
       userRatingsLoaded: false,
+      social: { instagram: 'Instagram Link', facebook: 'Facebook Link', twitter: 'Twitter Link', website: 'Website Link' },
     }
   },
   computed: {
@@ -126,6 +127,12 @@ export default {
         await this.updateUser(fieldName, value)
       }
     },
+    updateSocUserFn (fieldName) {
+      return async (value) => {
+        var meta = 'metadata'
+        await this.updateSocUser(fieldName, value, meta)
+      }
+    },
     prepareUpdatedLocations (place, handlerFn) {
       extractLocationDataFromPlace(place, loc => { handlerFn(loc ? [loc] : null) })
     },
@@ -134,6 +141,24 @@ export default {
       const newLocations = locations.filter((loc, i) => i !== index)
 
       await this.updateUser('locations', newLocations)
+    },
+    async updateSocUser (fieldName, value, meta) {
+      var obj = {}
+      obj[fieldName] = value
+      await this.$store.dispatch('updateUser', {
+        userId: this.selectedUser.id,
+        attrs: {
+          [meta]: obj
+        }
+      })
+      this.notifySuccess('notification.saved')
+
+      // Hack to erase the content in locations AppSwitchableEditor (c.f. `computed.locationValue`)
+      if (fieldName === 'locations') {
+        this.locationsChanged = true
+        await this.$nextTick()
+        this.locationsChanged = false
+      }
     },
     async updateUser (fieldName, value) {
       await this.$store.dispatch('updateUser', {
@@ -240,7 +265,86 @@ export default {
             input-type="textarea"
           />
         </section>
+        <QSeparator class="q-mt-xl" />
+        <section
+          v-show="!(selectedUser.id && !isCurrentUser && !selectedUser.metadata)"
+          class="q-px-sm"
+        >
+        <h2 class="text-h4 text-weight-medium stl-content-entry">Social links</h2>
+          <!-- Shared by natural user and orgs -->
+          <!-- reuse generic asset.description_label -->
 
+          <AppSwitchableEditor
+            tag="p"
+            class="text-body1 q-ma-lg text-justify"
+            :value="selectedUser.metadata.instagram"
+            :active="isCurrentUser"
+            :custom-save="updateSocUserFn('instagramLink')"
+            :input-label="social.instagram"
+            allow-falsy-save
+            input-type="textarea"
+          />
+        </section>
+
+        <section
+          v-show="!(selectedUser.id && !isCurrentUser && !selectedUser.metadata)"
+          class="q-px-sm"
+        >
+          <QSeparator class="q-mt-xl" />
+          <!-- Shared by natural user and orgs -->
+          <!-- reuse generic asset.description_label -->
+
+          <AppSwitchableEditor
+            tag="p"
+            class="text-body1 q-ma-lg text-justify"
+            :value="selectedUser.metadata.facebookLink"
+            :active="isCurrentUser"
+            :custom-save="updateSocUserFn('facebookLink')"
+            :input-label="social.facebook"
+            allow-falsy-save
+            input-type="textarea"
+          />
+        </section>
+
+        <section
+          v-show="!(selectedUser.id && !isCurrentUser && !selectedUser.metadata)"
+          class="q-px-sm"
+        >
+          <QSeparator class="q-mt-xl" />
+          <!-- Shared by natural user and orgs -->
+          <!-- reuse generic asset.description_label -->
+
+          <AppSwitchableEditor
+            tag="p"
+            class="text-body1 q-ma-lg text-justify"
+            :value="selectedUser.metadata.twitterLink"
+            :active="isCurrentUser"
+            :custom-save="updateSocUserFn('twitterLink')"
+            :input-label="social.twitter"
+            allow-falsy-save
+            input-type="textarea"
+          />
+        </section>
+
+        <section
+          v-show="!(selectedUser.id && !isCurrentUser && !selectedUser.metadata)"
+          class="q-px-sm"
+        >
+          <QSeparator class="q-mt-xl" />
+          <!-- Shared by natural user and orgs -->
+          <!-- reuse generic asset.description_label -->
+
+          <AppSwitchableEditor
+            tag="p"
+            class="text-body1 q-ma-lg text-justify"
+            :value="selectedUser.metadata.websiteLink"
+            :active="isCurrentUser"
+            :custom-save="updateSocUserFn('websiteLink')"
+            :input-label="social.website"
+            allow-falsy-save
+            input-type="textarea"
+          />
+        </section>
         <section
           v-if="isCurrentUser && stripeActive && selectedUserAssets.length && !hasLinkedStripeAccount"
           class="q-px-sm"
@@ -316,6 +420,9 @@ export default {
 </template>
 
 <style lang="stylus" scoped>
+.q-mt-xl, .q-my-xl {
+    margin-top:45px;
+}
 .justify-assets
   justify-content: center
   @media (min-width: $breakpoint-sm-min)
