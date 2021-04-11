@@ -29,6 +29,17 @@
             color="warning"
             text-color="white"
           />
+          <AppContent
+            v-if="activeAsset.id && isCurrentUserTheOwner && !hasLinkedStripeAccount"
+            class="text-uppercase non-selectable"
+            tag="QBtn"
+            entry="user"
+            field="account.stripe.link_account_reminder"
+            :rounded="style.roundedTheme"
+            color="primary"
+            text-color="white"
+            @click="goToProfile"
+          />
 
           <AppContent
             v-if="activeAsset.startDate"
