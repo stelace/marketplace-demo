@@ -29,6 +29,17 @@
             color="warning"
             text-color="white"
           />
+          <AppContent
+            v-if="activeAsset.id && isCurrentUserTheOwner && !hasLinkedStripeAccount"
+            class="text-uppercase non-selectable"
+            tag="QBtn"
+            entry="user"
+            field="account.stripe.link_account_reminder"
+            :rounded="style.roundedTheme"
+            color="primary"
+            text-color="white"
+            @click="goToProfile"
+          />
 
           <AppContent
             v-if="activeAsset.startDate"
@@ -334,6 +345,7 @@ import TransactionRatingsList from 'src/components/TransactionRatingsList'
 
 import PageComponentMixin from 'src/mixins/pageComponent'
 import PaymentMixin from 'src/mixins/payment'
+import StripeMixin from 'src/mixins/stripe'
 
 export default {
   components: {
@@ -348,6 +360,7 @@ export default {
   mixins: [
     PageComponentMixin,
     PaymentMixin,
+    StripeMixin,
   ],
   data () {
     return {
@@ -448,6 +461,7 @@ export default {
       'ratingsActive',
       'paymentActive',
       'conversations',
+      'stripeActive',
     ]),
   },
   watch: {
@@ -497,6 +511,9 @@ export default {
       // with server-side rendering (SSR)
       this.fetchRelatedAssets()
       this.fetchAssetRatingsByTransaction()
+    },
+    goToProfile () {
+      return this.$router.push({ name: 'publicProfile', params: { id: this.currentUser.id } })
     },
     toggleImageEdition (editing) {
       this.isEditingImages = typeof editing === 'boolean'

@@ -21,7 +21,7 @@ export default {
   appUpdateNoCache: true,
 
   placeholderImageBaseUrl: 'https://placeimg.com',
-  acceptWebP: false,
+  acceptWebP: true,
   // http://probablyprogramming.com/2009/03/15/the-tiniest-gif-ever
   blankImageBase64: 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==',
 

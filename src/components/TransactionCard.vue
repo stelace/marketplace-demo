@@ -187,18 +187,30 @@ export default {
         quantity: 1
       })
     },
-    fetchTransactionPreview () {
+    async fetchTransactionPreview () {
       const endDate = convertEndDate(this.endDate, { target: 'api' })
 
       const invalidDates = this.startDate && endDate && endDate < this.startDate
       if (invalidDates) return
+      try {
+        await this.$store.dispatch('previewTransaction', {
+          assetId: this.activeAsset.id,
+          startDate: this.startDate,
+          endDate,
+          quantity: this.quantity
+        })
+      } catch (error) {
+        // caught error, just throw for now so it bubbles up
+        if (error.message === 'Owner has not linked their Stripe account') {
+          this.notify('transaction.error.seller_unavailable', {
+            closeBtn: '✕',
+            multiLine: false,
+            timeout: 10 * 60 * 1000 // 10 minutes
+          })
+        }
 
-      this.$store.dispatch('previewTransaction', {
-        assetId: this.activeAsset.id,
-        startDate: this.startDate,
-        endDate,
-        quantity: this.quantity
-      })
+        throw error
+      }
     },
     onAuthChange (status) {
       if (status === 'success' && this.actionAfterAuthentication) {
@@ -231,19 +243,28 @@ export default {
 
       if (this.stripeActive) {
         await this.$store.dispatch('getStripeCustomer')
-        const sessionId = await this.$store.dispatch('createStripeCheckoutSession', { transactionId: transaction.id })
-
-        const stripe = await this.loadStripe()
-        await stripe.redirectToCheckout({ sessionId })
-      } else {
-        this.$router.push({
-          name: 'conversation',
-          params: { id: message.conversationId }
-        })
-
-        this.resetTransactionParameters()
-        this.$store.dispatch('resetTransactionPreview')
+        try {
+          const sessionId = await this.$store.dispatch('createStripeCheckoutSession', { transactionId: transaction.id })
+          const stripe = await this.loadStripe()
+          await stripe.redirectToCheckout({ sessionId })
+          return
+        } catch (error) {
+          if (error.message === 'Owner has not linked their Stripe account') {
+            this.notify('transaction.error.seller_unavailable', {
+              closeBtn: '✕',
+              multiLine: false,
+              timeout: 10 * 60 * 1000 // 10 minutes
+            })
+          }
+        }
       }
+      this.$router.push({
+        name: 'conversation',
+        params: { id: message.conversationId }
+      })
+
+      this.resetTransactionParameters()
+      this.$store.dispatch('resetTransactionPreview')
     },
   }
 }
@@ -441,7 +462,7 @@ export default {
     <div class="row">
       <AppCheckoutButton
         class="full-width"
-        :disabled="!validTransactionOptions || isOwnerCurrentUser"
+        :disabled="!validTransactionOptions || isOwnerCurrentUser || !preview"
         @click="checkout"
       />
     </div>
