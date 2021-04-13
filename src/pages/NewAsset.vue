@@ -62,6 +62,10 @@ export default {
     isAssetTypeReadonly () {
       return !!this.asset.asset.id
     },
+    priceyRequired () {
+      const pr = this.price
+      return !!pr.length
+    },
     categoryRequired () {
       const categories = values(this.common.categoriesById)
       return !!categories.length
@@ -138,7 +142,8 @@ export default {
       }
 
       const validCategory = this.selectedCategory && this.selectedCategory.name
-      if ((!this.categoryRequired || validCategory) && !isNaN(parseInt(this.price))) {
+      // if ((!this.categoryRequired || validCategory) && !isNaN(parseInt(this.price))) {
+      if ((!this.categoryRequired || validCategory)) {
         steps[3] = true
       }
 
@@ -185,6 +190,20 @@ export default {
     EventBus.$off('authStatusChanged', (status) => this.onAuthChange(status))
   },
   methods: {
+    addpriceEvent ($event) {
+      var keyCode = ($event.keyCode ? $event.keyCode : $event.which)
+      // only allow number and one dot
+      if ((keyCode < 48 || keyCode > 57) && (keyCode !== 46 || this.price.toString().indexOf('.') !== -1)) { // 46 is dot
+        $event.preventDefault()
+      }
+      // restrict to 2 decimal places
+      if (this.price != null && this.price.toString().indexOf('.') > -1 && (this.price.toString().split('.')[1].length > 1)) {
+        $event.preventDefault()
+      }
+      if (this.price != null && this.price.toString().indexOf('.') > -1 && (this.price.toString().split('.')[1].length === 1)) {
+        if (keyCode === 48) $event.preventDefault()
+      }
+    },
     afterAuth () {
       if (this.currentUser.id && this.currentUser.locations.length) {
         this.locations = [this.currentUser.locations[0]]
@@ -461,13 +480,15 @@ export default {
                 />
               </div>
               <div :style="showCategory ? 'flex: 1 2 auto;' : ''">
-                <AppInputNumber
+                <QInput
                   v-model="price"
+                  :value="price"
                   :label="priceLabel"
                   :rules="[
-                    price => Number.isFinite(price) ||
+                    price => !!price ||
                       $t({ id: 'form.error.missing_price' })
                   ]"
+                  @keypress="addpriceEvent"
                   required
                   bottom-slots
                 />
