@@ -53,6 +53,10 @@ export default {
       newUserImages: [], // to add to user images for reuse
       uploaderFiles: [],
       creatingAsset: false,
+      deliverytypes: [],
+      pickup: false,
+      delivery: false,
+
     }
   },
   computed: {
@@ -308,7 +312,11 @@ export default {
               images,
               // Save dates to create custom availabilities with Workflows
               startDate: this.startDate,
-              endDate: this.endDate
+              endDate: this.endDate,
+              pickup: this.pickup,
+              delivery: this.delivery,
+              deliverytype: this.deliverytypes
+
             }
           }
 
@@ -600,7 +608,52 @@ export default {
                 @change="changeCustomAttributes"
               />
             </div>
-
+            <div class="row text-left">
+            <div class="col-12 col-md-5">
+             <label class="customck">
+             Pickup
+            <input
+             type="checkbox"
+             id="jack"
+             value="1"
+             v-model="pickup"
+             />
+             <span class="checkmark"></span>
+            </label>
+            <label class="customck">
+            Delivery
+            <input
+            type="checkbox"
+             id="john"
+             value="1"
+             v-model="delivery"
+             />
+             <span class="checkmark"></span>
+            </label>
+            <div v-if="delivery == true">
+              <label class="customck">
+                Local delivery
+              <input
+             type="checkbox"
+             id="jack"
+             value="local"
+             v-model="deliverytypes"
+             />
+             <span class="checkmark"></span>
+            </label>
+            <label class="customck">
+              Long distance delivery
+            <input
+            type="checkbox"
+             id="john"
+             value="distance"
+             v-model="deliverytypes"
+             />
+             <span class="checkmark"></span>
+            </label>
+            </div>
+            </div>
+            </div>
             <div class="step-asset-picture q-py-lg">
               <AppContent
                 class="text-h5"
@@ -640,6 +693,67 @@ export default {
 </template>
 
 <style lang="stylus" scoped>
+label.customck {
+display: block;
+    position: relative;
+    padding-left:85px;
+    margin-bottom:0px;
+    cursor: pointer;
+    font-size: 16px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    line-height: 20px;
+    min-height: 60px;
+    padding-top: 20px;
+}
+.customck .checkmark:after {
+        content: "";
+        position: absolute;
+        display: none;
+      }
+      .customck input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+      }
+      .customck .checkmark {
+        position: absolute;
+    top: 20px;
+    left:45px;
+    height: 20px;
+    width: 20px;
+    background-color: transparent;
+    border-radius: 2px;
+    border: 2px solid #484848;
+      }
+      label.customck:hover {
+    background-color: #ededed;
+}
+      .customck input:checked ~ .checkmark:after {
+        display: block;
+      }
+      .customck .checkmark:after {
+  left: 8px;
+    top: 2px;
+    width: 7px;
+    height: 15px;
+    border: solid #fff;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(
+45deg
+);
+    transform: rotate(
+45deg
+);
+      }
+    .customck input:checked ~ .checkmark {
+  background-color:#d81b60;
+    border: 2px transparent;
+    width: 22px;
+    height: 22px;
+}
 .row-input
   flex: 1 0
   min-width: 0

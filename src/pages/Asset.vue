@@ -152,9 +152,58 @@
             allow-falsy-save
             input-type="textarea"
           />
-
+          <div class="row text-left">
+          <div class="col-12 col-md-5">
+            <label class="customck">
+             Pickup
+            <input
+             type="checkbox"
+             id="pickup"
+             :value="activeAsset.metadata.pickup"
+             :checked="activeAsset.metadata.pickup"
+             @change="changepickupdelivery"
+             />
+             <span class="checkmark"></span>
+            </label>
+            <label class="customck">
+            Delivery
+            <input
+            type="checkbox"
+             id="delivery"
+             :value="activeAsset.metadata.delivery"
+             :checked="activeAsset.metadata.delivery"
+             @change="changepickupdelivery"
+             />
+            <span class="checkmark"></span>
+            </label>
+            <div v-if="activeAsset.metadata.delivery == true">
+              <label class="customck">
+                Local delivery
+              <input
+             type="checkbox"
+             id="local"
+             value="local"
+             :checked="(activeAsset.metadata.deliverytype.indexOf('local') !== -1) ? true:false"
+             @change="changedeliveryoptions"
+             />
+            <span class="checkmark"></span>
+            </label>
+            <label class="customck">
+              Long distance delivery
+            <input
+            type="checkbox"
+             id="distance"
+             value="distance"
+             :checked="(activeAsset.metadata.deliverytype.indexOf('distance') !== -1) ? true:false"
+             @change="changedeliveryoptions"
+             />
+             <span class="checkmark"></span>
+            </label>
+            </div>
+            </div>
+            </div>
           <div
-            v-if="assetCustomAttributes.length"
+          v-if="assetCustomAttributes.length"
             class="row text-weight-medium q-py-sm"
           >
             <div v-if="isCurrentUserTheOwner">
@@ -427,6 +476,10 @@ export default {
     isAvailable () {
       return this.isActiveAssetAvailable
     },
+    ispickup () {
+      // this.pickup = this.activeAsset.metadata.pickup
+      return this.activeAsset.metadata.pickup
+    },
     ...mapState([
       'asset',
       'common',
@@ -516,6 +569,22 @@ export default {
           attrs.metadata = {
             images: value
           }
+        } else if (fieldName === 'pickup') {
+          attrs.metadata = {
+            pickup: value
+          }
+        } else if (fieldName === 'delivery') {
+          attrs.metadata = {
+            delivery: value
+          }
+        } else if (fieldName === 'local') {
+          attrs.metadata = {
+            deliverytype: value
+          }
+        } else if (fieldName === 'distance') {
+          attrs.metadata = {
+            deliverytype: value
+          }
         } else if (fieldName === 'customAttributes') {
           attrs.customAttributes = value
         } else if (isCustomAttribute) {
@@ -538,6 +607,16 @@ export default {
     },
     changeCustomAttributes (customAttributes) {
       return this.updateAssetFn('customAttributes')(customAttributes)
+    },
+    changepickupdelivery (val) {
+      return this.updateAssetFn(val.target.id)(val.target.checked)
+    },
+    changedeliveryoptions (val) {
+      var index = this.activeAsset.metadata.deliverytype.indexOf(val.target.id)
+      if (index !== -1) this.activeAsset.metadata.deliverytype.splice(index, 1)
+      else this.activeAsset.metadata.deliverytype.push(val.target.id)
+      console.log(this.activeAsset.metadata.deliverytype)
+      return this.updateAssetFn(val.target.id)(this.activeAsset.metadata.deliverytype)
     },
     customAttributesOfTypes (types) {
       if (!Array.isArray(types)) return []
@@ -640,6 +719,67 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+label.customck {
+display: block;
+    position: relative;
+    padding-left: 75px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    line-height: 20px;
+    min-height: 60px;
+    padding-top: 20px;
+}
+.customck .checkmark:after {
+        content: "";
+        position: absolute;
+        display: none;
+      }
+      .customck input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+      }
+      .customck .checkmark {
+        position: absolute;
+    top: 20px;
+    left: 20px;
+    height: 20px;
+    width: 20px;
+    background-color: transparent;
+    border-radius: 2px;
+    border: 2px solid #484848;
+      }
+      label.customck:hover {
+    background-color: #ededed;
+}
+      .customck input:checked ~ .checkmark:after {
+        display: block;
+      }
+      .customck .checkmark:after {
+  left: 8px;
+    top: 2px;
+    width: 7px;
+    height: 15px;
+    border: solid #fff;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(
+45deg
+);
+    transform: rotate(
+45deg
+);
+      }
+    .customck input:checked ~ .checkmark {
+  background-color: #f00056;
+    border: 2px transparent;
+    width: 22px;
+    height: 22px;
+}
 .justify-assets
   justify-content: center
   @media (min-width: $breakpoint-sm-min)
