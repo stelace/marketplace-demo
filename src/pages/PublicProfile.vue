@@ -37,7 +37,7 @@ export default {
       isPlaceSearchEnabled,
       userRatingsByTransaction: [],
       userRatingsLoaded: false,
-      social: { instagram: 'Instagram Link', facebook: 'Facebook Link', twitter: 'Twitter Link', website: 'Website Link' },
+      social: { instagram: 'Instagram Link', facebook: 'Facebook Link', twitter: 'Tiktok Link', website: 'Website Link' },
     }
   },
   computed: {

@@ -116,10 +116,10 @@
                 :value="selectedUser.firstName"
                 :active="isCurrentUser"
                 :custom-save="updateUserFn('firstname')"
-                :input-label="$t({ id: 'user.firstname_label' })"
+                :input-label="labels.name"
               />
             </div>
-            <div class="text-center">
+           <!-- <div class="text-center">
               <AppSwitchableEditor
                 class="inline-block"
                 :value="selectedUser.lastName"
@@ -127,7 +127,7 @@
                 :custom-save="updateUserFn('lastname')"
                 :input-label="$t({ id: 'user.lastname_label' })"
               />
-            </div>
+            </div> -->
           </div>
           <div
             v-else
@@ -214,7 +214,8 @@
           <AppMap
             class="absolute-full"
             :map-options="{
-              zoom: 4,
+              // style: 'mapbox://styles/mapbox/streets-v11',
+              zoom: 16,
             }"
             :nav-control="{
               show: false
@@ -266,6 +267,7 @@ export default {
       date: '',
       newAvatarUrl: '',
       uploadingAvatarSrc: '',
+      labels: { name: 'Name' },
       uploadFolder: 'images/avatars', // used by AppUpload
     }
   },

@@ -52,6 +52,7 @@ export default {
       container: uniqueId('stl-app-map-'), // ensuring that coexisting maps have unique Ids
       // Note: Update component map style rule if changing this pattern
       style: process.env.VUE_APP_MAPBOX_STYLE,
+      // style: 'mapbox://styles/mapbox/streets-v11',
       center: mapCenterCoordinates,
       zoom: 5,
       minZoom: 3, // same for zoom levels
