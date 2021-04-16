@@ -37,7 +37,7 @@ export default {
       isPlaceSearchEnabled,
       userRatingsByTransaction: [],
       userRatingsLoaded: false,
-      social: { instagram: 'Instagram Link', facebook: 'Facebook Link', twitter: 'Tiktok Link', website: 'Website Link' },
+      social: { instagram: 'Instagram Link', facebook: 'Facebook Link', twitter: 'Tiktok Link', website: 'Clubhouse Link' },
     }
   },
   computed: {
@@ -273,11 +273,16 @@ export default {
         <h2 class="text-h4 text-weight-medium stl-content-entry">Social links</h2>
           <!-- Shared by natural user and orgs -->
           <!-- reuse generic asset.description_label -->
-
+        </section>
+        <section
+          v-show="!(selectedUser.id && !isCurrentUser && !selectedUser.metadata.instagramLink)"
+          class="q-px-sm"
+        >
           <AppSwitchableEditor
             tag="p"
             class="text-body1 q-ma-lg text-justify"
-            :value="selectedUser.metadata.instagram"
+            :class="{ 'instagn': !isCurrentUser }"
+            :value="selectedUser.metadata.instagramLink"
             :active="isCurrentUser"
             :custom-save="updateSocUserFn('instagramLink')"
             :input-label="social.instagram"
@@ -287,7 +292,7 @@ export default {
         </section>
 
         <section
-          v-show="!(selectedUser.id && !isCurrentUser && !selectedUser.metadata)"
+          v-show="!(selectedUser.id && !isCurrentUser && !selectedUser.metadata.facebookLink)"
           class="q-px-sm"
         >
           <QSeparator class="q-mt-xl" />
@@ -297,6 +302,7 @@ export default {
           <AppSwitchableEditor
             tag="p"
             class="text-body1 q-ma-lg text-justify"
+            :class="{ 'facebk': !isCurrentUser }"
             :value="selectedUser.metadata.facebookLink"
             :active="isCurrentUser"
             :custom-save="updateSocUserFn('facebookLink')"
@@ -307,7 +313,7 @@ export default {
         </section>
 
         <section
-          v-show="!(selectedUser.id && !isCurrentUser && !selectedUser.metadata)"
+          v-show="!(selectedUser.id && !isCurrentUser && !selectedUser.metadata.tiktok)"
           class="q-px-sm"
         >
           <QSeparator class="q-mt-xl" />
@@ -317,9 +323,10 @@ export default {
           <AppSwitchableEditor
             tag="p"
             class="text-body1 q-ma-lg text-justify"
-            :value="selectedUser.metadata.twitterLink"
+            :class="{ 'tktk': !isCurrentUser }"
+            :value="selectedUser.metadata.tiktok"
             :active="isCurrentUser"
-            :custom-save="updateSocUserFn('twitterLink')"
+            :custom-save="updateSocUserFn('tiktok')"
             :input-label="social.twitter"
             allow-falsy-save
             input-type="textarea"
@@ -327,7 +334,7 @@ export default {
         </section>
 
         <section
-          v-show="!(selectedUser.id && !isCurrentUser && !selectedUser.metadata)"
+          v-show="!(selectedUser.id && !isCurrentUser && !selectedUser.metadata.websiteLink)"
           class="q-px-sm"
         >
           <QSeparator class="q-mt-xl" />
@@ -337,6 +344,7 @@ export default {
           <AppSwitchableEditor
             tag="p"
             class="text-body1 q-ma-lg text-justify"
+            :class="{ 'websit': !isCurrentUser }"
             :value="selectedUser.metadata.websiteLink"
             :active="isCurrentUser"
             :custom-save="updateSocUserFn('websiteLink')"
@@ -420,6 +428,34 @@ export default {
 </template>
 
 <style lang="stylus" scoped>
+.instagn {
+    background: url(https://d328vk3fbp0jh4.cloudfront.net/eyJidWNrZXQiOiJzeXItbWFya2V0LWltYWdlcy1wcm9kIiwia2V5IjoiZGV2L2ltYWdlcy80OWMwNjQ4NWFiYzE2NGUwOWNhZTdjYzMxOWMzMzc4MC1pbnN0YWdyYW0ucG5nIiwiZWRpdHMiOnsid2VicCI6dHJ1ZSwicmVzaXplIjp7IndpZHRoIjoxMjAwLCJoZWlnaHQiOjgwMCwid2l0aG91dEVubGFyZ2VtZW50Ijp0cnVlfX19);
+    background-repeat: no-repeat;
+    background-position: left;
+    padding-left: 25px;
+}
+
+.facebk {
+    background: url(https://d328vk3fbp0jh4.cloudfront.net/eyJidWNrZXQiOiJzeXItbWFya2V0LWltYWdlcy1wcm9kIiwia2V5IjoiZGV2L2ltYWdlcy8zNTNiZjdmZGZjYWJkMjViZjQ2ZjIwZjYzZmZlZGYzNi1mYWNlYm9vay5wbmciLCJlZGl0cyI6eyJ3ZWJwIjp0cnVlLCJyZXNpemUiOnsid2lkdGgiOjEyMDAsImhlaWdodCI6ODAwLCJ3aXRob3V0RW5sYXJnZW1lbnQiOnRydWV9fX0=);
+    background-repeat: no-repeat;
+    background-position: left;
+    padding-left: 25px;
+}
+
+.tktk {
+    background: url(https://d328vk3fbp0jh4.cloudfront.net/eyJidWNrZXQiOiJzeXItbWFya2V0LWltYWdlcy1wcm9kIiwia2V5IjoiZGV2L2ltYWdlcy8xZGYxNWNlOTBlNGM5YzYzZjEyMmYyYmUzZWFkZDk4Ni10aWstdG9rLnBuZyIsImVkaXRzIjp7IndlYnAiOnRydWUsInJlc2l6ZSI6eyJ3aWR0aCI6NjAwLCJoZWlnaHQiOjQwMCwid2l0aG91dEVubGFyZ2VtZW50Ijp0cnVlfX19);
+    background-repeat: no-repeat;
+    background-position: left;
+    padding-left: 25px;
+}
+
+.websit {
+    background: url(https://www.joinclubhouse.com/static/img/icon_wave.2872aeea710c.png);
+    background-repeat: no-repeat;
+    background-position: left;
+    padding-left: 25px;
+    background-size: 24px;
+}
 .q-mt-xl, .q-my-xl {
     margin-top:45px;
 }

@@ -869,7 +869,7 @@ export default {
              />
              <span class="checkmark"></span>
             </label>
-            <label class="customck">
+            <!--<label class="customck">
             Delivery
             <input
             type="checkbox"
@@ -878,8 +878,8 @@ export default {
              v-model="delivery"
              />
              <span class="checkmark"></span>
-            </label>
-            <div v-if="delivery == true">
+            </label> -->
+            <div>
               <label class="customck">
                 Local delivery
               <input
