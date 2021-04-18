@@ -97,7 +97,7 @@ export default {
       return this.usersAssets[this.currentUser.id] || []
     },
     needsStripeLink () {
-      return this.ownAssets.length >= 1 && !this.hasLinkedStripeAccount
+      return this.ownAssets.length >= 1 && !this.currentUserStripeAccount
     },
     ...mapState([
       'common',
@@ -388,7 +388,7 @@ export default {
         :icon="icons.matWarning"
       >
         <AppContent
-          v-if="!hasLinkedStripeAccount"
+          v-if="needsStripeLink"
           tag="QTooltip"
           entry="user"
           field="account.stripe.link_account_helper_button"

@@ -153,5 +153,5 @@ transaction:
       en: The selected dates are not available.
       fr: Les dates sélectionnées ne sont pas disponibles.
     seller_unavailable:
-      en: The seller is not ready to accept payments. Message them to arrange your purchase.
-      fr: The seller is not ready to accept payments. Message them to arrange your purchase.
+      en: The seller is not ready to accept payments. Please try later.
+      fr: The seller is not ready to accept payments. Please try later.

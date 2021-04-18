@@ -30,7 +30,7 @@
             text-color="white"
           />
           <AppContent
-            v-if="activeAsset.id && isCurrentUserTheOwner && !hasLinkedStripeAccount"
+            v-if="activeAsset.id && isCurrentUserTheOwner && !currentUserStripeAccount"
             class="text-uppercase non-selectable"
             tag="QBtn"
             entry="user"
