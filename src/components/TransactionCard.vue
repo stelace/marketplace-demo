@@ -258,13 +258,14 @@ export default {
           }
         }
       }
-      this.$router.push({
-        name: 'conversation',
-        params: { id: message.conversationId }
-      })
-
-      this.resetTransactionParameters()
-      this.$store.dispatch('resetTransactionPreview')
+      if (message && message.conversationId) {
+        this.$router.push({
+          name: 'conversation',
+          params: { id: message.conversationId }
+        })
+        this.resetTransactionParameters()
+        this.$store.dispatch('resetTransactionPreview')
+      }
     },
   }
 }
@@ -462,7 +463,7 @@ export default {
     <div class="row">
       <AppCheckoutButton
         class="full-width"
-        :disabled="!validTransactionOptions || isOwnerCurrentUser || !preview"
+        :disabled="!validTransactionOptions || isOwnerCurrentUser"
         @click="checkout"
       />
     </div>

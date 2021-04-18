@@ -236,13 +236,13 @@ export default {
       >
         <div>
           <AppContent
-            v-if="(!hasLinkedStripeAccount && !!paused)"
+            v-if="(!currentUserStripeAccount && !!paused)"
             tag="QTooltip"
             entry="user"
             field="account.stripe.link_account_reminder"
           />
           <QBtn
-            :disabled="(!hasLinkedStripeAccount && !!paused)"
+            :disabled="(!currentUserStripeAccount && !!paused)"
             :loading="updatingStatus"
             :rounded="style.roundedTheme"
             color="grey-2"
