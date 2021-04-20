@@ -153,98 +153,108 @@
             input-type="textarea"
           />
           <div class="row">
-          <div class="country col-12 col-sm-7">
+            <div class="country col-12 col-sm-7">
               <label><h3 class="text-h4 text-weight-medium stl-content-entry">Cuisine</h3></label>
               <select
-               v-if="isCurrentUserTheOwner"
-               @change="changecountryoption"
-               v-model="selected"
-               required >
-              <option
-              v-for="optionssels in optionssel"
-              v-bind:key="optionssels in optionssel"
-              v-bind:value="optionssels">
-                {{ optionssels }}
-              </option>
-            </select>
-            <p v-else>{{ this.activeAsset.metadata.country }}</p>
+                v-if="isCurrentUserTheOwner"
+                v-model="selectedcountry"
+                required
+                @change="changecountryoption"
+              >
+                <option
+                  v-for="optionssels in optionssel"
+                  :key="optionssels in optionssel"
+                  :value="optionssels"
+                >
+                  {{ optionssels }}
+                </option>
+              </select>
+              <p v-else>
+                {{ activeAsset.metadata.country }}
+              </p>
             </div>
-            </div>
+          </div>
           <div class="row text-left">
-          <div class="col-12 col-md-5">
-            <label v-if="isCurrentUserTheOwner" class="customck">
-            Pickup
-            <input
-             type="checkbox"
-             id="pickup"
-             :value="activeAsset.metadata.pickup"
-             :checked="activeAsset.metadata.pickup"
-             @change="changepickupdelivery"
-             />
-             <span class="checkmark"></span>
-            </label>
-            <label v-else class="">
-            <svg
-            aria-hidden="true"
-            role="presentation"
-            focusable="false"
-            viewBox="0 0 24 24"
-            class="q-mr-sm q-icon notranslate text-secondary"
-            style="font-size: 1.5rem;"><path d="M14.12,10H19V8.2H15.38L13.38,4.87C13.08,4.37 12.54,4.03 11.92,4.03C11.74,4.03 11.58,4.06 11.42,4.11L6,5.8V11H7.8V7.33L9.91,6.67L6,22H7.8L10.67,13.89L13,17V22H14.8V15.59L12.31,11.05L13.04,8.18M14,3.8C15,3.8 15.8,3 15.8,2C15.8,1 15,0.2 14,0.2C13,0.2 12.2,1 12.2,2C12.2,3 13,3.8 14,3.8Z"></path></svg>
-            Pickup
-            </label>
-            <!--<label class="customck">
-            Delivery
-            <input
-            type="checkbox"
-             id="delivery"
-             :value="activeAsset.metadata.delivery"
-             :checked="activeAsset.metadata.delivery"
-             @change="changepickupdelivery"
-             />
-            <span class="checkmark"></span>
-            </label> -->
-            <div v-if="isCurrentUserTheOwner">
-              <label class="customck">
-                Local delivery
-              <input
-             type="checkbox"
-             id="local"
-             value="local"
-             :checked="(activeAsset.metadata.deliverytype.indexOf('local') !== -1) ? true:false"
-             @change="changedeliveryoptions"
-             />
-            <span class="checkmark"></span>
-            </label>
-            <label class="customck">
-              Long distance delivery
-            <input
-            type="checkbox"
-             id="distance"
-             value="distance"
-             :checked="(activeAsset.metadata.deliverytype.indexOf('distance') !== -1) ? true:false"
-             @change="changedeliveryoptions"
-             />
-             <span class="checkmark"></span>
-            </label>
-            </div>
-            <div v-else>
-              <label class="">
+            <div class="col-12 col-md-5">
+              <label v-if="isCurrentUserTheOwner" class="customck">
+                Pickup
+                <input
+                  id="pickup"
+                  type="checkbox"
+                  :value="activeAsset.metadata.pickup"
+                  :checked="activeAsset.metadata.pickup"
+                  @change="changepickupdelivery"
+                >
+                <span class="checkmark"></span>
+              </label>
+              <label v-else class="">
                 <svg
-                v-if="activeAsset.metadata.deliverytype.indexOf('local') !== -1 || activeAsset.metadata.deliverytype.indexOf('distance') !== -1"
-                aria-hidden="true"
-                role="presentation"
-                focusable="false"
-                viewBox="0 0 24 24"
-                class="q-mr-sm q-icon notranslate text-secondary"
-                style="font-size: 1.5rem;"><path d="M19 15C19.55 15 20 15.45 20 16C20 16.55 19.55 17 19 17S18 16.55 18 16C18 15.45 18.45 15 19 15M19 13C17.34 13 16 14.34 16 16S17.34 19 19 19 22 17.66 22 16 20.66 13 19 13M10 6H5V8H10V6M17 5H14V7H17V9.65L13.5 14H10V9H6C3.79 9 2 10.79 2 13V16H4C4 17.66 5.34 19 7 19S10 17.66 10 16H14.5L19 10.35V7C19 5.9 18.11 5 17 5M7 17C6.45 17 6 16.55 6 16H8C8 16.55 7.55 17 7 17Z"></path></svg>
-                Delivery
-            </label>
+                  aria-hidden="true"
+                  role="presentation"
+                  focusable="false"
+                  viewBox="0 0 24 24"
+                  class="q-mr-sm q-icon notranslate text-secondary"
+                  style="font-size: 1.5rem;"
+                >
+                  <path d="M14.12,10H19V8.2H15.38L13.38,4.87C13.08,4.37 12.54,4.03 11.92,4.03C11.74,4.03 11.58,4.06 11.42,4.11L6,5.8V11H7.8V7.33L9.91,6.67L6,22H7.8L10.67,13.89L13,17V22H14.8V15.59L12.31,11.05L13.04,8.18M14,3.8C15,3.8 15.8,3 15.8,2C15.8,1 15,0.2 14,0.2C13,0.2 12.2,1 12.2,2C12.2,3 13,3.8 14,3.8Z"></path>
+                </svg>
+                Pickup
+              </label>
+              <!--<label class="customck">
+              Delivery
+              <input
+              type="checkbox"
+              id="delivery"
+              :value="activeAsset.metadata.delivery"
+              :checked="activeAsset.metadata.delivery"
+              @change="changepickupdelivery"
+              />
+              <span class="checkmark"></span>
+              </label> -->
+              <div v-if="isCurrentUserTheOwner">
+                <label class="customck">
+                  Local delivery
+                  <input
+                    id="local"
+                    type="checkbox"
+                    value="local"
+                    :checked="(activeAsset.metadata.deliverytype.indexOf('local') !== -1) ? true:false"
+                    @change="changedeliveryoptions"
+                  >
+                  <span class="checkmark"></span>
+                </label>
+                <label class="customck">
+                  Long distance delivery
+                  <input
+                    id="distance"
+                    type="checkbox"
+                    value="distance"
+                    :checked="(activeAsset.metadata.deliverytype.indexOf('distance') !== -1) ? true:false"
+                    @change="changedeliveryoptions"
+                  >
+                  <span class="checkmark"></span>
+                </label>
+              </div>
+              <div v-else>
+                <label class="">
+                  <svg
+                    v-if="activeAsset.metadata.deliverytype.indexOf('local') !== -1 || activeAsset.metadata.deliverytype.indexOf('distance') !== -1"
+                    aria-hidden="true"
+                    role="presentation"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                    class="q-mr-sm q-icon notranslate text-secondary"
+                    style="font-size: 1.5rem;"
+                  >
+                    <path d="M19 15C19.55 15 20 15.45 20 16C20 16.55 19.55 17 19 17S18 16.55 18 16C18 15.45 18.45 15 19 15M19 13C17.34 13 16 14.34 16 16S17.34 19 19 19 22 17.66 22 16 20.66 13 19 13M10 6H5V8H10V6M17 5H14V7H17V9.65L13.5 14H10V9H6C3.79 9 2 10.79 2 13V16H4C4 17.66 5.34 19 7 19S10 17.66 10 16H14.5L19 10.35V7C19 5.9 18.11 5 17 5M7 17C6.45 17 6 16.55 6 16H8C8 16.55 7.55 17 7 17Z"></path>
+                  </svg>
+                  Delivery
+                </label>
+              </div>
             </div>
-            </div>
-            </div>
+          </div>
           <div
-          v-if="assetCustomAttributes.length"
+            v-if="assetCustomAttributes.length"
             class="row text-weight-medium q-py-sm"
           >
             <div v-if="isCurrentUserTheOwner">
@@ -449,7 +459,7 @@ export default {
       assetRatingsLoaded: false,
       isEditingImages: false,
       isPlaceSearchEnabled,
-      selected: '',
+      selectedcountry: '',
       optionssel: [
         'Afghanistan',
         'Albania',
@@ -795,7 +805,7 @@ export default {
     currentUser (current, previous) {
       if (current.id === previous.id) return
       this.afterAuth()
-      this.selected = this.activeAsset.metadata.country
+      this.selectedcountry = this.activeAsset.metadata.country
       if (this.paymentActive && current.id) this.viewConversationAfterSuccessfulPayment()
     },
     $route () {
@@ -874,7 +884,7 @@ export default {
           }
         } else if (fieldName === 'country') {
           attrs.metadata = {
-            country: this.selected
+            country: this.selectedcountry
           }
         } else if (fieldName === 'customAttributes') {
           attrs.customAttributes = value
@@ -909,7 +919,6 @@ export default {
       var index = this.activeAsset.metadata.deliverytype.indexOf(val.target.id)
       if (index !== -1) this.activeAsset.metadata.deliverytype.splice(index, 1)
       else this.activeAsset.metadata.deliverytype.push(val.target.id)
-      console.log(this.activeAsset.metadata.deliverytype)
       return this.updateAssetFn(val.target.id)(this.activeAsset.metadata.deliverytype)
     },
     customAttributesOfTypes (types) {

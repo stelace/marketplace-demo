@@ -116,10 +116,10 @@
                 :value="selectedUser.firstName"
                 :active="isCurrentUser"
                 :custom-save="updateUserFn('firstname')"
-                :input-label="labels.name"
+                :input-label="$t({ id: 'user.name_label' })"
               />
             </div>
-           <!-- <div class="text-center">
+            <!-- <div class="text-center">
               <AppSwitchableEditor
                 class="inline-block"
                 :value="selectedUser.lastName"
@@ -267,7 +267,6 @@ export default {
       date: '',
       newAvatarUrl: '',
       uploadingAvatarSrc: '',
-      labels: { name: 'Name' },
       uploadFolder: 'images/avatars', // used by AppUpload
     }
   },

@@ -55,7 +55,7 @@ export default {
       creatingAsset: false,
       deliverytypes: [],
       pickup: false,
-      delivery: false,
+      // delivery: false,
       selectcountry: '',
       optionssel: [
         'Afghanistan',
@@ -562,7 +562,7 @@ export default {
               startDate: this.startDate,
               endDate: this.endDate,
               pickup: this.pickup,
-              delivery: this.delivery,
+              // delivery: this.delivery,
               deliverytype: this.deliverytypes,
               country: this.selectcountry,
 
@@ -745,9 +745,9 @@ export default {
                     price => !!price ||
                       $t({ id: 'form.error.missing_price' })
                   ]"
-                  @keypress="addpriceEvent"
                   required
                   bottom-slots
+                  @keypress="addpriceEvent"
                 />
               </div>
             </div>
@@ -858,62 +858,63 @@ export default {
               />
             </div>
             <div class="row text-left">
-            <div class="col-12 col-md-5">
-             <label class="customck">
-             Pickup
-            <input
-             type="checkbox"
-             id="jack"
-             value="1"
-             v-model="pickup"
-             />
-             <span class="checkmark"></span>
-            </label>
-            <!--<label class="customck">
-            Delivery
-            <input
-            type="checkbox"
-             id="john"
-             value="1"
-             v-model="delivery"
-             />
-             <span class="checkmark"></span>
-            </label> -->
-            <div>
-              <label class="customck">
-                Local delivery
-              <input
-             type="checkbox"
-             id="jack"
-             value="local"
-             v-model="deliverytypes"
-             />
-             <span class="checkmark"></span>
-            </label>
-            <label class="customck">
-              Long distance delivery
-            <input
-            type="checkbox"
-             id="john"
-             value="distance"
-             v-model="deliverytypes"
-             />
-             <span class="checkmark"></span>
-            </label>
-            </div>
-            </div>
+              <div class="col-12 col-md-5">
+                <label class="customck">
+                  Pickup
+                  <input
+                    id="jack"
+                    v-model="pickup"
+                    type="checkbox"
+                    value="1"
+                  >
+                  <span class="checkmark">
+                  </span>
+                </label>
+                <!--<label class="customck">
+                Delivery
+                <input
+                type="checkbox"
+                id="john"
+                value="1"
+                v-model="delivery"
+                />
+                <span class="checkmark"></span>
+                </label> -->
+                <div>
+                  <label class="customck">
+                    Local delivery
+                    <input
+                      id="jack"
+                      v-model="deliverytypes"
+                      type="checkbox"
+                      value="local"
+                    >
+                    <span class="checkmark"></span>
+                  </label>
+                  <label class="customck">
+                    Long distance delivery
+                    <input
+                      id="john"
+                      v-model="deliverytypes"
+                      type="checkbox"
+                      value="distance"
+                    >
+                    <span class="checkmark"></span>
+                  </label>
+                </div>
+              </div>
             </div>
             <div class="row">
-            <div class="country col-12 col-sm-7">
-              <label>Cuisine</label>
-              <select v-model="selectcountry" required>
-              <option v-for="optionssels in optionssel" v-bind:key="optionssels in optionssel"  v-bind:value="optionssels">
-                {{ optionssels }}
-              </option>
-            </select>
+              <div class="country col-12 col-sm-7">
+                <label>Cuisine</label>
+                <select v-model="selectcountry" required>
+                  <option v-for="optionssels in optionssel" :key="optionssels in optionssel" :value="optionssels">
+                    {{ optionssels }}
+                  </option>
+                </select>
+              </div>
             </div>
-            </div>
-           <div class="step-asset-picture q-py-lg">
+            <div class="step-asset-picture q-py-lg">
               <AppContent
                 class="text-h5"
                 tag="h3"

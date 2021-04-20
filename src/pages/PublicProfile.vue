@@ -37,7 +37,6 @@ export default {
       isPlaceSearchEnabled,
       userRatingsByTransaction: [],
       userRatingsLoaded: false,
-      social: { instagram: 'Instagram Link', facebook: 'Facebook Link', twitter: 'Tiktok Link', website: 'Clubhouse Link' },
     }
   },
   computed: {
@@ -270,7 +269,13 @@ export default {
           v-show="!(selectedUser.id && !isCurrentUser && !selectedUser.metadata)"
           class="q-px-sm"
         >
-        <h2 class="text-h4 text-weight-medium stl-content-entry">Social links</h2>
+          <AppContent
+            v-if="selectedUser.metadata"
+            tag="h2"
+            class="text-h4 text-weight-medium"
+            entry="user"
+            field="social_links_label.label"
+          />
           <!-- Shared by natural user and orgs -->
           <!-- reuse generic asset.description_label -->
         </section>
@@ -285,7 +290,7 @@ export default {
             :value="selectedUser.metadata.instagramLink"
             :active="isCurrentUser"
             :custom-save="updateSocUserFn('instagramLink')"
-            :input-label="social.instagram"
+            :input-label="$t({ id: 'user.social_links_label.instagramlabel' })"
             allow-falsy-save
             input-type="textarea"
           />
@@ -306,7 +311,7 @@ export default {
             :value="selectedUser.metadata.facebookLink"
             :active="isCurrentUser"
             :custom-save="updateSocUserFn('facebookLink')"
-            :input-label="social.facebook"
+            :input-label="$t({ id: 'user.social_links_label.facebooklabel' })"
             allow-falsy-save
             input-type="textarea"
           />
@@ -327,7 +332,7 @@ export default {
             :value="selectedUser.metadata.tiktok"
             :active="isCurrentUser"
             :custom-save="updateSocUserFn('tiktok')"
-            :input-label="social.twitter"
+            :input-label="$t({ id: 'user.social_links_label.tiktoklabel' })"
             allow-falsy-save
             input-type="textarea"
           />
@@ -348,7 +353,7 @@ export default {
             :value="selectedUser.metadata.websiteLink"
             :active="isCurrentUser"
             :custom-save="updateSocUserFn('websiteLink')"
-            :input-label="social.website"
+            :input-label="$t({ id: 'user.social_links_label.clubhouselabel' })"
             allow-falsy-save
             input-type="textarea"
           />
@@ -429,32 +434,32 @@ export default {
 
 <style lang="stylus" scoped>
 .instagn {
-    background: url(https://d328vk3fbp0jh4.cloudfront.net/eyJidWNrZXQiOiJzeXItbWFya2V0LWltYWdlcy1wcm9kIiwia2V5IjoiZGV2L2ltYWdlcy80OWMwNjQ4NWFiYzE2NGUwOWNhZTdjYzMxOWMzMzc4MC1pbnN0YWdyYW0ucG5nIiwiZWRpdHMiOnsid2VicCI6dHJ1ZSwicmVzaXplIjp7IndpZHRoIjoxMjAwLCJoZWlnaHQiOjgwMCwid2l0aG91dEVubGFyZ2VtZW50Ijp0cnVlfX19);
+    background: url(/instagram.png);
     background-repeat: no-repeat;
     background-position: left;
     padding-left: 25px;
 }
-
 .facebk {
-    background: url(https://d328vk3fbp0jh4.cloudfront.net/eyJidWNrZXQiOiJzeXItbWFya2V0LWltYWdlcy1wcm9kIiwia2V5IjoiZGV2L2ltYWdlcy8zNTNiZjdmZGZjYWJkMjViZjQ2ZjIwZjYzZmZlZGYzNi1mYWNlYm9vay5wbmciLCJlZGl0cyI6eyJ3ZWJwIjp0cnVlLCJyZXNpemUiOnsid2lkdGgiOjEyMDAsImhlaWdodCI6ODAwLCJ3aXRob3V0RW5sYXJnZW1lbnQiOnRydWV9fX0=);
+    background: url(/facebook.png);
     background-repeat: no-repeat;
     background-position: left;
     padding-left: 25px;
 }
-
 .tktk {
-    background: url(https://d328vk3fbp0jh4.cloudfront.net/eyJidWNrZXQiOiJzeXItbWFya2V0LWltYWdlcy1wcm9kIiwia2V5IjoiZGV2L2ltYWdlcy8xZGYxNWNlOTBlNGM5YzYzZjEyMmYyYmUzZWFkZDk4Ni10aWstdG9rLnBuZyIsImVkaXRzIjp7IndlYnAiOnRydWUsInJlc2l6ZSI6eyJ3aWR0aCI6NjAwLCJoZWlnaHQiOjQwMCwid2l0aG91dEVubGFyZ2VtZW50Ijp0cnVlfX19);
+    background: url(/tik-tok.png);
     background-repeat: no-repeat;
     background-position: left;
     padding-left: 25px;
 }
-
 .websit {
-    background: url(https://www.joinclubhouse.com/static/img/icon_wave.2872aeea710c.png);
+    background: url(/clubhouse.png);
     background-repeat: no-repeat;
     background-position: left;
     padding-left: 25px;
     background-size: 24px;
+}
+.social-icons-svg {
+    max-width: 16px;
 }
 .q-mt-xl, .q-my-xl {
     margin-top:45px;

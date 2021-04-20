@@ -203,3 +203,20 @@ user:
       account_linked_failure_message:
         en: Your Stripe account hasn’t been linked to {SERVICE_NAME}. Please try again later.
         fr: Votre compte Stripe n’a pas été lié à {SERVICE_NAME}. Veuillez réessayer plus tard.
+  social_links_label:
+    label:
+      en: Social links
+      fr: Liens sociaux
+    instagramlabel:
+      en: Instagram Link
+      fr: Instagram Link
+    facebooklabel:
+      en: Facebook Link
+      fr: Facebook Link
+    tiktoklabel:
+      en: Tiktok Link
+      fr: Tiktok Link
+    clubhouselabel:
+      en: Clubhouse Link
+      fr: Clubhouse Link    
+

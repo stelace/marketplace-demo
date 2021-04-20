@@ -90,7 +90,6 @@ function formatPlacesResult (result) {
     }`))
 
   shortDisplayName += (postcode ? `, ${postcode}` : '')
-
   return {
     id: result.place_id,
     osmType: result.osm_type,
