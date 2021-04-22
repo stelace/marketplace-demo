@@ -25,7 +25,8 @@ export default {
     const tagOptions = {}
     this.definitions
       .filter(ca => ca.type === 'tags')
-      .forEach(ca => { tagOptions[ca.name] = ca.suggestedValues || [] })
+      // .forEach(ca => { tagOptions[ca.name] = ca.suggestedValues || [] })
+      .forEach(ca => { tagOptions[ca.name] = ca.listValues || [] })
 
     return {
       customAttributes: this.values,

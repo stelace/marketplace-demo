@@ -54,257 +54,7 @@ export default {
       uploaderFiles: [],
       creatingAsset: false,
       deliverytypes: [],
-      pickup: false,
-      // delivery: false,
-      selectcountry: '',
-      optionssel: [
-        'Afghanistan',
-        'Albania',
-        'Algeria',
-        'American Samoa',
-        'Andorra',
-        'Angola',
-        'Anguilla',
-        'Antarctica',
-        'Antigua and Barbuda',
-        'Argentina',
-        'Armenia',
-        'Aruba',
-        'Australia',
-        'Austria',
-        'Azerbaijan',
-        'Bahamas',
-        'Bahrain',
-        'Bangladesh',
-        'Barbados',
-        'Belarus',
-        'Belgium',
-        'Belize',
-        'Benin',
-        'Bermuda',
-        'Bhutan',
-        'Bolivia',
-        'Bonaire, Sint Eustatius and Saba',
-        'Bosnia and Herzegovina',
-        'Botswana',
-        'Bouvet Island',
-        'Brazil',
-        'British Indian Ocean Territory',
-        'Brunei Darussalam',
-        'Bulgaria',
-        'Burkina Faso',
-        'Burundi',
-        'Cabo Verde',
-        'Cambodia',
-        'Cameroon',
-        'Canada',
-        'Cayman Islands',
-        'Central African Republic',
-        'Chad',
-        'Chile',
-        'China',
-        'Christmas Island',
-        'Cocos',
-        'Colombia',
-        'Comoros',
-        'Congo',
-        'Cook Islands',
-        'Costa Rica',
-        'Croatia',
-        'Cuba',
-        'Curaçao',
-        'Cyprus',
-        'Czechia',
-        'Denmark',
-        'Djibouti',
-        'Dominica',
-        'Dominican Republic',
-        'Ecuador',
-        'Egypt',
-        'El Salvador',
-        'Equatorial Guinea',
-        'Eritrea',
-        'Estonia',
-        'Eswatini',
-        'Ethiopia',
-        'Falkland Islands',
-        'Faroe Islands',
-        'Fiji',
-        'Finland',
-        'France',
-        'French Guiana',
-        'French Polynesia',
-        'French Southern Territories',
-        'Gabon',
-        'Gambia (the)',
-        'Georgia',
-        'Germany',
-        'Ghana',
-        'Gibraltar',
-        'Greece',
-        'Greenland',
-        'Grenada',
-        'Guadeloupe',
-        'Guam',
-        'Guatemala',
-        'Guernsey',
-        'Guinea',
-        'Guinea-Bissau',
-        'Guyana',
-        'Haiti',
-        'Heard Island and McDonald Islands',
-        'Holy See',
-        'Honduras',
-        'Hong Kong',
-        'Hungary',
-        'Iceland',
-        'India',
-        'Indonesia',
-        'Iran',
-        'Iraq',
-        'Ireland',
-        'Isle of Man',
-        'Israel',
-        'Italy',
-        'Jamaica',
-        'Japan',
-        'Jersey',
-        'Jordan',
-        'Kazakhstan',
-        'Kenya',
-        'Kiribati',
-        'Korea',
-        'Kuwait',
-        'Kyrgyzstan',
-        'Lao People Democratic Republic',
-        'Latvia',
-        'Lebanon',
-        'Lesotho',
-        'Liberia',
-        'Libya',
-        'Liechtenstein',
-        'Lithuania',
-        'Luxembourg',
-        'Macao',
-        'Madagascar',
-        'Malawi',
-        'Malaysia',
-        'Maldives',
-        'Mali',
-        'Malta',
-        'Marshall Islands',
-        'Martinique',
-        'Mauritania',
-        'Mauritius',
-        'Mayotte',
-        'Mexico',
-        'Micronesia',
-        'Moldova',
-        'Monaco',
-        'Mongolia',
-        'Montenegro',
-        'Montserrat',
-        'Morocco',
-        'Mozambique',
-        'Myanmar',
-        'Namibia',
-        'Nauru',
-        'Nepal',
-        'Netherlands',
-        'New Caledonia',
-        'New Zealand',
-        'Nicaragua',
-        'Niger',
-        'Nigeria',
-        'Niue',
-        'Norfolk Island',
-        'Northern Mariana Islands',
-        'Norway',
-        'Oman',
-        'Pakistan',
-        'Palau',
-        'Palestine, State of',
-        'Panama',
-        'Papua New Guinea',
-        'Paraguay',
-        'Peru',
-        'Philippines',
-        'Pitcairn',
-        'Poland',
-        'Portugal',
-        'Puerto Rico',
-        'Qatar',
-        'Republic of North Macedonia',
-        'Romania',
-        'Russian Federation',
-        'Rwanda',
-        'Réunion',
-        'Saint Barthélemy',
-        'Saint Helena, Ascension and Tristan da Cunha',
-        'Saint Kitts and Nevis',
-        'Saint Lucia',
-        'Saint Martin',
-        'Saint Pierre and Miquelon',
-        'Saint Vincent and the Grenadines',
-        'Samoa',
-        'San Marino',
-        'Sao Tome and Principe',
-        'Saudi Arabia',
-        'Senegal',
-        'Serbia',
-        'Seychelles',
-        'Sierra Leone',
-        'Singapore',
-        'Sint Maarten',
-        'Slovakia',
-        'Slovenia',
-        'Solomon Islands',
-        'Somalia',
-        'South Africa',
-        'South Georgia and the South Sandwich Islands',
-        'South Sudan',
-        'Spain',
-        'Sri Lanka',
-        'Sudan',
-        'Suriname',
-        'Svalbard and Jan Mayen',
-        'Sweden',
-        'Switzerland',
-        'Syrian Arab Republic',
-        'Taiwan',
-        'Tajikistan',
-        'Tanzania, United Republic of',
-        'Thailand',
-        'Timor-Leste',
-        'Togo',
-        'Tokelau',
-        'Tonga',
-        'Trinidad and Tobago',
-        'Tunisia',
-        'Turkey',
-        'Turkmenistan',
-        'Turks and Caicos Islands',
-        'Tuvalu',
-        'Uganda',
-        'Ukraine',
-        'United Arab Emirates',
-        'United Kingdom of Great Britain and Northern Ireland',
-        'United States Minor Outlying Islands',
-        'United States of America',
-        'Uruguay',
-        'Uzbekistan',
-        'Vanuatu',
-        'Venezuela',
-        'Viet Nam',
-        'Virgin Islands (British)',
-        'Virgin Islands (U.S.)',
-        'Wallis and Futuna',
-        'Western Sahara',
-        'Yemen',
-        'Zambia',
-        'Zimbabwe',
-        'Åland Islands'
-      ],
+      delivery: 0,
     }
   },
   computed: {
@@ -359,6 +109,8 @@ export default {
     },
     customAttributesByType () {
       const customAttributes = this.customAttributes // ensure Vue reactivity
+      // var pp = groupBy(customAttributes, ca => ca.type)
+      // console.log(pp)
       return groupBy(customAttributes, ca => ca.type)
     },
     assetTypes () {
@@ -463,6 +215,13 @@ export default {
     },
     changeCustomAttributes (customAttributes) {
       this.editingCustomAttributes = customAttributes
+      var ismodifydelivery = Object.prototype.hasOwnProperty.call(customAttributes, 'delivery')
+      if (ismodifydelivery) {
+        this.delivery = 0
+        if (customAttributes.delivery.indexOf('Seller delivers') !== -1) {
+          this.delivery = 1
+        }
+      }
     },
     customAttributesOfTypes (types) {
       if (!Array.isArray(types)) return []
@@ -561,10 +320,10 @@ export default {
               // Save dates to create custom availabilities with Workflows
               startDate: this.startDate,
               endDate: this.endDate,
-              pickup: this.pickup,
+              // pickup: this.pickup,
               // delivery: this.delivery,
               deliverytype: this.deliverytypes,
-              country: this.selectcountry,
+              // country: this.selectcountry,
 
             }
           }
@@ -859,7 +618,7 @@ export default {
             </div>
             <div class="row text-left">
               <div class="col-12 col-md-5">
-                <label class="customck">
+                <!--<label class="customck">
                   Pickup
                   <input
                     id="jack"
@@ -870,7 +629,7 @@ export default {
                   <span class="checkmark">
                   </span>
                 </label>
-                <!--<label class="customck">
+                <label class="customck">
                 Delivery
                 <input
                 type="checkbox"
@@ -880,7 +639,7 @@ export default {
                 />
                 <span class="checkmark"></span>
                 </label> -->
-                <div>
+                <div v-show="delivery == 1">
                   <label class="customck">
                     Local delivery
                     <input
@@ -904,17 +663,7 @@ export default {
                 </div>
               </div>
             </div>
-            <div class="row">
-              <div class="country col-12 col-sm-7">
-                <label>Cuisine</label>
-                <select v-model="selectcountry" required>
-                  <option v-for="optionssels in optionssel" :key="optionssels in optionssel" :value="optionssels">
-                    {{ optionssels }}
-                  </option>
-                </select>
-              </div>
-            </div>
-            <div class="step-asset-picture q-py-lg">
+             <div class="step-asset-picture q-py-lg">
               <AppContent
                 class="text-h5"
                 tag="h3"
