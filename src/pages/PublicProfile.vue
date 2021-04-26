@@ -151,13 +151,6 @@ export default {
         }
       })
       this.notifySuccess('notification.saved')
-
-      // Hack to erase the content in locations AppSwitchableEditor (c.f. `computed.locationValue`)
-      if (fieldName === 'locations') {
-        this.locationsChanged = true
-        await this.$nextTick()
-        this.locationsChanged = false
-      }
     },
     async updateUser (fieldName, value) {
       await this.$store.dispatch('updateUser', {
@@ -271,16 +264,14 @@ export default {
         >
           <AppContent
             v-if="selectedUser.metadata"
-            tag="h2"
+            tag="h3"
             class="text-h4 text-weight-medium"
             entry="user"
             field="social_links_label.label"
           />
-          <!-- Shared by natural user and orgs -->
-          <!-- reuse generic asset.description_label -->
         </section>
         <section
-          v-show="!(selectedUser.id && !isCurrentUser && !selectedUser.metadata.instagramLink)"
+          v-show="(selectedUser.id && isCurrentUser)"
           class="q-px-sm"
         >
           <AppSwitchableEditor
@@ -292,18 +283,28 @@ export default {
             :custom-save="updateSocUserFn('instagramLink')"
             :input-label="$t({ id: 'user.social_links_label.instagramlabel' })"
             allow-falsy-save
-            input-type="textarea"
+            input-type="input"
+          />
+        </section>
+        <section
+          v-show="(!isCurrentUser && selectedUser.metadata.instagramLink)"
+          class="q-px-sm"
+        >
+          <AppSwitchableEditor
+            tag="a"
+            class="text-body1 q-ma-lg text-justify"
+            :class="{ 'instagn': !isCurrentUser }"
+            :value="selectedUser.metadata.instagramLink"
+            :href="selectedUser.metadata.instagramLink"
+            target="_blank"
+            rel="noopener noreferrer"
           />
         </section>
 
         <section
-          v-show="!(selectedUser.id && !isCurrentUser && !selectedUser.metadata.facebookLink)"
+          v-show="(selectedUser.id && isCurrentUser)"
           class="q-px-sm"
         >
-          <QSeparator class="q-mt-xl" />
-          <!-- Shared by natural user and orgs -->
-          <!-- reuse generic asset.description_label -->
-
           <AppSwitchableEditor
             tag="p"
             class="text-body1 q-ma-lg text-justify"
@@ -313,18 +314,28 @@ export default {
             :custom-save="updateSocUserFn('facebookLink')"
             :input-label="$t({ id: 'user.social_links_label.facebooklabel' })"
             allow-falsy-save
-            input-type="textarea"
+            input-type="input"
+          />
+        </section>
+        <section
+          v-show="(!isCurrentUser && selectedUser.metadata.facebookLink)"
+          class="q-px-sm"
+        >
+          <AppSwitchableEditor
+            tag="a"
+            class="text-body1 q-ma-lg text-justify"
+            :class="{ 'facebk': !isCurrentUser }"
+            :value="selectedUser.metadata.facebookLink"
+            :href="selectedUser.metadata.facebookLink"
+            target="_blank"
+            rel="noopener noreferrer"
           />
         </section>
 
         <section
-          v-show="!(selectedUser.id && !isCurrentUser && !selectedUser.metadata.tiktok)"
+          v-show="(selectedUser.id && isCurrentUser)"
           class="q-px-sm"
         >
-          <QSeparator class="q-mt-xl" />
-          <!-- Shared by natural user and orgs -->
-          <!-- reuse generic asset.description_label -->
-
           <AppSwitchableEditor
             tag="p"
             class="text-body1 q-ma-lg text-justify"
@@ -334,18 +345,28 @@ export default {
             :custom-save="updateSocUserFn('tiktok')"
             :input-label="$t({ id: 'user.social_links_label.tiktoklabel' })"
             allow-falsy-save
-            input-type="textarea"
+            input-type="input"
+          />
+        </section>
+        <section
+          v-show="(!isCurrentUser && selectedUser.metadata.tiktok)"
+          class="q-px-sm"
+        >
+          <AppSwitchableEditor
+            tag="a"
+            class="text-body1 q-ma-lg text-justify"
+            :class="{ 'tktk': !isCurrentUser }"
+            :value="selectedUser.metadata.tiktok"
+            :href="selectedUser.metadata.tiktok"
+            target="_blank"
+            rel="noopener noreferrer"
           />
         </section>
 
         <section
-          v-show="!(selectedUser.id && !isCurrentUser && !selectedUser.metadata.websiteLink)"
+          v-show="(selectedUser.id && isCurrentUser)"
           class="q-px-sm"
         >
-          <QSeparator class="q-mt-xl" />
-          <!-- Shared by natural user and orgs -->
-          <!-- reuse generic asset.description_label -->
-
           <AppSwitchableEditor
             tag="p"
             class="text-body1 q-ma-lg text-justify"
@@ -355,7 +376,21 @@ export default {
             :custom-save="updateSocUserFn('websiteLink')"
             :input-label="$t({ id: 'user.social_links_label.clubhouselabel' })"
             allow-falsy-save
-            input-type="textarea"
+            input-type="input"
+          />
+        </section>
+        <section
+          v-show="(!isCurrentUser && selectedUser.metadata.websiteLink)"
+          class="q-px-sm"
+        >
+          <AppSwitchableEditor
+            tag="a"
+            class="text-body1 q-ma-lg text-justify"
+            :class="{ 'websit': !isCurrentUser }"
+            :value="selectedUser.metadata.websiteLink"
+            :href="selectedUser.metadata.websiteLink"
+            target="_blank"
+            rel="noopener noreferrer"
           />
         </section>
         <section

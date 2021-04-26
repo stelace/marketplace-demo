@@ -408,7 +408,6 @@ export default {
       assetRatingsLoaded: false,
       isEditingImages: false,
       isPlaceSearchEnabled,
-      selectedcountry: '',
     }
   },
   metaInfo () { // SEO, overriding any hard-coded content in translations
@@ -478,10 +477,6 @@ export default {
     isAvailable () {
       return this.isActiveAssetAvailable
     },
-    ispickup () {
-      // this.pickup = this.activeAsset.metadata.pickup
-      return this.activeAsset.metadata.pickup
-    },
     ...mapState([
       'asset',
       'common',
@@ -510,7 +505,6 @@ export default {
     currentUser (current, previous) {
       if (current.id === previous.id) return
       this.afterAuth()
-      this.selectedcountry = this.activeAsset.metadata.country
       if (this.paymentActive && current.id) this.viewConversationAfterSuccessfulPayment()
     },
     $route () {
@@ -575,26 +569,6 @@ export default {
           attrs.metadata = {
             images: value
           }
-        } else if (fieldName === 'pickup') {
-          attrs.metadata = {
-            pickup: value
-          }
-        } else if (fieldName === 'delivery') {
-          attrs.metadata = {
-            delivery: value
-          }
-        } else if (fieldName === 'local') {
-          attrs.metadata = {
-            deliverytype: value
-          }
-        } else if (fieldName === 'distance') {
-          attrs.metadata = {
-            deliverytype: value
-          }
-        } else if (fieldName === 'country') {
-          attrs.metadata = {
-            country: this.selectedcountry
-          }
         } else if (fieldName === 'customAttributes') {
           attrs.customAttributes = value
         } else if (isCustomAttribute) {
@@ -617,18 +591,6 @@ export default {
     },
     changeCustomAttributes (customAttributes) {
       return this.updateAssetFn('customAttributes')(customAttributes)
-    },
-    changecountryoption (val) {
-      return this.updateAssetFn('country')(val.target.value)
-    },
-    changepickupdelivery (val) {
-      return this.updateAssetFn(val.target.id)(val.target.checked)
-    },
-    changedeliveryoptions (val) {
-      var index = this.activeAsset.metadata.deliverytype.indexOf(val.target.id)
-      if (index !== -1) this.activeAsset.metadata.deliverytype.splice(index, 1)
-      else this.activeAsset.metadata.deliverytype.push(val.target.id)
-      return this.updateAssetFn(val.target.id)(this.activeAsset.metadata.deliverytype)
     },
     customAttributesOfTypes (types) {
       if (!Array.isArray(types)) return []
@@ -731,85 +693,6 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-.country {
-    text-align: left;
-}
-.country label {
-    display: block;
-    font-size: 16px;
-}
-.country select {
-    font-size: 12px;
-    min-height: 20px;
-    line-height: 1;
-    color: rgba(0,0,0,0.54);
-    padding: 8px 12px 8px 0;
-    width: 100%;
-    border-radius: 0;
-    border-width: 0 0 1px 0;
-    border-color: #c2c2c2;
-}
-label.customck {
-display: block;
-    position: relative;
-    padding-left: 75px;
-    margin-bottom: 10px;
-    cursor: pointer;
-    font-size: 16px;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    line-height: 20px;
-    min-height: 60px;
-    padding-top: 20px;
-}
-.customck .checkmark:after {
-        content: "";
-        position: absolute;
-        display: none;
-      }
-      .customck input {
-        position: absolute;
-        opacity: 0;
-        cursor: pointer;
-      }
-      .customck .checkmark {
-        position: absolute;
-    top: 20px;
-    left: 20px;
-    height: 20px;
-    width: 20px;
-    background-color: transparent;
-    border-radius: 2px;
-    border: 2px solid #484848;
-      }
-      label.customck:hover {
-    background-color: #ededed;
-}
-      .customck input:checked ~ .checkmark:after {
-        display: block;
-      }
-      .customck .checkmark:after {
-  left: 8px;
-    top: 2px;
-    width: 7px;
-    height: 15px;
-    border: solid #fff;
-    border-width: 0 3px 3px 0;
-    -webkit-transform: rotate(
-45deg
-);
-    transform: rotate(
-45deg
-);
-      }
-    .customck input:checked ~ .checkmark {
-  background-color: #f00056;
-    border: 2px transparent;
-    width: 22px;
-    height: 22px;
-}
 .justify-assets
   justify-content: center
   @media (min-width: $breakpoint-sm-min)

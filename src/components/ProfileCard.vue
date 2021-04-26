@@ -119,7 +119,7 @@
                 :input-label="$t({ id: 'user.name_label' })"
               />
             </div>
-            <!-- <div class="text-center">
+            <div class="text-center">
               <AppSwitchableEditor
                 class="inline-block"
                 :value="selectedUser.lastName"
@@ -127,7 +127,7 @@
                 :custom-save="updateUserFn('lastname')"
                 :input-label="$t({ id: 'user.lastname_label' })"
               />
-            </div> -->
+            </div>
           </div>
           <div
             v-else
@@ -214,8 +214,7 @@
           <AppMap
             class="absolute-full"
             :map-options="{
-              // style: 'mapbox://styles/mapbox/streets-v11',
-              zoom: 16,
+              zoom: 14,
             }"
             :nav-control="{
               show: false

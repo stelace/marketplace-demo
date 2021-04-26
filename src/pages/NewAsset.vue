@@ -53,8 +53,6 @@ export default {
       newUserImages: [], // to add to user images for reuse
       uploaderFiles: [],
       creatingAsset: false,
-      deliverytypes: [],
-      delivery: 0,
     }
   },
   computed: {
@@ -109,8 +107,6 @@ export default {
     },
     customAttributesByType () {
       const customAttributes = this.customAttributes // ensure Vue reactivity
-      // var pp = groupBy(customAttributes, ca => ca.type)
-      // console.log(pp)
       return groupBy(customAttributes, ca => ca.type)
     },
     assetTypes () {
@@ -215,13 +211,6 @@ export default {
     },
     changeCustomAttributes (customAttributes) {
       this.editingCustomAttributes = customAttributes
-      var ismodifydelivery = Object.prototype.hasOwnProperty.call(customAttributes, 'delivery')
-      if (ismodifydelivery) {
-        this.delivery = 0
-        if (customAttributes.delivery.indexOf('Seller delivers') !== -1) {
-          this.delivery = 1
-        }
-      }
     },
     customAttributesOfTypes (types) {
       if (!Array.isArray(types)) return []
@@ -320,12 +309,7 @@ export default {
               images,
               // Save dates to create custom availabilities with Workflows
               startDate: this.startDate,
-              endDate: this.endDate,
-              // pickup: this.pickup,
-              // delivery: this.delivery,
-              deliverytype: this.deliverytypes,
-              // country: this.selectcountry,
-
+              endDate: this.endDate
             }
           }
 
@@ -617,54 +601,7 @@ export default {
                 @change="changeCustomAttributes"
               />
             </div>
-            <div class="row text-left">
-              <div class="col-12 col-md-5">
-                <!--<label class="customck">
-                  Pickup
-                  <input
-                    id="jack"
-                    v-model="pickup"
-                    type="checkbox"
-                    value="1"
-                  >
-                  <span class="checkmark">
-                  </span>
-                </label>
-                <label class="customck">
-                Delivery
-                <input
-                type="checkbox"
-                id="john"
-                value="1"
-                v-model="delivery"
-                />
-                <span class="checkmark"></span>
-                </label> -->
-                <div v-show="delivery == 1">
-                  <label class="customck">
-                    Local delivery
-                    <input
-                      id="jack"
-                      v-model="deliverytypes"
-                      type="checkbox"
-                      value="local"
-                    >
-                    <span class="checkmark"></span>
-                  </label>
-                  <label class="customck">
-                    Long distance delivery
-                    <input
-                      id="john"
-                      v-model="deliverytypes"
-                      type="checkbox"
-                      value="distance"
-                    >
-                    <span class="checkmark"></span>
-                  </label>
-                </div>
-              </div>
-            </div>
-             <div class="step-asset-picture q-py-lg">
+            <div class="step-asset-picture q-py-lg">
               <AppContent
                 class="text-h5"
                 tag="h3"
@@ -703,86 +640,6 @@ export default {
 </template>
 
 <style lang="stylus" scoped>
-.country {
-    text-align: left;
-    margin-top: 75px;
-}
-.country label {
-    display: block;
-    font-size: 16px;
-}
-.country select {
-    font-size: 12px;
-    min-height: 20px;
-    line-height: 1;
-    color: rgba(0,0,0,0.54);
-    padding: 8px 12px 8px 0;
-    width: 100%;
-    border-radius: 0;
-    border-width: 0 0 1px 0;
-    border-color: #c2c2c2;
-}
-label.customck {
-display: block;
-    position: relative;
-    padding-left:85px;
-    margin-bottom:0px;
-    cursor: pointer;
-    font-size: 16px;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    line-height: 20px;
-    min-height: 60px;
-    padding-top: 20px;
-}
-.customck .checkmark:after {
-        content: "";
-        position: absolute;
-        display: none;
-      }
-      .customck input {
-        position: absolute;
-        opacity: 0;
-        cursor: pointer;
-      }
-      .customck .checkmark {
-        position: absolute;
-    top: 20px;
-    left:45px;
-    height: 20px;
-    width: 20px;
-    background-color: transparent;
-    border-radius: 2px;
-    border: 2px solid #484848;
-      }
-      label.customck:hover {
-    background-color: #ededed;
-}
-      .customck input:checked ~ .checkmark:after {
-        display: block;
-      }
-      .customck .checkmark:after {
-  left: 8px;
-    top: 2px;
-    width: 7px;
-    height: 15px;
-    border: solid #fff;
-    border-width: 0 3px 3px 0;
-    -webkit-transform: rotate(
-45deg
-);
-    transform: rotate(
-45deg
-);
-      }
-    .customck input:checked ~ .checkmark {
-  background-color:#d81b60;
-    border: 2px transparent;
-    width: 22px;
-    height: 22px;
-}
 .row-input
   flex: 1 0
   min-width: 0
