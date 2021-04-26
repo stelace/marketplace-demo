@@ -57,6 +57,9 @@ export default {
     },
     nbAssetsVisiblePerSlide () {
       const nbAssetsWithoutCarousel = this.$q.screen.gt.xs ? (this.$q.screen.lt.md ? 4 : 3) : 2
+      if (this.assets && this.assets.length < nbAssetsWithoutCarousel) {
+        return this.assets.length
+      }
       return this.showCarousel ? this.nbAssetsPerSlideDefault : nbAssetsWithoutCarousel
     },
     showCarousel () {
@@ -285,15 +288,15 @@ export default {
           <!-- TODO: remove WebP test when upgrading to AWS image handler version supporting AUTO_WEBP -->
           <source
             :srcset="`${
-              getHomeHeroUrlTransformed({ noWebP: true, width: 1024 })
+              getHomeHeroUrlTransformed({ width: 1024 })
             } 1024w, ${
-              getHomeHeroUrlTransformed({ noWebP: true, width: 1366 })
+              getHomeHeroUrlTransformed({ width: 1366 })
             } 1366w, ${
-              getHomeHeroUrlTransformed({ noWebP: true, width: 1600 })
+              getHomeHeroUrlTransformed({ width: 1600 })
             } 1600w, ${
-              getHomeHeroUrlTransformed({ noWebP: true, width: 1920 })
+              getHomeHeroUrlTransformed({ width: 1920 })
             } 1920w, ${
-              getHomeHeroUrlTransformed({ noWebP: true, width: 2560 })
+              getHomeHeroUrlTransformed({ width: 2560 })
             } 2560w`"
             sizes="100vw"
             media="(min-width: 640px)"

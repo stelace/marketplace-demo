@@ -1,6 +1,6 @@
 <script>
 import { sortBy, upperFirst, isEqual } from 'lodash'
-import { matClose } from '@quasar/extras/material-icons'
+import { matClose, matDeliveryDining, matRamenDining } from '@quasar/extras/material-icons'
 
 export default {
   props: {
@@ -25,7 +25,6 @@ export default {
     const tagOptions = {}
     this.definitions
       .filter(ca => ca.type === 'tags')
-      // .forEach(ca => { tagOptions[ca.name] = ca.suggestedValues || [] })
       .forEach(ca => { tagOptions[ca.name] = ca.listValues || [] })
 
     return {
@@ -53,7 +52,11 @@ export default {
     }
   },
   created () {
-    this.icons = { matClose }
+    this.icons = {
+      matClose,
+      ramen_dining: matRamenDining,
+      delivery_dining: matDeliveryDining
+    }
   },
   methods: {
     onCustomAttributeChange (name, value) {
@@ -185,16 +188,11 @@ export default {
                 dense
                 square
                 removable
-                color="accent"
+                color="secondary"
                 text-color="white"
                 class="q-mt-sm q-ml-xs q-mr-none"
                 @remove="scope.removeAtIndex(scope.index)"
               >
-                <QAvatar
-                  :icon="customAttribute.materialIcon || 'flash_on'"
-                  color="primary"
-                  text-color="white"
-                />
                 {{ scope.opt }}
               </QChip>
             </template>

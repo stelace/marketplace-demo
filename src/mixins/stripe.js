@@ -9,6 +9,9 @@ export default {
       if (!this.isCurrentUser) return false
       return !!get(this.currentUser, 'platformData._private.stripeAccount')
     },
+    currentUserStripeAccount () {
+      return !!get(this.currentUser, 'platformData._private.stripeAccount')
+    },
     ...mapGetters([
       'currentUser',
       'stripeActive',
@@ -76,7 +79,7 @@ export default {
       }
     },
     displayLinkStripeAccountMessage () {
-      if (!this.stripeActive || this.hasLinkedStripeAccount) return
+      if (!this.stripeActive || this.currentUserStripeAccount) return
 
       const goToPublicProfile = () => this.$router.push({ name: 'publicProfile', params: { id: this.currentUser.id } })
 

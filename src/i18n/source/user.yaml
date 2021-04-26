@@ -184,6 +184,9 @@ user:
       link_account_title:
         en: Stripe
         fr: Stripe
+      link_account_reminder:
+        en: Link a Stripe account to start selling.
+        fr: Link a Stripe account to start selling.
       link_account_notification_message:
         en: Please link a Stripe account in your profile to receive payments.
         fr: Merci de lier un compte Stripe dans votre page profil pour recevoir les paiements.

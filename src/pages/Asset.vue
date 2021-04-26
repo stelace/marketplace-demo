@@ -29,6 +29,17 @@
             color="warning"
             text-color="white"
           />
+          <AppContent
+            v-if="activeAsset.id && isCurrentUserTheOwner && !currentUserStripeAccount"
+            class="text-uppercase non-selectable"
+            tag="QBtn"
+            entry="user"
+            field="account.stripe.link_account_reminder"
+            :rounded="style.roundedTheme"
+            color="primary"
+            text-color="white"
+            @click="goToProfile"
+          />
 
           <AppContent
             v-if="activeAsset.startDate"
@@ -152,74 +163,14 @@
             allow-falsy-save
             input-type="textarea"
           />
-          <div class="row text-left">
-            <div class="col-12 col-md-5">
-              <label v-if="isCurrentUserTheOwner" class="customck">
-                Pickup
-                <input
-                  id="pickup"
-                  type="checkbox"
-                  :value="activeAsset.metadata.pickup"
-                  :checked="activeAsset.metadata.pickup"
-                  @change="changepickupdelivery"
-                >
-                <span class="checkmark"></span>
-              </label>
-              <label v-else class="">
-                <svg
-                  aria-hidden="true"
-                  role="presentation"
-                  focusable="false"
-                  viewBox="0 0 24 24"
-                  class="q-mr-sm q-icon notranslate text-secondary"
-                  style="font-size: 1.5rem;"
-                >
-                  <path d="M14.12,10H19V8.2H15.38L13.38,4.87C13.08,4.37 12.54,4.03 11.92,4.03C11.74,4.03 11.58,4.06 11.42,4.11L6,5.8V11H7.8V7.33L9.91,6.67L6,22H7.8L10.67,13.89L13,17V22H14.8V15.59L12.31,11.05L13.04,8.18M14,3.8C15,3.8 15.8,3 15.8,2C15.8,1 15,0.2 14,0.2C13,0.2 12.2,1 12.2,2C12.2,3 13,3.8 14,3.8Z"></path>
-                </svg>
-                Pickup
-              </label>
-              <div v-if="isCurrentUserTheOwner">
-                <label class="customck">
-                  Local delivery
-                  <input
-                    id="local"
-                    type="checkbox"
-                    value="local"
-                    :checked="(activeAsset.metadata.deliverytype.indexOf('local') !== -1) ? true:false"
-                    @change="changedeliveryoptions"
-                  >
-                  <span class="checkmark"></span>
-                </label>
-                <label class="customck">
-                  Long distance delivery
-                  <input
-                    id="distance"
-                    type="checkbox"
-                    value="distance"
-                    :checked="(activeAsset.metadata.deliverytype.indexOf('distance') !== -1) ? true:false"
-                    @change="changedeliveryoptions"
-                  >
-                  <span class="checkmark"></span>
-                </label>
-              </div>
-              <div v-else>
-                <label class="">
-                  <svg
-                    v-if="activeAsset.metadata.deliverytype.indexOf('local') !== -1 || activeAsset.metadata.deliverytype.indexOf('distance') !== -1"
-                    aria-hidden="true"
-                    role="presentation"
-                    focusable="false"
-                    viewBox="0 0 24 24"
-                    class="q-mr-sm q-icon notranslate text-secondary"
-                    style="font-size: 1.5rem;"
-                  >
-                    <path d="M19 15C19.55 15 20 15.45 20 16C20 16.55 19.55 17 19 17S18 16.55 18 16C18 15.45 18.45 15 19 15M19 13C17.34 13 16 14.34 16 16S17.34 19 19 19 22 17.66 22 16 20.66 13 19 13M10 6H5V8H10V6M17 5H14V7H17V9.65L13.5 14H10V9H6C3.79 9 2 10.79 2 13V16H4C4 17.66 5.34 19 7 19S10 17.66 10 16H14.5L19 10.35V7C19 5.9 18.11 5 17 5M7 17C6.45 17 6 16.55 6 16H8C8 16.55 7.55 17 7 17Z"></path>
-                  </svg>
-                  Delivery
-                </label>
-              </div>
-            </div>
-          </div>
+
+          <AppContent
+            tag="p"
+            class="q-my-lg q-mx-sm text-justify"
+            entry="asset"
+            field="checkout_message"
+          />
+
           <div
             v-if="assetCustomAttributes.length"
             class="row text-weight-medium q-py-sm"
@@ -227,6 +178,11 @@
             <div v-if="isCurrentUserTheOwner">
               <CustomAttributesEditor
                 :definitions="customAttributesOfTypes(['boolean'])"
+                :values="activeAsset.customAttributes"
+                @change="changeCustomAttributes"
+              />
+              <CustomAttributesEditor
+                :definitions="customAttributesOfTypes(['tags'])"
                 :values="activeAsset.customAttributes"
                 @change="changeCustomAttributes"
               />
@@ -250,6 +206,27 @@
                   :field="attribute.label.field"
                   :default-message="attribute.label.default"
                 />
+              </div>
+              <div
+                v-for="attribute in assetCustomAttributes.filter(ca => !!ca.value && ca.type === 'tags')"
+                :key="attribute.name"
+                class="non-selectable col-12 col-sm-4 q-mb-sm"
+              >
+                <div
+                  v-for="tag in attribute.value"
+                  :key="attribute.name+tag"
+                  class="non-selectable col-12 col-sm-4 q-mb-sm"
+                >
+                  <QChip
+                    dense
+                    square
+                    color="secondary"
+                    text-color="white"
+                    class="q-mt-sm q-ml-xs q-mr-none"
+                  >
+                    {{ tag }}
+                  </QChip>
+                </div>
               </div>
             </div>
           </div>
@@ -386,7 +363,10 @@
 import { mapState, mapGetters } from 'vuex'
 import { get, map, sortBy, values, compact, flatten, groupBy, isUndefined } from 'lodash'
 // WARNING: icons referenced in customAttributes should be included below
-import { mdiWhiteBalanceSunny, mdiImage, mdiSprout, mdiBarleyOff, mdiMoped, mdiWalk } from '@quasar/extras/mdi-v4'
+import {
+  mdiWhiteBalanceSunny, mdiImage, mdiSprout,
+  mdiBarleyOff, mdiMoped, mdiWalk, mdiNoodles
+} from '@quasar/extras/mdi-v4'
 
 import { extractLocationDataFromPlace, isPlaceSearchEnabled } from 'src/utils/places'
 import { populateAsset } from 'src/utils/asset'
@@ -401,6 +381,7 @@ import TransactionRatingsList from 'src/components/TransactionRatingsList'
 
 import PageComponentMixin from 'src/mixins/pageComponent'
 import PaymentMixin from 'src/mixins/payment'
+import StripeMixin from 'src/mixins/stripe'
 
 export default {
   components: {
@@ -415,6 +396,7 @@ export default {
   mixins: [
     PageComponentMixin,
     PaymentMixin,
+    StripeMixin,
   ],
   data () {
     return {
@@ -464,6 +446,7 @@ export default {
         if (def.materialIcon === 'no_food') def.icon = this.icons.mdiBarleyOff
         if (def.materialIcon === 'directions_walk') def.icon = this.icons.mdiWalk
         if (def.materialIcon === 'delivery_dining') def.icon = this.icons.mdiMoped
+        if (def.materialIcon === 'ramen_dining') def.icon = this.icons.mdiNoodles
         return Object.assign({ value: v }, def)
       })
 
@@ -520,6 +503,7 @@ export default {
       'ratingsActive',
       'paymentActive',
       'conversations',
+      'stripeActive',
     ]),
   },
   watch: {
@@ -559,7 +543,8 @@ export default {
       mdiSprout,
       mdiBarleyOff,
       mdiMoped,
-      mdiWalk
+      mdiWalk,
+      mdiNoodles
     }
   },
   methods: {
@@ -568,6 +553,9 @@ export default {
       // with server-side rendering (SSR)
       this.fetchRelatedAssets()
       this.fetchAssetRatingsByTransaction()
+    },
+    goToProfile () {
+      return this.$router.push({ name: 'publicProfile', params: { id: this.currentUser.id } })
     },
     toggleImageEdition (editing) {
       this.isEditingImages = typeof editing === 'boolean'

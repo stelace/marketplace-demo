@@ -313,7 +313,8 @@ export default {
             locations: this.locations,
             categoryId: this.selectedCategory ? this.selectedCategory.id : null,
             customAttributes: pick(this.editingCustomAttributes, this.editableCustomAttributeNames),
-            active: true,
+            // new assets should be inacitve if stripe account has not been linked
+            active: this.currentUserStripeAccount,
             validated: true,
             metadata: {
               images,
@@ -425,7 +426,7 @@ export default {
         class="text-h6"
         tag="h2"
         entry="pages"
-        field="new_asset.header"
+        field="new_asset.subheader"
       />
     </template>
 

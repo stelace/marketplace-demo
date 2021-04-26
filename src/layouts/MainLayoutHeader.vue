@@ -8,7 +8,8 @@ import {
   matLock,
   matMail,
   matPowerSettingsNew,
-  matSearch
+  matSearch,
+  matWarning
 } from '@quasar/extras/material-icons'
 import { mdiGithubCircle } from '@quasar/extras/mdi-v4'
 
@@ -23,6 +24,7 @@ import PlacesAutocomplete from 'src/components/PlacesAutocomplete'
 
 import AuthDialogMixin from 'src/mixins/authDialog'
 import GeolocationMixin from 'src/mixins/geolocation'
+import StripeMixin from 'src/mixins/stripe'
 
 export default {
   components: {
@@ -36,6 +38,7 @@ export default {
   mixins: [
     AuthDialogMixin,
     GeolocationMixin,
+    StripeMixin,
   ],
   data () {
     return {
@@ -90,6 +93,12 @@ export default {
     showGithubForkButton () {
       return process.env.VUE_APP_GITHUB_FORK_BUTTON === 'true'
     },
+    ownAssets () {
+      return this.usersAssets[this.currentUser.id] || []
+    },
+    needsStripeLink () {
+      return this.ownAssets.length >= 1 && !this.currentUserStripeAccount
+    },
     ...mapState([
       'common',
       'content',
@@ -106,6 +115,8 @@ export default {
       'defaultSearchMode',
       'currentUserPosition',
       'displayAssetDistance',
+      'stripeActive',
+      'usersAssets',
     ]),
   },
   watch: {
@@ -138,6 +149,7 @@ export default {
 
         if (this.isSearch) this.searchAssets()
         if (current.id) await this.$store.dispatch('fetchMessages')
+        if (current.id) await this.checkForStripeLink()
       }
     },
   },
@@ -154,6 +166,7 @@ export default {
         })
       }
     }
+    await this.checkForStripeLink()
   },
   created () {
     this.icons = {
@@ -163,10 +176,14 @@ export default {
       matMail,
       matSearch,
       matPowerSettingsNew,
-      mdiGithubCircle
+      mdiGithubCircle,
+      matWarning
     }
   },
   methods: {
+    async checkForStripeLink () {
+      if (this.currentUser.id) await this.$store.dispatch('fetchUserAssets')
+    },
     toggleMenu (visible = !this.isMenuOpened) {
       this.$store.commit(mutationTypes.LAYOUT__TOGGLE_MENU, { visible })
     },
@@ -360,6 +377,25 @@ export default {
       </QBtn>
 
       <QBtn
+        v-if="currentUser.id"
+        v-show="needsStripeLink"
+        :to="{ name: 'publicProfile', params: { id: currentUser.id } }"
+        :class="['q-mx-md header__inbox', isMenuOpened ? 'invisible' : '']"
+        :aria-label="$t({ id: 'navigation.public_profile' })"
+        :rounded="style.roundedTheme"
+        color="primary"
+        dense
+        :icon="icons.matWarning"
+      >
+        <AppContent
+          v-if="needsStripeLink"
+          tag="QTooltip"
+          entry="user"
+          field="account.stripe.link_account_helper_button"
+        />
+      </QBtn>
+
+      <QBtn
         v-show="!currentUser.id"
         flat
         no-caps
@@ -403,6 +439,7 @@ export default {
         align="between"
         dense
       />
+      <!-- TODO: make an icon button that shows on iPad screen sizes -->
 
       <QBtn
         v-if="currentUser.id && showAccountAvatar"

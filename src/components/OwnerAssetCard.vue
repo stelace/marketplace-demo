@@ -8,11 +8,15 @@ import logger from 'src/utils/logger'
 import ConfirmDeleteDialog from 'src/components/ConfirmDeleteDialog'
 
 import { isAvailable } from 'src/utils/asset'
+import StripeMixin from 'src/mixins/stripe'
 
 export default {
   components: {
     ConfirmDeleteDialog,
   },
+  mixins: [
+    StripeMixin,
+  ],
   props: {
     asset: {
       type: Object,
@@ -70,6 +74,7 @@ export default {
     }),
     ...mapGetters([
       'conversations',
+      'stripeActive',
     ])
   },
   created () {
@@ -229,24 +234,32 @@ export default {
         class="row justify-end q-mt-sm q-mb-md"
         @click.prevent
       >
-        <QBtn
-          v-if="!unavailable"
-          :loading="updatingStatus"
-          :rounded="style.roundedTheme"
-          color="grey-2"
-          text-color="default-color"
-          unelevated
-          @click.stop.prevent="toggleActive"
-        >
-          <QIcon
-            :name="paused ? icons.matPlayArrow : icons.matPause"
-            :left="true"
-          />
+        <div>
           <AppContent
-            entry="asset"
-            :field="paused ? 'reactivate_action' : 'pause_action'"
+            v-if="(!currentUserStripeAccount && !!paused)"
+            tag="QTooltip"
+            entry="user"
+            field="account.stripe.link_account_reminder"
           />
-        </QBtn>
+          <QBtn
+            :disabled="(!currentUserStripeAccount && !!paused)"
+            :loading="updatingStatus"
+            :rounded="style.roundedTheme"
+            color="grey-2"
+            text-color="default-color"
+            unelevated
+            @click.stop.prevent="toggleActive"
+          >
+            <QIcon
+              :name="paused ? icons.matPlayArrow : icons.matPause"
+              :left="true"
+            />
+            <AppContent
+              entry="asset"
+              :field="paused ? 'reactivate_action' : 'pause_action'"
+            />
+          </QBtn>
+        </div>
         <QBtn
           :loading="removingAsset"
           :rounded="style.roundedTheme"

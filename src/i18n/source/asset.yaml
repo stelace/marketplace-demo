@@ -91,6 +91,9 @@ asset:
           other {Commander}
           undefined {Contacter}
       }
+  checkout_message:
+    en: After purchase you'll chat with the chef to arrange pickup/delivery.
+    fr: After purchase you'll chat with the chef to arrange pickup/delivery.
   delete_listing_warning:
     en: "Please confirm you want to delete this listing."
     fr: "Confirmez-vous la suppression de cette annonce?"

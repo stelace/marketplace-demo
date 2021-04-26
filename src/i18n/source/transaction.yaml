@@ -152,3 +152,6 @@ transaction:
     unavailable_periods:
       en: The selected dates are not available.
       fr: Les dates sélectionnées ne sont pas disponibles.
+    seller_unavailable:
+      en: The seller is not ready to accept payments. Please try later.
+      fr: The seller is not ready to accept payments. Please try later.
