@@ -174,6 +174,11 @@
                 :values="activeAsset.customAttributes"
                 @change="changeCustomAttributes"
               />
+              <CustomAttributesEditor
+                :definitions="customAttributesOfTypes(['tags'])"
+                :values="activeAsset.customAttributes"
+                @change="changeCustomAttributes"
+              />
             </div>
             <div v-else>
               <!-- We only keep truthy customAttributes values but depending on UI we could need falsy ones as well -->
@@ -194,6 +199,27 @@
                   :field="attribute.label.field"
                   :default-message="attribute.label.default"
                 />
+              </div>
+              <div
+                v-for="attribute in assetCustomAttributes.filter(ca => !!ca.value && ca.type === 'tags')"
+                :key="attribute.name"
+                class="non-selectable col-12 col-sm-4 q-mb-sm"
+              >
+                <div
+                  v-for="tag in attribute.value"
+                  :key="attribute.name+tag"
+                  class="non-selectable col-12 col-sm-4 q-mb-sm"
+                >
+                  <QChip
+                    dense
+                    square
+                    color="secondary"
+                    text-color="white"
+                    class="q-mt-sm q-ml-xs q-mr-none"
+                  >
+                    {{ tag }}
+                  </QChip>
+                </div>
               </div>
             </div>
           </div>
