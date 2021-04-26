@@ -460,6 +460,10 @@ export default {
         </div>
       </div>
     </div>
+    <AppContent
+      entry="asset"
+      field="checkout_message"
+    />
     <div class="row">
       <AppCheckoutButton
         class="full-width"

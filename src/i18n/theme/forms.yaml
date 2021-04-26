@@ -13,3 +13,11 @@ form:
         en: Delivery
         fr: Vente
         context: Search for things available for Delivery
+      vegan:
+        en: Vegan
+        fr: Vegan
+        context: Search for Vegan food.
+      glutenFree:
+        en: Gluten Free
+        fr: Gluten Free
+        context: Search for Gluten Free food.

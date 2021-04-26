@@ -21,7 +21,7 @@ places:
     fr: "Adresse, ville, gare…"
     context: Illustrate search locations with some obvious examples
   address_placeholder:
-    en: Address
+    en: Neighborhood
     fr: Adresse
   distance_value:
     en: |

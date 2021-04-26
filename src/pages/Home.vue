@@ -57,6 +57,9 @@ export default {
     },
     nbAssetsVisiblePerSlide () {
       const nbAssetsWithoutCarousel = this.$q.screen.gt.xs ? (this.$q.screen.lt.md ? 4 : 3) : 2
+      if (this.assets && this.assets.length < nbAssetsWithoutCarousel) {
+        return this.assets.length
+      }
       return this.showCarousel ? this.nbAssetsPerSlideDefault : nbAssetsWithoutCarousel
     },
     showCarousel () {
