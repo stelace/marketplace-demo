@@ -163,6 +163,12 @@
             allow-falsy-save
             input-type="textarea"
           />
+          <AppContent
+            tag="p"
+            class="q-my-lg q-mx-sm text-justify"
+            entry="asset"
+            field="checkout_message"
+          />
 
           <div
             v-if="assetCustomAttributes.length"
@@ -356,7 +362,10 @@
 import { mapState, mapGetters } from 'vuex'
 import { get, map, sortBy, values, compact, flatten, groupBy, isUndefined } from 'lodash'
 // WARNING: icons referenced in customAttributes should be included below
-import { mdiWhiteBalanceSunny, mdiImage, mdiSprout, mdiBarleyOff, mdiMoped, mdiWalk } from '@quasar/extras/mdi-v4'
+import {
+  mdiWhiteBalanceSunny, mdiImage, mdiSprout,
+  mdiBarleyOff, mdiMoped, mdiWalk, mdiNoodles
+} from '@quasar/extras/mdi-v4'
 
 import { extractLocationDataFromPlace, isPlaceSearchEnabled } from 'src/utils/places'
 import { populateAsset } from 'src/utils/asset'
@@ -435,6 +444,7 @@ export default {
         if (def.materialIcon === 'no_food') def.icon = this.icons.mdiBarleyOff
         if (def.materialIcon === 'directions_walk') def.icon = this.icons.mdiWalk
         if (def.materialIcon === 'delivery_dining') def.icon = this.icons.mdiMoped
+        if (def.materialIcon === 'ramen_dining') def.icon = this.icons.mdiNoodles
         return Object.assign({ value: v }, def)
       })
 
@@ -528,7 +538,8 @@ export default {
       mdiSprout,
       mdiBarleyOff,
       mdiMoped,
-      mdiWalk
+      mdiWalk,
+      mdiNoodles
     }
   },
   methods: {
