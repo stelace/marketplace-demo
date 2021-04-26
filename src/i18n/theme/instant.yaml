@@ -27,3 +27,6 @@ instant:
       delivery_label:
         en: Delivery
         fr: Delivery
+      cuisine_label:
+        en: Cuisine
+        fr: Cuisine
