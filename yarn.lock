@@ -1582,13 +1582,13 @@
     "@sentry/utils" "6.2.5"
     tslib "^1.9.3"
 
-"@sentry/integrations@^6.2.5":
-  version "6.2.5"
-  resolved "https://registry.yarnpkg.com/@sentry/integrations/-/integrations-6.2.5.tgz#37cac11b486779707d62751da36aaaefbb44951a"
-  integrity sha512-4LOgO8lSeGaRV4w1Y03YWtTqrZdm56ciD7k0GLhv+PcFLpiu0exsS1XSs/9vET5LB5GtIgBTeJNNbxVFvvmv8g==
+"@sentry/integrations@^6.3.5":
+  version "6.3.5"
+  resolved "https://registry.yarnpkg.com/@sentry/integrations/-/integrations-6.3.5.tgz#3037e8f047c3b218d3d9bfacbb2089a174045baf"
+  integrity sha512-0+AN1JPz+JO/wSLW74mrCxdvxepwxe3u4swn8toPFuhNWiI+zpkZYr/Ic4EYDjLARn4Ouyba28uqESPDq8y0fw==
   dependencies:
-    "@sentry/types" "6.2.5"
-    "@sentry/utils" "6.2.5"
+    "@sentry/types" "6.3.5"
+    "@sentry/utils" "6.3.5"
     localforage "^1.8.1"
     tslib "^1.9.3"
 
@@ -1606,12 +1606,25 @@
   resolved "https://registry.yarnpkg.com/@sentry/types/-/types-6.2.5.tgz#34b75285b149e0b9bc5fd54fcc2c445d978c7f2e"
   integrity sha512-1Sux6CLYrV9bETMsGP/HuLFLouwKoX93CWzG8BjMueW+Di0OGxZphYjXrGuDs8xO8bAKEVGCHgVQdcB2jevS0w==
 
+"@sentry/types@6.3.5":
+  version "6.3.5"
+  resolved "https://registry.yarnpkg.com/@sentry/types/-/types-6.3.5.tgz#d5eca7e76c250882ab78c01a8df894a9a9ca537d"
+  integrity sha512-tY/3pkAmGYJ3F0BtwInsdt/uclNvF8aNG7XHsTPQNzk7BkNVWjCXx0sjxi6CILirl5nwNxYxVeTr2ZYAEZ/dSQ==
+
 "@sentry/utils@6.2.5":
   version "6.2.5"
   resolved "https://registry.yarnpkg.com/@sentry/utils/-/utils-6.2.5.tgz#be90d056b09ed1216097d7a29e3e81ba39238e1b"
   integrity sha512-fJoLUZHrd5MPylV1dT4qL74yNFDl1Ur/dab+pKNSyvnHPnbZ/LRM7aJ8VaRY/A7ZdpRowU+E14e/Yeem2c6gtQ==
   dependencies:
     "@sentry/types" "6.2.5"
+    tslib "^1.9.3"
+
+"@sentry/utils@6.3.5":
+  version "6.3.5"
+  resolved "https://registry.yarnpkg.com/@sentry/utils/-/utils-6.3.5.tgz#a4805448cb0314d3d119688162aa695598a10bbb"
+  integrity sha512-kHUcZ37QYlNzz7c9LVdApITXHaNmQK7+sw/If3M/qpff1fd5XoecA8laLfcYuz+Cw5mRhVmdhPcCRM3Xi1IGXg==
+  dependencies:
+    "@sentry/types" "6.3.5"
     tslib "^1.9.3"
 
 "@sentry/webpack-plugin@^1.15.1":
