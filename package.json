@@ -54,7 +54,7 @@
     "socket.io-client": "~2.4.0",
     "stelace": "0.14.0",
     "vue-analytics": "5.22.1",
-    "vue-intl": "3.1.0",
+    "vue-intl": "5.0.0",
     "vue-meta": "^2.4.0",
     "vue-slicksort": "^1.2.0",
     "vue-socket.io-extended": "4.1.0",
