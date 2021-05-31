@@ -38,7 +38,7 @@
     "postpublish": "pinst --enable"
   },
   "dependencies": {
-    "@quasar/extras": "^1.9.19",
+    "@quasar/extras": "^1.10.6",
     "@sentry/browser": "^6.3.6",
     "@sentry/integrations": "^6.3.5",
     "axios": "^0.21.1",
