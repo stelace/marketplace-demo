@@ -98,7 +98,7 @@
     "shelljs": "^0.8.4",
     "testcafe": "^1.14.0",
     "testcafe-reporter-xunit": "^2.1.0",
-    "testcafe-vue-selectors": "^3.1.0",
+    "testcafe-vue-selectors": "^3.1.1",
     "webfontloader": "^1.6.28",
     "workbox-webpack-plugin": "^6.1.2"
   },
