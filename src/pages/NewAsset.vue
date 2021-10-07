@@ -40,7 +40,7 @@ export default {
       price: null,
       startDate: '',
       endDate: '',
-      quantity: 1,
+      // quantity: 1,
       locations: [],
       isPlaceSearchEnabled,
       options: ['option1'],
@@ -250,7 +250,7 @@ export default {
               return img
             }) */
 
-          let assetQuantity = this.quantity
+          // let assetQuantity
 
           const shouldCreateAvailability = this.showAvailabilityDates && this.startDate
 
@@ -262,14 +262,14 @@ export default {
             if (!isAnUnavailability) {
               availabilityAttrs.startDate = this.startDate
               availabilityAttrs.endDate = this.endDate
-              availabilityAttrs.quantity = this.quantity
+              // availabilityAttrs.quantity = this.quantity
 
               // we want the asset to be available only during the availability period
-              assetQuantity = 0
+              // assetQuantity = 0
             } else {
               availabilityAttrs.startDate = date.addToDate(new Date(), { year: -1 }).toISOString()
               availabilityAttrs.endDate = this.startDate
-              availabilityAttrs.quantity = 0
+              // availabilityAttrs.quantity = 0
             }
           }
 
@@ -279,7 +279,7 @@ export default {
             assetTypeId: (this.selectedAssetType && this.selectedAssetType.id) || undefined, // `null` not allowed
             description: this.description,
             price: this.price,
-            quantity: this.selectedAssetType ? (this.selectedAssetType.infiniteStock ? 1 : assetQuantity) : 1,
+            quantity: 1,
             locations: this.locations,
             categoryId: this.selectedCategory ? this.selectedCategory.id : null,
             customAttributes: pick(this.editingCustomAttributes, this.editableCustomAttributeNames),
@@ -501,14 +501,13 @@ export default {
                   @selectPlace="selectPlace"
                 />
               </div>
-              <div
+              <!-- <div
                 v-show="!selectedAssetType || !selectedAssetType.infiniteStock"
                 class="col-12 col-sm-5"
               >
                 <AppInputNumber
                   v-model="quantity"
                   :label="$t({ id: 'asset.quantity_label' })"
-                  required
                   min="0"
                   :rules="[
                     quantity => quantity > 0 ||
@@ -516,7 +515,7 @@ export default {
                   ]"
                   bottom-slots
                 />
-              </div>
+              </div> -->
             </div>
           </div>
         </transition>
