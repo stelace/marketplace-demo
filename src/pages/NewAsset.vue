@@ -391,9 +391,6 @@ export default {
         @submit.prevent="createAsset"
       >
         <div class="step-1 q-py-lg">
-          <div class="text-h5">
-            {{ $t({ id: 'pages.new_asset.form_header' }) }}
-          </div>
           <div class="row justify-center">
             <QInput
               v-model="name"
@@ -572,7 +569,7 @@ export default {
 
             <div class="step-asset-picture q-py-lg">
               <AppContent
-                class="text-h5"
+                class="text-body2"
                 tag="h3"
                 entry="pages"
                 field="new_asset.picture_incentive"
