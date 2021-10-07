@@ -37,7 +37,6 @@ export default {
       price: null,
       startDate: '',
       endDate: '',
-      // quantity: 1,
       locations: [],
       isPlaceSearchEnabled,
       options: ['option1'],
@@ -139,20 +138,6 @@ export default {
         steps[3] = true
       }
 
-      // let isValidStartDate = true
-      // let isValidEndDate = true
-      // if (this.startDate) {
-      //   isValidStartDate = isValidDateString(this.startDate)
-      // }
-      // if (this.endDate) {
-      //   isValidEndDate = isValidDateString(this.endDate)
-      // }
-
-      // if (!this.showAvailabilityDates || (this.showAvailabilityDates && isValidStartDate && isValidEndDate)) {
-      //   // endDate is optional, so is quantity
-      //   steps[4] = true
-      // }
-
       // Index of first falsy step
       return steps.indexOf(false) >= 0 ? steps.indexOf(false) - 1 : steps.length - 1
     },
@@ -247,8 +232,6 @@ export default {
               return img
             }) */
 
-          // let assetQuantity
-
           const shouldCreateAvailability = this.showAvailabilityDates && this.startDate
 
           const availabilityAttrs = {}
@@ -259,14 +242,11 @@ export default {
             if (!isAnUnavailability) {
               availabilityAttrs.startDate = this.startDate
               availabilityAttrs.endDate = this.endDate
-              // availabilityAttrs.quantity = this.quantity
 
               // we want the asset to be available only during the availability period
-              // assetQuantity = 0
             } else {
               availabilityAttrs.startDate = date.addToDate(new Date(), { year: -1 }).toISOString()
               availabilityAttrs.endDate = this.startDate
-              // availabilityAttrs.quantity = 0
             }
           }
 
@@ -276,7 +256,6 @@ export default {
             assetTypeId: (this.selectedAssetType && this.selectedAssetType.id) || undefined, // `null` not allowed
             description: this.description,
             price: this.price,
-            quantity: 1,
             locations: this.locations,
             categoryId: this.selectedCategory ? this.selectedCategory.id : null,
             customAttributes: pick(this.editingCustomAttributes, this.editableCustomAttributeNames),
@@ -351,7 +330,6 @@ export default {
       this.price = null
       this.startDate = ''
       this.endDate = ''
-      this.quantity = 1
       this.locations = []
       this.selectedCategory = null
       this.editingCustomAttributes = {}
@@ -463,50 +441,6 @@ export default {
             </div>
           </div>
         </transition>
-
-        <!-- <transition enter-active-class="animated fadeInUp">
-          <div
-            v-if="step > 2"
-            class="step-3 q-py-lg"
-          >
-            <AppDateRangePicker
-              v-show="showAvailabilityDates"
-              class="q-mb-xl"
-              :start-date="startDate"
-              :end-date="endDate"
-              :missing-end-date-meaning="$t({ id: 'time.missing_end_date_meaning' })"
-              bottom-slots
-              @changeStartDate="selectStartDate"
-              @changeEndDate="selectEndDate"
-            />
-
-            <div class="row justify-around">
-              <div v-if="isPlaceSearchEnabled" class="col-12 col-sm-5">
-                <PlacesAutocomplete
-                  :label="$t({ id: 'places.address_placeholder' })"
-                  :initial-query="locationName"
-                  bottom-slots
-                  @selectPlace="selectPlace"
-                />
-              </div>
-              <div
-                v-show="!selectedAssetType || !selectedAssetType.infiniteStock"
-                class="col-12 col-sm-5"
-              >
-                <AppInputNumber
-                  v-model="quantity"
-                  :label="$t({ id: 'asset.quantity_label' })"
-                  min="0"
-                  :rules="[
-                    quantity => quantity > 0 ||
-                      $t({ id: 'form.error.missing_field' })
-                  ]"
-                  bottom-slots
-                />
-              </div>
-            </div>
-          </div>
-        </transition> -->
 
         <transition enter-active-class="animated fadeInUp">
           <div

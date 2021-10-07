@@ -91,7 +91,6 @@ export default {
       :label="$t({ id: 'prompt.add_pictures' })"
       :factory="uploadFactory"
       :filter="uploadFilter"
-      accept="image/*"
       color="transparent"
       flat
       multiple
