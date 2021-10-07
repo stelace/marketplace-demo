@@ -4,14 +4,12 @@ import { mapState, mapGetters } from 'vuex'
 import { date } from 'quasar'
 
 import EventBus from 'src/utils/event-bus'
-import { isValidDateString } from 'src/utils/time'
 import { extractLocationDataFromPlace, isPlaceSearchEnabled } from 'src/utils/places'
 import logger from 'src/utils/logger'
 
 import BasicHeroLayout from 'src/layouts/BasicHeroLayout'
 
 import CustomAttributesEditor from 'src/components/CustomAttributesEditor'
-import PlacesAutocomplete from 'src/components/PlacesAutocomplete'
 import SelectAssetType from 'src/components/SelectAssetType'
 import SelectCategories from 'src/components/SelectCategories'
 
@@ -23,7 +21,6 @@ export default {
     BasicHeroLayout,
 
     CustomAttributesEditor,
-    PlacesAutocomplete,
     SelectAssetType,
     SelectCategories,
   },
@@ -142,19 +139,19 @@ export default {
         steps[3] = true
       }
 
-      let isValidStartDate = true
-      let isValidEndDate = true
-      if (this.startDate) {
-        isValidStartDate = isValidDateString(this.startDate)
-      }
-      if (this.endDate) {
-        isValidEndDate = isValidDateString(this.endDate)
-      }
+      // let isValidStartDate = true
+      // let isValidEndDate = true
+      // if (this.startDate) {
+      //   isValidStartDate = isValidDateString(this.startDate)
+      // }
+      // if (this.endDate) {
+      //   isValidEndDate = isValidDateString(this.endDate)
+      // }
 
-      if (!this.showAvailabilityDates || (this.showAvailabilityDates && isValidStartDate && isValidEndDate)) {
-        // endDate is optional, so is quantity
-        steps[4] = true
-      }
+      // if (!this.showAvailabilityDates || (this.showAvailabilityDates && isValidStartDate && isValidEndDate)) {
+      //   // endDate is optional, so is quantity
+      //   steps[4] = true
+      // }
 
       // Index of first falsy step
       return steps.indexOf(false) >= 0 ? steps.indexOf(false) - 1 : steps.length - 1
@@ -476,7 +473,7 @@ export default {
           </div>
         </transition>
 
-        <transition enter-active-class="animated fadeInUp">
+        <!-- <transition enter-active-class="animated fadeInUp">
           <div
             v-if="step > 2"
             class="step-3 q-py-lg"
@@ -501,7 +498,7 @@ export default {
                   @selectPlace="selectPlace"
                 />
               </div>
-              <!-- <div
+              <div
                 v-show="!selectedAssetType || !selectedAssetType.infiniteStock"
                 class="col-12 col-sm-5"
               >
@@ -515,15 +512,15 @@ export default {
                   ]"
                   bottom-slots
                 />
-              </div> -->
+              </div>
             </div>
           </div>
-        </transition>
+        </transition> -->
 
         <transition enter-active-class="animated fadeInUp">
           <div
-            v-if="step > 3"
-            class="step-4 q-py-lg"
+            v-if="step > 2"
+            class="step-3 q-py-lg"
           >
             <div class="row justify-around">
               <div class="col-12 col-md-7">
