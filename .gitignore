@@ -82,7 +82,7 @@ typings/
 .yarn-integrity
 
 # Marketplace data
-data.js
+# data.js
 
 # Netlify functions
 /netlify-functions
