@@ -37,7 +37,6 @@
           :filter="uploadFilter"
           auto-upload
           flat
-          accept="image/*"
           color="transparent"
           text-color="transparent"
           @added="avatarAdded"
