@@ -383,12 +383,6 @@ export default {
         entry="pages"
         field="new_asset.header"
       />
-      <AppContent
-        class="text-h6"
-        tag="h2"
-        entry="pages"
-        field="new_asset.header"
-      />
     </template>
 
     <section class="q-pa-sm">
@@ -595,7 +589,7 @@ export default {
               :loading="creatingAsset"
               :label="$t( { id: 'prompt.create_button' })"
               :rounded="style.roundedTheme"
-              :disabled="step < 4 || !uploaderFiles.length"
+              :disabled="step < 3"
               color="secondary"
               size="lg"
               type="submit"

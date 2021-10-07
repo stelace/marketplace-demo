@@ -77,7 +77,7 @@ pages:
       en: Create your own listing in no time.
       fr: Créez votre propre annonce en quelques instants.
     header:
-      en: Create your new offer
+      en: Create your new resource
       fr: Créez votre nouvelle annonce
     header__EDITOR_LABEL:
       en: Main header of your listing creation page
@@ -102,7 +102,7 @@ pages:
             other {}
         }
     picture_incentive:
-      en: Beautiful pictures make a difference…
+      en: Upload your resource preview photo
       fr: De belles images font la différence…
     picture_incentive__EDITOR_LABEL:
       en: "Incentive to upload attractive images"
