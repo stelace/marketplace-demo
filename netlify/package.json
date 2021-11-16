@@ -10,7 +10,7 @@
   "scripts": {},
   "dependencies": {
     "@hapi/joi": "^17.1.0",
-    "aws-sdk": "^2.613.0",
+    "aws-sdk": "^2.814.0",
     "http-errors": "^1.7.3",
     "lodash": "^4.17.21",
     "middy": "^0.33.2",
