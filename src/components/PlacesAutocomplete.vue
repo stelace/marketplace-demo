@@ -186,25 +186,28 @@ export default {
     }
   },
   methods: {
-    fetchPlaces (query, update, abort) {
+    async fetchPlaces (query, update, abort) {
       if (query.length < 2) {
         abort()
         return
       }
 
-      update(async () => {
-        this.showLoadingSpinner()
+      this.showLoadingSpinner()
 
-        if (!query) {
-          this.places = []
-        } else {
-          let places = await search(query, { country: this.searchCountry })
-          places = places.slice(0, 5)
+      // put async operations outside `update` function
+      // otherwise the select menu doesn't display correctly
+      let places
+      if (!query) {
+        places = []
+      } else {
+        places = await search(query, { country: this.searchCountry })
+        places = places.slice(0, 5)
+      }
 
-          this.places = places
-        }
+      this.hideLoadingSpinner()
 
-        this.hideLoadingSpinner()
+      update(() => {
+        this.places = places
       })
     },
     selectPlace (place) {
