@@ -120,7 +120,7 @@ yarn
 
 3. Create environment files for development and production.
 
-You can copy `.env.example` and fill it with Stelace API keys.
+You can copy `.env.example` and fill it with Stelace API keys ([generate them](https://github.com/stelace/stelace/blob/dev/docs/api_keys.md) with the server-side open-source project).
 
 ```sh
 cp .env.example .env.development
