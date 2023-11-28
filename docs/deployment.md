@@ -1,10 +1,6 @@
 # Deployment
 
-We’ve set up continuous deployment for production (master) and development branches and you just have to click "_Deploy to netlify_" in [README](../README.md) to get started.
-
-Please refer to `netlify.toml` file and [Netlify CD docs](https://www.netlify.com/docs/continuous-deployment).
-
-You can still deploy manually with Netlify. Install [Netlify CLI](https://github.com/netlify/cli) if needed `npm install -g netlify-cli`, then login with `netlify login` and just run the following:
+You can deploy manually with Netlify. Install [Netlify CLI](https://github.com/netlify/cli) if needed `npm install -g netlify-cli`, then login with `netlify login` and just run the following:
 
 ```sh
 npm run deploy
